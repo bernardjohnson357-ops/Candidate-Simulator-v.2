@@ -12,7 +12,9 @@ export default function LindaPage() {
 
   const sendMessage = async () => {
     if (!input.trim()) return;
-    const newMessages = [...messages, { role: "user", content: input }];
+
+    // add user message
+    const newMessages: Message[] = [...messages, { role: "user", content: input }];
     setMessages(newMessages);
     setInput("");
     setLoading(true);
@@ -25,8 +27,15 @@ export default function LindaPage() {
       });
 
       const data = await res.json();
+
       if (data.reply) {
-        setMessages([...newMessages, data.reply]);
+        // ensure reply is in the correct format
+        const reply: Message =
+          typeof data.reply === "string"
+            ? { role: "assistant", content: data.reply }
+            : data.reply;
+
+        setMessages([...newMessages, reply]);
       }
     } catch (err) {
       console.error("Error talking to Linda:", err);
@@ -39,6 +48,8 @@ export default function LindaPage() {
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
       <div className="w-full max-w-lg bg-white shadow-lg rounded-lg p-4">
         <h1 className="text-xl font-bold mb-4">Chat with Linda</h1>
+
+        {/* Chat window */}
         <div className="space-y-2 mb-4 max-h-96 overflow-y-auto border rounded p-2 bg-gray-50">
           {messages.map((msg, i) => (
             <div
@@ -57,6 +68,8 @@ export default function LindaPage() {
             <div className="text-gray-500 text-sm italic">Linda is typing...</div>
           )}
         </div>
+
+        {/* Input */}
         <div className="flex space-x-2">
           <input
             type="text"

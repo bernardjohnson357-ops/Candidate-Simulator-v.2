@@ -1,56 +1,80 @@
-// pages/api/linda.ts
-import type { NextApiRequest, NextApiResponse } from "next";
+import { useState, useEffect } from "react";
 
-const STARTER_PROMPT = `You are Linda, a concerned parent speaking directly with the candidate. 
-You worry about the impact of politics on your family and community. 
-Speak warmly but firmly, like a parent who cares deeply about the future. 
-Keep your responses conversational, no walls of text. Ask the candidate questions.`;
+export default function LindaPage() {
+  const [messages, setMessages] = useState([
+    { role: "system", content: "You are Linda, a concerned parent speaking with the candidate." }
+  ]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
 
-// Ensure API key exists
-if (!process.env.OPENAI_API_KEY) {
-  throw new Error("Missing OPENAI_API_KEY in environment variables");
-}
+  async function sendMessage(userMessage: string) {
+    setLoading(true);
+    const newMessages = [...messages, { role: "user", content: userMessage }];
+    setMessages(newMessages);
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+    try {
+      const res = await fetch("/api/linda", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: newMessages })
+      });
 
-  try {
-    const { messages = [] } = req.body;
+      if (!res.ok) {
+        throw new Error(`API error: ${res.status}`);
+      }
 
-    // If no conversation yet, start with Linda’s opening line
-    const conversation =
-      messages.length === 0
-        ? [{ role: "assistant", content: STARTER_PROMPT }]
-        : messages;
-
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini", // can swap to gpt-4o for higher quality
-        messages: conversation,
-        temperature: 0.8,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("OpenAI API error:", errorText);
-      return res.status(500).json({ error: "Failed to fetch response from OpenAI" });
+      const data = await res.json();
+      setMessages([...newMessages, { role: "assistant", content: data.reply }]);
+    } catch (err) {
+      console.error("Error talking to Linda:", err);
+      setMessages([...newMessages, { role: "assistant", content: "Oops, something went wrong." }]);
+    } finally {
+      setLoading(false);
     }
-
-    const data = await response.json();
-
-    const reply = data.choices?.[0]?.message?.content ?? "Linda has no response.";
-
-    res.status(200).json({ reply });
-  } catch (err) {
-    console.error("Linda API error:", err);
-    res.status(500).json({ error: "Internal server error" });
   }
+
+  // ⬇️ Only run fetch logic in the browser
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+  }, []);
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
+      <div className="w-full max-w-lg bg-white shadow-lg rounded-lg p-4">
+        <h1 className="text-xl font-bold mb-4">Chat with Linda</h1>
+        <div className="space-y-2 mb-4 max-h-96 overflow-y-auto border p-2 rounded">
+          {messages.map((msg, i) => (
+            <div key={i} className={msg.role === "user" ? "text-right" : "text-left"}>
+              <span className={msg.role === "user" ? "bg-blue-100" : "bg-gray-100"}>
+                {msg.content}
+              </span>
+            </div>
+          ))}
+        </div>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!input.trim()) return;
+            sendMessage(input);
+            setInput("");
+          }}
+          className="flex"
+        >
+          <input
+            className="flex-grow border rounded-l px-2"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Type your message..."
+          />
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-blue-500 text-white px-4 py-2 rounded-r disabled:opacity-50"
+          >
+            {loading ? "..." : "Send"}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
 }

@@ -1,69 +1,95 @@
-// pages/api/linda.ts
-import type { NextApiRequest, NextApiResponse } from "next";
+"use client";
+import { useState } from "react";
 
 type Message = {
-  role: "user" | "assistant" | "system";
+  role: "user" | "assistant";
   content: string;
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+export default function LindaPage() {
+  const [conversation, setConversation] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: "assistant",
+      content:
+        "Hi, I’m Linda. After the recent hog stampedes and the school shooting threat, I’m really worried. What are you going to do to protect our children in schools?",
+    },
+  ]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  try {
-    const { messages } = req.body as { messages: Message[] };
-    if (!Array.isArray(messages)) {
-      return res.status(400).json({ error: "Messages must be an array" });
+  const sendMessage = async () => {
+    if (!input.trim()) return;
+
+    const userMessage: Message = { role: "user", content: input };
+
+    // Update conversation and display
+    setConversation((prev) => [...prev, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/linda", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: [...conversation, userMessage] }),
+      });
+
+      if (!res.ok) throw new Error("API error");
+
+      const data = await res.json();
+      const assistantMessage: Message = { role: "assistant", content: data.reply };
+
+      setConversation((prev) => [...prev, userMessage, assistantMessage]);
+      setMessages((prev) => [...prev, userMessage, assistantMessage]);
+    } catch (err) {
+      console.error("Error talking to Linda:", err);
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "Oops, something went wrong." },
+      ]);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const SYSTEM_PROMPT = `
-You are roleplaying as LINDA — a concerned parent meeting a political candidate (the user).
-Only speak as Linda. 
-Linda's personality:
-- Empathetic but worried
-- Outspoken on child safety
-- Emotional but respectful
-- Brings discussion back to her child and the community
-- Wants specific answers and pushes back if vague
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
+      <div className="w-full max-w-lg bg-white shadow-lg rounded-lg p-4">
+        <h1 className="text-xl font-bold mb-4">Chat with Linda</h1>
 
-Rules:
-- Always speak in first person
-- End each reply with a clear question to the candidate
-- Keep responses short (2–4 sentences)
-- Do not roleplay anyone else
-    `;
+        <div className="space-y-2 mb-4 max-h-96 overflow-y-auto border p-2 rounded">
+          {messages.map((msg, i) => (
+            <div
+              key={i}
+              className={`p-2 rounded-lg ${
+                msg.role === "user" ? "bg-blue-100 text-right" : "bg-gray-200 text-left"
+              }`}
+            >
+              {msg.content}
+            </div>
+          ))}
+          {loading && <div className="text-gray-500 italic">Linda is typing...</div>}
+        </div>
 
-    const apiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.LINDA_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-4o",
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          ...messages,
-        ],
-        temperature: 0.7,
-        max_tokens: 250,
-      }),
-    });
-
-    if (!apiResponse.ok) {
-      const errorText = await apiResponse.text();
-      console.error("OpenAI API error:", errorText);
-      return res.status(500).json({ error: "OpenAI API request failed" });
-    }
-
-    const data = await apiResponse.json();
-
-    const assistantMessage = data.choices?.[0]?.message?.content ?? "Linda has no response.";
-
-    res.status(200).json({ reply: assistantMessage });
-  } catch (err) {
-    console.error("Linda API error:", err);
-    res.status(500).json({ error: "Something went wrong" });
-  }
+        <div className="flex">
+          <input
+            className="flex-grow border rounded-l px-2"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Type your message..."
+            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+          />
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded-r disabled:opacity-50"
+            disabled={loading}
+            onClick={sendMessage}
+          >
+            {loading ? "..." : "Send"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }

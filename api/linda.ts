@@ -1,95 +1,43 @@
-"use client";
-import { useState } from "react";
+import type { NextApiRequest, NextApiResponse } from "next";
+import OpenAI from "openai";
 
-type Message = {
-  role: "user" | "assistant";
-  content: string;
-};
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY, // make sure this is set in Vercel
+});
 
-export default function LindaPage() {
-  const [conversation, setConversation] = useState<Message[]>([]);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "assistant",
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  try {
+    const { messages } = req.body as {
+      messages: { role: "user" | "assistant"; content: string }[];
+    };
+
+    // Always prepend a system instruction to lock Linda's persona
+    const systemPrompt = {
+      role: "system" as const,
       content:
-        "Hi, I’m Linda. After the recent hog stampedes and the school shooting threat, I’m really worried. What are you going to do to protect our children in schools?",
-    },
-  ]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
+        "You are Linda, a concerned parent speaking with a political candidate. " +
+        "You are worried about school safety, local community issues, and want clear answers. " +
+        "Stay empathetic and focused on the candidate’s policies. Do not role-shift.",
+    };
 
-  const sendMessage = async () => {
-    if (!input.trim()) return;
+    const completion = await client.chat.completions.create({
+      model: "gpt-4o-mini", // lighter, cheaper, and fast
+      messages: [systemPrompt, ...messages],
+      max_tokens: 300,
+      temperature: 0.7,
+    });
 
-    const userMessage: Message = { role: "user", content: input };
+    const reply =
+      completion.choices[0].message?.content ||
+      "Sorry, I don’t have a response right now.";
 
-    // Update conversation and display
-    setConversation((prev) => [...prev, userMessage]);
-    setMessages((prev) => [...prev, userMessage]);
-    setInput("");
-    setLoading(true);
-
-    try {
-      const res = await fetch("/api/linda", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: [...conversation, userMessage] }),
-      });
-
-      if (!res.ok) throw new Error("API error");
-
-      const data = await res.json();
-      const assistantMessage: Message = { role: "assistant", content: data.reply };
-
-      setConversation((prev) => [...prev, userMessage, assistantMessage]);
-      setMessages((prev) => [...prev, userMessage, assistantMessage]);
-    } catch (err) {
-      console.error("Error talking to Linda:", err);
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "Oops, something went wrong." },
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
-      <div className="w-full max-w-lg bg-white shadow-lg rounded-lg p-4">
-        <h1 className="text-xl font-bold mb-4">Chat with Linda</h1>
-
-        <div className="space-y-2 mb-4 max-h-96 overflow-y-auto border p-2 rounded">
-          {messages.map((msg, i) => (
-            <div
-              key={i}
-              className={`p-2 rounded-lg ${
-                msg.role === "user" ? "bg-blue-100 text-right" : "bg-gray-200 text-left"
-              }`}
-            >
-              {msg.content}
-            </div>
-          ))}
-          {loading && <div className="text-gray-500 italic">Linda is typing...</div>}
-        </div>
-
-        <div className="flex">
-          <input
-            className="flex-grow border rounded-l px-2"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your message..."
-            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-          />
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded-r disabled:opacity-50"
-            disabled={loading}
-            onClick={sendMessage}
-          >
-            {loading ? "..." : "Send"}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+    return res.status(200).json({ reply });
+  } catch (error: any) {
+    console.error("Linda API error:", error);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
 }

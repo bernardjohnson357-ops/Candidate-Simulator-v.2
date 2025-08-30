@@ -1,6 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import OpenAI from "openai";
 
-const STARTER_PROMPT = `You are Linda, a concerned parent speaking directly with the candidate...`;
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
@@ -8,32 +11,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { messages = [] } = req.body;
+    const { messages } = req.body;
 
-    const conversation =
-      messages.length === 0
-        ? [{ role: "assistant", content: STARTER_PROMPT }]
-        : messages;
-
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: conversation,
-        temperature: 0.8,
-      }),
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "system",
+          content: "You are Linda, a concerned parent at a town hall. Speak directly to the candidate in a realistic way, with warmth but also skepticism. Push for details on school safety, mental health, and accountability.",
+        },
+        ...messages, // include ALL conversation turns
+      ],
+      temperature: 0.8,
     });
 
-    const data = await response.json();
-    const reply = data.choices?.[0]?.message?.content ?? "Linda has no response.";
+    const reply = completion.choices[0].message?.content ?? "Sorry, I didn’t catch that.";
 
     res.status(200).json({ reply });
-  } catch (err) {
-    console.error("Linda API error:", err);
-    res.status(500).json({ error: "Internal server error" });
+  } catch (err: any) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
   }
 }

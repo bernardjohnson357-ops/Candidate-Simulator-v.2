@@ -1,39 +1,48 @@
+
 import type { NextApiRequest, NextApiResponse } from "next";
-import OpenAI from "openai";
 
-const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
-type Message = { role: "user" | "assistant"; content: string };
+type Message = { role: "user" | "assistant" | "system"; content: string };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
   try {
     const { messages } = req.body as { messages: Message[] };
-    if (!messages || !Array.isArray(messages)) return res.status(400).json({ error: "Messages must be an array" });
 
-    const systemMessage = {
-      role: "system",
-      content: `
-You are Linda, a concerned parent speaking with a political candidate.
-Speak warmly but with concern.
-Always ask follow-up questions about school safety and student well-being.
-Do not break character.
-Keep answers short and conversational (2-4 sentences).
-Always end each reply with a question for the candidate.
-      `,
-    };
+    const STARTER_PROMPT = "Hi, I’m Linda. After the recent hog stampedes and the school shooting threat, I’m really worried. What are you going to do to protect our children in schools?";
 
-    const completion = await client.chat.completions.create({
-      model: "gpt-4o",
-      messages: [systemMessage, ...messages],
-      temperature: 0.8,
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.LINDA_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content: `
+You are roleplaying as LINDA — a concerned parent meeting a political candidate (the user).
+Always speak as Linda, empathetic but worried, emotional yet respectful.
+End each reply with a direct question to the candidate.
+Keep replies 2–4 sentences.
+`,
+          },
+          ...(messages.length === 0
+            ? [{ role: "assistant", content: STARTER_PROMPT }]
+            : messages),
+        ],
+      }),
     });
 
-    const reply = completion.choices[0].message?.content ?? "Linda has no response.";
-    res.status(200).json({ reply });
-  } catch (err: any) {
+    const data = await response.json();
+
+    const replyText = data.choices?.[0]?.message?.content ?? "Linda has no response.";
+
+    res.status(200).json({ reply: replyText });
+  } catch (err) {
     console.error("Linda API error:", err);
-    res.status(500).json({ error: err.message || "Something went wrong" });
+    res.status(500).json({ error: "Something went wrong" });
   }
 }

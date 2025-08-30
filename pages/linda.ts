@@ -1,30 +1,31 @@
 "use client";
 import { useState } from "react";
 
-export default function LindaPage() {
-  const [conversation, setConversation] = useState<
-    { role: "user" | "assistant"; content: string }[]
-  >([]);
+type Message = {
+  role: "user" | "assistant";
+  content: string;
+};
 
-  const [messages, setMessages] = useState([
+export default function LindaPage() {
+  const [conversation, setConversation] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
       content:
         "Hi, I’m Linda. After the recent hog stampedes and the school shooting threat, I’m really worried. What are you going to do to protect our children in schools?",
     },
   ]);
-
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
 
-    const userMessage = { role: "user" as const, content: input };
-    const updatedConversation = [...conversation, userMessage];
+    const userMessage: Message = { role: "user", content: input };
 
-    setConversation(updatedConversation);
-    setMessages([...messages, userMessage]);
+    // Update conversation and display
+    setConversation((prev) => [...prev, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setLoading(true);
 
@@ -32,19 +33,22 @@ export default function LindaPage() {
       const res = await fetch("/api/linda", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: updatedConversation }),
+        body: JSON.stringify({ messages: [...conversation, userMessage] }),
       });
 
       if (!res.ok) throw new Error("API error");
 
       const data = await res.json();
-      const assistantMessage = { role: "assistant" as const, content: data.reply };
+      const assistantMessage: Message = { role: "assistant", content: data.reply };
 
-      setConversation([...updatedConversation, assistantMessage]);
-      setMessages([...messages, userMessage, assistantMessage]);
+      setConversation((prev) => [...prev, userMessage, assistantMessage]);
+      setMessages((prev) => [...prev, userMessage, assistantMessage]);
     } catch (err) {
-      console.error(err);
-      setMessages([...messages, { role: "assistant", content: "Oops, something went wrong." }]);
+      console.error("Error talking to Linda:", err);
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "Oops, something went wrong." },
+      ]);
     } finally {
       setLoading(false);
     }
@@ -57,22 +61,28 @@ export default function LindaPage() {
 
         <div className="space-y-2 mb-4 max-h-96 overflow-y-auto border p-2 rounded">
           {messages.map((msg, i) => (
-            <div key={i} className={msg.role === "user" ? "text-right" : "text-left"}>
-              <span className={msg.role === "user" ? "bg-blue-100" : "bg-gray-100"}>{msg.content}</span>
+            <div
+              key={i}
+              className={`p-2 rounded-lg ${
+                msg.role === "user" ? "bg-blue-100 text-right" : "bg-gray-200 text-left"
+              }`}
+            >
+              {msg.content}
             </div>
           ))}
           {loading && <div className="text-gray-500 italic">Linda is typing...</div>}
         </div>
 
-        <div className="flex flex-col space-y-2">
-          <textarea
-            className="flex-grow border rounded px-2 py-2 h-24 resize-none"
+        <div className="flex">
+          <input
+            className="flex-grow border rounded-l px-2"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type your message..."
+            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           />
           <button
-            className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
+            className="bg-blue-500 text-white px-4 py-2 rounded-r disabled:opacity-50"
             disabled={loading}
             onClick={sendMessage}
           >

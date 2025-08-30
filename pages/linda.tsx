@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState } from "@/components/linda";
 
 type Message = {
   role: "user" | "assistant";

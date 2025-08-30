@@ -3,8 +3,8 @@ import Head from "next/head";
 const Home: React.FC = () => (
   <>
     <Head>
-      <title>Welcome | Candidate Simulator</title>
-      <meta name="description" content="Homepage for Candidate Simulator" />
+      <title>Welcome | Candidate Simulator Ai</title>
+      <meta name="description" content="Homepage for Candidate Simulator Ai" />
     </Head>
     <main style={{
       minHeight: "100vh",
@@ -12,11 +12,11 @@ const Home: React.FC = () => (
       flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",
-      background: "#f2f2f2"
+      background: "#FED000"
     }}>
-      <h1>Welcome to Candidate Simulator</h1>
+      <h1>Welcome to Candidate Simulator Ai</h1>
       <p>
-        This is a generic homepage. Click below to get started or use your site navigation.
+        Click either "next" button to begin your conversation with Linda, a concered mother and single parent.
       </p>
       <a href="/linda">
         <button style={{
@@ -24,8 +24,8 @@ const Home: React.FC = () => (
           padding: "12px 32px",
           border: "none",
           borderRadius: "8px",
-          background: "#0070f3",
-          color: "#fff",
+          background: "#ffe44d",
+          color: "#000",
           fontSize: "1rem",
           cursor: "pointer"
         }}>

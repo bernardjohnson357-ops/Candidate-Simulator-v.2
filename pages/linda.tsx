@@ -1,23 +1,32 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export default function LindaPage() {
-  const [messages, setMessages] = useState<
+  // Only past user + assistant messages
+  const [conversation, setConversation] = useState<
     { role: "user" | "assistant"; content: string }[]
-  >([
+  >([]);
+
+  const [messages, setMessages] = useState([
     {
       role: "assistant",
-      content: "Hi, I’m Linda. After the recent hog stampedes and the school shooting threat, I’m really worried. What are you going to do to protect our children in schools?",
+      content:
+        "Hi, I’m Linda. After the recent hog stampedes and the school shooting threat, I’m really worried. What are you going to do to protect our children in schools?",
     },
   ]);
+
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
 
-    const newMessages = [...messages, { role: "user", content: input }];
-    setMessages(newMessages);
+    // Add user's message to conversation state
+    const userMessage = { role: "user" as const, content: input };
+    const updatedConversation = [...conversation, userMessage];
+
+    setConversation(updatedConversation); // backend uses this
+    setMessages([...messages, userMessage]); // frontend display
     setInput("");
     setLoading(true);
 
@@ -25,16 +34,19 @@ export default function LindaPage() {
       const res = await fetch("/api/linda", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages }),
+        body: JSON.stringify({ messages: updatedConversation }),
       });
 
       if (!res.ok) throw new Error("API error");
 
       const data = await res.json();
-      setMessages([...newMessages, { role: "assistant", content: data.reply }]);
+      const assistantMessage = { role: "assistant" as const, content: data.reply };
+
+      setConversation([...updatedConversation, assistantMessage]);
+      setMessages([...messages, userMessage, assistantMessage]);
     } catch (err) {
       console.error(err);
-      setMessages([...newMessages, { role: "assistant", content: "Oops, something went wrong." }]);
+      setMessages([...messages, { role: "assistant", content: "Oops, something went wrong." }]);
     } finally {
       setLoading(false);
     }

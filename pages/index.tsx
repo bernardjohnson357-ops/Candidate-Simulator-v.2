@@ -1,64 +1,84 @@
-import Head from "next/head";
+import { useState } from "react";
 
-const Home: React.FC = () => (
-  <>
-    <Head>
-      <title>Welcome | Candidate Simulator Ai</title>
-      <meta
-        name="description"
-        content="Homepage for Candidate Simulator Ai"
-      />
-    </Head>
-    <main
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#FED000", // LPTX Gold
-        textAlign: "center",
-        padding: "2rem",
-      }}
-    >
-      <h1
-        style={{
-          fontSize: "3rem",
-          fontWeight: "700",
-          marginBottom: "1rem",
-          color: "#56565A", // Charcoal Gray
-          fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
-        }}
-      >
-        Welcome to Candidate Simulator Ai
-      </h1>
+type Message = {
+  role: "user" | "assistant";
+  content: string;
+};
 
-      <p
-        style={{
-          fontSize: "1.25rem",
-          maxWidth: "600px",
-          lineHeight: "1.6",
-          color: "#000000", // Black
-          fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
-        }}
-      >
-        To begin your conversation with Linda, a concerned mother and single
-        parent, please use the <strong>“Next” button</strong> provided on our
-        main campaign website.
-      </p>
+export default function LindaChat() {
+  // Messages displayed in chat
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: "assistant",
+      content:
+        "Hi, I’m Linda. After the recent hog stampedes and the school shooting threat, I’m really worried. What are you going to do to protect our children in schools?",
+    },
+  ]);
 
-      <p
-        style={{
-          marginTop: "2rem",
-          fontSize: "1rem",
-          color: "#56565A",
-          fontStyle: "italic",
-        }}
-      >
-        This simulator is part of the official LPTX Candidate Experience.
-      </p>
-    </main>
-  </>
-);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
 
-export default Home;
+  const sendMessage = async () => {
+    if (!input.trim()) return;
+
+    const userMessage: Message = { role: "user", content: input };
+    const newConversation = [...messages, userMessage];
+
+    setMessages(newConversation);
+    setInput("");
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/linda", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: newConversation }),
+      });
+
+      const data = await res.json();
+      const assistantMessage: Message = { role: "assistant", content: data.reply };
+
+      setMessages([...newConversation, assistantMessage]);
+    } catch (err) {
+      console.error("Error talking to Linda:", err);
+      setMessages([...newConversation, { role: "assistant", content: "Oops, something went wrong." }]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
+      <div className="w-full max-w-lg bg-white shadow-lg rounded-lg p-4">
+        <h1 className="text-xl font-bold mb-4">Chat with Linda</h1>
+
+        <div className="space-y-2 mb-4 max-h-96 overflow-y-auto p-2 border rounded bg-gray-50">
+          {messages.map((msg, i) => (
+            <div key={i} className={`mb-2 ${msg.role === "user" ? "text-right" : "text-left"}`}>
+              <span
+                className={`inline-block px-3 py-2 rounded-lg ${
+                  msg.role === "user" ? "bg-blue-500 text-white" : "bg-gray-200 text-black"
+                }`}
+              >
+                {msg.content}
+              </span>
+            </div>
+          ))}
+          {loading && <div className="text-gray-500 italic">Linda is typing...</div>}
+        </div>
+
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+            className="flex-1 border rounded p-2"
+            placeholder="Type your message..."
+            disabled={loading}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -13,11 +13,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     // Create a Realtime session (voice + text)
-    const session = await client.realtime.sessions.create({
-      model: "gpt-4o-realtime-preview",  // Realtime voice model
-      voice: "verse",                    // Options: verse, alloy, sage, etc.
-      modalities: ["text", "audio"],     // Respond in both text + audio
-    });
+    const completion = await client.chat.completions.create({
+  model: "gpt-4o-mini",
+  messages: [
+    { role: "system", content: "You are Linda, a concerned Texas mother..." },
+    ...messages
+  ],
+  max_tokens: 300,
+});
 
     return res.status(200).json(session);
   } catch (err: any) {

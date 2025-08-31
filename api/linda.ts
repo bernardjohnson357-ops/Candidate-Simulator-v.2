@@ -5,7 +5,6 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-// Local type definition
 type ChatMessage = {
   role: "system" | "user" | "assistant";
   content: string;
@@ -21,6 +20,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return res.status(400).json({ error: "No conversation messages provided" });
+    }
+
+    // Check for API key
+    if (!process.env.OPENAI_API_KEY) {
+      return res.status(500).json({ error: "Missing OpenAI API key" });
     }
 
     const chatMessages: ChatMessage[] = [
@@ -42,11 +46,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       temperature: 0.7,
     });
 
-    const reply = completion.choices?.[0]?.message?.content ?? "Sorry, I don’t have a response right now.";
+    let reply = completion.choices?.[0]?.message?.content?.trim() ?? "Sorry, I don’t have a response right now.";
+
+    // Anti-repetition: If reply is the same as the last assistant message, send a friendly nudge.
+    const lastAssistantMsg = messages.filter((m) => m.role === "assistant").at(-1)?.content?.trim();
+    if (reply === lastAssistantMsg) {
+      reply = "Linda: I feel like we're repeating ourselves. Could you clarify or ask something new?";
+    }
 
     res.status(200).json({ reply });
   } catch (error: any) {
     console.error("API error:", error);
-    res.status(500).json({ error: "Something went wrong" });
+    res.status(500).json({ error: "Something went wrong, please try restarting the chat." });
   }
 }

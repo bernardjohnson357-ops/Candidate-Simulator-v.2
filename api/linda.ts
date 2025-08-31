@@ -1,8 +1,9 @@
+// /api/linda.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY!,
 });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -10,21 +11,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  // 👇 Move console.log here
-  console.log("Incoming messages:", req.body);
-
   try {
-    const { messages } = req.body;
-
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages,
+    // Create a Realtime session (voice + text)
+    const session = await client.realtime.sessions.create({
+      model: "gpt-4o-realtime-preview",  // Realtime voice model
+      voice: "verse",                    // Options: verse, alloy, sage, etc.
+      modalities: ["text", "audio"],     // Respond in both text + audio
     });
 
-    const reply = completion.choices?.[0]?.message?.content ?? "Sorry, I didn't get that.";
-    res.status(200).json({ reply });
-  } catch (error) {
-    console.error("Linda API error:", error);
-    res.status(500).json({ error: "Something went wrong with Linda." });
+    return res.status(200).json(session);
+  } catch (err: any) {
+    console.error("Error creating session:", err);
+    return res.status(500).json({ error: err.message });
   }
 }

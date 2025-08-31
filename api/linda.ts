@@ -1,9 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import OpenAI, { CreateChatCompletionRequestMessage } from "openai";
+import OpenAI from "openai";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
+
+// Local type definition
+type ChatMessage = {
+  role: "system" | "user" | "assistant";
+  content: string;
+};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
@@ -17,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: "No conversation messages provided" });
     }
 
-    const chatMessages: CreateChatCompletionRequestMessage[] = [
+    const chatMessages: ChatMessage[] = [
       {
         role: "system",
         content:

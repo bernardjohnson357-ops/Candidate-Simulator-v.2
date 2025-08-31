@@ -16,9 +16,10 @@ export default function LindaChat() {
 
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   const sendMessage = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || loading || error) return;
 
     const userMessage: Message = { role: "user", content: input };
     const newConversation = [...messages, userMessage];
@@ -34,16 +35,40 @@ export default function LindaChat() {
         body: JSON.stringify({ messages: newConversation }),
       });
 
+      if (!res.ok) {
+        throw new Error("Network response was not ok");
+      }
+
       const data = await res.json();
       const assistantMessage: Message = { role: "assistant", content: data.reply };
 
       setMessages([...newConversation, assistantMessage]);
     } catch (err) {
       console.error("Error talking to Linda:", err);
-      setMessages([...newConversation, { role: "assistant", content: "Oops, something went wrong." }]);
+      setMessages([
+        ...newConversation,
+        {
+          role: "assistant",
+          content:
+            "Sorry, something went wrong. Please try restarting the chat.",
+        },
+      ]);
+      setError(true);
     } finally {
       setLoading(false);
     }
+  };
+
+  const restartChat = () => {
+    setMessages([
+      {
+        role: "assistant",
+        content:
+          "Hi, I’m Linda. After the recent hog stampedes and the school shooting threat, I’m really worried. What are you going to do to protect our children in schools?",
+      },
+    ]);
+    setInput("");
+    setError(false);
   };
 
   return (
@@ -74,9 +99,30 @@ export default function LindaChat() {
             onKeyDown={(e) => e.key === "Enter" && sendMessage()}
             className="flex-1 border rounded p-2"
             placeholder="Type your message..."
-            disabled={loading}
+            disabled={loading || error}
           />
+          <button
+            onClick={sendMessage}
+            disabled={loading || error || !input.trim()}
+            className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
+          >
+            Send
+          </button>
         </div>
+
+        {error && (
+          <div className="mt-4 flex flex-col items-center">
+            <button
+              onClick={restartChat}
+              className="bg-green-500 text-white px-4 py-2 rounded"
+            >
+              Restart Chat
+            </button>
+            <div className="text-red-600 mt-2">
+              The conversation has ended due to an error. Please restart to try again.
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

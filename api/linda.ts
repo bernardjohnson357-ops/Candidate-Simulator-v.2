@@ -1,36 +1,51 @@
-import OpenAI from "openai"; import { NextApiRequest, NextApiResponse } from "next";
+// pages/api/linda.ts
+import type { NextApiRequest, NextApiResponse } from "next";
+import OpenAI from "openai";
 
-const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) { if (req.method !== "POST") { return res.status(405).json({ error: "Method not allowed" }); }
-
-try { const { message } = req.body;
-
-if (!message) {
-  return res.status(400).json({ error: "Message is required" });
-}
-
-const response = await client.chat.completions.create({
-  model: "gpt-5",
-  messages: [
-    {
-      role: "system",
-      content: `You are Linda, a concerned single parent in the candidate simulator.
-      - You are weighing your options carefully.
-      - You know about the hog problem in the community.
-      - You know about a former student who came to campus with a firearm and ammunition.
-      - You should respond like a real parent, concerned but thoughtful.
-      - Do not act like a debate coach or political strategist.`
-    },
-    { role: "user", content: message }
-  ],
-  temperature: 0.7,
-  max_tokens: 500
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
-const reply = response.choices[0]?.message?.content || "Sorry, I don't have a response.";
+type Message = { role: "user" | "assistant"; content: string };
 
-res.status(200).json({ reply });
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-} catch (error: any) { console.error("Linda API error:", error); res.status(500).json({ error: "Internal server error" }); } }
+  try {
+    const { messages } = req.body as { messages?: Message[] };
+    const userMessages = Array.isArray(messages) ? messages : [];
 
+    const systemMessage: Message = {
+      role: "system",
+      content: `
+You are Linda, a polite, anxious Texas mother. You are deeply concerned about school safety,
+especially wild hogs on campus and the possibility of school personnel carrying firearms.
+Always explain your reasoning step by step before giving your conclusion. Focus on emotional
+reaction, practical concerns, and logical consequences. Maintain a slightly anxious tone and
+stay in character. Initiate the conversation with a warm greeting and ask: "How will you keep
+children safe in school?".
+      `.trim(),
+    };
+
+    // Build the conversation to send to the model
+    const chatMessages: Message[] = [
+      systemMessage,
+      ...userMessages,
+    ];
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: chatMessages,
+      max_tokens: 400,
+      temperature: 0.7,
+    });
+
+    const reply = completion.choices?.[0]?.message?.content?.trim() || 
+                  "Sorry, I don’t have a response right now.";
+
+    return res.status(200).json({ reply });
+  } catch (err: any) {
+    console.error("Linda API error:", err);
+    return res.status(500).json({ error: err.message || "Something went wrong." });
+  }
+}

@@ -29,6 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(500).json({ error: "OpenAI API key is missing in server environment." });
     }
 
+    // Build full conversation history
     const chatMessages: ChatMessage[] = [
       {
         role: "system",
@@ -41,26 +42,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       })),
     ];
 
-    let completion;
-    try {
-      completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: chatMessages,
-        max_tokens: 300,
-        temperature: 0.7,
-      });
-    } catch (openaiError: any) {
-      // Log and send OpenAI error for debugging
-      console.error("OpenAI error:", openaiError);
-      return res.status(500).json({ error: "Failed to call OpenAI API: " + (openaiError?.message || JSON.stringify(openaiError)) });
-    }
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: chatMessages,
+      max_tokens: 300,
+      temperature: 0.7,
+    });
 
-    const reply = completion.choices?.[0]?.message?.content ?? "Sorry, I don’t have a response right now.";
+    const reply = completion.choices[0]?.message?.content ?? "Sorry, I don’t have a response right now.";
 
     res.status(200).json({ reply });
   } catch (error: any) {
-    // General error logging
     console.error("API error:", error);
-    res.status(500).json({ error: error?.message || JSON.stringify(error) || "Something went wrong, please try restarting the chat." });
+    res.status(500).json({
+      error: error?.message || "Something went wrong, please try restarting the chat.",
+    });
   }
 }

@@ -1,30 +1,29 @@
-// /api/linda.ts
 import type { NextApiRequest, NextApiResponse } from "next";
-import OpenAI from "openai";
-
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY!,
-});
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+  if (!process.env.OPENAI_API_KEY) {
+    return res.status(500).json({ error: "Missing server OpenAI key" });
   }
 
   try {
-    // Create a Realtime session (voice + text)
-    const completion = await client.chat.completions.create({
-  model: "gpt-4o-mini",
-  messages: [
-    { role: "system", content: "You are Linda, a concerned Texas mother..." },
-    ...messages
-  ],
-  max_tokens: 300,
-});
+    // Generate ephemeral key via OpenAI REST endpoint
+    const r = await fetch("https://api.openai.com/v1/realtime/sessions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-realtime-preview",
+        voice: "verse",
+        modalities: ["text","audio"],
+      }),
+    });
 
-    return res.status(200).json(session);
+    const data = await r.json();
+    res.status(200).json(data);
   } catch (err: any) {
-    console.error("Error creating session:", err);
-    return res.status(500).json({ error: err.message });
+    console.error("Failed to create ephemeral session:", err);
+    res.status(500).json({ error: err.message });
   }
 }

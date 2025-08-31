@@ -1,126 +1,102 @@
-import { useState } from "react";
+"use client";
 
-type Message = {
-  role: "user" | "assistant";
-  content: string;
-};
+import { useEffect, useState } from "react";
 
 export default function LindaChat() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "assistant",
-      content:
-        "Hi, I’m Linda. After the recent hog stampedes and the school shooting threat, I’m really worried. What are you going to do to protect our children in schools?",
-    },
-  ]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [ws, setWs] = useState<WebSocket | null>(null);
+  const [messages, setMessages] = useState<string[]>([]);
+  const [isConnected, setIsConnected] = useState(false);
 
-  const sendMessage = async () => {
-    if (!input.trim() || loading || error) return;
+  async function startChat() {
+    // Fetch ephemeral key from your backend
+    const resp = await fetch("/api/linda");
+    const data = await resp.json();
+    const token = data.client_secret.value;
 
-    const userMessage: Message = { role: "user", content: input };
-    const newConversation = [...messages, userMessage];
+    // Connect to OpenAI Realtime API
+    const socket = new WebSocket(
+      "wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview",
+      ["realtime", "openai-insecure-api-key." + token, "openai-beta.realtime-v1"]
+    );
 
-    setMessages(newConversation);
-    setInput("");
-    setLoading(true);
+    socket.onopen = () => {
+      setIsConnected(true);
+      console.log("Connected to Linda session.");
 
-    try {
-      const res = await fetch("/api/linda", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newConversation }),
-      });
+      // As soon as connection opens, Linda initiates the convo
+      socket.send(
+        JSON.stringify({
+          type: "response.create",
+          response: {
+            conversation: "default",
+            instructions:
+              "Hello there, I’m Linda. As a Texas mother, I worry deeply about school safety. Can I ask, how do you plan to keep children safe in school?",
+          },
+        })
+      );
+    };
 
-      const data = await res.json();
+    socket.onmessage = (event) => {
+      const msg = JSON.parse(event.data);
+      console.log("Received:", msg);
 
-      if (res.ok && data.reply) {
-        setMessages([...newConversation, { role: "assistant", content: data.reply }]);
-      } else if (data.error) {
-        setMessages([...newConversation, { role: "assistant", content: `Error: ${data.error}` }]);
-        setError(true);
-      } else {
-        setMessages([...newConversation, { role: "assistant", content: "Oops, unknown error." }]);
-        setError(true);
+      if (msg.type === "response.output_text.delta") {
+        setMessages((prev) => [...prev, msg.delta]);
       }
-    } catch (err) {
-      setMessages([
-        ...newConversation,
-        { role: "assistant", content: "Oops, network error. Please try again or restart the chat." },
-      ]);
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  const restartChat = () => {
-    setMessages([
-      {
-        role: "assistant",
-        content:
-          "Hi, I’m Linda. After the recent hog stampedes and the school shooting threat, I’m really worried. What are you going to do to protect our children in schools?",
-      },
-    ]);
-    setInput("");
-    setError(false);
-  };
+    socket.onclose = () => {
+      setIsConnected(false);
+      console.log("Connection closed.");
+    };
+
+    setWs(socket);
+  }
+
+  function sendUserMessage(text: string) {
+    if (!ws) return;
+    ws.send(
+      JSON.stringify({
+        type: "response.create",
+        response: {
+          conversation: "default",
+          instructions: text,
+        },
+      })
+    );
+  }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
-      <div className="w-full max-w-lg bg-white shadow-lg rounded-lg p-4">
-        <h1 className="text-xl font-bold mb-4">Chat with Linda</h1>
-
-        <div className="space-y-2 mb-4 max-h-96 overflow-y-auto p-2 border rounded bg-gray-50">
-          {messages.map((msg, i) => (
-            <div key={i} className={`mb-2 ${msg.role === "user" ? "text-right" : "text-left"}`}>
-              <span
-                className={`inline-block px-3 py-2 rounded-lg ${
-                  msg.role === "user" ? "bg-blue-500 text-white" : "bg-gray-200 text-black"
-                }`}
-              >
-                {msg.content}
-              </span>
-            </div>
-          ))}
-          {loading && <div className="text-gray-500 italic">Linda is typing...</div>}
-        </div>
-
-        <div className="flex gap-2">
+    <div className="flex flex-col items-center p-4">
+      {!isConnected ? (
+        <button
+          onClick={startChat}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+        >
+          Start / Talk to Linda
+        </button>
+      ) : (
+        <div className="w-full max-w-md">
+          <div className="border p-2 h-64 overflow-y-auto bg-gray-100 rounded-lg mb-2">
+            {messages.map((m, i) => (
+              <div key={i} className="mb-1">
+                {m}
+              </div>
+            ))}
+          </div>
           <input
             type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-            className="flex-1 border rounded p-2"
-            placeholder="Type your message..."
-            disabled={loading || error}
+            placeholder="Your response..."
+            className="w-full border rounded p-2"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                sendUserMessage(e.currentTarget.value);
+                e.currentTarget.value = "";
+              }
+            }}
           />
-          <button
-            onClick={sendMessage}
-            disabled={loading || error || !input.trim()}
-            className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
-          >
-            Send
-          </button>
         </div>
-
-        {error && (
-          <div className="mt-4 flex flex-col items-center">
-            <button
-              onClick={restartChat}
-              className="bg-green-500 text-white px-4 py-2 rounded"
-            >
-              Restart Chat
-            </button>
-            <div className="text-red-600 mt-2">
-              The conversation has ended due to an error. Please restart to try again.
-            </div>
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 }

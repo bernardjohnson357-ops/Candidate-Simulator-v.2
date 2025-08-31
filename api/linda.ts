@@ -1,29 +1,44 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+type Message = { role: "user" | "assistant"; content: string };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (!process.env.OPENAI_API_KEY) {
-    return res.status(500).json({ error: "Missing server OpenAI key" });
-  }
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
   try {
-    // Generate ephemeral key via OpenAI REST endpoint
-    const r = await fetch("https://api.openai.com/v1/realtime/sessions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-realtime-preview",
-        voice: "verse",
-        modalities: ["text","audio"],
-      }),
+    const { messages } = req.body as { messages: Message[] };
+    if (!messages || !Array.isArray(messages)) {
+      return res.status(400).json({ error: "No conversation messages provided" });
+    }
+
+    const systemMessage: Message = {
+      role: "system",
+      content:
+        "You are Linda, a polite but anxious Texas mother. Respond empathetically and stay in character. Always explain your reasoning step by step before giving your conclusion, focusing on school safety and community concerns.",
+    };
+
+    const chatMessages = [systemMessage, ...messages];
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: chatMessages,
+      max_tokens: 300,
+      temperature: 0.7,
     });
 
-    const data = await r.json();
-    res.status(200).json(data);
+    console.log("OpenAI response:", completion);
+
+    const reply = completion.choices?.[0]?.message?.content?.trim() ?? 
+                  "Sorry, I don’t have a response right now.";
+
+    res.status(200).json({ reply });
   } catch (err: any) {
-    console.error("Failed to create ephemeral session:", err);
-    res.status(500).json({ error: err.message });
+    console.error("API error:", err);
+    res.status(500).json({ error: err.message || "Something went wrong." });
   }
 }

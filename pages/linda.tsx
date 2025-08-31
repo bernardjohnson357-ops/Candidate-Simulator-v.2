@@ -1,32 +1,47 @@
 import { useState } from "react";
 
+type Message = {
+  role: "user" | "assistant";
+  content: string;
+};
+
 export default function LindaChat() {
-  const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: "assistant",
+      content:
+        "Hi, I’m Linda. After the recent hog stampedes and the school shooting threat, I’m really worried. What are you going to do to protect our children in schools?",
+    },
+  ]);
+
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
-    setLoading(true);
 
-    const userMessage = { role: "user", content: input };
-    setMessages((prev) => [...prev, userMessage]);
+    const userMessage: Message = { role: "user", content: input };
+    const newConversation = [...messages, userMessage];
+
+    setMessages(newConversation);
+    setInput("");
+    setLoading(true);
 
     try {
       const res = await fetch("/api/linda", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({ messages: newConversation }),
       });
 
       const data = await res.json();
-      const assistantMessage = { role: "assistant", content: data.reply };
+      const assistantMessage: Message = { role: "assistant", content: data.reply };
 
-      setMessages((prev) => [...prev, assistantMessage]);
+      setMessages([...newConversation, assistantMessage]);
     } catch (err) {
-      console.error(err);
+      console.error("Error talking to Linda:", err);
+      setMessages([...newConversation, { role: "assistant", content: "Oops, something went wrong." }]);
     } finally {
-      setInput("");
       setLoading(false);
     }
   };
@@ -34,9 +49,9 @@ export default function LindaChat() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
       <div className="w-full max-w-lg bg-white shadow-lg rounded-lg p-4">
-        <h1 className="text-2xl font-bold mb-4">Chat with Linda</h1>
+        <h1 className="text-xl font-bold mb-4">Chat with Linda</h1>
 
-        <div className="h-96 overflow-y-auto border rounded p-2 mb-4 bg-gray-50">
+        <div className="space-y-2 mb-4 max-h-96 overflow-y-auto p-2 border rounded bg-gray-50">
           {messages.map((msg, i) => (
             <div key={i} className={`mb-2 ${msg.role === "user" ? "text-right" : "text-left"}`}>
               <span
@@ -48,6 +63,7 @@ export default function LindaChat() {
               </span>
             </div>
           ))}
+          {loading && <div className="text-gray-500 italic">Linda is typing...</div>}
         </div>
 
         <div className="flex gap-2">
@@ -57,16 +73,9 @@ export default function LindaChat() {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && sendMessage()}
             className="flex-1 border rounded p-2"
-            placeholder="Type a message..."
+            placeholder="Type your message..."
             disabled={loading}
           />
-          <button
-            onClick={sendMessage}
-            disabled={loading}
-            className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
-          >
-            {loading ? "..." : "Send"}
-          </button>
         </div>
       </div>
     </div>

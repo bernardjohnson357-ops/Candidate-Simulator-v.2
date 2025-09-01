@@ -1,4 +1,4 @@
-import { WebSocketServer, WebSocket } from "ws";
+import WebSocket, { WebSocketServer } from "ws";
 import OpenAI from "openai";
 import fs from "fs";
 import path from "path";
@@ -13,15 +13,16 @@ const SYSTEM_PRIMER = `...your full primer here...`;
 const wss = new WebSocketServer({ port: 8080 });
 
 wss.on("connection", (ws: WebSocket) => {
-  console.log("Client connected");
-  let chatHistory: { role: string; content: string }[] = [];
-
   ws.on("message", async (msg: WebSocket.RawData) => {
     try {
-      // Convert incoming message to Buffer
-      const buffer = Buffer.isBuffer(msg) ? msg : Buffer.from(msg as ArrayBuffer);
-      const tempFile = path.join(tmpdir(), `chunk-${Date.now()}.webm`);
-      fs.writeFileSync(tempFile, buffer);
+      const data = JSON.parse(msg.toString());
+      // ...your logic here
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Unknown error";
+      ws.send(JSON.stringify({ error: errorMessage }));
+    }
+  });
+});
 
       // Whisper transcription
       const transcription = await openai.audio.transcriptions.create({

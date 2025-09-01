@@ -1,8 +1,6 @@
 import { NextRequest } from "next/server";
 import OpenAI from "openai";
 
-export const runtime = "edge";
-
 export async function POST(req: NextRequest) {
   try {
     // Accept audio as Blob, ArrayBuffer, or base64 JSON

@@ -1,4 +1,3 @@
-// server.ts
 import { WebSocketServer } from "ws";
 import OpenAI from "openai";
 import fs from "fs";
@@ -7,10 +6,9 @@ import { tmpdir } from "os";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// Your system primer
 const SYSTEM_PRIMER = `
 You are running a roleplay: an ensemble meeting with a candidate for public office...
-[keep your full primer here]
+[Keep your full primer here]
 `;
 
 const wss = new WebSocketServer({ port: 8080 });
@@ -22,12 +20,10 @@ wss.on("connection", (ws) => {
 
   ws.on("message", async (msg) => {
     try {
-      // Convert incoming audio chunk to temp file for Whisper
       const buffer = Buffer.isBuffer(msg) ? msg : Buffer.from(msg as ArrayBuffer);
       const tempFile = path.join(tmpdir(), `chunk-${Date.now()}.webm`);
       fs.writeFileSync(tempFile, buffer);
 
-      // Whisper transcription
       const transcription = await openai.audio.transcriptions.create({
         file: fs.createReadStream(tempFile),
         model: "whisper-1",
@@ -39,7 +35,6 @@ wss.on("connection", (ws) => {
       const userText = transcription;
       chatHistory.push({ role: "user", content: userText });
 
-      // Stream ensemble chat response
       const stream = await openai.chat.completions.stream({
         model: process.env.PRINCIPAL_OFFICE_API || "gpt-4o-mini",
         messages: [
@@ -55,7 +50,7 @@ wss.on("connection", (ws) => {
           const delta = event.delta;
           if (delta) {
             assistantText += delta;
-            ws.send(delta); // send incremental update to client
+            ws.send(delta);
           }
         }
       }

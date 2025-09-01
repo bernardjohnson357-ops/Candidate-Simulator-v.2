@@ -1,8 +1,24 @@
 import WebSocket, { WebSocketServer } from "ws";
-import OpenAI from "openai";
-import fs from "fs";
-import path from "path";
-import { tmpdir } from "os";
+
+const wss = new WebSocketServer({ port: 8080 });
+
+wss.on("connection", (ws: WebSocket) => {
+  ws.on("message", async (msg: WebSocket.RawData) => {
+    try {
+      const data = msg.toString();
+      console.log("Received:", data);
+
+      // Example response
+      ws.send(JSON.stringify({ reply: "Message received" }));
+    } catch (err) {
+      if (err instanceof Error) {
+        ws.send(JSON.stringify({ error: err.message }));
+      } else {
+        ws.send(JSON.stringify({ error: "Unknown error" }));
+      }
+    }
+  });
+});
 
 // Initialize OpenAI client
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });

@@ -1,51 +1,29 @@
-// pages/api/linda.ts
+// pages/api/simulator.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY, // make sure this is set in Vercel
 });
 
-type Message = { role: "system" | "assistant"; content: string };
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
 
   try {
-    const { messages } = req.body as { messages?: Message[] };
-    const userMessages = Array.isArray(messages) ? messages : [];
+    const { messages } = req.body; // expects { messages: [{ role: "user", content: "..." }] }
 
-    const systemMessage: Message = {
-      role: "system",
-      content: `
-You are Linda, a polite, anxious Texas mother. You are deeply concerned about school safety,
-especially wild hogs on campus and the possibility of school personnel carrying firearms.
-Always explain your reasoning step by step before giving your conclusion. Focus on emotional
-reaction, practical concerns, and logical consequences. Maintain a slightly anxious tone and
-stay in character. Initiate the conversation with a warm greeting and ask: "How will you keep
-children safe in school?".
-      `.trim(),
-    };
-
-    // Build the conversation to send to the model
-    const chatMessages: Message[] = [
-      systemMessage,
-      ...userMessages,
-    ];
-
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: chatMessages,
-      max_tokens: 400,
-      temperature: 0.7,
+    const completion = await client.chat.completions.create({
+      model: "gpt-4o-mini", // or your custom GPT model name
+      messages,
     });
 
-    const reply = completion.choices?.[0]?.message?.content?.trim() || 
-                  "Sorry, I don’t have a response right now.";
-
-    return res.status(200).json({ reply });
-  } catch (err: any) {
-    console.error("Linda API error:", err);
-    return res.status(500).json({ error: err.message || "Something went wrong." });
+    res.status(200).json({
+      reply: completion.choices[0].message,
+    });
+  } catch (error: any) {
+    console.error("OpenAI API error:", error);
+    res.status(500).json({ error: "Something went wrong" });
   }
 }

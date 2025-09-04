@@ -10,18 +10,48 @@ type Message = {
   content: string;
 };
 
+const moduleReadings: Record<string, string> = {
+  module0: `Module 0: Introduction and Candidate Coin overview...`,
+  module1a: `Module 1A: Independent/Write-In Filing...`,
+  // Add modules 1b, 2, 3, etc. here
+};
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-  const { messages } = req.body as { messages: Message[] };
+  const { messages, startModule, startingCoins } = req.body as {
+    messages: Message[];
+    startModule?: number; // 0–6
+    startingCoins?: number; // 0–100
+  };
+
   if (!messages || !Array.isArray(messages)) return res.status(400).json({ error: "No messages provided" });
 
-  // Full system prompt
-  const systemMessage: Message = {
-    role: "system",
-    content: `
-You are the Candidate Simulator Assistant. 
-[Role:
+  // Validate starting module
+  const moduleIndex = startModule && startModule >= 0 && startModule <= 6 ? startModule : 0;
+  const coins = startingCoins && startingCoins >= 0 && startingCoins <= 100 ? startingCoins : 0;
+
+  const currentModuleKey = `module${moduleIndex === 1 ? "1a" : moduleIndex}`; // Module 1 = 1a for Independent path
+  const reading = moduleReadings[currentModuleKey] || "Module content not found.";
+
+  // If first user interaction, send welcome + module info
+  const hasUserMessages = messages.some((m) => m.role === "user");
+  if (!hasUserMessages) {
+    return res.status(200).json({
+      reply: `👋 Welcome to the Candidate Simulator – Federal Build!\n\nYou are starting at Module ${moduleIndex} with ${coins} Candidate Coins.\n\n${reading}`,
+    });
+  }
+
+  // Otherwise, forward conversation to GPT
+  try {
+    const systemMessage: Message = {
+      role: "system",
+      content: `
+You are the Candidate Simulator Assistant – Federal Build.
+Follow the official simulator content and rules.
+Starting Module: ${moduleIndex}, Candidate Coins: ${coins}
+Refer only to the official readings and module content.
+
 You are the Candidate Simulator AI — a structured, federal campaign simulation tool.
 You do not provide campaign advice, create content, or invent scenarios. Your job is to narrate consequences, ask clarifying questions, and track Candidate Coins, signatures, votes, and campaign progress.
 
@@ -189,20 +219,10 @@ Work through the structured modules:
 8. Each module mirrors a stage of a real campaign.
 9. No Advice or Campaign Content
 The simulator does not provide political advice, campaign documents, or personalized
-strategies. All gameplay is based solely on the scenarios and modules provided.]
-    `,
-  };
+strategies. All gameplay is based solely on the scenarios and modules provided.
+`,
+    };
 
-  try {
-    // If there are no user messages yet, return the initial greeting
-    const hasUserMessages = messages.some((m) => m.role === "user");
-    if (!hasUserMessages) {
-      return res.status(200).json({
-        reply: "👋 Welcome to the Candidate Simulator! Type 'start' to begin Module 1.",
-      });
-    }
-
-    // Otherwise, continue normal GPT conversation
     const completion = await client.chat.completions.create({
       model: "gpt-4.1",
       messages: [systemMessage, ...messages],

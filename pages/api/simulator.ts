@@ -33,6 +33,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (!messages || !Array.isArray(messages)) return res.status(400).json({ error: "No messages provided" });
 
+// ✅ Writing reward system
+  const lastUserMessage = messages[messages.length - 1];
+  if (lastUserMessage && lastUserMessage.role === "user") {
+    const charCount = lastUserMessage.content.length;
+
+    let coinReward = 0;
+    if (charCount >= 100 && charCount < 200) coinReward = 1;
+    if (charCount >= 200 && charCount < 400) coinReward = 2;
+    if (charCount >= 400) coinReward = 3;
+
+    if (coinReward > 0) {
+      gameState.candidateCoins += coinReward;
+    }
+  }
+
+  // ✅ Signature → Voter Approval Conversion (Module 3 onward)
+  if (gameState.currentModule >= 3) {
+    gameState.voterApproval = gameState.signatures * 0.01; // 1 signature = 0.01%
+  }
+  
   // System prompt
   const systemMessage: Message = {
     role: "system",
@@ -230,15 +250,16 @@ strategies. All gameplay is based solely on the scenarios and modules provided.
     // Include full chat history (both user and assistant) for context
     const chatHistory: Message[] = [systemMessage, ...messages];
 
+    try {
     const completion = await client.chat.completions.create({
       model: "gpt-4.1",
-      messages: chatHistory,
+      messages: [systemMessage, ...messages],
       temperature: 0.7,
     });
 
     res.status(200).json({
-      reply: completion.choices[0].message?.content ?? "No response",
-      candidateCoins,
+      reply: completion.choices[0].message?.content ?? "",
+      state: gameState, // send updated state back to frontend
     });
   } catch (error: any) {
     console.error("Simulator API error:", error);

@@ -11,24 +11,17 @@ type Message = {
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
   const { messages } = req.body as { messages: Message[] };
+  if (!messages || !Array.isArray(messages)) return res.status(400).json({ error: "No messages provided" });
 
-  if (!messages || !Array.isArray(messages)) {
-    return res.status(400).json({ error: "No messages provided" });
-  }
-
-  // Full system prompt (use the exact one from Playground)
+  // Full system prompt
   const systemMessage: Message = {
     role: "system",
     content: `
 You are the Candidate Simulator Assistant. 
-[Candidate Simulator – Condensed System Prompt
-
-Role:
+[Role:
 You are the Candidate Simulator AI — a structured, federal campaign simulation tool.
 You do not provide campaign advice, create content, or invent scenarios. Your job is to narrate consequences, ask clarifying questions, and track Candidate Coins, signatures, votes, and campaign progress.
 
@@ -201,10 +194,19 @@ strategies. All gameplay is based solely on the scenarios and modules provided.]
   };
 
   try {
+    // If there are no user messages yet, return the initial greeting
+    const hasUserMessages = messages.some((m) => m.role === "user");
+    if (!hasUserMessages) {
+      return res.status(200).json({
+        reply: "👋 Welcome to the Candidate Simulator! Type 'start' to begin Module 1.",
+      });
+    }
+
+    // Otherwise, continue normal GPT conversation
     const completion = await client.chat.completions.create({
-      model: "gpt-4.1", // or your custom model ID if you deployed one
+      model: "gpt-4.1",
       messages: [systemMessage, ...messages],
-      temperature: 0.7, // match Playground settings if needed
+      temperature: 0.7,
     });
 
     res.status(200).json({

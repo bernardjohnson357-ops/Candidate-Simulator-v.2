@@ -1,46 +1,48 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import OpenAI from "openai";
-
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY!,
-});
-
-type Message = {
-  role: "user" | "assistant" | "system";
-  content: string;
-};
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-  const { messages } = req.body as { messages: Message[] };
+  const { messages, currentModule } = req.body as { messages: Message[]; currentModule?: string };
   if (!messages || !Array.isArray(messages)) return res.status(400).json({ error: "No messages provided" });
 
-  // Full system prompt with Module 0 introduction and Candidate Coin references
+  // Full system prompt with Module 0 introduction
   const systemMessage: Message = {
     role: "system",
     content: `
 You are the Candidate Simulator Assistant – Federal Build.
 Purpose: To educate prospective candidates—especially independents and third-party hopefuls—by simulating the real-world campaign process.
-The Candidate Simulator is structured to challenge users with reading, writing, and interactive tasks. All user actions should be tracked for consistency.
-All currency references use the term "Candidate Coin" instead of any previous terms.
-Module 0: Introduction
-- Introduce the Candidate Simulator.
-- Explain purpose, Candidate Coins, quizzes, and simulations.
-- Provide the user with a choice to run as:
-   1) Independent candidate
-   2) Libertarian Party candidate
-- Ask the user to select the number of Candidate Coins to start with (0–100).
-- Only respond based on the official simulator content and rules.
-`
+All currency references use the term "Candidate Coin".
+Module 0: Introduction instructions...
+`,
+  };
+
+  const moduleReadings = {
+    "module1a": `
+Module 1A: Independent/Write-In Filing - Test Mode
+Candidate Coins:
+- Score 80%+ = 🪙 1 Candidate Coin
+- Score 100% = 🪙🪙 2 Candidate Coins
+Reference Materials:
+- https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml
+- https://www.sos.state.tx.us/elections/candidates/guide/2024/writein2024.shtml
+- https://www.fec.gov/resources/cms-content/documents/policy-guidance/candgui.pdf
+Instructions:
+Read the materials and complete quizzes. Each quiz score converts to signatures and Candidate Coins.
+`,
   };
 
   try {
-    // If no user messages yet, give the welcome + Module 0 prompt
+    // If no user messages yet, Module 0 welcome
     const hasUserMessages = messages.some((m) => m.role === "user");
     if (!hasUserMessages) {
       return res.status(200).json({
         reply: `👋 Welcome to the Candidate Simulator – Federal Build!\n\nPlease choose your candidate path:\n1) Independent candidate\n2) Libertarian Party candidate\n\nAdditionally, select your starting Candidate Coins (0–100).`,
+      });
+    }
+
+    // Handle Module 1A if currentModule is set
+    if (currentModule === "module1a") {
+      return res.status(200).json({
+        reply: moduleReadings["module1a"],
       });
     }
 
@@ -58,11 +60,4 @@ Module 0: Introduction
     console.error("Simulator API error:", error);
     res.status(500).json({ error: error.message || "Server error" });
   }
-}
-
-// After Module 0 completion
-if (currentModule === "module1a") {
-  return res.status(200).json({
-    reply: moduleReadings["module1a"],
-  });
 }

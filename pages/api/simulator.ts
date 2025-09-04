@@ -33,9 +33,6 @@ const modules: Module[] = [
   { id: 6, title: "Module 6 - September Campaign Cycle", description: `Take FEC quarterly quiz, handle canvassing, postcards, and debate challenges.`, links: ["https://www.bernardjohnson4congress.com/general_election_cycle_september_test_mode","https://www.fec.gov/resources/cms-content/documents/policy-guidance/fecfrm3.pdf"] },
 ];
 
-import type { NextApiRequest, NextApiResponse } from "next";
-import type { GameState, Message } from "../../types"; // adjust path if needed
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 

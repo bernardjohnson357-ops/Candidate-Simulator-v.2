@@ -1,119 +1,140 @@
 import { useState } from "react";
 
 type Message = {
-  role: "user" | "assistant" | "system";
+  role: "user" | "assistant";
   content: string;
 };
 
-export default function Home() {
+type Module = {
+  id: number;
+  title: string;
+  description: string;
+  links?: string[];
+};
+
+const modules: Module[] = [
+  {
+    id: 0,
+    title: "Introduction",
+    description: `Purpose: Educate prospective candidates using reading, writing, and AI-interactive tasks. All currency references use Candidate Coins. Decide whether to run as Independent or Libertarian.`,
+    links: ["https://www.bernardjohnson4congress.com/candidate_simulator_homepage_-test_mode"],
+  },
+  {
+    id: 1,
+    title: "Module 1A - Independent/Write-In Filing",
+    description: `Earn Candidate Coins by scoring 80+ on quizzes. Study FEC and Texas SOS materials.`,
+    links: [
+      "https://www.bernardjohnson4congress.com/independent_write_in_filing_test_mode",
+      "https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml",
+      "https://www.sos.state.tx.us/elections/candidates/guide/2024/writein2024.shtml",
+      "https://www.fec.gov/resources/cms-content/documents/policy-guidance/candgui.pdf",
+    ],
+  },
+  {
+    id: 2,
+    title: "Module 2A - FEC Filing Fee Quizzes",
+    description: `Take federal campaign quizzes to earn Candidate Coins and signatures/votes.`,
+    links: [
+      "https://www.bernardjohnson4congress.com/candidate_simulator_fec_filing_fee_quizzes-test_mode",
+    ],
+  },
+  {
+    id: 3,
+    title: "Module 3 - General Election Cycle First Moves",
+    description: `Spend Candidate Coins on websites, packs, and ads. Build campaign infrastructure.`,
+    links: [
+      "https://www.bernardjohnson4congress.com/candidate_simulator_general_election_cycle-first_moves-_test_mode",
+    ],
+  },
+  {
+    id: 4,
+    title: "Module 4 - Campaign Announcement & Identity",
+    description: `Write a campaign announcement, develop slogans, mission statement, and key issues.`,
+    links: [
+      "https://www.bernardjohnson4congress.com/general_election_campaign_announcement_may_and_june_test_mode",
+      "https://www.bernardjohnson4congress.com/general_election_defining_your_campaign_s_identity_may_and_june_test_mode",
+    ],
+  },
+  {
+    id: 5,
+    title: "Module 5 - July & August Campaign Cycle",
+    description: `Design campaign merchandise, respond to endorsements and petitions, and draft legislative responses.`,
+    links: [
+      "https://www.bernardjohnson4congress.com/candidate_simulator_general_election_cycle_july_and_august_test_mode",
+    ],
+  },
+  {
+    id: 6,
+    title: "Module 6 - September Campaign Cycle",
+    description: `Take FEC quarterly filing quiz, handle canvassing scenarios, postcards, and debate challenges.`,
+    links: [
+      "https://www.bernardjohnson4congress.com/general_election_cycle_september_test_mode",
+      "https://www.fec.gov/resources/cms-content/documents/policy-guidance/fecfrm3.pdf",
+    ],
+  },
+];
+
+export default function CandidateSimulator() {
+  const [currentModule, setCurrentModule] = useState<number>(0);
+  const [candidateCoins, setCandidateCoins] = useState<number>(50);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState("");
 
-  const sendMessage = async () => {
-    if (!input.trim()) return;
+  const module = modules.find((m) => m.id === currentModule)!;
 
-    const newMessages: Message[] = [...messages, { role: "user", content: input }];
-    setMessages(newMessages);
-    setInput("");
-
-    try {
-      const res = await fetch("/api/simulator", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages }),
-      });
-
-      const data = await res.json();
-      setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
-    } catch (err) {
-      console.error(err);
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "⚠️ Error: could not get response." },
-      ]);
+  const nextModule = () => {
+    if (currentModule < modules.length - 1) {
+      setCurrentModule(currentModule + 1);
     }
   };
 
-  return (
-    <main
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        background: "#FED000",
-        padding: "1rem",
-      }}
-    >
-      <h1>Candidate Simulator AI</h1>
+  const sendMessage = (input: string) => {
+    if (!input.trim()) return;
+    setMessages((prev) => [...prev, { role: "user", content: input }]);
+    // For now, AI responses can be placeholders or fetched from your API
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "assistant",
+        content: `Received your response for ${module.title}. Proceed to next step.`,
+      },
+    ]);
+  };
 
-      <div
-        style={{
-          background: "white",
-          border: "1px solid #ccc",
-          borderRadius: "8px",
-          padding: "1rem",
-          width: "100%",
-          maxWidth: "600px",
-          height: "400px",
-          overflowY: "auto",
-          marginBottom: "1rem",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        {messages.map((m, i) => (
-          <div
-            key={i}
-            style={{
-              margin: "0.5rem 0",
-              padding: "0.5rem 1rem",
-              borderRadius: "8px",
-              background: m.role === "assistant" ? "#f1f1f1" : "#d1e7dd",
-              alignSelf: m.role === "assistant" ? "flex-start" : "flex-end",
-              maxWidth: "80%",
-            }}
-          >
-            {m.content}
-          </div>
-<div>
-  <p>{assistantMessage.content}</p>
-  <ul>
-    <li>
-      <a href="https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml" target="_blank" rel="noopener noreferrer">
-        Texas SOS Independent Candidate Guide 2024
-      </a>
-    </li>
-    <li>
-      <a href="https://www.sos.state.tx.us/elections/candidates/guide/2024/writein2024.shtml" target="_blank" rel="noopener noreferrer">
-        Texas SOS Write-In Candidate Guide 2024
-      </a>
-    </li>
-    <li>
-      <a href="https://www.fec.gov/resources/cms-content/documents/policy-guidance/candgui.pdf" target="_blank" rel="noopener noreferrer">
-        FEC Guide for Congressional Candidates
-      </a>
-    </li>
-  </ul>
-</div>
-        
+  return (
+    <main style={{ padding: "2rem", fontFamily: "sans-serif" }}>
+      <h1>Candidate Simulator – Federal Build</h1>
+      <p>
+        Current Module: <strong>{module.title}</strong>
+      </p>
+      <p>
+        Candidate Coins: <strong>{candidateCoins}</strong>
+      </p>
+      <div style={{ marginBottom: "1rem", padding: "1rem", border: "1px solid #ccc" }}>
+        <p>{module.description}</p>
+        {module.links?.map((link) => (
+          <p key={link}>
+            🔗 <a href={link} target="_blank" rel="noopener noreferrer">{link}</a>
+          </p>
         ))}
       </div>
 
-      <div style={{ display: "flex", width: "100%", maxWidth: "600px" }}>
+      <div style={{ marginBottom: "1rem" }}>
         <input
           type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          style={{ flex: 1, padding: "0.5rem" }}
           placeholder="Type your response..."
+          onKeyDown={(e) => {
+            if (e.key === "Enter") sendMessage((e.target as HTMLInputElement).value);
+          }}
         />
-        <button
-          onClick={sendMessage}
-          style={{ padding: "0.5rem 1rem", marginLeft: "0.5rem" }}
-        >
-          Send
-        </button>
+        <button onClick={nextModule} style={{ marginLeft: "1rem" }}>Next Module</button>
+      </div>
+
+      <div style={{ borderTop: "1px solid #ccc", paddingTop: "1rem" }}>
+        {messages.map((m, i) => (
+          <div key={i} style={{ marginBottom: "0.5rem" }}>
+            <strong>{m.role}:</strong> {m.content}
+          </div>
+        ))}
       </div>
     </main>
   );

@@ -257,7 +257,7 @@ strategies. All gameplay is based solely on the scenarios and modules provided.
       temperature: 0.7,
     });
 
-    res.status(200).json({
+res.status(200).json({
       reply: completion.choices[0].message?.content ?? "",
       state: gameState, // send updated state back to frontend
     });

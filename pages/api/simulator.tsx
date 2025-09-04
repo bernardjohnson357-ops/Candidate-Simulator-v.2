@@ -1,7 +1,11 @@
-import { useState } from "react";
+// /pages/api/simulator.ts
+import type { NextApiRequest, NextApiResponse } from "next";
+import OpenAI from "openai";
+
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
 type Message = {
-  role: "user" | "assistant";
+  role: "user" | "assistant" | "system";
   content: string;
 };
 
@@ -13,94 +17,59 @@ type Module = {
 };
 
 const modules: Module[] = [
-  { id: 0, title: "Introduction", description: `Purpose: Educate prospective candidates using reading, writing, and AI-interactive tasks. All currency references use Candidate Coins. Decide whether to run as Independent or Libertarian.`, links: ["https://www.bernardjohnson4congress.com/candidate_simulator_homepage_-test_mode"] },
-  { id: 1, title: "Module 1A - Independent/Write-In Filing", description: `Earn Candidate Coins by scoring 80+ on quizzes. Study FEC and Texas SOS materials.`, links: ["https://www.bernardjohnson4congress.com/independent_write_in_filing_test_mode","https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml","https://www.sos.state.tx.us/elections/candidates/guide/2024/writein2024.shtml","https://www.fec.gov/resources/cms-content/documents/policy-guidance/candgui.pdf"] },
-  { id: 2, title: "Module 2A - FEC Filing Fee Quizzes", description: `Take federal campaign quizzes to earn Candidate Coins and signatures/votes.`, links: ["https://www.bernardjohnson4congress.com/candidate_simulator_fec_filing_fee_quizzes-test_mode"] },
-  { id: 3, title: "Module 3 - General Election Cycle First Moves", description: `Spend Candidate Coins on websites, packs, and ads. Build campaign infrastructure.`, links: ["https://www.bernardjohnson4congress.com/candidate_simulator_general_election_cycle-first_moves-_test_mode"] },
-  { id: 4, title: "Module 4 - Campaign Announcement & Identity", description: `Write a campaign announcement, develop slogans, mission statement, and key issues.`, links: ["https://www.bernardjohnson4congress.com/general_election_campaign_announcement_may_and_june_test_mode","https://www.bernardjohnson4congress.com/general_election_defining_your_campaign_s_identity_may_and_june_test_mode"] },
-  { id: 5, title: "Module 5 - July & August Campaign Cycle", description: `Design campaign merchandise, respond to endorsements and petitions, and draft legislative responses.`, links: ["https://www.bernardjohnson4congress.com/candidate_simulator_general_election_cycle_july_and_august_test_mode"] },
-  { id: 6, title: "Module 6 - September Campaign Cycle", description: `Take FEC quarterly filing quiz, handle canvassing scenarios, postcards, and debate challenges.`, links: ["https://www.bernardjohnson4congress.com/general_election_cycle_september_test_mode","https://www.fec.gov/resources/cms-content/documents/policy-guidance/fecfrm3.pdf"] },
+  { id: 0, title: "Introduction", description: `Purpose: Educate candidates using reading, writing, and AI-interactive tasks. Candidate Coins are the campaign currency. Decide Independent or Libertarian.`, links: ["https://www.bernardjohnson4congress.com/candidate_simulator_homepage_-test_mode"] },
+  { id: 1, title: "Module 1A - Independent/Write-In Filing", description: `Earn Candidate Coins via quizzes. Study FEC & TX SOS materials.`, links: ["https://www.bernardjohnson4congress.com/independent_write_in_filing_test_mode","https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml","https://www.sos.state.tx.us/elections/candidates/guide/2024/writein2024.shtml","https://www.fec.gov/resources/cms-content/documents/policy-guidance/candgui.pdf"] },
+  { id: 2, title: "Module 2A - FEC Filing Fee Quizzes", description: `Take quizzes to earn Candidate Coins and signatures/votes.`, links: ["https://www.bernardjohnson4congress.com/candidate_simulator_fec_filing_fee_quizzes-test_mode"] },
+  { id: 3, title: "Module 3 - General Election Cycle First Moves", description: `Spend Candidate Coins on campaign tools, infrastructure, and ads.`, links: ["https://www.bernardjohnson4congress.com/candidate_simulator_general_election_cycle-first_moves-_test_mode"] },
+  { id: 4, title: "Module 4 - Campaign Announcement & Identity", description: `Write announcement, slogans, mission, key issues.`, links: ["https://www.bernardjohnson4congress.com/general_election_campaign_announcement_may_and_june_test_mode","https://www.bernardjohnson4congress.com/general_election_defining_your_campaign_s_identity_may_and_june_test_mode"] },
+  { id: 5, title: "Module 5 - July & August Campaign Cycle", description: `Design merchandise, respond to endorsements and petitions, draft legislative responses.`, links: ["https://www.bernardjohnson4congress.com/candidate_simulator_general_election_cycle_july_and_august_test_mode"] },
+  { id: 6, title: "Module 6 - September Campaign Cycle", description: `Take FEC quarterly quiz, handle canvassing, postcards, and debate challenges.`, links: ["https://www.bernardjohnson4congress.com/general_election_cycle_september_test_mode","https://www.fec.gov/resources/cms-content/documents/policy-guidance/fecfrm3.pdf"] },
 ];
 
-export default function CandidateSimulator() {
-  const [currentModule, setCurrentModule] = useState<number>(0);
-  const [candidateCoins, setCandidateCoins] = useState<number>(50);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState<string>("");
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-  const module = modules.find((m) => m.id === currentModule)!;
+  const { messages, currentModule = 0, candidateCoins = 50 } = req.body as { messages: Message[]; currentModule?: number; candidateCoins?: number };
 
-  const sendMessage = async () => {
-    if (!input.trim()) return;
+  if (!messages || !Array.isArray(messages)) return res.status(400).json({ error: "No messages provided" });
 
-    const userMessage: Message = { role: "user", content: input };
-    const newMessages = [...messages, userMessage];
-    setMessages(newMessages);
-    setInput("");
+  // System prompt: strict Candidate Simulator rules
+  const systemMessage: Message = {
+    role: "system",
+    content: `
+You are the Candidate Simulator Assistant – Federal Build.
+- Stay strictly in character.
+- Track Candidate Coins and signatures.
+- Respond only based on official module content (modules 0–6).
+- Never give unrelated advice.
+- Guide the user step-by-step through reading, quizzes, and scenarios.
+`
+  };
 
-    try {
-      const res = await fetch("/api/simulator", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: newMessages,
-          currentModule,
-          candidateCoins,
-        }),
+  try {
+    // If no user messages yet, return welcome + Module 0 intro
+    const hasUserMessages = messages.some((m) => m.role === "user");
+    if (!hasUserMessages) {
+      const module0 = modules[0];
+      return res.status(200).json({
+        reply: `👋 Welcome to the Candidate Simulator – Federal Build!\n\nModule 0: ${module0.title}\n${module0.description}\n\nChoose your candidate path:\n1) Independent\n2) Libertarian\n\nSelect starting Candidate Coins (0–100).\n\nReference: ${module0.links?.[0]}`,
+        candidateCoins,
       });
-
-      const data = await res.json();
-
-      // Append assistant's reply
-      const assistantMessage: Message = { role: "assistant", content: data.reply };
-      setMessages((prev) => [...prev, assistantMessage]);
-
-      // Update Candidate Coins if returned by API
-      if (data.candidateCoins !== undefined) setCandidateCoins(data.candidateCoins);
-
-    } catch (err) {
-      console.error(err);
-      setMessages((prev) => [...prev, { role: "assistant", content: "Error: could not get response from simulator." }]);
     }
-  };
 
-  const nextModule = () => {
-    if (currentModule < modules.length - 1) setCurrentModule(currentModule + 1);
-  };
+    // Otherwise, send messages to GPT for module-specific responses
+    const completion = await client.chat.completions.create({
+      model: "gpt-4.1",
+      messages: [systemMessage, ...messages],
+      temperature: 0.7,
+    });
 
-  return (
-    <main style={{ padding: "2rem", fontFamily: "sans-serif" }}>
-      <h1>Candidate Simulator – Federal Build</h1>
-      <p>Current Module: <strong>{module.title}</strong></p>
-      <p>Candidate Coins: <strong>{candidateCoins}</strong></p>
-
-      <div style={{ marginBottom: "1rem", padding: "1rem", border: "1px solid #ccc" }}>
-        <p>{module.description}</p>
-        {module.links?.map((link) => (
-          <p key={link}>🔗 <a href={link} target="_blank" rel="noopener noreferrer">{link}</a></p>
-        ))}
-      </div>
-
-      <div style={{ marginBottom: "1rem", display: "flex", gap: "0.5rem" }}>
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Type your response..."
-          style={{ flex: 1, padding: "0.5rem" }}
-          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-        />
-        <button onClick={sendMessage}>Send</button>
-        <button onClick={nextModule}>Next Module</button>
-      </div>
-
-      <div style={{ borderTop: "1px solid #ccc", paddingTop: "1rem" }}>
-        {messages.map((m, i) => (
-          <div key={i} style={{ marginBottom: "0.5rem" }}>
-            <strong>{m.role}:</strong> {m.content}
-          </div>
-        ))}
-      </div>
-    </main>
-  );
+    res.status(200).json({
+      reply: completion.choices[0].message?.content ?? "No response",
+      candidateCoins,
+    });
+  } catch (error: any) {
+    console.error("Simulator API error:", error);
+    res.status(500).json({ error: error.message || "Server error" });
+  }
 }

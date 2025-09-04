@@ -256,16 +256,14 @@ strategies. All gameplay is based solely on the scenarios and modules provided.
     }
 
     // Include full chat history (both user and assistant) for context
-    const chatHistory: Message[] = [systemMessage, ...messages];
-
-    try {
+ try {
     const completion = await client.chat.completions.create({
       model: "gpt-4.1",
       messages: [systemMessage, ...messages],
       temperature: 0.7,
     });
 
-res.status(200).json({
+    res.status(200).json({
       reply: completion.choices[0].message?.content ?? "",
       state: gameState, // send updated state back to frontend
     });

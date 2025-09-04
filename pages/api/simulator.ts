@@ -9,6 +9,13 @@ type Message = {
   content: string;
 };
 
+type GameState = {
+  currentModule: number;
+  candidateCoins: number;
+  signatures: number;
+  voterApproval: number;
+};
+
 type Module = {
   id: number;
   title: string;

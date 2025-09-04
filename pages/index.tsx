@@ -15,25 +15,10 @@ const Home: React.FC = () => (
       background: "#FED000"
     }}>
       <h1>Welcome to Candidate Simulator Ai</h1>
-      <p>
-        Click either "next" button to begin your conversation with Linda, a concered mother and single parent.
-      </p>
-      <a href="/linda">
-        <button style={{
-          marginTop: "24px",
-          padding: "12px 32px",
-          border: "none",
-          borderRadius: "8px",
-          background: "#ffe44d",
-          color: "#000",
-          fontSize: "1rem",
-          cursor: "pointer"
-        }}>
-          Get Started
-        </button>
-      </a>
-    </main>
-  </>
-);
-
+      html, body, #root {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
 export default Home;

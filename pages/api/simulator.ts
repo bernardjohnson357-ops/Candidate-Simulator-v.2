@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const completion = await client.chat.completions.create({
-      model: "gpt-4o-mini", // swap in your custom GPT model if needed
+      model: "gpt-4.1", // swap in your custom GPT model if needed
       messages,
     });
 

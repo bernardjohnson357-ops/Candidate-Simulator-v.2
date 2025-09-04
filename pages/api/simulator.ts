@@ -47,6 +47,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (!messages || !Array.isArray(messages)) return res.status(400).json({ error: "No messages provided" });
 
+ // ✅ Now safe to check user messages
+  const hasUserMessages = messages.some((m) => m.role === "user");
+
+  // If first time → send Module 0 intro
+  if (!hasUserMessages) {
+    return res.status(200).json({
+      reply: `👋 Welcome to the Candidate Simulator – Federal Build!\n\nChoose your path:\n1) Independent candidate\n2) Libertarian Party candidate\n\nAlso, pick your starting Candidate Coins (0–100).`,
+      gameState: {
+        currentModule: 0,
+        candidateCoins,
+        signatures,
+        voterApproval,
+      } as GameState,
+    });
+  }
+  
   // ✅ Initialize game state cleanly
   let gameState: GameState = {
     currentModule,
@@ -280,13 +296,16 @@ strategies. All gameplay is based solely on the scenarios and modules provided.
  try {
     const completion = await client.chat.completions.create({
       model: "gpt-4.1",
-      messages: [systemMessage, ...messages],
+      messages: [
+        { role: "system", content: "You are the Candidate Simulator Assistant – Federal Build." },
+        ...messages,
+      ],
       temperature: 0.7,
     });
 
     res.status(200).json({
       reply: completion.choices[0].message?.content ?? "",
-      state: gameState, // send updated state back to frontend
+      gameState,
     });
   } catch (error: any) {
     console.error("Simulator API error:", error);

@@ -33,6 +33,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (!messages || !Array.isArray(messages)) return res.status(400).json({ error: "No messages provided" });
 
+  // ✅ Initialize game state
+  let gameState: GameState = state ?? {
+    currentModule: 0,
+    candidateCoins: 0,
+    signatures: 0,
+    voterApproval: 0,
+  };
+  
 // ✅ Writing reward system
   const lastUserMessage = messages[messages.length - 1];
   if (lastUserMessage && lastUserMessage.role === "user") {

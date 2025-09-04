@@ -1,24 +1,20 @@
+// pages/index.tsx
 import Head from "next/head";
 
-const Home: React.FC = () => (
-  <>
-    <Head>
-      <title>Welcome | Candidate Simulator Ai</title>
-      <meta name="description" content="Homepage for Candidate Simulator Ai" />
-    </Head>
-    <main style={{
-      minHeight: "100vh",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      alignItems: "center",
-      background: "#FED000"
-    }}>
-      <h1>Welcome to Candidate Simulator Ai</h1>
-      html, body, #root {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-}
+const Home: React.FC = () => {
+  return (
+    <>
+      <Head>
+        <title>Welcome | Candidate Simulator Ai</title>
+        <meta name="description" content="Homepage for Candidate Simulator Ai" />
+      </Head>
+      <main className="min-h-screen flex flex-col justify-center items-center bg-yellow-400">
+        <h1 className="text-4xl font-bold text-center">
+          Welcome to Candidate Simulator Ai
+        </h1>
+      </main>
+    </>
+  );
+};
+
 export default Home;

@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { sendToSimulator } from "./simulatorClient";
+import { sendToSimulator } from "../lib/SimulatorClient";
 
 export default function SimulatorChat() {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);

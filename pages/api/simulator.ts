@@ -47,10 +47,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (!messages || !Array.isArray(messages)) return res.status(400).json({ error: "No messages provided" });
 
- // ✅ Now safe to check user messages
+  // ✅ First-time user: Module 0 intro
   const hasUserMessages = messages.some((m) => m.role === "user");
-
-  // If first time → send Module 0 intro
   if (!hasUserMessages) {
     return res.status(200).json({
       reply: `👋 Welcome to the Candidate Simulator – Federal Build!\n\nChoose your path:\n1) Independent candidate\n2) Libertarian Party candidate\n\nAlso, pick your starting Candidate Coins (0–100).`,
@@ -62,8 +60,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       } as GameState,
     });
   }
-  
-  // ✅ Initialize game state cleanly
+
+  // ✅ Initialize game state
   let gameState: GameState = {
     currentModule,
     candidateCoins,
@@ -88,12 +86,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // ✅ Signature → Voter Approval Conversion (Module 3 onward)
   if (gameState.currentModule >= 3) {
-    gameState.voterApproval = gameState.signatures * 0.01; // 1 signature = 0.01%
+    gameState.voterApproval = parseFloat((gameState.signatures * 0.01).toFixed(2)); // rounded %
   }
 
-  // Return game state so frontend can keep track
+  // ✅ Generate AI reply using OpenAI
+  const completion = await client.chat.completions.create({
+    model: "gpt-4.1",
+    messages: [
+      { role: "system", content: "You are the Candidate Simulator AI. Stay neutral, guide the user through modules, and track campaign progress." },
+      ...messages.map((m) => ({ role: m.role, content: m.content })),
+      {
+        role: "system",
+        content: `Game State: Module ${gameState.currentModule}, Coins: ${gameState.candidateCoins}, Signatures: ${gameState.signatures}, Voter Approval: ${gameState.voterApproval}%.`,
+      },
+    ],
+  });
+
+  const aiReply = completion.choices[0].message?.content || "⚠️ No AI response generated.";
+
+  // ✅ Return AI reply + updated game state
   return res.status(200).json({
-    reply: "✅ Game state updated.",
+    reply: aiReply,
     gameState,
   });
 }

@@ -33,6 +33,9 @@ const modules: Module[] = [
   { id: 6, title: "Module 6 - September Campaign Cycle", description: `Take FEC quarterly quiz, handle canvassing, postcards, and debate challenges.`, links: ["https://www.bernardjohnson4congress.com/general_election_cycle_september_test_mode","https://www.fec.gov/resources/cms-content/documents/policy-guidance/fecfrm3.pdf"] },
 ];
 
+import type { NextApiRequest, NextApiResponse } from "next";
+import type { GameState, Message } from "../../types"; // adjust path if needed
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
@@ -45,11 +48,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       voterApproval?: number;
     };
 
-  if (!messages || !Array.isArray(messages)) {
-    return res.status(400).json({ error: "No messages provided" });
-  }
+  if (!messages || !Array.isArray(messages)) return res.status(400).json({ error: "No messages provided" });
 
-  // ✅ Initialize game state
+  // ✅ Initialize game state cleanly
   let gameState: GameState = {
     currentModule,
     candidateCoins,
@@ -77,13 +78,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     gameState.voterApproval = gameState.signatures * 0.01; // 1 signature = 0.01%
   }
 
-  // ⬇️ you'll still need to finish your OpenAI call + response here...
+  // Return game state so frontend can keep track
+  return res.status(200).json({
+    reply: "✅ Game state updated.",
+    gameState,
+  });
 }
-
-  // ✅ Signature → Voter Approval Conversion (Module 3 onward)
-  if (gameState.currentModule >= 3) {
-    gameState.voterApproval = gameState.signatures * 0.01; // 1 signature = 0.01%
-  }
   
   // System prompt
   const systemMessage: Message = {

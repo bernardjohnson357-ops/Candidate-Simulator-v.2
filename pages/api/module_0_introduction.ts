@@ -59,3 +59,10 @@ Module 0: Introduction
     res.status(500).json({ error: error.message || "Server error" });
   }
 }
+
+// After Module 0 completion
+if (currentModule === "module1a") {
+  return res.status(200).json({
+    reply: moduleReadings["module1a"],
+  });
+}

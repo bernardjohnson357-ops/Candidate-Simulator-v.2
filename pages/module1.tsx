@@ -1,7 +1,8 @@
 import Head from "next/head";
 import Link from "next/link";
+import type { NextPage } from "next";
 
-export default function Module1() {
+const Module1: NextPage = () => {
   return (
     <>
       <Head>
@@ -13,12 +14,10 @@ export default function Module1() {
       </Head>
 
       <main className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
-        {/* Title */}
         <h1 className="text-3xl md:text-5xl font-bold mb-6 text-center">
           Module 1: Filing Process
         </h1>
 
-        {/* Instructions */}
         <div className="bg-white rounded-2xl shadow p-6 max-w-2xl text-lg leading-relaxed">
           <p className="mb-4">
             In this module, you’ll begin your journey by learning about ballot
@@ -36,7 +35,6 @@ export default function Module1() {
           </p>
         </div>
 
-        {/* Navigation */}
         <div className="mt-8 flex space-x-4">
           <Link href="/" legacyBehavior>
             <a className="px-6 py-3 bg-yellow-400 text-black rounded-xl font-medium shadow hover:bg-yellow-300">
@@ -52,4 +50,6 @@ export default function Module1() {
       </main>
     </>
   );
-}
+};
+
+export default Module1;

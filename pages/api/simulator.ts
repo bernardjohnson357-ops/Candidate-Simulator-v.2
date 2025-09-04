@@ -29,19 +29,28 @@ const modules: Module[] = [
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-  const { messages, currentModule = 0, candidateCoins = 50 } = req.body as { messages: Message[]; currentModule?: number; candidateCoins?: number };
+  const { messages, currentModule = 0, candidateCoins = 50, signatures = 0, voterApproval = 0 } =
+    req.body as {
+      messages: Message[];
+      currentModule?: number;
+      candidateCoins?: number;
+      signatures?: number;
+      voterApproval?: number;
+    };
 
-  if (!messages || !Array.isArray(messages)) return res.status(400).json({ error: "No messages provided" });
+  if (!messages || !Array.isArray(messages)) {
+    return res.status(400).json({ error: "No messages provided" });
+  }
 
   // ✅ Initialize game state
-  let gameState: GameState = state ?? {
-    currentModule: 0,
-    candidateCoins: 0,
-    signatures: 0,
-    voterApproval: 0,
+  let gameState: GameState = {
+    currentModule,
+    candidateCoins,
+    signatures,
+    voterApproval,
   };
-  
-// ✅ Writing reward system
+
+  // ✅ Writing reward system
   const lastUserMessage = messages[messages.length - 1];
   if (lastUserMessage && lastUserMessage.role === "user") {
     const charCount = lastUserMessage.content.length;
@@ -55,6 +64,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       gameState.candidateCoins += coinReward;
     }
   }
+
+  // ✅ Signature → Voter Approval Conversion (Module 3 onward)
+  if (gameState.currentModule >= 3) {
+    gameState.voterApproval = gameState.signatures * 0.01; // 1 signature = 0.01%
+  }
+
+  // ⬇️ you'll still need to finish your OpenAI call + response here...
+}
 
   // ✅ Signature → Voter Approval Conversion (Module 3 onward)
   if (gameState.currentModule >= 3) {

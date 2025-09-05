@@ -48,8 +48,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!messages || !Array.isArray(messages)) return res.status(400).json({ error: "No messages provided" });
 
   // ✅ First-time user: Module 0 intro
+ // Now you can safely use 'messages'
   const hasUserMessages = messages.some((m) => m.role === "user");
+
   if (!hasUserMessages) {
+    const module0 = modules[0];
     return res.status(200).json({
       reply: `👋 Welcome to the Candidate Simulator – Federal Build!\n\nChoose your path:\n1) Independent candidate\n2) Libertarian Party candidate\n\nAlso, pick your starting Candidate Coins (0–100).`,
       gameState: {

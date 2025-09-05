@@ -1,3 +1,28 @@
+// pages/api/simulator.ts
+import type { NextApiRequest, NextApiResponse } from "next";
+import OpenAI from "openai";
+
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
+
+type Message = {
+  role: "user" | "assistant" | "system";
+  content: string;
+};
+
+type GameState = {
+  currentModule: number;
+  candidateCoins: number;
+  signatures: number;
+  voterApproval: number;
+};
+
+type Module = {
+  id: number;
+  title: string;
+  description: string;
+  links?: string[];
+};
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 

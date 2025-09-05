@@ -1,6 +1,12 @@
 // pages/api/simulator.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 
+// ✅ Message type
+type Message = {
+  role: "user" | "assistant" | "system";
+  content: string;
+};
+
 // ✅ Module type
 type Module = {
   id: number;
@@ -36,17 +42,33 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  try {
-    // ✅ Assign module0 before using it
-    const module0 = modules[0];
+  // Optional system message
+  const systemMessage: Message = {
+    role: "system",
+    content: `
+You are the Candidate Simulator Assistant – Federal Build.
+Provide guidance, resources, and answers based on the modules.
+Keep responses neutral and educational.
+    `,
+  };
 
+  // ✅ Safe handling of messages from request
+  const body = req.body as { messages?: Message[] };
+  const messages: Message[] = Array.isArray(body.messages) ? body.messages : [];
+
+  // ✅ First-time user welcome
+  if (!messages.some((m) => m.role === "user")) {
+    const module0 = modules[0];
     return res.status(200).json({
       reply: `👋 Welcome to the Candidate Simulator – Federal Build!\n\nModule 0: ${module0.title}\n${module0.description}\n\nReference: ${module0.links?.[0]}`,
     });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Internal server error" });
   }
+
+  // ✅ Default response for existing messages
+  return res.status(200).json({
+    reply: "✅ Message received.",
+    systemMessage, // optional inclusion
+  });
 }
   
   // System prompt

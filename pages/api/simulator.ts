@@ -36,7 +36,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  // ✅ Return a simple response
+  // ✅ Return a simple response without any try/catch
   const module0 = modules[0];
   return res.status(200).json({
     reply: `👋 Welcome to the Candidate Simulator – Federal Build!\n\nModule 0: ${module0.title}\n${module0.description}\n\nReference: ${module0.links?.[0]}`,

@@ -28,11 +28,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { messages } = req.body as {
-    messages: Message[];
-  };
+  // ✅ Ensure req.body is typed
+  const body = req.body as { messages?: Message[] };
 
-  if (!messages || !Array.isArray(messages)) {
+  // ✅ Default to empty array if messages missing
+  const messages: Message[] = Array.isArray(body.messages) ? body.messages : [];
+
+  if (!messages.length) {
     return res.status(400).json({ error: "No messages provided" });
   }
 
@@ -49,7 +51,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   return res.status(200).json({
     reply: "✅ Message received.",
   });
-} // <-- Only **one closing brace** here
+} // <-- single closing brace
   
   // System prompt
   const systemMessage: Message = {

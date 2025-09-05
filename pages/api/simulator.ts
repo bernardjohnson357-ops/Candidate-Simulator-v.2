@@ -37,14 +37,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
-  // You can add your logic here (OpenAI call, state management, etc.)
-  return res.status(200).json({ reply: `👋 Welcome to the Candidate Simulator – Federal Build!\n\nModule 0: ${module0.title}\n${module0.description}\n\nReference: ${module0.links?.[0]}`,
-  });
-} catch (err) { console.error(err); return res.status(200).json({
-      reply: "✅ Message received.",
-    });
+    // ✅ Assign module0 before using it
+    const module0 = modules[0];
 
-  } catch (err) 
+    return res.status(200).json({
+      reply: `👋 Welcome to the Candidate Simulator – Federal Build!\n\nModule 0: ${module0.title}\n${module0.description}\n\nReference: ${module0.links?.[0]}`,
+    });
+  } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Internal server error" });
   }

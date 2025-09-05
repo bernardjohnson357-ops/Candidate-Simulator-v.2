@@ -49,7 +49,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       reply: "✅ Message received.",
     });
 
-  } catch (err) {
+  } catch (err) 
     console.error(err);
     return res.status(500).json({ error: "Internal server error" });
   }

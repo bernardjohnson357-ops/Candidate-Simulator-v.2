@@ -28,30 +28,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  // ✅ Ensure req.body is typed
-  const body = req.body as { messages?: Message[] };
+  try {
+    // ✅ Ensure req.body is typed
+    const body = req.body as { messages?: Message[] };
 
-  // ✅ Default to empty array if messages missing
-  const messages: Message[] = Array.isArray(body.messages) ? body.messages : [];
+    // ✅ Default to empty array if messages missing
+    const messages: Message[] = Array.isArray(body.messages) ? body.messages : [];
 
-  if (!messages.length) {
-    return res.status(400).json({ error: "No messages provided" });
-  }
+    if (!messages.length) {
+      return res.status(400).json({ error: "No messages provided" });
+    }
 
-  // ✅ First-time user
-  const hasUserMessages = messages.some((m) => m.role === "user");
-  if (!hasUserMessages) {
-    const module0 = modules[0];
+    // ✅ First-time user
+    const hasUserMessages = messages.some((m) => m.role === "user");
+    if (!hasUserMessages) {
+      const module0 = modules[0];
+      return res.status(200).json({
+        reply: `👋 Welcome to the Candidate Simulator – Federal Build!\n\nModule 0: ${module0.title}\n${module0.description}\n\nChoose your candidate path:\n1) Independent\n2) Libertarian\n\nReference: ${module0.links?.[0]}`,
+      });
+    }
+
+    // ✅ Simply acknowledge user input
     return res.status(200).json({
-      reply: `👋 Welcome to the Candidate Simulator – Federal Build!\n\nModule 0: ${module0.title}\n${module0.description}\n\nChoose your candidate path:\n1) Independent\n2) Libertarian\n\nReference: ${module0.links?.[0]}`,
+      reply: "✅ Message received.",
     });
-  }
 
-  // ✅ Simply acknowledge user input
-  return res.status(200).json({
-    reply: "✅ Message received.",
-  });
-} // <-- single closing brace
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}
   
   // System prompt
   const systemMessage: Message = {

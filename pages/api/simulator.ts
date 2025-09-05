@@ -1,13 +1,7 @@
 // pages/api/simulator.ts
 import type { NextApiRequest, NextApiResponse } from "next";
-import OpenAI from "openai";
 
-// ✅ OpenAI client
-const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
-
-// ✅ Types
-type Message = { role: "user" | "assistant" | "system"; content: string; };
-
+// ✅ Module type
 type Module = {
   id: number;
   title: string;
@@ -15,11 +9,25 @@ type Module = {
   links?: string[];
 };
 
-// ✅ Module definitions must be **above** the handler
+// ✅ Module definitions
 const modules: Module[] = [
-  { id: 0, title: "Introduction", description: "Purpose: Educate candidates using reading, writing, and AI-interactive tasks. Decide Independent or Libertarian.", links: ["https://www.bernardjohnson4congress.com/candidate_simulator_homepage_-test_mode"] },
-  { id: 1, title: "Module 1A - Independent/Write-In Filing", description: "Study FEC & TX SOS materials.", links: ["https://www.bernardjohnson4congress.com/independent_write_in_filing_test_mode","https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml","https://www.sos.state.tx.us/elections/candidates/guide/2024/writein2024.shtml","https://www.fec.gov/resources/cms-content/documents/policy-guidance/candgui.pdf"] },
-  // Add modules 2–6 here...
+  {
+    id: 0,
+    title: "Introduction",
+    description: "Purpose: Educate candidates using reading, writing, and AI-interactive tasks.",
+    links: ["https://www.bernardjohnson4congress.com/candidate_simulator_homepage_-test_mode"],
+  },
+  {
+    id: 1,
+    title: "Module 1A - Independent/Write-In Filing",
+    description: "Study FEC & TX SOS materials.",
+    links: [
+      "https://www.bernardjohnson4congress.com/independent_write_in_filing_test_mode",
+      "https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml",
+      "https://www.sos.state.tx.us/elections/candidates/guide/2024/writein2024.shtml",
+      "https://www.fec.gov/resources/cms-content/documents/policy-guidance/candgui.pdf",
+    ],
+  },
 ];
 
 // ✅ API handler
@@ -28,25 +36,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  try {
-    // ✅ Ensure req.body is typed
-    const body = req.body as { messages?: Message[] };
-
-    // ✅ Default to empty array if messages missing
-    const messages: Message[] = Array.isArray(body.messages) ? body.messages : [];
-
-    if (!messages.length) {
-      return res.status(400).json({ error: "No messages provided" });
-    }
-
-    // ✅ First-time user
-    const hasUserMessages = messages.some((m) => m.role === "user");
-    if (!hasUserMessages) {
-      const module0 = modules[0];
-      return res.status(200).json({
-        reply: `👋 Welcome to the Candidate Simulator – Federal Build!\n\nModule 0: ${module0.title}\n${module0.description}\n\nChoose your candidate path:\n1) Independent\n2) Libertarian\n\nReference: ${module0.links?.[0]}`,
-      });
-    }
+  // ✅ Return a simple response without using messages
+  const module0 = modules[0];
+  return res.status(200).json({
+    reply: `👋 Welcome to the Candidate Simulator – Federal Build!\n\nModule 0: ${module0.title}\n${module0.description}\n\nReference: ${module0.links?.[0]}`,
+  });
+}
 
     // ✅ Simply acknowledge user input
     return res.status(200).json({

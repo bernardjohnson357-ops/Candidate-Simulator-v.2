@@ -295,7 +295,6 @@ strategies. All gameplay is based solely on the scenarios and modules provided.
   };
 
   try {
-    // If no user messages yet, return welcome + Module 0 intro
     const hasUserMessages = messages.some((m) => m.role === "user");
     if (!hasUserMessages) {
       const module0 = modules[0];

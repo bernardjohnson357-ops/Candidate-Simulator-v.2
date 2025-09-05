@@ -2,12 +2,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import OpenAI from "openai";
 
+// ✅ OpenAI client
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
-type Message = {
-  role: "user" | "assistant" | "system";
-  content: string;
-};
+// ✅ Types
+type Message = { role: "user" | "assistant" | "system"; content: string; };
 
 type GameState = {
   currentModule: number;
@@ -23,30 +22,22 @@ type Module = {
   links?: string[];
 };
 
+// ✅ Module definitions must be **above** the handler
+const modules: Module[] = [
+  { id: 0, title: "Introduction", description: "Purpose: Educate candidates using reading, writing, and AI-interactive tasks. Candidate Coins are the campaign currency. Decide Independent or Libertarian.", links: ["https://www.bernardjohnson4congress.com/candidate_simulator_homepage_-test_mode"] },
+  { id: 1, title: "Module 1A - Independent/Write-In Filing", description: "Earn Candidate Coins via quizzes. Study FEC & TX SOS materials.", links: ["https://www.bernardjohnson4congress.com/independent_write_in_filing_test_mode","https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml","https://www.sos.state.tx.us/elections/candidates/guide/2024/writein2024.shtml","https://www.fec.gov/resources/cms-content/documents/policy-guidance/candgui.pdf"] },
+  // Add modules 2–6 here...
+];
+
+// ✅ API handler
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-  // ✅ Extract messages safely from request body
-  const {
-    messages,
-    currentModule = 0,
-    candidateCoins = 50,
-    signatures = 0,
-    voterApproval = 0,
-  } = req.body as {
-    messages?: Message[];
-    currentModule?: number;
-    candidateCoins?: number;
-    signatures?: number;
-    voterApproval?: number;
-  };
+  const { messages, currentModule = 0, candidateCoins = 50, signatures = 0, voterApproval = 0 } =
+    req.body as { messages: Message[]; currentModule?: number; candidateCoins?: number; signatures?: number; voterApproval?: number; };
 
-  // ✅ Validate messages array
-  if (!messages || !Array.isArray(messages)) {
-    return res.status(400).json({ error: "No messages provided" });
-  }
+  if (!messages || !Array.isArray(messages)) return res.status(400).json({ error: "No messages provided" });
 
-  // ✅ Check if user has sent any messages yet
   const hasUserMessages = messages.some((m) => m.role === "user");
 
   // ✅ First-time user: Module 0 intro
@@ -54,14 +45,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const module0 = modules[0];
     return res.status(200).json({
       reply: `👋 Welcome to the Candidate Simulator – Federal Build!\n\nModule 0: ${module0.title}\n${module0.description}\n\nChoose your candidate path:\n1) Independent\n2) Libertarian\n\nSelect starting Candidate Coins (0–100).\n\nReference: ${module0.links?.[0]}`,
-      gameState: {
-        currentModule,
-        candidateCoins,
-        signatures,
-        voterApproval,
-      },
+      gameState: { currentModule: 0, candidateCoins, signatures, voterApproval } as GameState,
     });
   }
+
+  // ...rest of your game logic here
+}
 
   // Continue with game logic here...
 }

@@ -54,26 +54,15 @@ export default function Home() {
   return (
     <main style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", background: "#FED000", padding: "1rem" }}>
       <h1>Candidate Simulator AI</h1>
-      <p>Candidate Coins: {candidateCoins} 🪙</p>
 
-      <div style={{
-        background: "white",
-        border: "1px solid #ccc",
-        borderRadius: "8px",
-        padding: "1rem",
-        width: "100%",
-        maxWidth: "700px",
-        height: "500px",
-        overflowY: "auto",
-        marginBottom: "1rem",
-      }}>
-        {messages.map((m, i) => (
-          <div key={i} style={{ margin: "0.5rem 0", whiteSpace: "pre-wrap" }}>
-            <strong>{m.role === "assistant" ? "Simulator" : "You"}:</strong> {m.content}
-          </div>
-        ))}
-        <div ref={messagesEndRef} />
-      </div>
+     <div className="bg-white border border-gray-300 rounded-lg p-4 w-[90%] max-w-3xl h-[80vh] min-h-[400px] overflow-y-auto mx-auto">
+  {messages.map((m, i) => (
+    <div key={i} className="my-2 whitespace-pre-wrap">
+      <strong>{m.role === "assistant" ? "Simulator" : "You"}:</strong> {m.content}
+    </div>
+  ))}
+  <div ref={messagesEndRef} />
+</div>
 
       <div style={{ display: "flex", width: "100%", maxWidth: "700px" }}>
         <input

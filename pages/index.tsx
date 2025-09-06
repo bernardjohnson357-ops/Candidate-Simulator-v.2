@@ -53,20 +53,21 @@ if (e.key === "Enter") sendMessage();
 };
 
 return (
-<main
-  style={{
-    minHeight: "100vh",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    background: "#000", // black background
-    color: "white",     // white text
-    padding: "1rem",
-  }}
->
-  <h1>Candidate Simulator AI</h1>
-  <p>This text will now appear white on a black background.</p>
-</main>
+  <main
+    style={{
+      minHeight: "100vh",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      background: "#000",
+      color: "white",
+      padding: "1rem",
+    }}
+  >
+    <h1>Candidate Simulator AI</h1>
+    <p>Welcome! Type a message below.</p>
+  </main>
+);
 
 <div className="bg-white border border-gray-300 rounded-lg p-4 w-[90%] max-w-3xl h-[80vh] min-h-[400px] overflow-y-auto mx-auto">
 

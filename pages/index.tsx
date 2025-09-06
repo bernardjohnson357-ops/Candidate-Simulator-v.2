@@ -8,7 +8,7 @@ type Message = {
 
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([
-    { role: "assistant", content: "👋 Welcome to the Candidate Simulator! Type 'start' to begin Module 0." }
+    { role: "assistant", content: " Welcome to the Candidate Simulator! Type 'start' to begin Module 0." }
   ]);
   const [input, setInput] = useState("");
   const [candidateCoins, setCandidateCoins] = useState(50);

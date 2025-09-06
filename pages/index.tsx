@@ -55,7 +55,7 @@ export default function Home() {
     <main style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", background: "#FED000", padding: "1rem" }}>
       <h1>Candidate Simulator AI</h1>
 
-     <div className="bg-white border border-gray-300 rounded-lg p-4 w-[90%] max-w-3xl h-[80vh] min-h-[400px] overflow-y-auto mx-auto">
+     <div className="bg-white border border-gray-300 rounded-lg p-4 w-[90%] max-w-3xl max-h-[90vh] overflow-y-auto mx-auto">
   {messages.map((m, i) => (
     <div key={i} className="my-2 whitespace-pre-wrap">
       <strong>{m.role === "assistant" ? "Simulator" : "You"}:</strong> {m.content}

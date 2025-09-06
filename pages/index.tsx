@@ -1,8 +1,17 @@
 // pages/index.tsx
 import { useRef, useState, useEffect } from "react";
 
-export default function ChatSimulator({ messages }) {
-  const messagesEndRef = useRef(null);
+type Message = {
+  role: "assistant" | "user";
+  content: string;
+};
+
+type ChatSimulatorProps = {
+  messages: Message[];
+};
+
+export default function ChatSimulator({ messages }: ChatSimulatorProps) {
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [input, setInput] = useState("");
 
   // Auto-scroll to bottom when new messages arrive
@@ -11,7 +20,7 @@ export default function ChatSimulator({ messages }) {
   }, [messages]);
 
   // Auto-resize textarea
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
     e.target.style.height = "auto"; // reset height
     e.target.style.height = e.target.scrollHeight + "px"; // set to content height

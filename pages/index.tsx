@@ -8,7 +8,7 @@ content: string;
 
 export default function Home() {
 const [messages, setMessages] = useState<Message[]>([
-{ role: "assistant", content: "👋 Welcome to the Candidate Simulator! Type 'start' to begin Module 0." }
+{ role: "assistant", content: "Welcome to the Candidate Simulator! Type 'start' to begin Module 0." }
 ]);
 const [input, setInput] = useState("");
 const [candidateCoins, setCandidateCoins] = useState(50); // default starting coins
@@ -53,7 +53,7 @@ if (e.key === "Enter") sendMessage();
 };
 
 return (
-<main style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", background: "#0000", padding: "1rem" }}>
+<main style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", background: "#000", padding: "1rem" }}>
 <h1>Candidate Simulator AI</h1>
 
 <div className="bg-white border border-gray-300 rounded-lg p-4 w-[90%] max-w-3xl h-[80vh] min-h-[400px] overflow-y-auto mx-auto">

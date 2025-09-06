@@ -70,7 +70,6 @@ Narrate consequences of user decisions, or
 Ask a clarifying question to guide the next decision.
 
 
-
 5. Always follow Candidate Coin and scoring rules.
 
 
@@ -133,30 +132,205 @@ Simulation Flow
 
 ---
 
-Candidate Coins
+Module 0 – Introduction
+Federal Build for the Candidate Simulator
+Purpose
+To educate prospective candidates and prepare independent and third-party candidates (and their teams) with valuable real-world experience.
+The Candidate Simulator is a structured learning platform with:
+Reading → Learn the volume of information and legal frameworks.
+Writing → Develop and organize campaign positions.
+Voice interactions → Practice candidate communication.
+Record-keeping → All actions logged for consistency.
+Candidate Coin (CC) System
+1 Candidate Coin = $100 USD.
+Quizzes simulate fundraising.
+Signatures represent voter approval.
+1 signature = 0.001 voter approval (e.g., 100 signatures = 10%).
+Minimum to enter General Election (Module 3):
+5% voter approval AND filing fee paid.
+Quizzes & Scoring
+Mix of multiple-choice and open-ended.
+80%+ score = signatures earned equal to % + 1 CC.
+100% score = 100 signatures + 2 CC.
+Spending 50+ CC triggers a quarterly FEC filing quiz.
+Reference Roadmap
+ REFERENCE LINK – Candidate Simulator Homepage
+ REFERENCE LINK – Candidate Guide (FEC)
 
-Score ≥80% on quiz → 🪙 1 Candidate Coin
+>>> BRANCH_START: Independent Path
+Module 1A – Independent/Write-In Filing
+REFERENCE LINK – Independent Filing Guide (TX)
+ REFERENCE LINK – Write-In Filing Guide (TX)
+Task
+Read the above links.
+TASK LINK – Take Quiz on Requirements
 
-Perfect score on first try → 🪙🪙 2 Candidate Coins
+Module 2A – FEC Filing Fee Quizzes (Independent)
+TASK LINK – FEC Filing Fee Quizzes
+Task
+Complete multiple rounds of quizzes.
+ Result
+Earn CC + signatures.
+ Outcome
+On completion, proceed to General Election.
 
-Bonus Coins possible via in-scenario actions (e.g., QR scans).
+>>> BRANCH_START: Party Path
+Module 1B – Party Filing
+REFERENCE LINK – Party Filing Guide (TX)
+ REFERENCE LINK – Candidate Guide (FEC)
+Task
+Read the above links.
+TASK LINK – Take Quiz on Requirements
 
-1 Coin = $100 simulated campaign dollars.
+Module 2B – FEC Filing Fee Quizzes (Party)
+TASK LINK – FEC Filing Fee Quizzes
+Task
+Complete multiple rounds of quizzes.
+ Result
+Earn CC + signatures.
+ Outcome
+On completion, proceed to General Election.
 
-Enforce fair play: no duplicate coin awards.
+>>> BRANCH_END: Merge to General Election
+
+Module 3 – May (General Election: First Moves)
+REFERENCE LINK – General Election First Moves
+Candidate Coin Spending Options
+Website/Domain/Email: 7 CC
+Infrastructure Packs: 5–30 CC (Explorer → Founder, 1–6 months)
+Digital Ads: 2–12 CC per month
+Team-Building Task
+Recruit a friend to join the simulator (simulates campaign expansion).
+Opposition Research Task
+ Submit:
+Candidate’s name & FEC ID
+Receipts, expenditures, cash on hand (beginning & ending)
+Source link (e.g., REFERENCE LINK – FEC Data Example)
+Knowledge Quiz
+ TASK LINK – General Election FEC Getting Started Quiz
+ REFERENCE LINK – FECFile Getting Started Manual
+
+Module 4 – May & June (Campaign Identity)
+Activity 1 – Campaign Announcement
+ TASK LINK – Announcement Submission
+Write a newspaper article announcing candidacy.
+Activity 2 – Defining Campaign Identity
+ TASK LINK – Identity Submission
+ Submit:
+Campaign slogan(s).
+Mission statement/credo.
+Four key issues with explanations.
+
+Module 5 – July & August (Campaign Expansion)
+REFERENCE LINK – General Election July & August
+Design Task
+Create yard sign, bumper sticker, T-shirt. Upload for AI review.
+[SCENARIO – MULTIPLE CHOICE] Endorsement Dilemma
+ Group: Texas Mothers for Does (anti-deer hunting, ~200 members).
+ Offer: Endorsement + promotion.
+ Decision: Accept or Decline.
+[SCENARIO – MULTIPLE CHOICE] Petition Decision
+ Petition: End War in Gaza.
+ Decision: Sign or Decline.
+[SCENARIO – TEXT RESPONSE] Legislative Response
+ Opponent passed controversial legislation (tax cuts for wealthy, cuts student food programs, admired president signed it).
+ Task: Write your candidate response.
+
+Module 6 – September (FEC Compliance & Scenarios)
+REFERENCE LINK – General Election September
+FEC Filing Quiz
+ REFERENCE LINK – FEC Form 3 Manual
+ TASK LINK – Complete FEC Filing Quiz
+[SCENARIO – TEXT RESPONSE] Community Canvassing
+ Resident: “I retired with $1.5M. I’m worried it won’t last. What would you do for people like me?”
+ Task: Candidate response.
+[SCENARIO – TEXT RESPONSE] Constitution Day Challenge
+ At Armadillo University, protesters confront you about your prior decision on the Gaza petition.
+ Task: Candidate response.
+[SCENARIO – MULTIPLE CHOICE] Postcard Offer
+100 CC = postcards + mid-Oct–Election ads.
+75 CC = postcards + late Oct ads only.
+0 CC = decline.
+[SCENARIO – MULTIPLE CHOICE] Debate Challenge
+ Opponent invites you to October debate.
+Accept/Decline.
+Option: Hire debate coach (50 CC).
+
+Module 7 – October 1–7
+REFERENCE LINK – General Election October 1–7 Test Mode
+Election Countdown
+One month until Election Day (Tuesday, Nov 3).
+Campaign team: campaign manager, communications director, dedicated volunteers.
+📰 Weekly News Summary (Reference)
+World News: Gaza population drop, Chinese facilitation of weapons, etc.
+National News: LA earthquake, Capitol security, transgender sports league.
+Texas News: Gerrymandering, school safety, retiree relief, debate rumors, weather watch.
+📊 Weekly Campaign Briefing
+Opposition Research: Incumbent leads by 15%, strong local support, funding secure.
+Constituent Sentiment: Community safety is top concern after wild hog incident.
+[SCENARIO – TEXT RESPONSE] Candidate Speech
+Task: Prepare an inspiring speech addressing community safety and reassuring families.
+Prompt:
+Using the Weekly Campaign Briefing above, write a 1–2 paragraph speech responding to constituent concerns.
+User Input: Type or use speech-to-text directly here. GPT evaluates and stores response immediately
 
 
----
+Module 8 – October 8–14
+REFERENCE LINK – General Election October 8–14 Test Mode
+Election Countdown
+Election Day is just weeks away (Nov 3).
+📰 Weekly News Summary (Reference)
+World News: European leaders alarmed by Gaza reports, China shipping nuclear weapons to Iran, Canada calls for boycotts.
+National News: Congressional shooting, transgender soccer league stabbing, U.S. leaders pledge support for Israel.
+Texas Updates: Polling shows strong Israel support, advocacy for open-carry shotguns at schools, mixed reactions to healthcare law, local flood relief actions, transgender politician’s statements.
+📊 Weekly Campaign Briefing
+Opposition Research: Incumbent receives polling surge after attack, small-dollar donations rising.
+Constituent Sentiment: Residents uncertain about your rhetoric, some support opponent.
+[SCENARIO – TEXT RESPONSE / SPEECH-TO-TEXT] Press Conference
+Task: Hold a press conference. Begin with an opening statement addressing the most important issues.
+Prompt for GPT:
+ Using the Weekly Campaign Briefing above, craft an opening statement for the press conference. You may type your response or use speech-to-text.
+User Input: Type or speak directly. GPT captures and evaluates immediately.
+After opening statement, type “Next” to proceed through follow-up questions.
+[TASK LINK] → actual press conference interaction page.
 
-Module & Timeline Highlights
+Module 9 – October 15–22
+REFERENCE LINK – General Election October 15–22 A Test Mode
+ REFERENCE LINK – Podcast Questions
+Election Countdown
+Election Day is almost here!
+📰 Weekly News Summary (Reference)
+World News: U.S. faces trade restrictions due to Israel alliance; Iran attacks Saudi Arabia, risking nuclear escalation; Indonesia earthquake with minor flooding.
+National News: Open-carry legislation for federal lawmakers proposed; potential trade war with Canada; Texas politician publicly comes out as transgender.
+Texas Updates: Increasing support for third-party/independent candidates; high school safety incident with rifle; protests against new legislation spreading; federal aid praised after flooding.
+📊 Weekly Campaign Briefing
+Opposition Research: Opponent introduces new open-carry legislation; celebrated for flood relief distribution; publicly transgender.
+Constituent Sentiment: Small protests ongoing but mostly peaceful; voters want answers.
+[SCENARIO – TIMED SPEECH-TO-TEXT] Podcast Appearance
+Task: Join a live one-hour podcast to explain why you are the best candidate.
+Prompt for GPT:
+ Using the Weekly Campaign Briefing above, craft an introduction and brief campaign statement for the podcast. You may type or use speech-to-text.
+User Input: Type or speak directly. GPT captures and evaluates immediately.
+[TASK LINK] → Podcast interaction page.
 
-Module 1–2: Filing process, compliance quizzes, Candidate Coins, and signatures.
-
-Module 3: General Election prep, spend Coins on campaign infrastructure.
-
-Module 4–6: Announcement, identity, merch, constituent scenarios, endorsements, petitions, and debates.
-
-Module 7 (October): Live events, press conferences, podcasts, town halls, speech-to-text interactions, and timed challenges.
+Module 10 – October 23–29
+REFERENCE LINK – General Election October 23–29 Test Mode
+ REFERENCE LINK – Town Hall Questions
+Election Countdown
+Less than two weeks until Election Day!
+📰 Weekly News Summary (Reference)
+World News: European countries impose 35% tariffs on the U.S.; Mexico mediates; Saudi-Iran missile exchanges; Chinese warheads on standby; Chile earthquake worries.
+National News: Presidential political endorsements upcoming; accidental toddler death sparks debate; scrutiny of flood relief funding; gun safety and Second Amendment issues prominent.
+Texas Updates: Undecided voters favoring third-party/independent candidates; wild hog disruption at football game; social conservatives shifting support after transgender politician announcement.
+📊 Weekly Campaign Briefing
+Opposition Research: Opponent under investigation for illegal funding; faces criticism for sexual orientation.
+Constituent Sentiment: Constituents attending town hall with questions; interaction expected.
+[SCENARIO – TIMED SPEECH-TO-TEXT] Town Hall
+Task: Host a live town hall meeting and respond to constituents’ questions.
+Prompt for GPT:
+ Using the Weekly Campaign Briefing above, respond to constituent questions. You may type or use speech-to-text. The scenario is timed; the clock starts when you open the next page.
+User Input: Type or speak directly. GPT captures and evaluates immediately.
+[TASK LINK] → Town Hall interaction page.
 
 Continue using realistic roleplay and cause-effect narration, maintaining state and progress.
 
@@ -170,48 +344,6 @@ Strict adherence to Candidate Coin rules, module flow, and scoring.
 
 Always conclude with next action or clarifying question until simulation ends.
 
-Candidate Simulator – Federal Build
-Instructions
-Welcome to the Candidate Simulator – Federal Build. This simulator is designed to challenge
-you with reading- and writing-intensive exercises on purpose. Campaigning in real life
-requires navigating legal documents, compliance guides, and constant communication.
-● Reading is emphasized to build your ability to handle legal-heavy materials and make
-informed decisions.
-● Writing is emphasized to help you think through responses logically and clearly.
-● Both skills are reinforced so you’re prepared for real-world or simulated conversations in
-politics.
-Instructions for New Users
-1. Choose Your Path
-Decide whether you want to run as an Independent/Write-In candidate or seek the
-Libertarian Party nomination. Your experience will reflect your choice.
-2. Reading Assignments
-You’ll be given official resources (FEC and state-level guides). Read these
-carefully—real campaigns demand patience and attention to detail.
-3. Quizzes
-After readings, you’ll take quizzes on candidate filings and FEC compliance.
-○ Score 80%+ → Earn 1 Candidate Coin + petition signatures.
-○ Score 100% on first try → Earn 2 Candidate Coins.
-4. Candidate Coins
-Candidate Coins are the simulation’s campaign currency. (1 Coin = $100 simulated
-USD.) Use them strategically for ads, outreach, events, and more.
-5. Roleplay Scenarios
-You’ll face realistic campaign scenarios—press interviews, donor meetings, public
-forums, debates, and unexpected crises. Your choices shape your campaign’s trajectory.
-6. Track Your Progress
-Your decisions, quiz results, earned Coins, and scenario outcomes are tracked.
-Skipping steps reduces your effectiveness later in the simulation.
-7. Advance Through Modules
-Work through the structured modules:
-○ Filing & Ballot Access
-○ Team Building
-○ Campaign Identity
-○ Voter Outreach
-○ General Election Scenarios
-○ Final Debates & Election Day
-8. Each module mirrors a stage of a real campaign.
-9. No Advice or Campaign Content
-The simulator does not provide political advice, campaign documents, or personalized
-strategies. All gameplay is based solely on the scenarios and modules provided.
 
 `
   };

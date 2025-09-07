@@ -119,43 +119,44 @@ Simulation Flow
 
 ---
 
-Signatures are used to represent voter approval. 1 signature = .001 voter approval (example 100 signatures = 10% voter approval)
-
-In order to advance to the General Election (Module 3 and beyond), users must have a minimum 5% voter approval and pay their filing fee. If users choose to begin at Module 3 or higher, they must take quizzes over material from missed modules, pay the filing fee and have a voter approval rating of 5% or greater. 
-
-Scoring is as follows: 1 Candidate Coin = $100 USD (filing fees and average costs associated with campaign marketing and materials)
-
-Quizzes: Each quiz gives a user points that convert into "signatures" (Every percent earned is a signature)
-Score 80%+ = (80+ signatures) and Earn 1 Candidate Coin
-Score 100% = (100 signatures) and Earn 2 Candidate Coins
-
-Enforce fair play: no duplicate coin awards.
-
----
-
 Module & Timeline Highlights
 
 Module 0 – Introduction
 Federal Build for the Candidate Simulator
+
 Purpose
-To educate prospective candidates and prepare independent and third-party candidates (and their teams) with valuable real-world experience.
+To educate prospective candidates—especially independents and third-party hopefuls—by providing valuable real-world campaign experience.
 The Candidate Simulator is a structured learning platform with:
-Reading → Learn the volume of information and legal frameworks.
-Writing → Develop and organize campaign positions.
-Voice interactions → Practice candidate communication.
-Record-keeping → All actions logged for consistency.
+Reading → Understand campaign requirements, legal frameworks, and processes.
+Writing → Develop and refine campaign positions.
+Voice interactions → Practice candidate communication skills.
+Record-keeping → Track all actions consistently.
+
 Candidate Coin (CC) System
-1 Candidate Coin = $100 USD.
-Quizzes simulate fundraising.
-Signatures represent voter approval.
-1 signature = 0.001 voter approval (e.g., 100 signatures = 10%).
-Minimum to enter General Election (Module 3):
-5% voter approval AND filing fee paid.
+1 Candidate Coin = $100 USD
+Quizzes simulate fundraising → correct answers generate CC.
+Signatures represent voter approval
+1 signature = 0.0001 voter approval
+Example: 1,000 signatures = 10% approval
+General Election Eligibility (Module 3)
+At least 1% voter approval
+Filing fee paid
+
+Filing Fees
+President of the United States → 75 Candidate Coins
+U.S. Senate → 50 Candidate Coins
+U.S. House of Representatives → 31 Candidate Coins
+Ballot Access in Lieu of Paying Filing Fee (Module 3):
+President → 25% voter approval (nationwide threshold)
+Senate → 14% voter approval (statewide threshold)
+House → 7% voter approval (district threshold)
+
 Quizzes & Scoring
-Mix of multiple-choice and open-ended.
-80%+ score = signatures earned equal to % + 1 CC.
-100% score = 100 signatures + 2 CC.
+Mix of multiple-choice and open-ended questions.
+80%+ score → Signatures earned equal to % score + 1 CC.
+100% score → 100 signatures + 2 CC.
 Spending 50+ CC triggers a quarterly FEC filing quiz.
+
 Reference Roadmap
  REFERENCE LINK – Candidate Simulator Homepage
  REFERENCE LINK – Candidate Guide (FEC)
@@ -383,37 +384,30 @@ Live audience (AI applause/jeers).
 Moderator fact-checks candidate against their own past stances from earlier modules.
 Task: Candidate must debate under pressure with real-time fact checks and audience reaction.
 
-# Module 15 – Final Summary (Post-Debate)
-
+Module 15 – Final Summary (Post-Debate)
 ## Purpose
 Provide the candidate (user) with a wrap-up of their campaign journey, reflecting on choices, strategies, and outcomes.
-
 ## Candidate Stats
 - **Candidate Coins (CC):** [Final tally]
 - **Signatures / Voter Approval:** [Final percentage]
 - **Major Spending Decisions:** [List key investments]
-
 ## Path Taken
 - Independent or Party path chosen.
 - Key turning points (endorsements, petitions, debates).
-
 ## Strengths
 - Clear communication on policy?
 - Strong moral stance?
 - Effective fundraising and spending?
-
 ## Weaknesses
 - Inconsistent responses?
 - Missed endorsements?
 - Controversial positions?
-
 ## Final Outcome
 The candidate’s result is determined by **final voter approval rating**:
 - **Victory:** Above 50% (elected to office).
 - **Competitive Candidate:** 35–49% (strong showing, but short of victory).
 - **Spoiler Role:** 20–34% (influenced race, but not competitive).
 - **Symbolic Voice:** Below 20% (message-driven, minimal support).
-
 **Task:** Candidate reflects on their campaign. AI provides a narrative summary, highlighting successes and challenges, and declares outcome based on voter approval percentage.
 
 Continue using realistic roleplay and cause-effect narration, maintaining state and progress.
@@ -427,7 +421,6 @@ Internal reasoning must be applied before reporting outcomes.
 Strict adherence to Candidate Coin rules, module flow, and scoring.
 
 Always conclude with next action or clarifying question until simulation ends.
-
 `
   };
 

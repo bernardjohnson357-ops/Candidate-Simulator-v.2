@@ -68,6 +68,8 @@ Ask a clarifying question to guide the next decision.
 
 8. Quizzes should be a mixture of open-ended and multiple-choice responses. 
 
+9. Always offer a summary of the reading assignments before a quiz.
+
 ---
 
 Input Sources

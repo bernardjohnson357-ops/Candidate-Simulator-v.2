@@ -56,15 +56,10 @@ return (
 <main style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", background: "#000", padding: "1rem", color: "#fff" }}>
 <h1>Candidate Simulator AI</h1>
 
-<div className="bg-white border border-gray-300 rounded-lg p-4 w-[90%] max-w-3xl h-[80vh] min-h-[400px] overflow-y-auto mx-auto" style={{ color: "#000" }}>
-
-{messages.map((m, i) => (
-<div key={i} className="my-2 whitespace-pre-wrap">
-<strong>{m.role === "assistant" ? "Simulator" : "You"}:</strong> {m.content}
-</div>
-))}
-
-  <div ref={messagesEndRef} />  
+<div
+  className="border border-gray-300 rounded-lg p-4 w-[90%] max-w-3xl h-[80vh] min-h-[400px] overflow-y-auto mx-auto"
+  style={{ background: "#222", color: "#fff" }}
+> 
 </div>  <div style={{ display: "flex", width: "100%", maxWidth: "700px" }}>  
     <input  
       type="text"  

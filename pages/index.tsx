@@ -2,22 +2,22 @@
 import { useState, useRef, useEffect } from "react";
 
 type Message = {
-  role: "user" | "assistant" | "system";
+  role: "user" | "assistant";
   content: string;
 };
 
-export default function Home() {
+export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const [candidateCoins, setCandidateCoins] = useState(50); // default starting coins
+  const [candidateCoins, setCandidateCoins] = useState(50);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to the latest message
+  // Scroll to bottom on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Fetch assistant greeting and module 0 on first load
+  // Fetch greeting from backend on first load
   useEffect(() => {
     if (messages.length === 0) {
       (async () => {
@@ -77,39 +77,66 @@ export default function Home() {
     <main
       style={{
         minHeight: "100vh",
+        background: "#FED000",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        background: "#000",
-        padding: "1rem",
-        color: "#fff",
+        padding: "1.5rem 0",
       }}
     >
-      <h1>Candidate Simulator AI</h1>
-
+      <h1 style={{ color: "#000", fontWeight: 700, marginBottom: "1rem" }}>
+        Candidate Simulator Chat
+      </h1>
       <div
-        className="border border-gray-300 rounded-lg p-4 w-[90%] max-w-3xl h-[80vh] min-h-[400px] overflow-y-auto mx-auto"
-        style={{ background: "#222", color: "#fff" }}
+        style={{
+          background: "#fff",
+          color: "#000",
+          borderRadius: "1rem",
+          boxShadow: "0 4px 16px rgba(0,0,0,0.09)",
+          padding: "1.5rem",
+          width: "90%",
+          maxWidth: 600,
+          minHeight: 380,
+          height: "65vh",
+          overflowY: "auto",
+          marginBottom: "1rem",
+        }}
       >
         {messages.map((m, i) => (
-          <div key={i} className="my-2 whitespace-pre-wrap">
+          <div key={i} style={{ margin: "1rem 0", whiteSpace: "pre-wrap" }}>
             <strong>{m.role === "assistant" ? "Simulator" : "You"}:</strong> {m.content}
           </div>
         ))}
         <div ref={messagesEndRef} />
       </div>
-      <div style={{ display: "flex", width: "100%", maxWidth: "700px" }}>
+      <div style={{ display: "flex", width: "90%", maxWidth: 600 }}>
         <input
           type="text"
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          style={{ flex: 1, padding: "0.5rem", color: "#000" }}
+          style={{
+            flex: 1,
+            padding: "0.75rem",
+            fontSize: "1rem",
+            border: "1px solid #ddd",
+            borderRadius: "0.5rem",
+            marginRight: "0.5rem",
+          }}
           placeholder="Type your response..."
         />
         <button
           onClick={sendMessage}
-          style={{ padding: "0.5rem 1rem", marginLeft: "0.5rem" }}
+          style={{
+            padding: "0.75rem 1.25rem",
+            fontSize: "1rem",
+            background: "#000",
+            color: "#fff",
+            border: "none",
+            borderRadius: "0.5rem",
+            fontWeight: 600,
+            cursor: "pointer",
+          }}
         >
           Send
         </button>

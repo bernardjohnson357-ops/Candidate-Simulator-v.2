@@ -85,7 +85,8 @@ export default function ChatPage() {
       }}
     >
       <h1 style={{ color: "#000", fontWeight: 700, marginBottom: "1rem" }}>
-        Candidate Simulator Chat
+
+      
       </h1>
       <div
         style={{

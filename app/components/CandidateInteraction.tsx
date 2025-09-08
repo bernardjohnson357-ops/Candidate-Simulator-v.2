@@ -19,6 +19,7 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = () => {
 
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
+
     recognitionRef.current = new SpeechRecognition();
     recognitionRef.current.continuous = false;
     recognitionRef.current.interimResults = false;

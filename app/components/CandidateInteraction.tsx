@@ -8,6 +8,8 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = () => {
   const [userInput, setUserInput] = useState("");
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Reference to the speech recognition instance
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   // 🎤 Start voice capture
@@ -17,9 +19,11 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = () => {
       return;
     }
 
+    // Get the constructor from the window
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
 
+    // Assign a new instance to the ref
     recognitionRef.current = new SpeechRecognition();
     recognitionRef.current.continuous = false;
     recognitionRef.current.interimResults = false;

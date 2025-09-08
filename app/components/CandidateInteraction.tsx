@@ -1,3 +1,13 @@
+// Tell TypeScript about SpeechRecognition
+declare global {
+  interface Window {
+    SpeechRecognition: typeof SpeechRecognition;
+    webkitSpeechRecognition: typeof SpeechRecognition;
+  }
+}
+
+type SpeechRecognition = any; // fallback until official types exist
+
 "use client";
 
 import React, { useState, useRef } from "react";

@@ -10,7 +10,7 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = () => {
   const [loading, setLoading] = useState(false);
 
   // Reference to the speech recognition instance
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<any | null>(null);
 
   // 🎤 Start voice capture
   const handleVoiceInput = () => {
@@ -20,23 +20,30 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = () => {
     }
 
     // Get the constructor from the window
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
+   const recognitionRef = useRef<any | null>(null);
 
-    // Assign a new instance to the ref
-    recognitionRef.current = new SpeechRecognition();
-    recognitionRef.current.continuous = false;
-    recognitionRef.current.interimResults = false;
-    recognitionRef.current.lang = "en-US";
+const handleVoiceInput = () => {
+  if (!("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
+    alert("Your browser doesn’t support speech recognition.");
+    return;
+  }
 
-    recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
-      const transcript = event.results[0][0].transcript;
-      setUserInput(transcript);
-    };
+  const SpeechRecognition =
+    (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
-    recognitionRef.current.start();
+  recognitionRef.current = new SpeechRecognition();
+  recognitionRef.current.continuous = false;
+  recognitionRef.current.interimResults = false;
+  recognitionRef.current.lang = "en-US";
+
+  recognitionRef.current.onresult = (event: any) => {
+    const transcript = event.results[0][0].transcript;
+    setUserInput(transcript);
   };
 
+  recognitionRef.current.start();
+};
+    
   // 🔊 Speak response aloud
   const speak = (text: string) => {
     const utterance = new SpeechSynthesisUtterance(text);

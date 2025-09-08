@@ -1,53 +1,68 @@
-# **Module 0 – Introduction**
+# **\#Module 0 – Introduction**
 
-**Federal Build for the Candidate Simulator**
+ **Federal Build for the Candidate Simulator**
+
+---
 
 ### **Purpose**
 
-To educate prospective candidates—especially independents and third-party hopefuls—by providing valuable real-world campaign experience.
+The Candidate Simulator is designed to educate prospective candidates—especially independents and third-party hopefuls—by providing **structured, realistic campaign practice**. It combines both **simulation mechanics** (Candidate Coins, signatures, quizzes) and **real-world references** (laws, filing requirements, official guides).
 
-The Candidate Simulator is a structured learning platform with:
+Participants will engage in:
 
 * **Reading** → Understand campaign requirements, legal frameworks, and processes.  
 * **Writing** → Develop and refine campaign positions.  
 * **Voice interactions** → Practice candidate communication skills.  
-* **Record-keeping** → Track all actions consistently.  
+* **Record-keeping** → Track actions consistently across modules.  
   ---
 
-  ### **Candidate Coin (CC) System**
+  ### **Candidate Coin (CC) System *(Simulation Mechanics)***
 
-* **1 Candidate Coin \= $100 USD**  
+* **1 Candidate Coin (CC) \= $100 USD (simulated value)**  
 * **Quizzes simulate fundraising** → correct answers generate CC.  
-* **Signatures represent voter approval**  
+* **Signatures simulate voter approval:**  
   * 1 signature \= 0.0001 voter approval  
-  * Example: 1,000 signatures \= 10% approval  
-* **General Election Eligibility (Module 3\)**  
-  * At least **1% voter approval**  
-  * **Filing fee paid**
+  * Example: 1,000 signatures \= 10% approval
 
+**Eligibility for General Election (before Module 3):**
+
+* At least **1% voter approval**  
+* Filing fee (in CC) must be paid  
   ---
 
-  ### **Filing Fees**
+  ### **Filing Fees *(Simulation Equivalents)***
 
-* **President of the United States** → 75 Candidate Coins  
-* **U.S. Senate** → 50 Candidate Coins  
-* **U.S. House of Representatives** → 31 Candidate Coins
+* President of the United States → **75 CC**  
+* U.S. Senate → **50 CC**  
+* U.S. House of Representatives → **31 CC**
 
-**Ballot Access in Lieu of Paying Filing Fee (Module 3):**
+**Ballot Access in Lieu of Filing Fee:**
 
-* President → 25% voter approval (nationwide threshold)  
-* Senate → 14% voter approval (statewide threshold)  
-* House → 7% voter approval (district threshold)  
+* President → **25% voter approval (nationwide threshold)**  
+* Senate → **14% voter approval (statewide threshold)**  
+* House → **7% voter approval (district threshold)**  
   ---
 
-  ### **Quizzes & Scoring**
+  ### **Quizzes & Scoring *(Simulation Mechanics)***
 
-* Mix of **multiple-choice** and **open-ended** questions.  
-* **80%+ score** → Signatures earned equal to % score \+ 1 CC.  
-* **100% score** → 100 signatures \+ 2 CC.  
-* Spending **50+ CC** triggers a **quarterly FEC filing quiz**.  
+* Mix of multiple-choice and open-ended questions.  
+* **80%+ score** → signatures earned equal to % score \+ 1 CC.  
+* **100% score** → 100 signatures \+ 2 CC.
+
+**Quarterly FEC Filing Quizzes (simulation task triggered by 50+ CC spent):**
+
+* Covers both **Form 3 compliance** and **simulator expenditures/CC totals**.  
+* **Penalties for mistakes:**  
+  * Incorrect multiple-choice \= –1 CC  
+  * Incorrect open-ended \= –50 signatures  
+* **Feedback is delayed** until the next module.
+
+**Amendments:**
+
+* Users may reattempt incorrect questions without penalty.  
+* If incorrect again → penalties are doubled, applied as an **“FEC administrative fee for penalties and errors.”**  
   ---
-
-**Reference Roadmap**  
- [REFERENCE LINK – Candidate Simulator Homepage](https://www.bernardjohnson4congress.com/candidate_simulator_homepage_-test_mode)  
- [REFERENCE LINK – Candidate Guide (FEC)](https://www.fec.gov/resources/cms-content/documents/policy-guidance/candgui.pdf)
+  
+Reference Roadmap
+ REFERENCE LINK – Candidate Simulator Homepage
+ REFERENCE LINK – Candidate Guide (FEC)

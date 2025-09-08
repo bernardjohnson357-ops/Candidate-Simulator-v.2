@@ -1,13 +1,3 @@
-// Tell TypeScript about SpeechRecognition
-declare global {
-  interface Window {
-    SpeechRecognition: typeof SpeechRecognition;
-    webkitSpeechRecognition: typeof SpeechRecognition;
-  }
-}
-
-type SpeechRecognition = any; // fallback until official types exist
-
 "use client";
 
 import React, { useState, useRef } from "react";
@@ -28,7 +18,7 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = () => {
     }
 
     const SpeechRecognition =
-      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      window.SpeechRecognition || window.webkitSpeechRecognition;
     recognitionRef.current = new SpeechRecognition();
     recognitionRef.current.continuous = false;
     recognitionRef.current.interimResults = false;

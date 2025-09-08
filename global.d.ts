@@ -1,6 +1,6 @@
 // global.d.ts
 
-// This declares SpeechRecognition as a global type for TypeScript
+// Make SpeechRecognition available globally to TypeScript
 declare var SpeechRecognition: any;
 declare var webkitSpeechRecognition: any;
 

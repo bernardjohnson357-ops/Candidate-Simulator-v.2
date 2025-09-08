@@ -47,7 +47,8 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = () => {
     if (!userInput.trim()) return;
     setLoading(true);
     try {
-      const res = await fetch("/api/respond", {
+      // ✅ Updated fetch path to match your API file
+      const res = await fetch("/api/simulator", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ input: userInput }),
@@ -58,7 +59,7 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = () => {
         setResponse(data.output);
         speak(data.output);
       } else {
-        setResponse("⚠️ No response from model.");
+        setResponse("⚠️ No response from API.");
       }
     } catch (err) {
       console.error(err);
@@ -70,6 +71,7 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = () => {
 
   return (
     <div className="flex flex-col gap-4 p-4 border rounded-lg bg-white shadow">
+      {/* Input area */}
       <textarea
         className="w-full p-3 border border-gray-300 rounded resize-none overflow-hidden"
         style={{ minHeight: "100px", maxHeight: "300px" }}
@@ -82,6 +84,8 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = () => {
         }}
         placeholder="Type your response or use the microphone..."
       />
+
+      {/* Buttons */}
       <div className="flex gap-2">
         <button
           onClick={handleVoiceInput}
@@ -97,6 +101,8 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = () => {
           {loading ? "Loading..." : "Submit"}
         </button>
       </div>
+
+      {/* Model response */}
       {response && (
         <div className="p-3 border border-gray-200 rounded bg-gray-50 whitespace-pre-wrap">
           {response}

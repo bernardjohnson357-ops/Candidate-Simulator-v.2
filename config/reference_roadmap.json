@@ -1,0 +1,182 @@
+{
+  "modules": {
+    "1A": {
+      "real_world": [
+        {
+          "label": "TX SOS Independent Candidate Guide (2024)",
+          "url": "https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml"
+        },
+        {
+          "label": "TX SOS Write-In Candidate Guide (2024)",
+          "url": "https://www.sos.state.tx.us/elections/candidates/guide/2024/writein2024.shtml"
+        },
+        {
+          "label": "FEC Candidate Guide – Party Committees",
+          "url": "https://www.fec.gov/resources/cms-content/documents/policy-guidance/partygui.pdf"
+        }
+      ],
+      "simulator": [
+        {
+          "label": "Independent Write-In Filing (Simulator)",
+          "url": "https://www.bernardjohnson4congress.com/independent_write_in_filing_test_mode"
+        }
+      ]
+    },
+    "2A": {
+      "real_world": [
+        {
+          "label": "TX SOS Independent Candidate Guide (2024)",
+          "url": "https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml"
+        },
+        {
+          "label": "TX SOS Write-In Candidate Guide (2024)",
+          "url": "https://www.sos.state.tx.us/elections/candidates/guide/2024/writein2024.shtml"
+        },
+        {
+          "label": "FEC Candidate Guide – Party Committees",
+          "url": "https://www.fec.gov/resources/cms-content/documents/policy-guidance/partygui.pdf"
+        }
+      ],
+      "simulator": [
+        {
+          "label": "FEC Filing Fee Quiz (Simulator – Independent)",
+          "url": "https://www.bernardjohnson4congress.com/candidate_simulator_fec_filing_fee_quizzes_-_test_mode"
+        }
+      ]
+    },
+    "1B": {
+      "real_world": [
+        {
+          "label": "TX SOS Libertarian/Green Nomination Guide (2024)",
+          "url": "https://www.sos.state.tx.us/elections/candidates/guide/2024/lib-green-nom2024.shtml"
+        },
+        {
+          "label": "FEC Candidate Guide – Party Committees",
+          "url": "https://www.fec.gov/resources/cms-content/documents/policy-guidance/partygui.pdf"
+        }
+      ]
+    },
+    "2B": {
+      "real_world": [
+        {
+          "label": "TX SOS Independent Candidate Guide (2024)",
+          "url": "https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml"
+        },
+        {
+          "label": "TX SOS Write-In Candidate Guide (2024)",
+          "url": "https://www.sos.state.tx.us/elections/candidates/guide/2024/writein2024.shtml"
+        },
+        {
+          "label": "FEC Candidate Guide – Party Committees",
+          "url": "https://www.fec.gov/resources/cms-content/documents/policy-guidance/partygui.pdf"
+        }
+      ],
+      "simulator": [
+        {
+          "label": "FEC Filing Fee Quiz (Simulator – Party)",
+          "url": "https://www.bernardjohnson4congress.com/candidate_simulator_fec_filing_fee_quizzes_-_test_mode"
+        }
+      ]
+    },
+    "4": {
+      "real_world": [
+        {
+          "label": "FEC Committee Data (example)",
+          "url": "https://www.fec.gov/data/committee/C00588657/?cycle=2026"
+        },
+        {
+          "label": "FECFile Getting Started Manual",
+          "url": "https://www.fec.gov/resources/cms-content/documents/FECFile_GettingStartedManual_Candidates.pdf"
+        }
+      ],
+      "simulator": [
+        {
+          "label": "General Election Cycle – May & June (Simulator)",
+          "url": "https://www.bernardjohnson4congress.com/candidate_simulator_general_election_cycle_may_and_june_test_mode"
+        },
+        {
+          "label": "Campaign Announcement (Simulator)",
+          "url": "https://www.bernardjohnson4congress.com/general_election_campaign_announcement_may_and_june_test_mode"
+        },
+        {
+          "label": "Defining Campaign Identity (Simulator)",
+          "url": "https://www.bernardjohnson4congress.com/general_election_defining_your_campaign_s_identity_may_and_june_test_mode"
+        },
+        {
+          "label": "FEC Quiz (Simulator)",
+          "url": "https://www.bernardjohnson4congress.com/general_election_fec_getting_started_quiz_may_and_june_test_mode"
+        }
+      ]
+    },
+    "6": {
+      "real_world": [
+        {
+          "label": "FEC Form 3 Manual",
+          "url": "https://www.fec.gov/resources/cms-content/documents/policy-guidance/fecfrm3.pdf"
+        }
+      ],
+      "simulator": [
+        {
+          "label": "General Election Cycle – September (Simulator)",
+          "url": "https://www.bernardjohnson4congress.com/general_election_cycle_september_test_mode"
+        },
+        {
+          "label": "Constitution Day Scenario (Simulator)",
+          "url": "https://www.bernardjohnson4congress.com/general_election_cycle_september_constitution_day_test_mode"
+        },
+        {
+          "label": "September Scenario (Simulator)",
+          "url": "https://www.bernardjohnson4congress.com/general_election_cycle_september_scenario_test_mode"
+        },
+        {
+          "label": "Postcard Offer (Simulator)",
+          "url": "https://www.bernardjohnson4congress.com/general_election_cycle_september_postcard_offer_test_mode"
+        },
+        {
+          "label": "Debate Challenge (Simulator)",
+          "url": "https://www.bernardjohnson4congress.com/general_election_cycle_september_debate_challenge_test_mode"
+        }
+      ]
+    },
+    "7": {
+      "simulator": [
+        {
+          "label": "General Election Cycle – October 1–7 (Simulator)",
+          "url": "https://www.bernardjohnson4congress.com/general_election_cycle_october_1_7_test_mode"
+        }
+      ]
+    },
+    "8": {
+      "simulator": [
+        {
+          "label": "General Election Cycle – October 8–14 (Simulator)",
+          "url": "https://www.bernardjohnson4congress.com/general_election_october_8_14_test_mode"
+        }
+      ]
+    },
+    "9": {
+      "simulator": [
+        {
+          "label": "General Election Cycle – October 15–22A (Simulator)",
+          "url": "https://www.bernardjohnson4congress.com/general_election_october_15-22_a_test_mode"
+        },
+        {
+          "label": "General Election Cycle – October 15–22B (Simulator)",
+          "url": "https://www.bernardjohnson4congress.com/general_election_october_15-22_b_test_mode"
+        }
+      ]
+    },
+    "10": {
+      "simulator": [
+        {
+          "label": "General Election Cycle – October 23–29A (Simulator)",
+          "url": "https://www.bernardjohnson4congress.com/general_election_cycle_october_23_29_test_mode"
+        },
+        {
+          "label": "General Election Cycle – October 23–29B (Simulator)",
+          "url": "https://www.bernardjohnson4congress.com/general_election_cycle_october_23_29_b_test_mode"
+        }
+      ]
+    }
+  }
+}

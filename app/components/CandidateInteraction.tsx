@@ -19,31 +19,22 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = () => {
       return;
     }
 
-    // Get the constructor from the window
-   const recognitionRef = useRef<any | null>(null);
+    const SpeechRecognition =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
-const handleVoiceInput = () => {
-  if (!("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
-    alert("Your browser doesn’t support speech recognition.");
-    return;
-  }
+    recognitionRef.current = new SpeechRecognition();
+    recognitionRef.current.continuous = false;
+    recognitionRef.current.interimResults = false;
+    recognitionRef.current.lang = "en-US";
 
-  const SpeechRecognition =
-    (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    recognitionRef.current.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setUserInput(transcript);
+    };
 
-  recognitionRef.current = new SpeechRecognition();
-  recognitionRef.current.continuous = false;
-  recognitionRef.current.interimResults = false;
-  recognitionRef.current.lang = "en-US";
-
-  recognitionRef.current.onresult = (event: any) => {
-    const transcript = event.results[0][0].transcript;
-    setUserInput(transcript);
+    recognitionRef.current.start();
   };
 
-  recognitionRef.current.start();
-};
-    
   // 🔊 Speak response aloud
   const speak = (text: string) => {
     const utterance = new SpeechSynthesisUtterance(text);
@@ -79,7 +70,6 @@ const handleVoiceInput = () => {
 
   return (
     <div className="flex flex-col gap-4 p-4 border rounded-lg bg-white shadow">
-      {/* Input area */}
       <textarea
         className="w-full p-3 border border-gray-300 rounded resize-none overflow-hidden"
         style={{ minHeight: "100px", maxHeight: "300px" }}
@@ -92,8 +82,6 @@ const handleVoiceInput = () => {
         }}
         placeholder="Type your response or use the microphone..."
       />
-
-      {/* Buttons */}
       <div className="flex gap-2">
         <button
           onClick={handleVoiceInput}
@@ -109,8 +97,6 @@ const handleVoiceInput = () => {
           {loading ? "Loading..." : "Submit"}
         </button>
       </div>
-
-      {/* Model response */}
       {response && (
         <div className="p-3 border border-gray-200 rounded bg-gray-50 whitespace-pre-wrap">
           {response}

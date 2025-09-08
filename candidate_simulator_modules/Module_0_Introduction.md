@@ -1,8 +1,3 @@
-Got it ✅ — I’ll clean this up so the Markdown renders cleanly, avoids escaped characters (\= → =), and has consistent headings and spacing. Here’s a corrected version you can drop straight into your .md file:
-
-
----
-
 Module 0 – Introduction
 
 Federal Build for the Candidate Simulator

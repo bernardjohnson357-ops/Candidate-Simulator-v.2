@@ -1,17 +1,13 @@
-// MarkdownRenderer.tsx
+// components/MarkdownRenderer.tsx
 import React from "react";
 import ReactMarkdown from "react-markdown";
 
-type MarkdownRendererProps = {
+interface MarkdownRendererProps {
   content: string;
-};
+}
 
 const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
-  return (
-    <div className="markdown-container">
-      <ReactMarkdown>{content}</ReactMarkdown>
-    </div>
-  );
+  return <ReactMarkdown>{content}</ReactMarkdown>;
 };
 
 export default MarkdownRenderer;

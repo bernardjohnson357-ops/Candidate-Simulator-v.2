@@ -1,37 +1,20 @@
-// app/components/LiveMarkdownRenderer.tsx
+// app/components/MarkdownRenderer.tsx
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-interface LiveMarkdownRendererProps {
-  initialContent?: string;
+interface MarkdownRendererProps {
+  content: string;
 }
 
-const LiveMarkdownRenderer: React.FC<LiveMarkdownRendererProps> = ({
-  initialContent = "",
-}) => {
-  const [content, setContent] = useState(initialContent);
-
+const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
   return (
-    <div className="flex flex-col md:flex-row gap-4">
-      {/* Textarea for typing markdown */}
-      <textarea
-        className="w-full md:w-1/2 p-4 border border-gray-300 rounded-lg h-[400px] resize-none"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        placeholder="Type your markdown here..."
-      />
-
-      {/* Rendered Markdown */}
-      <div className="w-full md:w-1/2 p-4 border border-gray-300 rounded-lg h-[400px] overflow-y-auto prose max-w-full">
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-          {content}
-        </ReactMarkdown>
-      </div>
+    <div className="prose max-w-full">
+      <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
     </div>
   );
 };
 
-export default LiveMarkdownRenderer;
+export default MarkdownRenderer;

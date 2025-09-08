@@ -1,4 +1,4 @@
-import CandidateInteraction from "@/components/CandidateInteraction";
+import CandidateInteraction from "./components/CandidateInteraction";
 
 export default function Page() {
   return (

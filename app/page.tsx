@@ -1,15 +1,10 @@
-// app/page.tsx (Next.js App Router)
-import MarkdownRenderer from "@/components/MarkdownRenderer";
+import CandidateInteraction from "@/components/CandidateInteraction";
 
 export default function Page() {
-  const markdown = `
-  # Hello World
-  This is **markdown** rendered inside Next.js
-  `;
-
   return (
-    <main>
-      <MarkdownRenderer content={markdown} />
-    </main>
+    <div className="max-w-2xl mx-auto mt-10">
+      <h1 className="text-2xl font-bold mb-4">Candidate Simulator</h1>
+      <CandidateInteraction />
+    </div>
   );
 }

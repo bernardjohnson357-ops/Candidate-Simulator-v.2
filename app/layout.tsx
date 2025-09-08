@@ -1,6 +1,5 @@
-// app/layout.tsx
 import React from "react";
-import "./globals.css"; // optional if you have global styles
+import "./globals.css"; // ✅ make sure this line is here
 
 export const metadata = {
   title: "Candidate Simulator",

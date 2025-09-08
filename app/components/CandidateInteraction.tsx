@@ -2,17 +2,30 @@
 
 import React, { useState, useRef } from "react";
 
-interface CandidateInteractionProps {}
+interface CandidateInteractionProps {
+  initialModule?: number;
+  initialCoins?: number;
+}
 
-const CandidateInteraction: React.FC<CandidateInteractionProps> = () => {
+type Message = {
+  role: "user" | "assistant" | "system";
+  content: string;
+};
+
+const CandidateInteraction: React.FC<CandidateInteractionProps> = ({
+  initialModule = 0,
+  initialCoins = 50,
+}) => {
   const [userInput, setUserInput] = useState("");
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [currentModule, setCurrentModule] = useState(initialModule);
+  const [candidateCoins, setCandidateCoins] = useState(initialCoins);
 
-  // Reference to the speech recognition instance
   const recognitionRef = useRef<any | null>(null);
 
-  // 🎤 Start voice capture
+  // 🎤 Voice input
   const handleVoiceInput = () => {
     if (!("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
       alert("Your browser doesn’t support speech recognition.");
@@ -35,27 +48,40 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = () => {
     recognitionRef.current.start();
   };
 
-  // 🔊 Speak response aloud
+  // 🔊 Speak text aloud
   const speak = (text: string) => {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "en-US";
     speechSynthesis.speak(utterance);
   };
 
-  // 📤 Send to API route
+  // 📤 Submit to API
   const handleSubmit = async () => {
     if (!userInput.trim()) return;
     setLoading(true);
+
+    // Add user message to messages array
+    const newMessages: Message[] = [...messages, { role: "user", content: userInput }];
+    setMessages(newMessages);
+
     try {
-      // ✅ Updated fetch path to match your API file
       const res = await fetch("/api/simulator", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ input: userInput }),
+        body: JSON.stringify({
+          messages: newMessages,
+          currentModule,
+          candidateCoins,
+        }),
       });
 
       const data = await res.json();
       if (data.output) {
+        // Add assistant message to messages
+        const assistantMessage: Message = { role: "assistant", content: data.output };
+        setMessages([...newMessages, assistantMessage]);
+
+        // Display and speak response
         setResponse(data.output);
         speak(data.output);
       } else {
@@ -66,6 +92,7 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = () => {
       setResponse("❌ Error connecting to API.");
     } finally {
       setLoading(false);
+      setUserInput(""); // Clear input
     }
   };
 
@@ -102,7 +129,7 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = () => {
         </button>
       </div>
 
-      {/* Model response */}
+      {/* Assistant response */}
       {response && (
         <div className="p-3 border border-gray-200 rounded bg-gray-50 whitespace-pre-wrap">
           {response}

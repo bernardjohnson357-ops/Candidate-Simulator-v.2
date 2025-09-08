@@ -2,17 +2,15 @@
 
 import React, { useState, useRef } from "react";
 
-interface CandidateInteractionProps {
-  onSubmit: (text: string) => Promise<string>; // hook to your model
-}
+interface CandidateInteractionProps {}
 
-const CandidateInteraction: React.FC<CandidateInteractionProps> = ({ onSubmit }) => {
+const CandidateInteraction: React.FC<CandidateInteractionProps> = () => {
   const [userInput, setUserInput] = useState("");
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
-  // 🎤 Start/stop voice capture
+  // 🎤 Start voice capture
   const handleVoiceInput = () => {
     if (!("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
       alert("Your browser doesn’t support speech recognition.");
@@ -34,21 +32,34 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = ({ onSubmit })
     recognitionRef.current.start();
   };
 
-  // 🔊 Speak model output
+  // 🔊 Speak response aloud
   const speak = (text: string) => {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "en-US";
     speechSynthesis.speak(utterance);
   };
 
-  // 📤 Submit response to model
+  // 📤 Send to API route
   const handleSubmit = async () => {
     if (!userInput.trim()) return;
     setLoading(true);
     try {
-      const result = await onSubmit(userInput);
-      setResponse(result);
-      speak(result); // auto-play audio output
+      const res = await fetch("/api/respond", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ input: userInput }),
+      });
+
+      const data = await res.json();
+      if (data.output) {
+        setResponse(data.output);
+        speak(data.output);
+      } else {
+        setResponse("⚠️ No response from model.");
+      }
+    } catch (err) {
+      console.error(err);
+      setResponse("❌ Error connecting to API.");
     } finally {
       setLoading(false);
     }
@@ -56,7 +67,7 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = ({ onSubmit })
 
   return (
     <div className="flex flex-col gap-4 p-4 border rounded-lg bg-white shadow">
-      {/* User input area */}
+      {/* Input area */}
       <textarea
         className="w-full p-3 border border-gray-300 rounded resize-none overflow-hidden"
         style={{ minHeight: "100px", maxHeight: "300px" }}
@@ -70,7 +81,7 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = ({ onSubmit })
         placeholder="Type your response or use the microphone..."
       />
 
-      {/* Controls */}
+      {/* Buttons */}
       <div className="flex gap-2">
         <button
           onClick={handleVoiceInput}

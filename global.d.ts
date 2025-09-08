@@ -1,12 +1,12 @@
 // global.d.ts
 
-// These tell TypeScript about the SpeechRecognition constructor on window
-interface Window {
-  SpeechRecognition: typeof window.SpeechRecognition | undefined;
-  webkitSpeechRecognition: typeof window.webkitSpeechRecognition | undefined;
-}
+// This declares SpeechRecognition as a global type for TypeScript
+declare var SpeechRecognition: any;
+declare var webkitSpeechRecognition: any;
 
-// Use `any` for the instance type
-type SpeechRecognition = any;
+interface Window {
+  SpeechRecognition: typeof SpeechRecognition;
+  webkitSpeechRecognition: typeof webkitSpeechRecognition;
+}
 
 export {};

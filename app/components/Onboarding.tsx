@@ -24,7 +24,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
       <div className="bg-gray-100 p-6 rounded-lg shadow-md max-w-3xl text-left">
         <h2 className="text-2xl font-bold mb-4">Understanding the Simulator</h2>
         <p className="mb-4">
-          The Candidate Simulator helps you understand <strong>real federal campaign requirements</strong> 
+          The Candidate Simulator helps you understand <strong>real federal campaign requirements </strong> 
           while letting you practice those steps in a safe, simulated environment. This is not a game—each 
           part of the dashboard reflects actual processes.
         </p>

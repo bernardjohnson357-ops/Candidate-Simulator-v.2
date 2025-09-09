@@ -58,7 +58,7 @@ User Starting Options:
 
 Start at Module 0–6 (with warnings for skipped modules).
 
-Choose starting Candidate Coins: 0–100 (max 100).
+Choose starting Candidate Coins: 0–50 (max 50).
 Rules
 
 1. Never give political advice, solutions, or campaign strategies.
@@ -89,6 +89,9 @@ Filing Fees (Simulation Equivalents)
 President of the United States → 75 CC
 U.S. Senate → 50 CC
 U.S. House of Representatives → 31 CC
+
+If users choose to pay the filing fee, they must also have a minimum of 2.5% voter approval before reaching Module 3.
+
 Ballot Access in Lieu of Filing Fee:
 President → 25% voter approval (nationwide threshold)
 Senate → 14% voter approval (statewide threshold)
@@ -165,7 +168,7 @@ Signatures simulate voter approval:
 1 signature = 0.0001 voter approval
 Example: 1,000 signatures = 10% approval
 Eligibility for General Election (before Module 3):
-At least 1% voter approval
+At least 2.5% voter approval and 
 Filing fee (in CC) must be paid
 
 Users must choose which office they're running for: President of the United States, U.S. Senate or U.S. House of Representatives.
@@ -174,6 +177,10 @@ Filing Fees (Simulation Equivalents)
 President of the United States → 75 CC
 U.S. Senate → 50 CC
 U.S. House of Representatives → 31 CC
+
+If paying the filing fee, users must have at least 2.5% voter approval. 
+
+
 Ballot Access in Lieu of Filing Fee:
 President → 25% voter approval (nationwide threshold)
 Senate → 14% voter approval (statewide threshold)
@@ -183,15 +190,22 @@ Quizzes & Scoring (Simulation Mechanics)
 Mix of multiple-choice and open-ended questions.
 80%+ score → signatures earned equal to % score + 1 CC.
 100% score → 100 signatures + 2 CC.
+
 Quarterly FEC Filing Quizzes (simulation task triggered by 50+ CC spent):
 Covers both Form 3 compliance and simulator expenditures/CC totals.
-Penalties for mistakes:
+
+Penalties for mistakes on Form 3 quizzes:
 Incorrect multiple-choice = –1 CC
 Incorrect open-ended = –50 signatures
 Feedback is delayed until the next module.
+
 Amendments:
-Users may reattempt incorrect questions without penalty.
+
+Users may retake missed portions of the Form 3 quiz.
+
 If incorrect again → penalties are doubled, applied as an “FEC administrative fee for penalties and errors.”
+
+Users may reattempt incorrect questions on any other quizzes, other than Form 3 without penalty. Only one reattempt per quiz.
 
 Reference Roadmap
  REFERENCE LINK – Candidate Simulator Homepage

@@ -23,10 +23,12 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = ({
   const [currentModule, setCurrentModule] = useState(initialModule);
   const [candidateCoins, setCandidateCoins] = useState(initialCoins);
 
+  // Reference to the speech recognition instance
   const recognitionRef = useRef<any | null>(null);
 
-  // 🎤 Voice input
+  // 🎤 Voice input (only enabled for module 7+)
   const handleVoiceInput = () => {
+    if (currentModule < 7) return; // early exit for pre-October modules
     if (!("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
       alert("Your browser doesn’t support speech recognition.");
       return;
@@ -48,14 +50,15 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = ({
     recognitionRef.current.start();
   };
 
-  // 🔊 Speak text aloud
+  // 🔊 Speak response aloud (only module 7+)
   const speak = (text: string) => {
+    if (currentModule < 7) return;
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "en-US";
     speechSynthesis.speak(utterance);
   };
 
-  // 📤 Submit to API
+  // 📤 Submit user input to the simulator API
   const handleSubmit = async () => {
     if (!userInput.trim()) return;
     setLoading(true);
@@ -76,12 +79,10 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = ({
       });
 
       const data = await res.json();
+
       if (data.output) {
-        // Add assistant message to messages
         const assistantMessage: Message = { role: "assistant", content: data.output };
         setMessages([...newMessages, assistantMessage]);
-
-        // Display and speak response
         setResponse(data.output);
         speak(data.output);
       } else {
@@ -92,7 +93,7 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = ({
       setResponse("❌ Error connecting to API.");
     } finally {
       setLoading(false);
-      setUserInput(""); // Clear input
+      setUserInput(""); // clear input after submission
     }
   };
 
@@ -116,7 +117,10 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = ({
       <div className="flex gap-2">
         <button
           onClick={handleVoiceInput}
-          className="px-4 py-2 bg-blue-600 text-white rounded"
+          className={`px-4 py-2 rounded text-white ${
+            currentModule >= 7 ? "bg-blue-600" : "bg-gray-400 cursor-not-allowed"
+          }`}
+          disabled={currentModule < 7}
         >
           🎤 Speak
         </button>

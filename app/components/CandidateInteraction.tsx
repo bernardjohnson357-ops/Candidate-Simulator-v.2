@@ -110,7 +110,7 @@ const CandidateInteraction: React.FC<CandidateInteractionProps> = ({
           target.style.height = "auto";
           target.style.height = target.scrollHeight + "px";
         }}
-        placeholder="Type your response or use the microphone..."
+        placeholder="Which federal office would you like to run for?"
       />
 
       {/* Buttons */}

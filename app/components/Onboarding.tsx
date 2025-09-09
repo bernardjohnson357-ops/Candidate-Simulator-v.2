@@ -20,19 +20,47 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
 
   return (
     <div className="flex flex-col items-center gap-6">
+      {/* Context Panel */}
+      <div className="bg-gray-100 p-6 rounded-lg shadow-md max-w-3xl text-left">
+        <h2 className="text-2xl font-bold mb-4">Understanding the Simulator</h2>
+        <p className="mb-4">
+          The Candidate Simulator helps you understand <strong>real federal campaign requirements</strong> 
+          while letting you practice those steps in a safe, simulated environment. This is not a game—each 
+          part of the dashboard reflects actual processes.
+        </p>
 
-<div className="bg-gray-100 p-4 rounded-lg mb-6">
-  <h2 className="text-xl font-semibold mb-2">Welcome to the Federal Candidate Simulator!</h2>
-  <p className="mb-1">This dashboard shows your campaign resources and helps you make decisions safely, just like a real federal candidate.</p>
-  <ul className="list-disc list-inside">
-    <li><strong>Candidate Coins (CC)</strong> – Earn by completing quizzes and spend on campaign actions.</li>
-    <li><strong>Signatures</strong> – Represent voter approval for ballot access.</li>
-    <li><strong>Campaign Bank</strong> – Tracks total raised, total spent, and cash on hand for FEC compliance.</li>
-    <li><strong>Branch Selection</strong> – Choose Independent / Write-In or Third-Party to start your campaign path.</li>
-  </ul>
-  <p className="mt-2 font-semibold">Tip: Watch your resources carefully—they affect your eligibility and success in the simulation!</p>
-</div>
-      
+        <h3 className="text-lg font-semibold">Candidate Coins (CC)</h3>
+        <p className="mb-4">
+          <strong>Real World:</strong> Candidates raise money through contributions, deposit it into a 
+          campaign bank account, and report it to the FEC. <br />
+          <strong>Simulation:</strong> CC represent campaign funds. 1 CC = $100. Your dashboard shows 
+          how much you’ve raised, spent, and your cash on hand, mirroring FEC reporting.
+        </p>
+
+        <h3 className="text-lg font-semibold">Signatures & Voter Approval</h3>
+        <p className="mb-4">
+          <strong>Real World:</strong> Ballot access requires petition signatures or filing fees. 
+          Voter support is built through outreach. <br />
+          <strong>Simulation:</strong> Signatures equal voter approval. Gathering enough can substitute 
+          for paying a filing fee, just as in real elections.
+        </p>
+
+        <h3 className="text-lg font-semibold">Campaign Bank</h3>
+        <p className="mb-4">
+          <strong>Real World:</strong> Federal candidates must use a dedicated campaign bank account and 
+          file quarterly reports (Form 3) with the FEC. <br />
+          <strong>Simulation:</strong> Your dashboard tracks total funds raised, spent, and cash on hand. 
+          Later modules simulate FEC filings for compliance practice.
+        </p>
+
+        <h3 className="text-lg font-semibold">Modules & Decisions</h3>
+        <p>
+          <strong>Real World:</strong> Campaigns involve filings, strategy, and compliance reporting. <br />
+          <strong>Simulation:</strong> Each module mirrors a campaign stage. Your decisions will affect CC, 
+          signatures, and voter approval, just as real candidates’ choices affect their campaigns.
+        </p>
+      </div>
+
       {/* Dashboard */}
       <div className="flex flex-wrap gap-6 justify-center mb-8">
         <div className="bg-white shadow-md rounded-lg px-6 py-4 text-center">

@@ -86,13 +86,13 @@ Ask a clarifying question to guide the next decision.
 10. In Module 0, users must choose which office they're running for (President of the United States, U.S. Senate or U.S. House of Representatives) and receive the following information:
 
 Filing Fees (Simulation Equivalents)
-President of the United States → 75 CC
-U.S. Senate → 50 CC
-U.S. House of Representatives → 31 CC
+President of the United States → 75 CC and 2.5% voter approval
+U.S. Senate → 50 CC and 2.5% voter approval
+U.S. House of Representatives → 31 CC and 2.5% voter approval
 
-If users choose to pay the filing fee, they must also have a minimum of 2.5% voter approval before reaching Module 3.
+If users choose to pay the filing fee, they must have a minimum voter approval of 2.5% before reaching Module 3.
 
-Ballot Access in Lieu of Filing Fee:
+Ballot Access in Lieu of Filing Fee, before reaching Module 3:
 President → 25% voter approval (nationwide threshold)
 Senate → 14% voter approval (statewide threshold)
 House → 7% voter approval (district threshold)
@@ -151,7 +151,7 @@ Module & Timeline Highlights
 
 #Module 0 – Introduction
 
- Federal Build for the Candidate Simulator
+Federal Build for the Candidate Simulator
 
 Purpose
 The Candidate Simulator is designed to educate prospective candidates—especially independents and third-party hopefuls—by providing structured, realistic campaign practice. It combines both simulation mechanics (Candidate Coins, signatures, quizzes) and real-world references (laws, filing requirements, official guides).
@@ -170,20 +170,19 @@ Quizzes simulate fundraising → correct answers generate CC.
 
 Signatures simulate voter approval:
 1 signature = 0.0001 voter approval
-Example: 100 signatures = 1% approval and 1000 signatures = 10%
+Example: 100 signatures = 1% approval or 1000 signatures = 10%
 
 Eligibility for General Election (before Module 3):
 
 Filing Fees (Simulation Equivalents)
-President of the United States → 75 CC
-U.S. Senate → 50 CC
-U.S. House of Representatives → 31 CC
+President of the United States → 75 CC and 2.5% voter approval
+U.S. Senate → 50 CC and 2.5% voter approval
+U.S. House of Representatives → 31 CC and 2.5% voter approval
 
 At least 2.5% voter approval and the 
 filing fee (in CC) must be paid.
 
 If paying the filing fee, users must have at least 2.5% voter approval. 
-
 
 Ballot Access in Lieu of Filing Fee:
 President → 25% voter approval (nationwide threshold)

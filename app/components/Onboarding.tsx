@@ -1,11 +1,11 @@
 "use client";
 import { useState } from "react";
 
-type Props = {
+type OnboardingProps = {
   onComplete: (path: "independent" | "thirdParty", option: "payFee" | "signatures") => void;
 };
 
-export default function Onboarding({ onComplete }: Props) {
+export default function Onboarding({ onComplete }: OnboardingProps) {
   const [path, setPath] = useState<"independent" | "thirdParty" | null>(null);
   const [cc, setCC] = useState(50);
   const [signatures, setSignatures] = useState(0);
@@ -15,7 +15,6 @@ export default function Onboarding({ onComplete }: Props) {
   const cashOnHand = totalRaised - totalSpent;
 
   const handleStartSimulation = (option: "payFee" | "signatures") => {
-    // Trigger parent callback to transition to CandidateInteraction
     onComplete(path!, option);
   };
 
@@ -27,10 +26,16 @@ export default function Onboarding({ onComplete }: Props) {
           <h3 className="font-semibold text-lg">Candidate Coins (CC)</h3>
           <p className="text-2xl font-bold">{cc}</p>
           <div className="mt-2 flex justify-center gap-2 flex-wrap">
-            <button onClick={() => { setCC(cc + 2); setTotalRaised(totalRaised + 200); setSignatures(signatures + 50); }} className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">
+            <button
+              onClick={() => { setCC(cc + 2); setTotalRaised(totalRaised + 200); setSignatures(signatures + 50); }}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
+            >
               Earn 2 CC (Quiz)
             </button>
-            <button onClick={() => { if(cc>=5){setCC(cc-5); setTotalSpent(totalSpent+500);} }} className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
+            <button
+              onClick={() => { if(cc>=5){setCC(cc-5); setTotalSpent(totalSpent+500);} }}
+              className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+            >
               Spend 5 CC (Action)
             </button>
           </div>

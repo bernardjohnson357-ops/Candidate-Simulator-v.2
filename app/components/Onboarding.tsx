@@ -20,6 +20,19 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
 
   return (
     <div className="flex flex-col items-center gap-6">
+
+<div className="bg-gray-100 p-4 rounded-lg mb-6">
+  <h2 className="text-xl font-semibold mb-2">Welcome to the Federal Candidate Simulator!</h2>
+  <p className="mb-1">This dashboard shows your campaign resources and helps you make decisions safely, just like a real federal candidate.</p>
+  <ul className="list-disc list-inside">
+    <li><strong>Candidate Coins (CC)</strong> – Earn by completing quizzes and spend on campaign actions.</li>
+    <li><strong>Signatures</strong> – Represent voter approval for ballot access.</li>
+    <li><strong>Campaign Bank</strong> – Tracks total raised, total spent, and cash on hand for FEC compliance.</li>
+    <li><strong>Branch Selection</strong> – Choose Independent / Write-In or Third-Party to start your campaign path.</li>
+  </ul>
+  <p className="mt-2 font-semibold">Tip: Watch your resources carefully—they affect your eligibility and success in the simulation!</p>
+</div>
+      
       {/* Dashboard */}
       <div className="flex flex-wrap gap-6 justify-center mb-8">
         <div className="bg-white shadow-md rounded-lg px-6 py-4 text-center">

@@ -161,22 +161,26 @@ Writing → Develop and refine campaign positions.
 Voice interactions → Practice candidate communication skills.
 Record-keeping → Track actions consistently across modules.
 
+Users must choose which office they're running for: President of the United States, U.S. Senate or U.S. House of Representatives.
+
 Candidate Coin (CC) System (Simulation Mechanics)
+
 1 Candidate Coin (CC) = $100 USD (simulated value)
 Quizzes simulate fundraising → correct answers generate CC.
+
 Signatures simulate voter approval:
 1 signature = 0.0001 voter approval
-Example: 1,000 signatures = 10% approval
-Eligibility for General Election (before Module 3):
-At least 2.5% voter approval and 
-Filing fee (in CC) must be paid
+Example: 100 signatures = 1% approval and 1000 signatures = 10%
 
-Users must choose which office they're running for: President of the United States, U.S. Senate or U.S. House of Representatives.
+Eligibility for General Election (before Module 3):
 
 Filing Fees (Simulation Equivalents)
 President of the United States → 75 CC
 U.S. Senate → 50 CC
 U.S. House of Representatives → 31 CC
+
+At least 2.5% voter approval and the 
+filing fee (in CC) must be paid.
 
 If paying the filing fee, users must have at least 2.5% voter approval. 
 
@@ -192,9 +196,11 @@ Mix of multiple-choice and open-ended questions.
 100% score → 100 signatures + 2 CC.
 
 Quarterly FEC Filing Quizzes (simulation task triggered by 50+ CC spent):
+
 Covers both Form 3 compliance and simulator expenditures/CC totals.
 
 Penalties for mistakes on Form 3 quizzes:
+
 Incorrect multiple-choice = –1 CC
 Incorrect open-ended = –50 signatures
 Feedback is delayed until the next module.

@@ -17,29 +17,34 @@ type Module = {
 };
 
 const modules: Module[] = [
-  { id: 0, title: "Introduction", description: `Purpose: Educate candidates using reading, writing, and AI-interactive tasks. Candidate Coins are the campaign currency. Decide Independent or Libertarian.`, links: ["https://www.bernardjohnson4congress.com/candidate_simulator_homepage_-test_mode"] },
-  { id: 1, title: "Module 1A - Independent/Write-In Filing", description: `Earn Candidate Coins via quizzes. Study FEC & TX SOS materials.`, links: ["https://www.bernardjohnson4congress.com/independent_write_in_filing_test_mode","https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml","https://www.sos.state.tx.us/elections/candidates/guide/2024/writein2024.shtml","https://www.fec.gov/resources/cms-content/documents/policy-guidance/candgui.pdf"] },
-  { id: 2, title: "Module 2A - FEC Filing Fee Quizzes", description: `Take quizzes to earn Candidate Coins and signatures/votes.`, links: ["https://www.bernardjohnson4congress.com/candidate_simulator_fec_filing_fee_quizzes-test_mode"] },
-  { id: 3, title: "Module 3 - General Election Cycle First Moves", description: `Spend Candidate Coins on campaign tools, infrastructure, and ads.`, links: ["https://www.bernardjohnson4congress.com/candidate_simulator_general_election_cycle-first_moves-_test_mode"] },
-  { id: 4, title: "Module 4 - Campaign Announcement & Identity", description: `Write announcement, slogans, mission, key issues.`, links: ["https://www.bernardjohnson4congress.com/general_election_campaign_announcement_may_and_june_test_mode","https://www.bernardjohnson4congress.com/general_election_defining_your_campaign_s_identity_may_and_june_test_mode"] },
-  { id: 5, title: "Module 5 - July & August Campaign Cycle", description: `Design merchandise, respond to endorsements and petitions, draft legislative responses.`, links: ["https://www.bernardjohnson4congress.com/candidate_simulator_general_election_cycle_july_and_august_test_mode"] },
-  { id: 6, title: "Module 6 - September Campaign Cycle", description: `Take FEC quarterly quiz, handle canvassing, postcards, and debate challenges.`, links: ["https://www.bernardjohnson4congress.com/general_election_cycle_september_test_mode","https://www.fec.gov/resources/cms-content/documents/policy-guidance/fecfrm3.pdf"] },
+  { id: 0, title: "Introduction", description: "Purpose: Educate candidates using reading, writing, and AI-interactive tasks." },
+  { id: 1, title: "Module 1A - Independent Filing", description: "Earn Candidate Coins via quizzes." },
+  { id: 7, title: "October Modules", description: "Voice and speech practice unlocked." },
+  // ...add other modules as needed
 ];
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
 
-  const { messages, currentModule = 0, candidateCoins = 50 } = req.body as { messages: Message[]; currentModule?: number; candidateCoins?: number };
+  const { messages, currentModule = 0, candidateCoins = 50 } = req.body as {
+    messages: Message[];
+    currentModule?: number;
+    candidateCoins?: number;
+  };
 
-  if (!messages || !Array.isArray(messages)) return res.status(400).json({ error: "No messages provided" });
+  if (!messages || !Array.isArray(messages) || messages.length === 0) {
+    return res.status(400).json({ error: "No messages provided" });
+  }
 
-  // System prompt
-  const systemMessage: Message = {
-    role: "system",
-    content: `
-Candidate Simulator – Condensed System Prompt
+  try {
+    const moduleContext = modules.find((m) => m.id === currentModule);
 
-Role:
+    // Add system message with module context
+    const openAIMessages = [
+      { role: "system", content: `You are a campaign simulator assistant. Candidate has ${candidateCoins} Candidate Coins. Module context: ${moduleContext?.description}
+      Role:
 You are the Candidate Simulator AI — a structured, federal campaign simulation tool.
 You do not provide campaign advice, create content, or invent scenarios. Your job is to narrate consequences, ask clarifying questions, and track Candidate Coins, signatures, votes, and campaign progress.
 
@@ -71,6 +76,17 @@ Ask a clarifying question to guide the next decision.
 8. Quizzes should be a mixture of open-ended and multiple-choice responses. 
 
 9. Always offer brief and detailed summaries of the reading assignments.
+
+10. In Module 0, users must choose which office they're running for (President of the United States, U.S. Senate or U.S. House of Representatives) and receive the following information:
+
+Filing Fees (Simulation Equivalents)
+President of the United States → 75 CC
+U.S. Senate → 50 CC
+U.S. House of Representatives → 31 CC
+Ballot Access in Lieu of Filing Fee:
+President → 25% voter approval (nationwide threshold)
+Senate → 14% voter approval (statewide threshold)
+House → 7% voter approval (district threshold)
 ---
 
 Input Sources
@@ -145,6 +161,8 @@ Example: 1,000 signatures = 10% approval
 Eligibility for General Election (before Module 3):
 At least 1% voter approval
 Filing fee (in CC) must be paid
+
+Users must choose which office they're running for: President of the United States, U.S. Senate or U.S. House of Representatives.
 
 Filing Fees (Simulation Equivalents)
 President of the United States → 75 CC
@@ -436,36 +454,21 @@ Internal reasoning must be applied before reporting outcomes.
 
 Strict adherence to Candidate Coin rules, module flow, and scoring.
 
-Always conclude with next action or clarifying question until simulation ends.
-`
-  };
-
-  try {
-    // If no user messages yet, return welcome + Module 0 intro
-    const hasUserMessages = messages.some((m) => m.role === "user");
-    if (!hasUserMessages) {
-      const module0 = modules[0];
-      return res.status(200).json({
-        reply: `👋 Welcome to the Candidate Simulator – Federal Build!\n\nModule 0: ${module0.title}\n${module0.description}\n\nChoose your candidate path:\n1) Independent\n2) Libertarian\n\nSelect starting Candidate Coins (0–100).\n\nReference: ${module0.links?.[0]}`,
-        candidateCoins,
-      });
-    }
-
-    // Include full chat history (both user and assistant) for context
-    const chatHistory: Message[] = [systemMessage, ...messages];
+Always conclude with next action or clarifying question until simulation ends.` },
+      ...messages,
+    ];
 
     const completion = await client.chat.completions.create({
-      model: "gpt-4.1",
-      messages: chatHistory,
+      model: "gpt-4",
+      messages: openAIMessages,
       temperature: 0.7,
     });
 
-    res.status(200).json({
-      reply: completion.choices[0].message?.content ?? "No response",
-      candidateCoins,
-    });
-  } catch (error: any) {
-    console.error("Simulator API error:", error);
-    res.status(500).json({ error: error.message || "Server error" });
+    const output = completion.choices?.[0]?.message?.content ?? "⚠️ No response from model.";
+
+    return res.status(200).json({ output });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Internal server error" });
   }
 }

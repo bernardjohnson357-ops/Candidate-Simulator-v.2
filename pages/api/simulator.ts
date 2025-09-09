@@ -1,8 +1,12 @@
 // pages/api/simulator.ts
 import type { NextApiRequest, NextApiResponse } from "next";
-import OpenAI, { ChatCompletionMessageParam } from "openai";
+import OpenAI from "openai";
 
-const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
+const apiKey = process.env.OPENAI_API_KEY;
+if (!apiKey) {
+  console.warn("OPENAI_API_KEY is not set");
+}
+const client = new OpenAI({ apiKey });
 
 type Message = {
   role: "user" | "assistant" | "system";
@@ -23,9 +27,7 @@ const modules: Module[] = [
 ];
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
   const { messages, currentModule = 0, candidateCoins = 50 } = req.body as {
     messages: Message[];
@@ -37,14 +39,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: "No messages provided" });
   }
 
+  if (!apiKey) {
+    return res.status(500).json({ error: "OpenAI API key not configured on server" });
+  }
+
   try {
     const moduleContext = modules.find((m) => m.id === currentModule);
 
-    const openAIMessages: ChatCompletionMessageParam[] = [
+    // Build messages and cast to `any[]` to avoid strict SDK typing issues
+    const openAIMessages: any[] = [
       {
         role: "system",
         content: `Role:
-        
 You are the Candidate Simulator AI — a structured, federal campaign simulation tool.
 You do not provide campaign advice, create content, or invent scenarios. Your job is to narrate consequences, ask clarifying questions, and track Candidate Coins, signatures, votes, and campaign progress.
 
@@ -454,25 +460,33 @@ Internal reasoning must be applied before reporting outcomes.
 
 Strict adherence to Candidate Coin rules, module flow, and scoring.
 
-Always conclude with next action or clarifying question until simulation ends. Candidate has ${candidateCoins} Candidate Coins. Module context: ${moduleContext?.description}`,
+Always conclude with next action or clarifying question until simulation ends. Candidate has ${candidateCoins} Candidate Coins. Module context: ${moduleContext?.description ?? "None"}`,
       },
-      ...messages.map((m) => ({
-        role: m.role as "user" | "assistant" | "system",
-        content: m.content,
-      })),
+      ...messages.map((m) => ({ role: m.role, content: m.content })),
     ];
 
+    // Call OpenAI Chat Completions
     const completion = await client.chat.completions.create({
-      model: "gpt-4o-mini", // or "gpt-4o"
+      model: "gpt-4o-mini", // choose a model available to you
       messages: openAIMessages,
       temperature: 0.7,
-    });
+    } as any); // cast full request as any to avoid further TS signature issues
 
-    const output = completion.choices?.[0]?.message?.content ?? "⚠️ No response from model.";
+    // Extract output safely
+    const output =
+      // v4-style: completion.choices?.[0]?.message?.content
+      (completion as any)?.choices?.[0]?.message?.content ??
+      // fallback if structure differs:
+      (completion as any)?.choices?.[0]?.text ??
+      "⚠️ No response from model.";
+
+    // Optional: log the raw completion for debugging (remove in production)
+    console.debug("OpenAI completion:", JSON.stringify(completion)?.slice(0, 2000));
 
     return res.status(200).json({ output });
-  } catch (err) {
-    console.error("Simulator API error:", err);
-    return res.status(500).json({ error: "Internal server error" });
+  } catch (err: any) {
+    console.error("Simulator API error:", err?.message ?? err);
+    // Return a helpful error message to the front end for debugging
+    return res.status(500).json({ error: `OpenAI error: ${err?.message ?? "unknown"}` });
   }
 }

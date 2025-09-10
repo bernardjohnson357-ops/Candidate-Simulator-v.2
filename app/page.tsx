@@ -17,74 +17,77 @@ export default function HomePage() {
           Welcome to Federal Candidate Simulator - AI
         </h1>
         <h2 className="text-xl mb-2">Module 0 – Introduction</h2>
-<div className="mb-4 whitespace-pre-line">
-{`🎯 Purpose
-The Candidate Simulator teaches prospective federal candidates—especially independents and third-party hopefuls—how to run a campaign safely and realistically.
-It combines:
-Real-World Processes: Laws, FEC filing requirements, ballot access, and official guides.
-Simulation Mechanics: Candidate Coins (CC), quizzes, voter signatures, and scenario-based decision-making.
-By the end, participants understand both what real candidates must do and how to practice these steps in a simulation.
+<div className="mb-4">
+  <h3 className="font-bold mb-2">🎯 Purpose</h3>
+  <p className="mb-2">
+    The Candidate Simulator teaches prospective federal candidates—especially independents and third-party hopefuls—how to run a campaign safely and realistically. It combines:
+  </p>
+  <ul className="list-disc list-inside mb-2">
+    <li>Real-World Processes: Laws, FEC filing requirements, ballot access, and official guides.</li>
+    <li>Simulation Mechanics: Candidate Coins (CC), quizzes, voter signatures, and scenario-based decision-making.</li>
+  </ul>
+  <p className="mb-4">By the end, participants understand both what real candidates must do and how to practice these steps in a simulation.</p>
 
-🏛️ The Real Candidate Process
-Running for federal office in the U.S. involves:
-Choosing an Office: President, U.S. Senate, or U.S. House.
-Meeting Ballot Requirements: Paying fees or gathering signatures.
-FEC Reporting: Filing quarterly once campaign activity crosses financial thresholds.
-Building Voter Support: Developing a campaign identity and gaining approval.
-Sources: FEC Candidate Guide (2024 edition), State Candidate Filing Guides.
+  <h3 className="font-bold mb-2">🏛️ The Real Candidate Process</h3>
+  <ul className="list-disc list-inside mb-4">
+    <li>Choosing an Office: President, U.S. Senate, or U.S. House.</li>
+    <li>Meeting Ballot Requirements: Paying fees or gathering signatures.</li>
+    <li>FEC Reporting: Filing quarterly once campaign activity crosses financial thresholds.</li>
+    <li>Building Voter Support: Developing a campaign identity and gaining approval.</li>
+  </ul>
+  <p className="mb-4">Sources: FEC Candidate Guide (2024 edition), State Candidate Filing Guides.</p>
 
-🎮 How the Simulator Works
-Starting Conditions
-Each participant starts with 50 Candidate Coins (CC).
-Choose a ballot access path:
-Independent Candidate
-Third-Party Nominee
-Write-In Candidate
-Your choice determines your simulator branch (Modules 1A, 1B, or Write-In).
+  <h3 className="font-bold mb-2">🎮 How the Simulator Works</h3>
+  <p className="mb-2">Starting Conditions: Each participant starts with 50 Candidate Coins (CC).</p>
+  <p className="mb-2">Choose a ballot access path:</p>
+  <ul className="list-disc list-inside mb-2">
+    <li>Independent Candidate</li>
+    <li>Third-Party Nominee</li>
+    <li>Write-In Candidate</li>
+  </ul>
+  <p className="mb-2">Your choice determines your simulator branch (Modules 1A, 1B, or Write-In).</p>
 
-Candidate Coin (CC) System
-1 CC = $100 (simulated)
-Quizzes simulate fundraising: correct answers earn CC and signatures.
-Scoring Example:
-80%+ → % of signatures + 1 CC
-100% → 100 signatures + 2 CC
+  <h4 className="font-semibold mb-1">Candidate Coin (CC) System</h4>
+  <ul className="list-disc list-inside mb-2">
+    <li>1 CC = $100 (simulated)</li>
+    <li>Quizzes simulate fundraising: correct answers earn CC and signatures.</li>
+    <li>Scoring Example:
+      <ul className="list-disc list-inside ml-5">
+        <li>80%+ → % of signatures + 1 CC</li>
+        <li>100% → 100 signatures + 2 CC</li>
+      </ul>
+    </li>
+  </ul>
 
-Signatures → Voter Approval
-1 signature = 0.0001 voter approval
-Example: 100 signatures = 1% approval; 1,000 signatures = 10% approval.
+  <h4 className="font-semibold mb-1">Signatures → Voter Approval</h4>
+  <p className="mb-2">1 signature = 0.0001 voter approval. Example: 100 signatures = 1% approval; 1,000 signatures = 10% approval.</p>
 
-Eligibility for the General Election
-Fee Option (pay CC + minimum approval)
-Office
-Fee (CC)
-Voter Approval
-President
-75 CC
-2.5%
-Senate
-50 CC
-2.5%
-House
-31 CC
-2.5%
+  <h4 className="font-semibold mb-1">Eligibility for the General Election</h4>
+  <p className="mb-2">Fee Option (pay CC + minimum approval):</p>
+  <ul className="list-disc list-inside mb-2">
+    <li>President: 75 CC + 2.5%</li>
+    <li>Senate: 50 CC + 2.5%</li>
+    <li>House: 31 CC + 2.5%</li>
+  </ul>
+  <p className="mb-2">Signature Option (no fee):</p>
+  <ul className="list-disc list-inside mb-2">
+    <li>President: 25% nationwide</li>
+    <li>Senate: 14% statewide</li>
+    <li>House: 7% districtwide</li>
+  </ul>
 
-Signature Option (no fee)
-Office
-Voter Approval Required
-President
-25% nationwide
-Senate
-14% statewide
-House
-7% districtwide
-
-Quizzes & Retakes
-All quizzes: 1 retake allowed without penalty.
-Form 3 Quizzes (FEC filings): Triggered after spending 50+ CC.
-Penalties for errors:
-Wrong multiple-choice: –1 CC
-Wrong open-ended: –50 signatures
-Retake mistakes double the penalty (“FEC administrative fees”).`}
+  <h4 className="font-semibold mb-1">Quizzes & Retakes</h4>
+  <ul className="list-disc list-inside mb-2">
+    <li>All quizzes: 1 retake allowed without penalty.</li>
+    <li>Form 3 Quizzes (FEC filings): Triggered after spending 50+ CC.</li>
+    <li>Penalties for errors:
+      <ul className="list-disc list-inside ml-5">
+        <li>Wrong multiple-choice: –1 CC</li>
+        <li>Wrong open-ended: –50 signatures</li>
+        <li>Retake mistakes double the penalty (“FEC administrative fees”).</li>
+      </ul>
+    </li>
+  </ul>
 </div>
         
         <p className="mb-4">Choose your path:</p>

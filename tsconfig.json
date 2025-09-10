@@ -12,7 +12,11 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "baseUrl": ".",           // <-- ADD THIS
+    "paths": {                // <-- OPTIONAL ALIAS
+      "@/*": ["./*"]
+    }
   },
   "include": [
     "next-env.d.ts",

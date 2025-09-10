@@ -1,20 +1,20 @@
 // app/page.tsx
 "use client";
+
 import { useState } from "react";
-import Onboarding from "./components/Onboarding";
-import CandidateInteraction from "./components/CandidateInteraction";
+import Onboarding, { OnboardingPath, FilingOption } from "@/components/Onboarding";
+import CandidateChat from "@/components/CandidateChat";
 
 export default function Page() {
+  const [userPath, setUserPath] = useState<OnboardingPath | null>(null);
+  const [filingOption, setFilingOption] = useState<FilingOption | null>(null);
   const [onboardingComplete, setOnboardingComplete] = useState(false);
-  const [userPath, setUserPath] = useState<"independent" | "thirdParty" | null>(null);
-  const [filingOption, setFilingOption] = useState<"payFee" | "signatures" | null>(null);
 
   return (
-    <div className="max-w-4xl mx-auto mt-10">
-      <h1 className="text-3xl font-bold mb-6 text-center">
-        Federal Candidate Simulator – AI Edition
-      </h1>
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-start py-10 gap-10">
+      <h1 className="text-3xl font-bold mb-6">Federal Candidate Simulator</h1>
 
+      {/* Step 1: Onboarding */}
       {!onboardingComplete && (
         <Onboarding
           onComplete={(path, option) => {
@@ -25,11 +25,9 @@ export default function Page() {
         />
       )}
 
+      {/* Step 2: Candidate Chat / AI-driven simulation */}
       {onboardingComplete && userPath && filingOption && (
-        <CandidateInteraction
-          userPath={userPath}
-          filingOption={filingOption}
-        />
+        <CandidateChat path={userPath} option={filingOption} startingCC={50} />
       )}
     </div>
   );

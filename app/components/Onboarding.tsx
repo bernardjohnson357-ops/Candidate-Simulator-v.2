@@ -67,18 +67,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
           <h3 className="font-semibold text-lg">Candidate Coins (CC)</h3>
           <p className="text-2xl font-bold">{cc}</p>
           <div className="mt-2 flex justify-center gap-2 flex-wrap">
-            <button
-              onClick={() => { setCC(cc + 2); setTotalRaised(totalRaised + 200); setSignatures(signatures + 50); }}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
-            >
-              Earn 2 CC (Quiz)
-            </button>
-            <button
-              onClick={() => { if(cc>=5){setCC(cc-5); setTotalSpent(totalSpent+500);} }}
-              className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-            >
-              Spend 5 CC (Action)
-            </button>
+   
           </div>
         </div>
         <div className="bg-white shadow-md rounded-lg px-6 py-4 text-center">

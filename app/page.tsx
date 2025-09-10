@@ -25,7 +25,7 @@ export default function Page() {
         />
       )}
 
-      {/* Step 2: Candidate Chat / AI-driven simulation */}
+      {/* Step 2: AI-driven chat */}
       {onboardingComplete && userPath && filingOption && (
         <CandidateChat path={userPath} option={filingOption} startingCC={50} />
       )}

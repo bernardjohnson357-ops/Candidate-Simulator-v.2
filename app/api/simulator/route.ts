@@ -1,11 +1,10 @@
 // app/api/simulator/route.ts
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
-// ---------------------------
-// Mock database (replace with real DB in production)
 interface UserState {
   userId: string;
-  path: 'Independent' | 'Party' | 'thirdParty';
+  path: "Independent" | "Party" | "thirdParty";
+  filingOption: "signatures" | "filingFee";
   currentModule: string;
   cc: number;
   signatures: number;
@@ -16,13 +15,15 @@ interface UserState {
 const userDB = new Map<string, UserState>();
 
 // ---------------------------
-// Utility functions
-function getUserState(userId: string): UserState {
+// Utility helpers
+// ---------------------------
+function getUserState(userId: string, path: UserState["path"], filingOption: UserState["filingOption"]): UserState {
   if (!userDB.has(userId)) {
     const defaultState: UserState = {
       userId,
-      path: 'thirdParty', // default path for new users
-      currentModule: '0',
+      path,
+      filingOption,
+      currentModule: "0",
       cc: 50,
       signatures: 0,
       completedQuizzes: [],
@@ -39,9 +40,9 @@ function saveUserState(userId: string, state: UserState) {
 }
 
 function evaluateQuiz(quizId: string, answers: any) {
-  const score = Math.floor(Math.random() * 41) + 60; // Random 60-100
+  const score = Math.floor(Math.random() * 41) + 60; // 60-100
   const earnedCC = score === 100 ? 2 : 1;
-  const earnedSignatures = Math.floor(score); 
+  const earnedSignatures = Math.floor(score);
   return { score, earnedCC, earnedSignatures };
 }
 
@@ -50,18 +51,35 @@ function checkFECTrigger(user: UserState): boolean {
 }
 
 function getNextStep(user: UserState) {
-  // If user hasn't started Module 1, show filing guide & quiz
-  if (user.currentModule === '0') {
-    return {
-      message: `Welcome! You chose path: ${user.path}, filing option: signatures.\n\nStep 1: Read the FEC filing guide:\n- TX Independent Filing Guide: https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml\n- Candidate Simulator Homepage: https://www.bernardjohnson4congress.com/candidate_simulator_homepage_-test_mode\n- FEC Candidate Guide: https://www.fec.gov/resources/cms-content/documents/policy-guidance/candgui.pdf\n\nStep 2: Take the FEC Filing Fee Quiz to simulate paying your filing fee and earning signatures.`,
-      nextTask: 'FEC Filing Fee Quiz',
-      currentModule: '1A', // start Module 1
-    };
+  // Branching logic based on path + filing option
+  if (user.currentModule === "0") {
+    if (user.path === "Independent" || user.path === "thirdParty") {
+      if (user.filingOption === "signatures") {
+        return {
+          message: `Welcome! You chose path: ${user.path}, filing option: signatures.\n\nStep 1: Read Independent/Third-Party signature filing guide.\nStep 2: Take the Signature Verification Quiz.`,
+          nextTask: "Signature Verification Quiz",
+          currentModule: "1A",
+        };
+      } else {
+        return {
+          message: `Welcome! You chose path: ${user.path}, filing option: filing fee.\n\nStep 1: Read Independent/Third-Party filing fee guide.\nStep 2: Take the Filing Fee Quiz.`,
+          nextTask: "Filing Fee Quiz",
+          currentModule: "2A",
+        };
+      }
+    }
+
+    if (user.path === "Party") {
+      return {
+        message: `Welcome! You chose path: Party candidate.\n\nStep 1: Read Party filing guide.\nStep 2: Take the Party Filing Quiz.`,
+        nextTask: "Party Filing Quiz",
+        currentModule: "1B",
+      };
+    }
   }
 
-  // Default next step
   return {
-    message: 'Continue your current module or proceed to the next quiz/task.',
+    message: "Continue your current module or complete the next task.",
     nextTask: null,
     currentModule: user.currentModule,
   };
@@ -69,17 +87,23 @@ function getNextStep(user: UserState) {
 
 // ---------------------------
 // API Route
+// ---------------------------
 export async function POST(req: NextRequest) {
   try {
     const { userId, action, payload } = await req.json();
-    const user = getUserState(userId);
+
+    // Ensure we pass path + filingOption when initializing
+    const user = getUserState(
+      userId,
+      payload?.path || "thirdParty",
+      payload?.filingOption || "signatures"
+    );
 
     switch (action) {
-      case 'init':
-        // Return next step for new or returning user
+      case "init":
         return NextResponse.json(getNextStep(user));
 
-      case 'completeQuiz': {
+      case "completeQuiz": {
         const { quizId, answers } = payload;
         const result = evaluateQuiz(quizId, answers);
 
@@ -92,15 +116,15 @@ export async function POST(req: NextRequest) {
 
         if (checkFECTrigger(user)) {
           fecTriggered = true;
-          nextTask = 'FEC Filing Quiz';
+          nextTask = "FEC Filing Quiz";
           user.fecFilings.push(user.currentModule);
-          user.currentModule += '_FECQuiz';
+          user.currentModule += "_FECQuiz";
         }
 
         saveUserState(userId, user);
 
         return NextResponse.json({
-          message: 'Quiz completed',
+          message: "Quiz completed",
           score: result.score,
           earnedCC: result.earnedCC,
           earnedSignatures: result.earnedSignatures,
@@ -112,10 +136,10 @@ export async function POST(req: NextRequest) {
         });
       }
 
-      case 'spendCC': {
+      case "spendCC": {
         const { amount } = payload;
         if (amount > user.cc) {
-          return NextResponse.json({ error: 'Not enough CC' }, { status: 400 });
+          return NextResponse.json({ error: "Not enough CC" }, { status: 400 });
         }
         user.cc -= amount;
 
@@ -124,9 +148,9 @@ export async function POST(req: NextRequest) {
 
         if (checkFECTrigger(user)) {
           fecTriggered = true;
-          nextTask = 'FEC Filing Quiz';
+          nextTask = "FEC Filing Quiz";
           user.fecFilings.push(user.currentModule);
-          user.currentModule += '_FECQuiz';
+          user.currentModule += "_FECQuiz";
         }
 
         saveUserState(userId, user);
@@ -140,10 +164,9 @@ export async function POST(req: NextRequest) {
         });
       }
 
-      case 'nextModule': {
+      case "nextModule": {
         const { nextModule } = payload;
         user.currentModule = nextModule;
-
         saveUserState(userId, user);
 
         return NextResponse.json({
@@ -153,9 +176,12 @@ export async function POST(req: NextRequest) {
       }
 
       default:
-        return NextResponse.json({ error: 'Unknown action' }, { status: 400 });
+        return NextResponse.json({ error: "Unknown action" }, { status: 400 });
     }
   } catch (err) {
-    return NextResponse.json({ error: 'Failed to process request', details: err }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to process request", details: err },
+      { status: 500 }
+    );
   }
 }

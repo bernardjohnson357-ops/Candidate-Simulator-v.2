@@ -1,3 +1,4 @@
+//app/components/Onboarding.tsx
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -52,12 +53,17 @@ interface ModuleTask {
 interface OnboardingProps {
   path: OnboardingPath;
   filingOption: FilingOption;
+  onComplete?: (path: OnboardingPath, option: FilingOption) => void; // ✅ added
 }
 
 // ----------------------
 // Component
 // ----------------------
-export default function Onboarding({ path, filingOption }: OnboardingProps) {
+export default function Onboarding({
+  path,
+  filingOption,
+  onComplete,
+}: OnboardingProps) {
   const [userId] = useState("user123"); // TODO: Replace with real auth/session user
   const [task, setTask] = useState<ModuleTask | null>(null);
   const [answers, setAnswers] = useState<Record<string, any>>({});
@@ -66,33 +72,59 @@ export default function Onboarding({ path, filingOption }: OnboardingProps) {
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   // ----------------------
-  // Init user state
+  // Init user state (branch by path + filingOption)
   // ----------------------
   useEffect(() => {
     fetch("/api/simulator", {
       method: "POST",
-      body: JSON.stringify({ userId, action: "init", payload: { path, filingOption } }),
+      body: JSON.stringify({
+        userId,
+        action: "init",
+        payload: { path, filingOption },
+      }),
     })
       .then((res) => res.json())
       .then((data) => {
-        data.readingLinks = [
-          "https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml",
-          "https://www.bernardjohnson4congress.com/candidate_simulator_homepage_-test_mode",
-          "https://www.fec.gov/resources/cms-content/documents/policy-guidance/candgui.pdf",
-        ];
-        data.questions = [
-          {
-            id: "quiz1",
-            type: "text",
-            question: "Explain the filing requirements in your own words.",
-          },
-          {
-            id: "quiz2",
-            type: "multipleChoice",
-            question: "What is the minimum voter approval to enter the general election?",
-            options: ["1%", "5%", "10%", "15%"],
-          },
-        ];
+        // Add different reading links based on branch
+        if (path === "Independent" || path === "thirdParty") {
+          if (filingOption === "signatures") {
+            data.readingLinks = [
+              "https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml",
+              "https://www.fec.gov/resources/cms-content/documents/policy-guidance/candgui.pdf",
+            ];
+          } else {
+            data.readingLinks = [
+              "https://www.bernardjohnson4congress.com/candidate_simulator_homepage_-test_mode",
+              "https://www.fec.gov/resources/cms-content/documents/policy-guidance/candgui.pdf",
+            ];
+          }
+        } else if (path === "Party") {
+          data.readingLinks = [
+            "https://www.sos.state.tx.us/elections/candidates/guide/2024/lib-green-nom2024.shtml",
+            "https://www.fec.gov/resources/cms-content/documents/policy-guidance/candgui.pdf",
+          ];
+        }
+
+        // Example quiz per branch
+        data.questions =
+          path === "Party"
+            ? [
+                {
+                  id: "partyQuiz",
+                  type: "multipleChoice",
+                  question: "Which form must Party candidates file with the FEC?",
+                  options: ["Form 1", "Form 3", "Form 5", "Form 99"],
+                },
+              ]
+            : [
+                {
+                  id: "indQuiz",
+                  type: "text",
+                  question:
+                    "Explain the independent/third-party filing requirements in your own words.",
+                },
+              ];
+
         setTask(data);
       });
   }, [userId, path, filingOption]);
@@ -116,6 +148,11 @@ export default function Onboarding({ path, filingOption }: OnboardingProps) {
     const data = await res.json();
     setTask(data);
     setShowQuiz(false);
+
+    // ✅ Notify parent that onboarding is complete
+    if (onComplete) {
+      onComplete(path, filingOption);
+    }
   };
 
   // ----------------------

@@ -1,30 +1,33 @@
-import { NextResponse } from "next/server";
+// app/api/respond/route.ts
+import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY!,
-});
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
-export async function POST(req: Request) {
-  const { input } = await req.json();
-
-  if (!input || typeof input !== "string") {
-    return NextResponse.json({ error: "Invalid input" }, { status: 400 });
-  }
-
+export async function POST(req: NextRequest) {
   try {
+    const body = await req.json();
+    const { messages } = body;
+
+    if (!messages) return NextResponse.json({ error: "No messages provided" }, { status: 400 });
+
+    // Convert messages to GPT format
+    const chatMessages = messages.map((m: any) => ({
+      role: m.type === "user" ? "user" : "assistant",
+      content: m.content,
+    }));
+
     const completion = await client.chat.completions.create({
-      model: "gpt-4o-mini", // fast + cost-effective
-      messages: [
-        { role: "system", content: "You are a campaign simulator assistant." },
-        { role: "user", content: input },
-      ],
+      model: "gpt-4o-mini",
+      messages: chatMessages as any, // cast to bypass strict typing
+      temperature: 0.7,
     });
 
-    const output = completion.choices[0].message?.content || "No response.";
-    return NextResponse.json({ output });
-  } catch (err: any) {
-    console.error("OpenAI error:", err);
-    return NextResponse.json({ error: "OpenAI request failed" }, { status: 500 });
+    const reply = completion.choices?.[0]?.message?.content || "No response from AI.";
+
+    return NextResponse.json({ reply });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ error: "OpenAI error" }, { status: 500 });
   }
 }

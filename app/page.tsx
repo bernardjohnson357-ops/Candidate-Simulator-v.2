@@ -2,8 +2,8 @@
 "use client";
 
 import { useState } from "react";
-import Onboarding, { OnboardingPath, FilingOption } from "@/components/Onboarding";
-import CandidateChat from "@/components/CandidateChat";
+import Onboarding, { OnboardingPath, FilingOption } from "./components/Onboarding";
+import CandidateChat from "./components/CandidateChat";
 
 export default function Page() {
   const [userPath, setUserPath] = useState<OnboardingPath | null>(null);

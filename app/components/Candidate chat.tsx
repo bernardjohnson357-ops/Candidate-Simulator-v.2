@@ -7,36 +7,52 @@ type Message = {
   content: string;
 };
 
-export default function CandidateChat({ path, option }: { path: string; option: string }) {
-  const [showChat, setShowChat] = useState(false);
+type CandidateChatProps = {
+  path: "independent" | "thirdParty";
+  option: "payFee" | "signatures";
+  startingCC?: number;
+};
+
+export default function CandidateChat({
+  path,
+  option,
+  startingCC = 50,
+}: CandidateChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [cc, setCC] = useState(startingCC);
+  const [signatures, setSignatures] = useState(0);
+
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    // Launch AI greeting automatically
+    addAIMessage(
+      `Welcome to the Candidate Simulator! You selected path: ${path} and filing option: ${option}. Let's begin your simulated campaign.`
+    );
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleStartChat = () => {
-    setShowChat(true);
-    addAIMessage(
-      `Welcome to the candidate simulator chat! You chose ${path} and ${option}. I will guide you through the simulation, narrate consequences, and ask clarifying questions.`
-    );
-  };
-
   const addAIMessage = (content: string) => {
+    // Parse CC/signature updates if included in AI response
+    const ccMatch = content.match(/\+(\d+)\s*CC/);
+    const sigMatch = content.match(/\+(\d+)\s*signatures/);
+
+    if (ccMatch) setCC((prev) => prev + parseInt(ccMatch[1], 10));
+    if (sigMatch) setSignatures((prev) => prev + parseInt(sigMatch[1], 10));
+
     setMessages((prev) => [...prev, { type: "ai", content }]);
   };
 
   const handleSendMessage = async () => {
     if (!inputValue && !imageFile) return;
 
-    if (inputValue) {
-      setMessages((prev) => [...prev, { type: "user", content: inputValue }]);
-    }
-
+    if (inputValue) setMessages((prev) => [...prev, { type: "user", content: inputValue }]);
     if (imageFile) {
       const url = URL.createObjectURL(imageFile);
       setMessages((prev) => [...prev, { type: "image", content: url }]);
@@ -52,7 +68,7 @@ export default function CandidateChat({ path, option }: { path: string; option: 
         const response = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ messages }),
+          body: JSON.stringify({ messages: [...messages, { type: "user", content: userText }] }),
         });
         const data = await response.json();
         if (data.reply) addAIMessage(data.reply);
@@ -72,75 +88,61 @@ export default function CandidateChat({ path, option }: { path: string; option: 
 
   return (
     <div className="flex flex-col items-center gap-6">
-      {!showChat && (
-        <button
-          onClick={handleStartChat}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-4 rounded-lg shadow-lg"
-        >
-          Start Candidate Chat
-        </button>
-      )}
+      {/* Dashboard for CC and Signatures */}
+      <div className="flex gap-6 mb-4">
+        <div className="bg-white shadow-md rounded-lg p-4 text-center w-32">
+          <h3 className="font-semibold">Candidate Coins</h3>
+          <p className="text-2xl font-bold">{cc}</p>
+        </div>
+        <div className="bg-white shadow-md rounded-lg p-4 text-center w-32">
+          <h3 className="font-semibold">Signatures</h3>
+          <p className="text-2xl font-bold">{signatures}</p>
+        </div>
+      </div>
 
-      {showChat && (
-        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-          <div className="bg-white w-11/12 md:w-3/4 lg:w-1/2 p-6 rounded-lg shadow-lg relative flex flex-col h-[80vh]">
+      {/* Chat window */}
+      <div className="w-full md:w-3/4 lg:w-1/2 flex flex-col h-[70vh] border rounded shadow-lg">
+        <div className="flex-1 overflow-y-auto p-4 bg-gray-50 space-y-2">
+          {messages.map((msg, idx) =>
+            msg.type === "user" ? (
+              <div key={idx} className="bg-blue-100 p-2 rounded text-right">{msg.content}</div>
+            ) : msg.type === "ai" ? (
+              <div key={idx} className="bg-gray-200 p-2 rounded">{msg.content}</div>
+            ) : (
+              <div key={idx}><img src={msg.content} className="max-h-64 rounded" /></div>
+            )
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Input area */}
+        <div className="flex flex-col gap-2 p-2 border-t">
+          <textarea
+            ref={textareaRef}
+            value={inputValue}
+            onChange={handleTextareaChange}
+            placeholder="Type your message..."
+            className="w-full border rounded px-3 py-2 resize-none overflow-hidden"
+          />
+          <div className="flex gap-2">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => e.target.files && setImageFile(e.target.files[0])}
+              className="border rounded px-3 py-2"
+            />
             <button
-              onClick={() => setShowChat(false)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 font-bold"
+              onClick={handleSendMessage}
+              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
             >
-              ✕
+              Send
             </button>
-
-            <h2 className="text-xl font-bold mb-4">Candidate Chat</h2>
-
-            <div className="flex-1 overflow-y-auto mb-4 border rounded p-4 bg-gray-50 space-y-2">
-              {messages.map((msg, idx) =>
-                msg.type === "user" ? (
-                  <div key={idx} className="bg-blue-100 p-2 rounded text-right">
-                    {msg.content}
-                  </div>
-                ) : msg.type === "ai" ? (
-                  <div key={idx} className="bg-gray-200 p-2 rounded">
-                    {msg.content}
-                  </div>
-                ) : (
-                  <div key={idx}>
-                    <img src={msg.content} className="max-h-64 rounded" />
-                  </div>
-                )
-              )}
-              <div ref={messagesEndRef} />
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <textarea
-                ref={textareaRef}
-                value={inputValue}
-                onChange={handleTextareaChange}
-                placeholder="Type your message..."
-                className="w-full border rounded px-3 py-2 resize-none overflow-hidden"
-              />
-              <div className="flex gap-2">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => e.target.files && setImageFile(e.target.files[0])}
-                  className="border rounded px-3 py-2"
-                />
-                <button
-                  onClick={handleSendMessage}
-                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-                >
-                  Send
-                </button>
-                <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                  🎤 Audio
-                </button>
-              </div>
-            </div>
+            <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+              🎤 Audio
+            </button>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

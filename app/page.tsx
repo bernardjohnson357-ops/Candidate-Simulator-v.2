@@ -17,7 +17,8 @@ export default function HomePage() {
           Welcome to Federal Candidate Simulator - AI
         </h1>
         <h2 className="text-xl mb-2">Module 0 – Introduction</h2>
-<p "🎯 Purpose
+<div className="mb-4 whitespace-pre-line">
+{`🎯 Purpose
 The Candidate Simulator teaches prospective federal candidates—especially independents and third-party hopefuls—how to run a campaign safely and realistically.
 It combines:
 Real-World Processes: Laws, FEC filing requirements, ballot access, and official guides.
@@ -77,15 +78,14 @@ Senate
 House
 7% districtwide
 
-
 Quizzes & Retakes
 All quizzes: 1 retake allowed without penalty.
 Form 3 Quizzes (FEC filings): Triggered after spending 50+ CC.
 Penalties for errors:
 Wrong multiple-choice: –1 CC
 Wrong open-ended: –50 signatures
-Retake mistakes double the penalty (“FEC administrative fees”).
-" </p>
+Retake mistakes double the penalty (“FEC administrative fees”).`}
+</div>
         
         <p className="mb-4">Choose your path:</p>
 

@@ -1,87 +1,77 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
-type OnboardingProps = {
-  onComplete: (path: "independent" | "thirdParty", option: "payFee" | "signatures") => void;
+type Message = {
+  type: "user" | "ai" | "image";
+  content: string;
 };
 
-export default function Onboarding({ onComplete }: OnboardingProps) {
+export default function OnboardingChat() {
   const [path, setPath] = useState<"independent" | "thirdParty" | null>(null);
-  const [cc, setCC] = useState(50);
-  const [signatures, setSignatures] = useState(0);
-  const [totalRaised, setTotalRaised] = useState(0);
-  const [totalSpent, setTotalSpent] = useState(0);
-
-  const cashOnHand = totalRaised - totalSpent;
+  const [showChat, setShowChat] = useState(false);
+  const [chatContext, setChatContext] = useState<{ path: string; option: string } | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputValue, setInputValue] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const handleStartSimulation = (option: "payFee" | "signatures") => {
-    onComplete(path!, option);
+    setChatContext({ path: path!, option });
+    setShowChat(true);
+    addAIMessage(
+      `Welcome to the candidate simulator chat! You are starting as a ${path} candidate and chose ${option}.`
+    );
+  };
+
+  const addAIMessage = (content: string) => {
+    setMessages((prev) => [...prev, { type: "ai", content }]);
+  };
+
+  const handleSendMessage = async () => {
+    if (!inputValue && !imageFile) return;
+
+    // Add user text
+    if (inputValue) {
+      setMessages((prev) => [...prev, { type: "user", content: inputValue }]);
+    }
+
+    // Add user image
+    if (imageFile) {
+      const url = URL.createObjectURL(imageFile);
+      setMessages((prev) => [...prev, { type: "image", content: url }]);
+      setImageFile(null);
+    }
+
+    const userText = inputValue;
+    setInputValue("");
+    if (textareaRef.current) textareaRef.current.style.height = "auto";
+
+    if (userText) {
+      // Call GPT API (replace with your own backend endpoint)
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages: [...messages, { type: "user", content: userText }] }),
+        });
+        const data = await response.json();
+        addAIMessage(data.reply);
+      } catch (err) {
+        addAIMessage("Error: Unable to get response from AI.");
+      }
+    }
+  };
+
+  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputValue(e.target.value);
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
   };
 
   return (
     <div className="flex flex-col items-center gap-6">
-      {/* Context Panel */}
-      <div className="bg-gray-100 p-6 rounded-lg shadow-md max-w-3xl text-left">
-        <h2 className="text-2xl font-bold mb-4">Understanding the Simulator</h2>
-        <p className="mb-4">
-          The Candidate Simulator helps you understand <strong>real federal campaign requirements </strong> 
-          while letting you practice those steps in a safe, simulated environment. This is not a game—each 
-          part of the dashboard reflects actual processes.
-        </p>
-
-        <h3 className="text-lg font-semibold">Candidate Coins (CC)</h3>
-        <p className="mb-4">
-          <strong>Real World:</strong> Candidates raise money through contributions, deposit it into a 
-          campaign bank account, and report it to the FEC. <br />
-          <strong>Simulation:</strong> CC represent campaign funds. 1 CC = $100. Your dashboard shows 
-          how much you’ve raised, spent, and your cash on hand, mirroring FEC reporting.
-        </p>
-
-        <h3 className="text-lg font-semibold">Signatures & Voter Approval</h3>
-        <p className="mb-4">
-          <strong>Real World:</strong> Ballot access requires petition signatures or filing fees. 
-          Voter support is built through outreach. <br />
-          <strong>Simulation:</strong> Signatures equal voter approval. Gathering enough can substitute 
-          for paying a filing fee, just as in real elections.
-        </p>
-
-        <h3 className="text-lg font-semibold">Campaign Bank</h3>
-        <p className="mb-4">
-          <strong>Real World:</strong> Federal candidates must use a dedicated campaign bank account and 
-          file quarterly reports (Form 3) with the FEC. <br />
-          <strong>Simulation:</strong> Your dashboard tracks total funds raised, spent, and cash on hand. 
-          Later modules simulate FEC filings for compliance practice.
-        </p>
-
-        <h3 className="text-lg font-semibold">Modules & Decisions</h3>
-        <p>
-          <strong>Real World:</strong> Campaigns involve filings, strategy, and compliance reporting. <br />
-          <strong>Simulation:</strong> Each module mirrors a campaign stage. Your decisions will affect CC, 
-          signatures, and voter approval, just as real candidates’ choices affect their campaigns.
-        </p>
-      </div>
-
-      {/* Dashboard */}
-      <div className="flex flex-wrap gap-6 justify-center mb-8">
-        <div className="bg-white shadow-md rounded-lg px-6 py-4 text-center">
-          <h3 className="font-semibold text-lg">Candidate Coins (CC)</h3>
-          <p className="text-2xl font-bold">{cc}</p>
-          <div className="mt-2 flex justify-center gap-2 flex-wrap">
-   
-          </div>
-        </div>
-        <div className="bg-white shadow-md rounded-lg px-6 py-4 text-center">
-          <h3 className="font-semibold text-lg">Signatures</h3>
-          <p className="text-2xl font-bold">{signatures}</p>
-        </div>
-        <div className="bg-white shadow-md rounded-lg px-6 py-4 text-center">
-          <h3 className="font-semibold text-lg">Campaign Bank</h3>
-          <p>Total Raised: ${totalRaised}</p>
-          <p>Total Spent: ${totalSpent}</p>
-          <p className="text-xl font-bold">Cash on Hand: ${cashOnHand}</p>
-        </div>
-      </div>
-
       {/* Branch Selection */}
       {!path && (
         <div className="flex flex-col md:flex-row gap-6">
@@ -103,6 +93,58 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
           <button onClick={() => handleStartSimulation("signatures")} className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-4 rounded-lg shadow-lg">
             Gather Signatures (In Lieu of Fee)
           </button>
+        </div>
+      )}
+
+      {/* Chat Modal */}
+      {showChat && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+          <div className="bg-white w-11/12 md:w-3/4 lg:w-1/2 p-6 rounded-lg shadow-lg relative flex flex-col h-[80vh]">
+            <button onClick={() => setShowChat(false)} className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 font-bold">
+              ✕
+            </button>
+
+            <h2 className="text-xl font-bold mb-4">Candidate Chat</h2>
+
+            <div className="flex-1 overflow-y-auto mb-4 border rounded p-4 bg-gray-50 space-y-2">
+              {messages.map((msg, idx) =>
+                msg.type === "user" ? (
+                  <div key={idx} className="bg-blue-100 p-2 rounded text-right">{msg.content}</div>
+                ) : msg.type === "ai" ? (
+                  <div key={idx} className="bg-gray-200 p-2 rounded">{msg.content}</div>
+                ) : (
+                  <div key={idx}>
+                    <img src={msg.content} className="max-h-64 rounded" />
+                  </div>
+                )
+              )}
+            </div>
+
+            {/* Input area */}
+            <div className="flex flex-col gap-2">
+              <textarea
+                ref={textareaRef}
+                value={inputValue}
+                onChange={handleTextareaChange}
+                placeholder="Type your message..."
+                className="w-full border rounded px-3 py-2 resize-none overflow-hidden"
+              />
+              <div className="flex gap-2">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => e.target.files && setImageFile(e.target.files[0])}
+                  className="border rounded px-3 py-2"
+                />
+                <button onClick={handleSendMessage} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                  Send
+                </button>
+                <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                  🎤 Audio
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

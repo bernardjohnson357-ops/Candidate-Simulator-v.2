@@ -3,6 +3,15 @@
 
 import { useState, useEffect, useRef } from "react";
 
+// ----------------------
+// Exported Types
+// ----------------------
+export type OnboardingPath = "Independent" | "Party" | "thirdParty";
+export type FilingOption = "signatures" | "filingFee";
+
+// ----------------------
+// Interfaces
+// ----------------------
 interface Question {
   id: string;
   type: "text" | "multipleChoice";
@@ -21,22 +30,25 @@ interface ModuleTask {
   signatures: number;
 }
 
-// Declare the webkitSpeechRecognition global type for TypeScript
-declare global {
-  interface Window {
-    webkitSpeechRecognition: any;
-  }
+interface OnboardingProps {
+  path: OnboardingPath;
+  filingOption: FilingOption;
 }
 
-export default function Onboarding() {
-  const [userId] = useState("user123");
+// ----------------------
+// Component
+// ----------------------
+export default function Onboarding({ path, filingOption }: OnboardingProps) {
+  const [userId] = useState("user123"); // TODO: Replace with auth/session user
   const [task, setTask] = useState<ModuleTask | null>(null);
   const [answers, setAnswers] = useState<Record<string, any>>({});
   const [showQuiz, setShowQuiz] = useState(false);
   const [speechActive, setSpeechActive] = useState(false);
-  const recognitionRef = useRef<any>(null); // Fix TypeScript error
+  const recognitionRef = useRef<any>(null); // fixed type issue
 
-  // Initialize user
+  // ----------------------
+  // Init user state
+  // ----------------------
   useEffect(() => {
     fetch("/api/simulator", {
       method: "POST",
@@ -66,6 +78,9 @@ export default function Onboarding() {
       });
   }, [userId]);
 
+  // ----------------------
+  // Quiz logic
+  // ----------------------
   const handleAnswerChange = (questionId: string, value: any) => {
     setAnswers({ ...answers, [questionId]: value });
   };
@@ -84,8 +99,13 @@ export default function Onboarding() {
     setShowQuiz(false);
   };
 
+  // ----------------------
+  // Speech-to-text
+  // ----------------------
   const startSpeech = () => {
-    if (!("webkitSpeechRecognition" in window)) return alert("Speech API not supported");
+    if (!("webkitSpeechRecognition" in window))
+      return alert("Speech API not supported");
+
     const recognition = new window.webkitSpeechRecognition();
     recognitionRef.current = recognition;
     recognition.continuous = false;
@@ -96,6 +116,7 @@ export default function Onboarding() {
       const text = event.results[0][0].transcript;
       handleAnswerChange("quizSpeech", text);
     };
+
     recognition.start();
     setSpeechActive(true);
   };
@@ -105,11 +126,16 @@ export default function Onboarding() {
     setSpeechActive(false);
   };
 
+  // ----------------------
+  // Render
+  // ----------------------
   if (!task) return <p>Loading simulator...</p>;
 
   return (
     <div className="p-4">
       <h2>Candidate Simulator</h2>
+      <p>Path: {path}</p>
+      <p>Filing Option: {filingOption}</p>
       <p>### Candidate Coins: {task.cc}</p>
       <p>### Signatures: {task.signatures}</p>
 
@@ -121,7 +147,11 @@ export default function Onboarding() {
           <ul>
             {task.readingLinks.map((link, i) => (
               <li key={i}>
-                <a href={link} target="_blank" className="text-blue-600 underline">
+                <a
+                  href={link}
+                  target="_blank"
+                  className="text-blue-600 underline"
+                >
                   {link}
                 </a>
               </li>

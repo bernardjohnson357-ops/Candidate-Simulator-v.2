@@ -21,13 +21,20 @@ interface ModuleTask {
   signatures: number;
 }
 
-export default function Simulator() {
+// Declare the webkitSpeechRecognition global type for TypeScript
+declare global {
+  interface Window {
+    webkitSpeechRecognition: any;
+  }
+}
+
+export default function Onboarding() {
   const [userId] = useState("user123");
   const [task, setTask] = useState<ModuleTask | null>(null);
   const [answers, setAnswers] = useState<Record<string, any>>({});
   const [showQuiz, setShowQuiz] = useState(false);
   const [speechActive, setSpeechActive] = useState(false);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<any>(null); // Fix TypeScript error
 
   // Initialize user
   useEffect(() => {
@@ -37,13 +44,11 @@ export default function Simulator() {
     })
       .then((res) => res.json())
       .then((data) => {
-        // Example: add reading links to Module 1
         data.readingLinks = [
           "https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml",
           "https://www.bernardjohnson4congress.com/candidate_simulator_homepage_-test_mode",
           "https://www.fec.gov/resources/cms-content/documents/policy-guidance/candgui.pdf",
         ];
-        // Example questions
         data.questions = [
           {
             id: "quiz1",
@@ -61,12 +66,10 @@ export default function Simulator() {
       });
   }, [userId]);
 
-  // Handle quiz answer change
   const handleAnswerChange = (questionId: string, value: any) => {
     setAnswers({ ...answers, [questionId]: value });
   };
 
-  // Submit quiz
   const submitQuiz = async () => {
     const res = await fetch("/api/simulator", {
       method: "POST",
@@ -81,16 +84,15 @@ export default function Simulator() {
     setShowQuiz(false);
   };
 
-  // Start speech recognition for text input
   const startSpeech = () => {
     if (!("webkitSpeechRecognition" in window)) return alert("Speech API not supported");
-    const recognition = new webkitSpeechRecognition();
+    const recognition = new window.webkitSpeechRecognition();
     recognitionRef.current = recognition;
     recognition.continuous = false;
     recognition.interimResults = false;
     recognition.lang = "en-US";
 
-    recognition.onresult = (event) => {
+    recognition.onresult = (event: any) => {
       const text = event.results[0][0].transcript;
       handleAnswerChange("quizSpeech", text);
     };

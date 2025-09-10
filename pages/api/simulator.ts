@@ -151,338 +151,228 @@ Simulation Flow
 
 Module & Timeline Highlights
 
-Module 0 – Introduction
-Federal Candidate Simulator – AI Edition
+# Federal Candidate Simulator – Master Roadmap  
+**AI Edition**  
 
-🎯 Purpose
-The Candidate Simulator teaches prospective federal candidates—especially independents and third-party hopefuls—how to run a campaign safely and realistically.
-It combines:
-Real-World Processes: Laws, FEC filing requirements, ballot access, and official guides.
-Simulation Mechanics: Candidate Coins (CC), quizzes, voter signatures, and scenario-based decision-making.
-By the end, participants understand both what real candidates must do and how to practice these steps in a simulation.
+---
 
-🏛️ The Real Candidate Process
-Running for federal office in the U.S. involves:
-Choosing an Office: President, U.S. Senate, or U.S. House.
-Meeting Ballot Requirements: Paying fees or gathering signatures.
-FEC Reporting: Filing quarterly once campaign activity crosses financial thresholds.
-Building Voter Support: Developing a campaign identity and gaining approval.
-Sources: FEC Candidate Guide (2024 edition), State Candidate Filing Guides.
+## Module 0 – Introduction  
 
-🎮 How the Simulator Works
-Starting Conditions
-Each participant starts with 50 Candidate Coins (CC).
-Choose a ballot access path:
-Independent Candidate
-Third-Party Nominee
-Write-In Candidate
-Your choice determines your simulator branch (Modules 1A, 1B, or Write-In).
+### 🎯 Purpose  
+The Candidate Simulator teaches prospective federal candidates—especially independents and third-party hopefuls—how to run a campaign safely and realistically.  
 
-Candidate Coin (CC) System
-1 CC = $100 (simulated)
-Quizzes simulate fundraising: correct answers earn CC and signatures.
-Scoring Example:
-80%+ → % of signatures + 1 CC
-100% → 100 signatures + 2 CC
+It combines:  
+- **Real-World Processes**: Laws, FEC filing requirements, ballot access, and official guides.  
+- **Simulation Mechanics**: Candidate Coins (CC), quizzes, voter signatures, and scenario-based decision-making.  
 
-Signatures → Voter Approval
-1 signature = 0.0001 voter approval
-Example: 100 signatures = 1% approval; 1,000 signatures = 10% approval.
+By the end, participants understand both what real candidates must do and how to practice these steps in a simulation.  
 
-Eligibility for the General Election
-Fee Option (pay CC + minimum approval)
-Office
-Fee (CC)
-Voter Approval
-President
-75 CC
-2.5%
-Senate
-50 CC
-2.5%
-House
-31 CC
-2.5%
+### 🏛️ The Real Candidate Process  
+Running for federal office in the U.S. involves:  
+1. Choosing an Office: President, U.S. Senate, or U.S. House.  
+2. Meeting Ballot Requirements: Paying fees or gathering signatures.  
+3. FEC Reporting: Filing Forms 1 & 2 at the start, and quarterly Form 3 filings once campaign activity crosses financial thresholds.  
+4. Building Voter Support: Developing a campaign identity and gaining approval.  
 
-Signature Option (no fee)
-Office
-Voter Approval Required
-President
-25% nationwide
-Senate
-14% statewide
-House
-7% districtwide
+### 🎮 How the Simulator Works  
+- Each participant starts with **50 Candidate Coins (CC)**.  
+- Choose a ballot access path: Independent, Third-Party, or Write-In.  
+- Your choice determines your simulator branch.  
 
+**Candidate Coin (CC) System**  
+- 1 CC = $100 (simulated).  
+- Quizzes simulate fundraising: correct answers earn CC and signatures.  
 
-Quizzes & Retakes
-All quizzes: 1 retake allowed without penalty.
-Form 3 Quizzes (FEC filings): Triggered after spending 50+ CC.
-Penalties for errors:
-Wrong multiple-choice: –1 CC
-Wrong open-ended: –50 signatures
-Retake mistakes double the penalty (“FEC administrative fees”).
+**Signatures → Voter Approval**  
+- 1 signature = 0.0001 voter approval.  
+- Example: 100 signatures = 1% approval; 1,000 signatures = 10% approval.  
 
-📚 Reference Roadmap
-Candidate Simulator Homepage (internal)
-Federal Election Commission Candidate Guide (2024 edition)
+**Eligibility for the General Election**  
+- **Fee Option (pay CC + minimum approval)**:  
+  - President: 75 CC + 2.5% approval  
+  - Senate: 50 CC + 2.5% approval  
+  - House: 31 CC + 2.5% approval  
+- **Signature Option (no fee)**:  
+  - President: 25% nationwide  
+  - Senate: 14% statewide  
+  - House: 7% districtwide  
 
+**Quizzes & Retakes**  
+- 1 free retake for all quizzes.  
+- Wrong answers = penalties: –1 CC or –50 signatures.  
+- Retake mistakes double the penalty (“FEC administrative fees”).  
 
+---
 
+# >>> BRANCH_START: Independent Path  
 
->>> BRANCH_START: Independent Path
-Module 1A – Independent/Write-In Filing
-REFERENCE LINK – Independent Filing Guide (TX)
- REFERENCE LINK – Write-In Filing Guide (TX)
-Task
-Read the above links.
-TASK LINK – Take Quiz on Requirements
+## Module 1A – Independent/Write-In Filing  
 
-Module 2A – FEC Filing Fee Quizzes (Independent)
-TASK LINK – FEC Filing Fee Quizzes
-Task
-Complete multiple rounds of quizzes.
- Result
-Earn CC + signatures.
- Outcome
-On completion, proceed to General Election.
+**🎯 Purpose**  
+Understand the Texas state filing requirements for independent and write-in candidates, including SOS procedures.  
 
->>> BRANCH_START: Party Path
-Module 1B – Party Filing
-REFERENCE LINK – Party Filing Guide (TX)
- REFERENCE LINK – Candidate Guide (FEC)
-Task
-Read the above links.
-TASK LINK – Take Quiz on Requirements
+**📝 Brief Summary**  
+Independent and write-in candidates must complete state-level filing through the Secretary of State, either paying fees or gathering signatures, before pursuing federal filings.  
 
-Module 2B – FEC Filing Fee Quizzes (Party)
-TASK LINK – FEC Filing Fee Quizzes
-Task
-Complete multiple rounds of quizzes.
- Result
-Earn CC + signatures.
- Outcome
-On completion, proceed to General Election.
+**📝 Detailed Summary**  
+Independent and write-in candidates face specific filing requirements at the state level. They must submit the proper forms to the Secretary of State, either paying the required filing fee or collecting enough signatures to qualify for the ballot. Once state filing is complete, candidates prepare for federal compliance, tracking contributions and expenditures for eventual FEC reporting.  
 
->>> BRANCH_END: Merge to General Election
+**📝 Task**  
+- Complete quiz on independent/write-in filing requirements (SOS process).  
 
-Module 3 – May (General Election: First Moves)
-REFERENCE LINK – General Election First Moves
-Candidate Coin Spending Options
-Website/Domain/Email: 7 CC
-Infrastructure Packs: 5–30 CC (Explorer → Founder, 1–6 months)
-Digital Ads: 2–12 CC per month
-Team-Building Task
-Recruit a friend to join the simulator (simulates campaign expansion).
-Opposition Research Task
- Submit:
-Candidate’s name & FEC ID
-Receipts, expenditures, cash on hand (beginning & ending)
-Source link (e.g., REFERENCE LINK – FEC Data Example)
-Knowledge Quiz
- TASK LINK – General Election FEC Getting Started Quiz
- REFERENCE LINK – FECFile Getting Started Manual
+---
 
-Module 4 – May & June (Campaign Identity)
-Activity 1 – Campaign Announcement
- TASK LINK – Announcement Submission
-Write a newspaper article announcing candidacy.
-Activity 2 – Defining Campaign Identity
- TASK LINK – Identity Submission
- Submit:
-Campaign slogan(s).
-Mission statement/credo.
-Four key issues with explanations.
+## Module 2A – FEC Filing Fee Quizzes (Independent)  
 
-Module 5 – July & August (Campaign Expansion)
-REFERENCE LINK – General Election July & August
-Design Task
-Create yard sign, bumper sticker, T-shirt. Upload for AI review.
-[SCENARIO – MULTIPLE CHOICE] Endorsement Dilemma
- Group: Texas Mothers for Does (anti-deer hunting, ~200 members).
- Offer: Endorsement + promotion.
- Decision: Accept or Decline.
-[SCENARIO – MULTIPLE CHOICE] Petition Decision
- Petition: End War in Gaza.
- Decision: Sign or Decline.
-[SCENARIO – TEXT RESPONSE] Legislative Response
- Opponent passed controversial legislation (tax cuts for wealthy, cuts student food programs, admired president signed it).
- Task: Write your candidate response.
+**🎯 Purpose**  
+Practice federal filing requirements for independent candidates, covering **FEC Forms 1 and 2**.  
 
-Module 6 – September (FEC Compliance & Scenarios)
-REFERENCE LINK – General Election September
-FEC Filing Quiz
- REFERENCE LINK – FEC Form 3 Manual
- TASK LINK – Complete FEC Filing Quiz
-[SCENARIO – TEXT RESPONSE] Community Canvassing
- Resident: “I retired with $1.5M. I’m worried it won’t last. What would you do for people like me?”
- Task: Candidate response.
-[SCENARIO – TEXT RESPONSE] Constitution Day Challenge
- At Armadillo University, protesters confront you about your prior decision on the Gaza petition.
- Task: Candidate response.
-[SCENARIO – MULTIPLE CHOICE] Postcard Offer
-100 CC = postcards + mid-Oct–Election ads.
-75 CC = postcards + late Oct ads only.
-0 CC = decline.
-[SCENARIO – MULTIPLE CHOICE] Debate Challenge
- Opponent invites you to October debate.
-Accept/Decline.
-Option: Hire debate coach (50 CC).
+**📝 Brief Summary**  
+Independent candidates must submit FEC Forms 1 and 2 once campaign activity passes thresholds, reporting contributions, expenditures, and committee structure.  
 
-Module 7 – October 1–7
-REFERENCE LINK – General Election October 1–7 Test Mode
-Election Countdown
-One month until Election Day (Tuesday, Nov 3).
-Campaign team: campaign manager, communications director, dedicated volunteers.
-📰 Weekly News Summary (Reference)
-World News: Gaza population drop, Chinese facilitation of weapons, etc.
-National News: LA earthquake, Capitol security, transgender sports league.
-Texas News: Gerrymandering, school safety, retiree relief, debate rumors, weather watch.
-📊 Weekly Campaign Briefing
-Opposition Research: Incumbent leads by 15%, strong local support, funding secure.
-Constituent Sentiment: Community safety is top concern after wild hog incident.
-[SCENARIO – TEXT RESPONSE] Candidate Speech
-Task: Prepare an inspiring speech addressing community safety and reassuring families.
-Prompt:
-Using the Weekly Campaign Briefing above, write a 1–2 paragraph speech responding to constituent concerns.
-User Input: Type or use speech-to-text directly here. GPT evaluates and stores response immediately
+**📝 Detailed Summary**  
+Federal law requires independent candidates to file:  
+- **Form 1 (Statement of Candidacy)** – declares candidacy.  
+- **Form 2 (Statement of Organization)** – registers campaign committee and reports initial finances.  
 
+These quizzes simulate the reporting process. Successful completion earns CC and voter signatures, reinforcing the link between compliance and campaign credibility.  
 
-Module 8 – October 8–14
-REFERENCE LINK – General Election October 8–14 Test Mode
-Election Countdown
-Election Day is just weeks away (Nov 3).
-📰 Weekly News Summary (Reference)
-World News: European leaders alarmed by Gaza reports, China shipping nuclear weapons to Iran, Canada calls for boycotts.
-National News: Congressional shooting, transgender soccer league stabbing, U.S. leaders pledge support for Israel.
-Texas Updates: Polling shows strong Israel support, advocacy for open-carry shotguns at schools, mixed reactions to healthcare law, local flood relief actions, transgender politician’s statements.
-📊 Weekly Campaign Briefing
-Opposition Research: Incumbent receives polling surge after attack, small-dollar donations rising.
-Constituent Sentiment: Residents uncertain about your rhetoric, some support opponent.
-[SCENARIO – TEXT RESPONSE / SPEECH-TO-TEXT] Press Conference
-Task: Hold a press conference. Begin with an opening statement addressing the most important issues.
-Prompt for GPT:
- Using the Weekly Campaign Briefing above, craft an opening statement for the press conference. You may type your response or use speech-to-text.
-User Input: Type or speak directly. GPT captures and evaluates immediately.
-After opening statement, type “Next” to proceed through follow-up questions.
-[TASK LINK] → actual press conference interaction page.
+**📝 Task**  
+- Complete multiple rounds of FEC filing quizzes (Forms 1 & 2).  
+- Outcome: Earn CC + voter signatures.  
+- Unlocks General Election branch.  
 
-Module 9 – October 15–22
-REFERENCE LINK – General Election October 15–22 A Test Mode
- REFERENCE LINK – Podcast Questions
-Election Countdown
-Election Day is almost here!
-📰 Weekly News Summary (Reference)
-World News: U.S. faces trade restrictions due to Israel alliance; Iran attacks Saudi Arabia, risking nuclear escalation; Indonesia earthquake with minor flooding.
-National News: Open-carry legislation for federal lawmakers proposed; potential trade war with Canada; Texas politician publicly comes out as transgender.
-Texas Updates: Increasing support for third-party/independent candidates; high school safety incident with rifle; protests against new legislation spreading; federal aid praised after flooding.
-📊 Weekly Campaign Briefing
-Opposition Research: Opponent introduces new open-carry legislation; celebrated for flood relief distribution; publicly transgender.
-Constituent Sentiment: Small protests ongoing but mostly peaceful; voters want answers.
-[SCENARIO – TIMED SPEECH-TO-TEXT] Podcast Appearance
-Task: Join a live one-hour podcast to explain why you are the best candidate.
-Prompt for GPT:
- Using the Weekly Campaign Briefing above, craft an introduction and brief campaign statement for the podcast. You may type or use speech-to-text.
-User Input: Type or speak directly. GPT captures and evaluates immediately.
-[TASK LINK] → Podcast interaction page.
+---
 
-Module 10 – October 23–29
-REFERENCE LINK – General Election October 23–29 Test Mode
- REFERENCE LINK – Town Hall Questions
-Election Countdown
-Less than two weeks until Election Day!
-📰 Weekly News Summary (Reference)
-World News: European countries impose 35% tariffs on the U.S.; Mexico mediates; Saudi-Iran missile exchanges; Chinese warheads on standby; Chile earthquake worries.
-National News: Presidential political endorsements upcoming; accidental toddler death sparks debate; scrutiny of flood relief funding; gun safety and Second Amendment issues prominent.
-Texas Updates: Undecided voters favoring third-party/independent candidates; wild hog disruption at football game; social conservatives shifting support after transgender politician announcement.
-📊 Weekly Campaign Briefing
-Opposition Research: Opponent under investigation for illegal funding; faces criticism for sexual orientation.
-Constituent Sentiment: Constituents attending town hall with questions; interaction expected.
-[SCENARIO – TIMED SPEECH-TO-TEXT] Town Hall
-Task: Host a live town hall meeting and respond to constituents’ questions.
-Prompt for GPT:
- Using the Weekly Campaign Briefing above, respond to constituent questions. You may type or use speech-to-text. The scenario is timed; the clock starts when you open the next page.
-User Input: Type or speak directly. GPT captures and evaluates immediately.
-[TASK LINK] → Town Hall interaction page.
+# >>> BRANCH_START: Party Path  
 
-   Module 11 – October 30: School Visit
-Scenarios (all voiced AI dialogue):
-Parent Dialogue
+## Module 1B – Party Filing  
 
+**🎯 Purpose**  
+Learn Texas SOS and federal filing requirements for party candidates.  
 
-Character: Linda, anxious single mom.
-Concern: wild hogs + fear of armed teachers.
-Task: Candidate responds in real-time dialogue.
-Principal’s Office Ensemble
+**📝 Brief Summary**  
+Party candidates must navigate state filing with the Secretary of State and prepare for federal FEC reporting to secure ballot access.  
 
+**📝 Detailed Summary**  
+Party candidates begin with state-level filing, submitting nomination forms and either paying fees or meeting signature thresholds. After SOS filing, candidates must comply federally:  
+- **Form 1 (Statement of Candidacy)** to declare candidacy.  
+- **Form 2 (Statement of Organization)** to register the campaign committee.  
 
-Characters:
-Dr. Howard (Superintendent, veteran, blunt).
-Mrs. Arnold (Principal, grandmotherly, resilient).
-Karen (PTO, gun range owner, pro-2A).
-Shared stance: arm administrators.
-Issues: hog problem, school shooting risks, legislative pressure.
-Task: Candidate mediates conversation with multiple voices.
-Classroom Visit
+The quiz reinforces both SOS and FEC filing steps, ensuring candidates understand legal foundations.  
 
+**📝 Task**  
+- Complete quiz on party filing requirements (SOS + FEC basics).  
 
-Characters: 8–11-year-old students.
-Tone: playful chatter, immature but curious.
-Topic: hogs + guns.
-Task: Candidate answers questions while keeping kids reassured.
+---
 
-Module 12 – October 31: Television Interview
-Phases of Interview (voiced AI dialogue):
-Softball Opening → weather, sports, school visit recap.
-Policy Questions → hogs, armed admins, Gaza/Israel, China/NK/Iran.
-“Gotcha” Phase → opponent’s bill, flood money scandal, contrast Q’s.
-Closing Challenge → Moderator asks if candidate would repeat this face-to-face in the final debate before Election Day.
+## Module 2B – FEC Filing Fee Quizzes (Party)  
 
-Module 13 – November 1: Pro-Israel Group Meeting
-Scenario (voiced AI dialogue):
-Group previously backed opponent, but scandal (transgender reveal) shook their support.
-Conditions for endorsement:
-Candidate must be anti-transgender.
-Candidate must reject two-state solution.
-Choices:
-Accept → +1000 CC, ad boost, but protests/backlash.
-Decline → Mixed reviews, but moral credibility praised.
+**🎯 Purpose**  
+Practice federal filing requirements for party candidates, covering **FEC Forms 1 and 2**.  
 
-Module 14 – November 2: Debate Night
-Structure (voiced AI dialogue):
-AI moderator + AI opponent.
-Live audience (AI applause/jeers).
-20–25 policy questions across economy, foreign policy, social issues, local concerns.
-Moderator fact-checks candidate against their own past stances from earlier modules.
-Task: Candidate must debate under pressure with real-time fact checks and audience reaction.
+**📝 Brief Summary**  
+Party candidates must submit FEC Forms 1 and 2 after crossing financial thresholds, reporting donations, expenditures, and committee organization.  
 
-Module 15 – Final Summary (Post-Debate)
-## Purpose
-Provide the candidate (user) with a wrap-up of their campaign journey, reflecting on choices, strategies, and outcomes.
-## Candidate Stats
-- **Candidate Coins (CC):** [Final tally]
-- **Signatures / Voter Approval:** [Final percentage]
-- **Major Spending Decisions:** [List key investments]
-## Path Taken
-- Independent or Party path chosen.
-- Key turning points (endorsements, petitions, debates).
-## Strengths
-- Clear communication on policy?
-- Strong moral stance?
-- Effective fundraising and spending?
-## Weaknesses
-- Inconsistent responses?
-- Missed endorsements?
-- Controversial positions?
-## Final Outcome
-The candidate’s result is determined by **final voter approval rating**:
-- **Victory:** Above 50% (elected to office).
-- **Competitive Candidate:** 35–49% (strong showing, but short of victory).
-- **Spoiler Role:** 20–34% (influenced race, but not competitive).
-- **Symbolic Voice:** Below 20% (message-driven, minimal support).
-**Task:** Candidate reflects on their campaign. AI provides a narrative summary, highlighting successes and challenges, and declares outcome based on voter approval percentage.
+**📝 Detailed Summary**  
+Federal law requires accurate reporting of contributions, expenditures, and committee details. These quizzes simulate the FEC process, rewarding correct completion with CC and voter signatures. This practice reinforces the importance of compliance and builds campaign credibility.  
 
+**📝 Task**  
+- Complete multiple rounds of FEC filing quizzes (Forms 1 & 2).  
+- Outcome: Earn CC + voter signatures.  
+- Unlocks General Election branch.  
 
+---
+
+# >>> BRANCH_END: Merge to General Election  
+
+---
+
+# >>> GENERAL ELECTION BRANCH  
+
+## Module 3 – May: First Moves  
+- Allocate CC for campaign setup (website, ads, infrastructure).  
+- Recruit team members.  
+- Outcome: Updated CC and voter approval.  
+
+## Module 4 – May & June: Campaign Identity  
+- Write campaign announcement.  
+- Submit slogan, mission statement, and 4 issues.  
+- Outcome: Earn CC and voter approval.  
+
+## Module 5 – July & August: Campaign Expansion  
+- Design signs, shirts, and promo materials.  
+- Scenario decisions: endorsements, petitions, legislative response.  
+- Outcome: Scenario-based CC and voter approval changes.  
+
+## Module 6 – September: FEC Compliance & Scenarios  
+- Complete quarterly **FEC Form 3 quiz**.  
+- Respond to canvassing and Constitution Day scenarios.  
+- Outcome: CC adjustments, voter approval updates.  
+
+## Module 7 – October 1–7: Early October Ops  
+- Prepare and deliver community safety speech.  
+- Manage team and early ad buys.  
+- Outcome: Speech feedback + updated CC/voter approval.  
+
+## Module 8 – October 8–14: Mid-October Ops  
+- Respond to press conference scenario.  
+- Adjust campaign messaging to news cycle.  
+- Outcome: Earn CC and voter approval.  
+
+## Module 9 – October 15–22: Final Push  
+- Participate in podcast + timed speech tasks.  
+- Outcome: Final CC and voter approval adjustments.  
+
+## Module 10 – October 23–29: Election Countdown  
+- Host town hall scenario.  
+- Allocate last CC for outreach/ads.  
+- Outcome: Final voter approval and CC tally.  
+
+---
+
+# >>> ELECTION WEEK BRANCH  
+
+## Module 11 – October 30: School Visit  
+- **Parent Dialogue**: Respond to anxious single mom about hogs and armed teachers.  
+- **Principal’s Office Ensemble**: Mediate between superintendent, principal, and PTO gun range owner.  
+- **Classroom Visit**: Reassure children (ages 8–11) with playful but responsible answers.  
+- Outcome: Voter approval adjusted based on tone, empathy, and clarity.  
+
+## Module 12 – October 31: Television Interview  
+- **Softball Opening** → casual questions.  
+- **Policy Questions** → hogs, armed admins, foreign policy.  
+- **“Gotcha” Phase** → scandals and contrast questions.  
+- **Closing Challenge** → commit to stance before debate.  
+- Outcome: Performance impacts credibility and voter approval.  
+
+## Module 13 – November 1: Pro-Israel Group Meeting  
+- Choice: Accept or decline conditional endorsement.  
+- **Accept** → +1000 CC, ad boost, backlash.  
+- **Decline** → mixed reviews, moral credibility praised.  
+- Outcome: Adjusted CC, credibility, voter approval.  
+
+## Module 14 – November 2: Debate Night  
+- AI moderator + AI opponent + live audience.  
+- 20–25 policy questions across all issue areas.  
+- Real-time fact-checks against earlier modules.  
+- Outcome: Debate performance strongly shapes final voter approval.  
+
+## Module 15 – Final Summary (Post-Debate)  
+- **Candidate Stats**: CC, voter approval, spending.  
+- **Path Taken**: Independent or Party, key turning points.  
+- **Strengths & Weaknesses**: Assessed by AI.  
+- **Final Outcome**:  
+  - Victory: 50%+  
+  - Competitive Candidate: 35–49%  
+  - Spoiler Role: 20–34%  
+  - Symbolic Voice: Below 20%  
+- Task: Candidate reflects. AI delivers narrative closure.  
+
+---
+
+✅ **Completion**:  
+By finishing Modules 0–15, participants complete a **full campaign simulation** from SOS filing through Election Day and post-debate reflection.
 Continue using realistic roleplay and cause-effect narration, maintaining state and progress.
 
 Key Notes

@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 // Mock database (replace with real DB in production)
 interface UserState {
   userId: string;
-  path: 'Independent' | 'Party';
+  path: 'Independent' | 'Party' | 'thirdParty';
   currentModule: string;
   cc: number;
   signatures: number;
@@ -19,15 +19,17 @@ const userDB = new Map<string, UserState>();
 // Utility functions
 function getUserState(userId: string): UserState {
   if (!userDB.has(userId)) {
-    userDB.set(userId, {
+    const defaultState: UserState = {
       userId,
-      path: 'Independent',
+      path: 'thirdParty', // default path for new users
       currentModule: '0',
       cc: 50,
       signatures: 0,
       completedQuizzes: [],
       fecFilings: [],
-    });
+    };
+    userDB.set(userId, defaultState);
+    return defaultState;
   }
   return userDB.get(userId)!;
 }
@@ -37,16 +39,32 @@ function saveUserState(userId: string, state: UserState) {
 }
 
 function evaluateQuiz(quizId: string, answers: any) {
-  // Replace with real quiz logic
   const score = Math.floor(Math.random() * 41) + 60; // Random 60-100
   const earnedCC = score === 100 ? 2 : 1;
-  const earnedSignatures = Math.floor(score); // 1 point = 1 signature in this mock
+  const earnedSignatures = Math.floor(score); 
   return { score, earnedCC, earnedSignatures };
 }
 
 function checkFECTrigger(user: UserState): boolean {
-  // Spending 50+ CC triggers FEC filing
   return user.cc >= 50 && !user.fecFilings.includes(user.currentModule);
+}
+
+function getNextStep(user: UserState) {
+  // If user hasn't started Module 1, show filing guide & quiz
+  if (user.currentModule === '0') {
+    return {
+      message: `Welcome! You chose path: ${user.path}, filing option: signatures.\n\nStep 1: Read the FEC filing guide:\n- TX Independent Filing Guide: https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml\n- Candidate Simulator Homepage: https://www.bernardjohnson4congress.com/candidate_simulator_homepage_-test_mode\n- FEC Candidate Guide: https://www.fec.gov/resources/cms-content/documents/policy-guidance/candgui.pdf\n\nStep 2: Take the FEC Filing Fee Quiz to simulate paying your filing fee and earning signatures.`,
+      nextTask: 'FEC Filing Fee Quiz',
+      currentModule: '1A', // start Module 1
+    };
+  }
+
+  // Default next step
+  return {
+    message: 'Continue your current module or proceed to the next quiz/task.',
+    nextTask: null,
+    currentModule: user.currentModule,
+  };
 }
 
 // ---------------------------
@@ -57,6 +75,10 @@ export async function POST(req: NextRequest) {
     const user = getUserState(userId);
 
     switch (action) {
+      case 'init':
+        // Return next step for new or returning user
+        return NextResponse.json(getNextStep(user));
+
       case 'completeQuiz': {
         const { quizId, answers } = payload;
         const result = evaluateQuiz(quizId, answers);
@@ -72,7 +94,7 @@ export async function POST(req: NextRequest) {
           fecTriggered = true;
           nextTask = 'FEC Filing Quiz';
           user.fecFilings.push(user.currentModule);
-          user.currentModule += '_FECQuiz'; // Example: auto-advance to FEC quiz module
+          user.currentModule += '_FECQuiz';
         }
 
         saveUserState(userId, user);

@@ -110,6 +110,10 @@ export default function HomePage() {
     );
   }
 
+  // Once path is chosen, immediately go to chat
+  return <CandidateChat path={path} />;
+}
+  
   // Step 1: Office + Filing Option selection
   if (path && !filingOption) {
     return (

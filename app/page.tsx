@@ -20,37 +20,29 @@ export default function HomePage() {
         <div className="mb-6">
           <h3 className="font-bold mb-2">🎯 Purpose</h3>
           <p className="mb-2">
-            The Candidate Simulator teaches prospective federal candidates—especially independents and third-party hopefuls—how to run a campaign safely and realistically. It combines real-world processes (laws, FEC filings, ballot access) and simulation mechanics (Candidate Coins, quizzes, voter signatures, scenario-based decision-making).
+            The Candidate Simulator is an educational platform that helps prospective federal candidates, especially independents and third-party hopefuls, understand and practice the steps required to run a campaign. The simulator is instructional and focuses on campaign logistics, filing requirements, and resource management.
           </p>
 
           <h3 className="font-bold mb-2">🏛️ The Real Candidate Process</h3>
           <ul className="list-disc list-inside mb-4">
             <li>Choose an Office: President, U.S. Senate, or U.S. House.</li>
-            <li>Meet Ballot Requirements: Pay fees or gather signatures.</li>
-            <li>FEC Reporting: File quarterly after campaign activity.</li>
-            <li>Build Voter Support: Develop campaign identity and approval.</li>
+            <li>Meet filing and ballot requirements according to your chosen path.</li>
+            <li>Track and manage campaign resources and voter support through structured exercises.</li>
           </ul>
 
           <h3 className="font-bold mb-2">🎮 How the Simulator Works</h3>
           <ul className="list-disc list-inside mb-2">
-            <li>Start with 50 Candidate Coins (CC).</li>
+            <li>Each participant starts with <strong>50 Candidate Coins (CC)</strong>, representing simulated campaign resources.</li>
             <li>Choose a ballot access path: Independent, Third-Party, or Write-In.</li>
-            <li>Candidate Coins simulate fundraising; quizzes and tasks earn CC and signatures.</li>
-            <li>Signatures represent voter approval (1 signature = 0.0001 approval).</li>
-            <li>General Election eligibility requires minimum CC, signatures, or fee payments depending on path.</li>
+            <li>Structured exercises simulate the allocation of resources and the accumulation of voter support.</li>
+            <li>Signatures represent voter support (1 signature = 0.0001 approval).</li>
+            <li>Eligibility for the General Election depends on completing filing requirements and demonstrating sufficient voter support.</li>
           </ul>
 
-          <h4 className="font-semibold mb-1">Quizzes & Retakes</h4>
+          <h4 className="font-semibold mb-1">Exercising Resources and Voter Support</h4>
           <ul className="list-disc list-inside">
-            <li>All quizzes: 1 retake allowed without penalty.</li>
-            <li>FEC quizzes: Triggered after spending 50+ CC.</li>
-            <li>Penalties:
-              <ul className="list-disc list-inside ml-5">
-                <li>Wrong multiple-choice: –1 CC</li>
-                <li>Wrong open-ended: –50 signatures</li>
-                <li>Retake mistakes double the penalty (“FEC administrative fees”).</li>
-              </ul>
-            </li>
+            <li>Tasks and quizzes are exercises in campaign management, allocating resources (CC) and building voter support (signatures).</li>
+            <li>Retakes are allowed for educational purposes, with simulated consequences for errors to reinforce learning.</li>
           </ul>
         </div>
 

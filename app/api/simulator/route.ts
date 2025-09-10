@@ -19,7 +19,6 @@ const userDB = new Map<string, UserState>();
 // Utility functions
 function getUserState(userId: string): UserState {
   if (!userDB.has(userId)) {
-    // Initialize default state
     userDB.set(userId, {
       userId,
       path: 'Independent',
@@ -37,7 +36,7 @@ function saveUserState(userId: string, state: UserState) {
   userDB.set(userId, state);
 }
 
-function evaluateQuiz(quizId: string, answers: any): { score: number; earnedCC: number; earnedSignatures: number } {
+function evaluateQuiz(quizId: string, answers: any) {
   // Replace with real quiz logic
   const score = Math.floor(Math.random() * 41) + 60; // Random 60-100
   const earnedCC = score === 100 ? 2 : 1;
@@ -66,11 +65,14 @@ export async function POST(req: NextRequest) {
         user.signatures += result.earnedSignatures;
         user.completedQuizzes.push(quizId);
 
-        // Check if FEC filing is triggered
         let fecTriggered = false;
+        let nextTask = null;
+
         if (checkFECTrigger(user)) {
           fecTriggered = true;
+          nextTask = 'FEC Filing Quiz';
           user.fecFilings.push(user.currentModule);
+          user.currentModule += '_FECQuiz'; // Example: auto-advance to FEC quiz module
         }
 
         saveUserState(userId, user);
@@ -81,7 +83,8 @@ export async function POST(req: NextRequest) {
           earnedCC: result.earnedCC,
           earnedSignatures: result.earnedSignatures,
           fecTriggered,
-          nextModule: user.currentModule,
+          nextTask,
+          currentModule: user.currentModule,
           cc: user.cc,
           signatures: user.signatures,
         });
@@ -94,12 +97,24 @@ export async function POST(req: NextRequest) {
         }
         user.cc -= amount;
 
+        let fecTriggered = false;
+        let nextTask = null;
+
+        if (checkFECTrigger(user)) {
+          fecTriggered = true;
+          nextTask = 'FEC Filing Quiz';
+          user.fecFilings.push(user.currentModule);
+          user.currentModule += '_FECQuiz';
+        }
+
         saveUserState(userId, user);
 
         return NextResponse.json({
           message: `Spent ${amount} CC`,
           cc: user.cc,
-          fecTriggered: checkFECTrigger(user),
+          fecTriggered,
+          nextTask,
+          currentModule: user.currentModule,
         });
       }
 

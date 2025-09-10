@@ -12,6 +12,12 @@ type Message = {
   text: string;
 };
 
+type QuizQuestion = {
+  question: string;
+  options: string[];
+  correctAnswer: string;
+};
+
 export default function CandidateChat({ path }: CandidateChatProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -20,103 +26,150 @@ export default function CandidateChat({ path }: CandidateChatProps) {
 - You start with 50 Candidate Coins (CC), representing simulated campaign resources.
 - Completing campaign tasks allocates these resources and builds voter support (signatures).
 - Signatures = voter support (1 signature = 0.0001 approval).
-- Typed or spoken responses will be used in selected modules (7–10).
-- Image upload is optional after Module 5. All feedback is instructional.`,
+- Typed or spoken responses are used in selected modules (7–10).
+- Image upload is optional after Module 5. All feedback is instructional.
+- For compliance documents, you can always request a brief or detailed summary before quizzes.`,
     },
   ]);
 
   const [input, setInput] = useState("");
   const [cc, setCC] = useState(50);
   const [signatures, setSignatures] = useState(0);
-  const [step, setStep] = useState(1); // Tracks Module 1–15
+  const [step, setStep] = useState(1); // Module 1–15
+  const [modulePrompted, setModulePrompted] = useState(false);
+  const [quizActive, setQuizActive] = useState(false);
+  const [currentQuiz, setCurrentQuiz] = useState<QuizQuestion | null>(null);
 
   const [speechEnabled, setSpeechEnabled] = useState(false);
   const [imageUploadEnabled, setImageUploadEnabled] = useState(false);
 
-  // Append a message
   const addMessage = (msg: Message) =>
     setMessages((prev) => [...prev, msg]);
 
-  // Handle text or speech input
-  const sendMessage = (text: string) => {
-    if (!text.trim()) return;
-
-    addMessage({ sender: "user", text });
-    let aiResponse = "";
-    let nextStep = step + 1;
-
-    // Determine AI response based on current module
-    switch (step) {
-      case 1: // Module 1: Filing
-      case 2:
-        aiResponse = `Module ${step}: Filing exercises complete. Resources and voter support updated.`;
-        setCC((prev) => prev + 5);
-        setSignatures((prev) => prev + 50);
-        break;
-
-      case 3: // Campaign setup
-      case 4:
-        aiResponse = `Module ${step}: Campaign identity exercises complete. Resources and voter support updated.`;
-        setCC((prev) => prev + 5);
-        setSignatures((prev) => prev + 50);
-        break;
-
-      case 5: // Campaign Expansion / Materials
-        aiResponse = `Module 5: Campaign Expansion.
-Please describe or upload your campaign materials (signs, shirts, promo items). Then respond to scenario decisions: endorsements, petitions, or legislative responses.`;
-        setImageUploadEnabled(true);
-        break;
-
-      case 6: // FEC compliance
-        aiResponse = `Module 6: FEC compliance exercises complete. Resources and voter support updated.`;
-        setCC((prev) => prev + 5);
-        setSignatures((prev) => prev + 50);
-        break;
-
-      case 7: // Early October Ops (speech/typed)
-      case 8:
-      case 9:
-        aiResponse = `Module ${step}: Please respond to the scenario by typing or speaking your answer. Speech input enabled.`;
-        setSpeechEnabled(true);
-        break;
-
-      case 10: // Election Countdown
-        aiResponse = `Module 10: Final outreach exercises. Audio input/output and image upload are available for review.`;
-        setSpeechEnabled(true);
-        setImageUploadEnabled(true);
-        break;
-
-      case 11:
-      case 12:
-      case 13:
-      case 14:
-        aiResponse = `Module ${step}: Election week scenario complete. Resources and voter support updated.`;
-        setCC((prev) => prev + 5);
-        setSignatures((prev) => prev + 50);
-        break;
-
-      case 15: // Final Summary
-        aiResponse = `Module 15: Simulation complete.
-- Campaign Resources: ${cc} CC
-- Voter Support: ${signatures} signatures
-- Path Taken: ${path}
-- Strengths & Weaknesses assessed by AI.`;
-        nextStep = 15; // Stay on final module
-        setSpeechEnabled(false);
-        setImageUploadEnabled(false);
-        break;
-
-      default:
-        aiResponse = "Simulation complete.";
-        nextStep = step;
-        break;
-    }
-
-    addMessage({ sender: "ai", text: aiResponse });
-    setStep(nextStep);
+  // Sample compliance quiz questions for Module 1
+  const complianceQuizzes: Record<number, QuizQuestion[]> = {
+    1: [
+      {
+        question: "What is the purpose of FEC Form 1?",
+        options: [
+          "Declare candidacy",
+          "Register committee",
+          "Report donations",
+          "Collect signatures",
+        ],
+        correctAnswer: "Declare candidacy",
+      },
+      {
+        question: "What information is required on Form 2?",
+        options: [
+          "Committee info, treasurer, bank info",
+          "Candidate’s birth certificate",
+          "Party platform statement",
+          "Election results",
+        ],
+        correctAnswer: "Committee info, treasurer, bank info",
+      },
+    ],
   };
 
-  // Speech-to-text handler (Web Speech API)
+  // Present module prompts and optional summaries
+  useEffect(() => {
+    if (!modulePrompted) {
+      let promptText = "";
+      switch (step) {
+        case 1:
+          promptText = `Module 1: Independent Filing
+
+You are required to understand the following compliance documents:
+- FEC Form 1 – Statement of Candidacy
+- FEC Form 2 – Statement of Organization
+- State SOS Filing
+
+Type "summary brief" for key points or "summary detailed" for full explanation. When ready, you will take a quiz to confirm your understanding.`;
+          break;
+
+        case 2:
+          promptText = `Module 2: FEC Filing Fee Quiz (Independent)
+Review your prior compliance knowledge. You will take a quiz on FEC Forms 1 & 2 and SOS filing. Type "summary brief" or "summary detailed" to review before starting.`;
+          break;
+
+        default:
+          promptText = `Module ${step} instructions.`;
+      }
+
+      addMessage({ sender: "ai", text: promptText });
+      setModulePrompted(true);
+    }
+  }, [step, modulePrompted]);
+
+  const sendMessage = (text: string) => {
+    if (!text.trim()) return;
+    addMessage({ sender: "user", text });
+
+    const lowerText = text.toLowerCase();
+
+    // Handle summary requests
+    if (lowerText.includes("summary brief")) {
+      addMessage({
+        sender: "ai",
+        text:
+          "Brief Summary:\n- Form 1: declares candidacy\n- Form 2: registers committee\n- SOS filing: state ballot access",
+      });
+      return;
+    }
+
+    if (lowerText.includes("summary detailed")) {
+      addMessage({
+        sender: "ai",
+        text:
+          "Detailed Summary:\n- FEC Form 1 (Statement of Candidacy): declares your candidacy. Required fields: candidate name, office, election year.\n- FEC Form 2 (Statement of Organization): registers your campaign committee, treasurer, bank info, initial finances.\n- State SOS filing: ensures ballot access, either through signatures or fees. Check deadlines and requirements carefully. Links: [FEC Forms](https://www.fec.gov/forms/).",
+      });
+      return;
+    }
+
+    // Handle quizzes
+    if (!quizActive && complianceQuizzes[step]) {
+      setCurrentQuiz(complianceQuizzes[step][0]);
+      setQuizActive(true);
+      addMessage({ sender: "ai", text: `Quiz: ${complianceQuizzes[step][0].question}\nOptions: ${complianceQuizzes[step][0].options.join(", ")}` });
+      return;
+    }
+
+    if (quizActive && currentQuiz) {
+      if (text.trim().toLowerCase() === currentQuiz.correctAnswer.toLowerCase()) {
+        addMessage({ sender: "ai", text: "Correct. Compliance understanding confirmed." });
+        setCC((prev) => prev + 5);
+        setSignatures((prev) => prev + 50);
+      } else {
+        addMessage({ sender: "ai", text: `Incorrect. Review the document and try again. Correct answer: ${currentQuiz.correctAnswer}` });
+      }
+      setQuizActive(false);
+      setCurrentQuiz(null);
+      setStep(step + 1);
+      setModulePrompted(false);
+      return;
+    }
+
+    // Default message for other steps
+    addMessage({ sender: "ai", text: "Response recorded. Continuing simulation..." });
+    setStep(step + 1);
+    setModulePrompted(false);
+  };
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    addMessage({ sender: "user", text: `[Image uploaded: ${file.name}]` });
+    addMessage({
+      sender: "ai",
+      text: "Image reviewed. Feedback provided on clarity, layout, and professional presentation. Simulated CC and voter support updated.",
+    });
+
+    setCC((prev) => prev + 5);
+    setSignatures((prev) => prev + 50);
+  };
+
   const startSpeechRecognition = () => {
     const SpeechRecognition =
       (window as any).SpeechRecognition ||
@@ -136,35 +189,8 @@ Please describe or upload your campaign materials (signs, shirts, promo items). 
       sendMessage(spokenText);
     };
 
-    recognition.onerror = (event: any) => {
-      console.error("Speech recognition error:", event.error);
-    };
-
+    recognition.onerror = (event: any) => console.error(event.error);
     recognition.start();
-  };
-
-  // Text-to-speech handler
-  const speakText = (text: string) => {
-    if (!("speechSynthesis" in window)) return;
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "en-US";
-    window.speechSynthesis.speak(utterance);
-  };
-
-  // Image upload handler
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    addMessage({ sender: "user", text: `[Image uploaded: ${file.name}]` });
-    addMessage({
-      sender: "ai",
-      text: "Image reviewed. Feedback provided on clarity, layout, and professional presentation. Simulated campaign resources and voter support updated.",
-    });
-
-    // Simulated adjustments
-    setCC((prev) => prev + 5);
-    setSignatures((prev) => prev + 50);
   };
 
   return (

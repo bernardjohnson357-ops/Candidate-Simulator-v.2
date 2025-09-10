@@ -27,11 +27,20 @@ export default function CandidateChat({
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
+  // Speech recognition
+  const recognitionRef = useRef<any>(null);
   useEffect(() => {
-    // Launch AI greeting automatically
-    addAIMessage(
-      `Welcome to the Candidate Simulator! You selected path: ${path} and filing option: ${option}. Let's begin your simulated campaign.`
-    );
+    if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.lang = "en-US";
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setInputValue(transcript);
+      };
+    }
   }, []);
 
   useEffect(() => {
@@ -39,7 +48,7 @@ export default function CandidateChat({
   }, [messages]);
 
   const addAIMessage = (content: string) => {
-    // Parse CC/signature updates if included in AI response
+    // Parse CC/signature updates if included
     const ccMatch = content.match(/\+(\d+)\s*CC/);
     const sigMatch = content.match(/\+(\d+)\s*signatures/);
 
@@ -47,6 +56,12 @@ export default function CandidateChat({
     if (sigMatch) setSignatures((prev) => prev + parseInt(sigMatch[1], 10));
 
     setMessages((prev) => [...prev, { type: "ai", content }]);
+
+    // Speak the AI message
+    if ("speechSynthesis" in window) {
+      const utterance = new SpeechSynthesisUtterance(content);
+      window.speechSynthesis.speak(utterance);
+    }
   };
 
   const handleSendMessage = async () => {
@@ -86,9 +101,12 @@ export default function CandidateChat({
     }
   };
 
+  const startVoiceInput = () => {
+    recognitionRef.current?.start();
+  };
+
   return (
     <div className="flex flex-col items-center gap-6">
-      {/* Dashboard for CC and Signatures */}
       <div className="flex gap-6 mb-4">
         <div className="bg-white shadow-md rounded-lg p-4 text-center w-32">
           <h3 className="font-semibold">Candidate Coins</h3>
@@ -100,7 +118,6 @@ export default function CandidateChat({
         </div>
       </div>
 
-      {/* Chat window */}
       <div className="w-full md:w-3/4 lg:w-1/2 flex flex-col h-[70vh] border rounded shadow-lg">
         <div className="flex-1 overflow-y-auto p-4 bg-gray-50 space-y-2">
           {messages.map((msg, idx) =>
@@ -115,7 +132,6 @@ export default function CandidateChat({
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input area */}
         <div className="flex flex-col gap-2 p-2 border-t">
           <textarea
             ref={textareaRef}
@@ -137,8 +153,11 @@ export default function CandidateChat({
             >
               Send
             </button>
-            <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-              🎤 Audio
+            <button
+              onClick={startVoiceInput}
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+              🎤 Voice
             </button>
           </div>
         </div>

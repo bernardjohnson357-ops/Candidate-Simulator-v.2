@@ -1,7 +1,7 @@
 // app/components/CandidateChat.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type CandidateChatProps = {
   path: "Party" | "Independent";
@@ -17,119 +17,90 @@ export default function CandidateChat({ path }: CandidateChatProps) {
     {
       sender: "system",
       text: `Welcome to the Federal Candidate Simulator. I will guide you through a realistic campaign simulation.
-- You start with 50 Candidate Coins (CC), which represent simulated campaign resources.
-- Campaign tasks and exercises allocate these resources and build voter support (signatures).
+- You start with 50 Candidate Coins (CC), representing simulated campaign resources.
+- Completing campaign tasks allocates these resources and builds voter support (signatures).
 - Signatures = voter support (1 signature = 0.0001 approval).
-- Modules are sequential; instructions, exercises, and scenario prompts are professional and instructional.
-- Typed or spoken responses are used in later modules (7–9) to simulate real-world communication.`,
+- Typed or spoken responses will be used in selected modules (7–10).
+- Image upload is optional after Module 5. All feedback is instructional.`,
     },
   ]);
 
   const [input, setInput] = useState("");
   const [cc, setCC] = useState(50);
   const [signatures, setSignatures] = useState(0);
-  const [step, setStep] = useState<number>(1); // Tracks Module 1–15
+  const [step, setStep] = useState(1); // Tracks Module 1–15
 
-  // Track if speech input is enabled
   const [speechEnabled, setSpeechEnabled] = useState(false);
   const [imageUploadEnabled, setImageUploadEnabled] = useState(false);
 
-  // Helper to append messages
-  const addMessage = (msg: Message) => setMessages((prev) => [...prev, msg]);
+  // Append a message
+  const addMessage = (msg: Message) =>
+    setMessages((prev) => [...prev, msg]);
 
+  // Handle text or speech input
   const sendMessage = (text: string) => {
     if (!text.trim()) return;
 
     addMessage({ sender: "user", text });
-
     let aiResponse = "";
     let nextStep = step + 1;
 
+    // Determine AI response based on current module
     switch (step) {
-      // Modules 1–2: Filing quizzes
-      case 1:
+      case 1: // Module 1: Filing
       case 2:
         aiResponse = `Module ${step}: Filing exercises complete. Resources and voter support updated.`;
-        setCC((prev) => prev + 5); // Simulated gain
-        setSignatures((prev) => prev + 50);
-        break;
-
-      // Modules 3–4: Campaign setup & identity
-      case 3:
-        aiResponse = "Module 3: Campaign setup complete. Allocate resources and recruit team members.";
         setCC((prev) => prev + 5);
         setSignatures((prev) => prev + 50);
         break;
 
+      case 3: // Campaign setup
       case 4:
-        aiResponse = "Module 4: Campaign identity exercises complete. Slogan, mission statement, and issues submitted.";
+        aiResponse = `Module ${step}: Campaign identity exercises complete. Resources and voter support updated.`;
         setCC((prev) => prev + 5);
         setSignatures((prev) => prev + 50);
         break;
 
-      // Module 5: Campaign materials + scenario exercises
-      case 5:
+      case 5: // Campaign Expansion / Materials
         aiResponse = `Module 5: Campaign Expansion.
-Please describe or upload your campaign materials (signs, shirts, promo items).
-Then, respond to scenario decisions: endorsements, petitions, legislative response.`;
-        setImageUploadEnabled(true); // Unlock image submission
+Please describe or upload your campaign materials (signs, shirts, promo items). Then respond to scenario decisions: endorsements, petitions, or legislative responses.`;
+        setImageUploadEnabled(true);
         break;
 
-      // Module 6: FEC compliance & scenarios
-      case 6:
-        aiResponse = `Module 6: FEC compliance exercises and scenarios complete. CC and voter support updated based on responses.`;
+      case 6: // FEC compliance
+        aiResponse = `Module 6: FEC compliance exercises complete. Resources and voter support updated.`;
         setCC((prev) => prev + 5);
         setSignatures((prev) => prev + 50);
         break;
 
-      // Modules 7–9: Speech or typed input
-      case 7:
+      case 7: // Early October Ops (speech/typed)
       case 8:
       case 9:
         aiResponse = `Module ${step}: Please respond to the scenario by typing or speaking your answer. Speech input enabled.`;
         setSpeechEnabled(true);
         break;
 
-      // Module 10: Audio + image review
-      case 10:
-        aiResponse = `Module 10: Election Countdown.
-Submit final outreach exercises. Audio input/output and image upload enabled for review.`;
+      case 10: // Election Countdown
+        aiResponse = `Module 10: Final outreach exercises. Audio input/output and image upload are available for review.`;
         setSpeechEnabled(true);
         setImageUploadEnabled(true);
         break;
 
-      // Modules 11–14: Election week scenarios
       case 11:
-        aiResponse = "Module 11: School Visit scenario complete. Voter support adjusted based on clarity and empathy.";
-        setCC((prev) => prev + 5);
-        setSignatures((prev) => prev + 50);
-        break;
-
       case 12:
-        aiResponse = "Module 12: Television interview complete. Resources and voter support updated.";
-        setCC((prev) => prev + 5);
-        setSignatures((prev) => prev + 50);
-        break;
-
       case 13:
-        aiResponse = "Module 13: Pro-Israel group meeting complete. Outcome reflected in simulated CC and voter approval.";
-        setCC((prev) => prev + 5);
-        setSignatures((prev) => prev + 50);
-        break;
-
       case 14:
-        aiResponse = "Module 14: Debate night complete. Performance impacts final voter support.";
+        aiResponse = `Module ${step}: Election week scenario complete. Resources and voter support updated.`;
         setCC((prev) => prev + 5);
         setSignatures((prev) => prev + 50);
         break;
 
-      case 15:
-        aiResponse = `Module 15: Final Summary.
+      case 15: // Final Summary
+        aiResponse = `Module 15: Simulation complete.
 - Campaign Resources: ${cc} CC
 - Voter Support: ${signatures} signatures
 - Path Taken: ${path}
-- Strengths & Weaknesses assessed by AI.
-Simulation complete. Reflect on your experience.`;
+- Strengths & Weaknesses assessed by AI.`;
         nextStep = 15; // Stay on final module
         setSpeechEnabled(false);
         setImageUploadEnabled(false);
@@ -145,20 +116,55 @@ Simulation complete. Reflect on your experience.`;
     setStep(nextStep);
   };
 
-  // Placeholder handlers for speech and image upload
-  const handleSpeechInput = (spokenText: string) => {
-    sendMessage(spokenText);
+  // Speech-to-text handler (Web Speech API)
+  const startSpeechRecognition = () => {
+    const SpeechRecognition =
+      (window as any).SpeechRecognition ||
+      (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Speech recognition not supported in this browser.");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onresult = (event: any) => {
+      const spokenText = event.results[0][0].transcript;
+      sendMessage(spokenText);
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error("Speech recognition error:", event.error);
+    };
+
+    recognition.start();
   };
 
+  // Text-to-speech handler
+  const speakText = (text: string) => {
+    if (!("speechSynthesis" in window)) return;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "en-US";
+    window.speechSynthesis.speak(utterance);
+  };
+
+  // Image upload handler
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
-      addMessage({ sender: "user", text: `[Image uploaded: ${file.name}]` });
-      addMessage({ sender: "ai", text: "Image reviewed. Feedback provided on clarity, layout, and professional presentation." });
-      // Simulate resource/voter support updates
-      setCC((prev) => prev + 5);
-      setSignatures((prev) => prev + 50);
-    }
+    if (!file) return;
+
+    addMessage({ sender: "user", text: `[Image uploaded: ${file.name}]` });
+    addMessage({
+      sender: "ai",
+      text: "Image reviewed. Feedback provided on clarity, layout, and professional presentation. Simulated campaign resources and voter support updated.",
+    });
+
+    // Simulated adjustments
+    setCC((prev) => prev + 5);
+    setSignatures((prev) => prev + 50);
   };
 
   return (
@@ -200,7 +206,7 @@ Simulation complete. Reflect on your experience.`;
       {speechEnabled && (
         <button
           className="px-4 py-1 bg-green-600 text-white rounded mb-2"
-          onClick={() => alert("Speech input would start here.")}
+          onClick={startSpeechRecognition}
         >
           Speak
         </button>

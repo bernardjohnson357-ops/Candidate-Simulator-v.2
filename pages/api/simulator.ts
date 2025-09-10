@@ -155,64 +155,77 @@ Module 0 – Introduction
 Federal Candidate Simulator – AI Edition
 
 🎯 Purpose
-The Candidate Simulator is designed to educate prospective candidates—especially independents and third-party hopefuls—by providing structured, realistic campaign practice.
+The Candidate Simulator teaches prospective federal candidates—especially independents and third-party hopefuls—how to run a campaign safely and realistically.
 It combines:
-Real-World Processes → based on laws, filing requirements, and official guides.
-Simulation Mechanics → Candidate Coins, signatures, quizzes, and scenarios that mimic campaign decisions.
-By the end, participants will understand not only what real candidates must do but also how to practice those steps safely inside the simulator.
+Real-World Processes: Laws, FEC filing requirements, ballot access, and official guides.
+Simulation Mechanics: Candidate Coins (CC), quizzes, voter signatures, and scenario-based decision-making.
+By the end, participants understand both what real candidates must do and how to practice these steps in a simulation.
 
 🏛️ The Real Candidate Process
-Running for federal office in the United States requires:
-Choosing an office: President, U.S. Senate, or U.S. House of Representatives.
-Meeting ballot access requirements: Paying filing fees or gathering signatures.
-Filing quarterly reports with the Federal Election Commission (FEC) once campaign activity passes financial thresholds.
-Building a campaign identity and earning enough voter approval to compete in a general election.
-Sources: Federal Election Commission Candidate Guide (2024 edition); State Candidate Filing Guides.
+Running for federal office in the U.S. involves:
+Choosing an Office: President, U.S. Senate, or U.S. House.
+Meeting Ballot Requirements: Paying fees or gathering signatures.
+FEC Reporting: Filing quarterly once campaign activity crosses financial thresholds.
+Building Voter Support: Developing a campaign identity and gaining approval.
+Sources: FEC Candidate Guide (2024 edition), State Candidate Filing Guides.
 
-🎮 How the Simulator Mimics the Process
+🎮 How the Simulator Works
 Starting Conditions
-Every participant begins with 50 Candidate Coins (CC).
-At the start, you must choose your path to ballot access:
-Independent Candidate (petition and/or fee requirement)
-Third-Party Nominee (through party nomination process)
-Write-In Candidate (declaration of candidacy rules apply)
-Your choice determines which branch of the simulator you follow (Module 1A, 1B, or Write-In).
+Each participant starts with 50 Candidate Coins (CC).
+Choose a ballot access path:
+Independent Candidate
+Third-Party Nominee
+Write-In Candidate
+Your choice determines your simulator branch (Modules 1A, 1B, or Write-In).
 
 Candidate Coin (CC) System
-1 CC = $100 (simulated value).
-Quizzes simulate fundraising: correct answers generate CC.
-Scoring → Coins + Signatures:
-80%+ = score percent in signatures + 1 CC.
-100% = 100 signatures + 2 CC.
+1 CC = $100 (simulated)
+Quizzes simulate fundraising: correct answers earn CC and signatures.
+Scoring Example:
+80%+ → % of signatures + 1 CC
+100% → 100 signatures + 2 CC
 
 Signatures → Voter Approval
-1 signature = 0.0001 voter approval.
+1 signature = 0.0001 voter approval
 Example: 100 signatures = 1% approval; 1,000 signatures = 10% approval.
 
-Eligibility for the General Election (before Module 3)
-Filing Fee Equivalents (paid in CC):
-President → 75 CC and 2.5% voter approval
-Senate → 50 CC and 2.5% voter approval
-House → 31 CC and 2.5% voter approval
-Ballot Access in Lieu of Fee (signatures only):
-President → 25% voter approval (nationwide)
-Senate → 14% voter approval (statewide)
-House → 7% voter approval (districtwide)
+Eligibility for the General Election
+Fee Option (pay CC + minimum approval)
+Office
+Fee (CC)
+Voter Approval
+President
+75 CC
+2.5%
+Senate
+50 CC
+2.5%
+House
+31 CC
+2.5%
+
+Signature Option (no fee)
+Office
+Voter Approval Required
+President
+25% nationwide
+Senate
+14% statewide
+House
+7% districtwide
+
 
 Quizzes & Retakes
-All quizzes may be retaken once without penalty.
-Form 3 Quizzes (Quarterly FEC Filings)
-Triggered once you spend 50+ CC (to mimic real filing thresholds).
-Cover compliance reporting and CC expenditures.
+All quizzes: 1 retake allowed without penalty.
+Form 3 Quizzes (FEC filings): Triggered after spending 50+ CC.
 Penalties for errors:
-Wrong multiple-choice = –1 CC
-Wrong open-ended = –50 signatures
-Retake allowed, but penalties double if you miss again (applied as “FEC administrative fees”).
+Wrong multiple-choice: –1 CC
+Wrong open-ended: –50 signatures
+Retake mistakes double the penalty (“FEC administrative fees”).
 
 📚 Reference Roadmap
-These sources anchor the simulator’s design and content:
-Candidate Simulator Homepage (internal training reference)
-Federal Election Commission, Candidate Guide (2024 edition)
+Candidate Simulator Homepage (internal)
+Federal Election Commission Candidate Guide (2024 edition)
 
 
 

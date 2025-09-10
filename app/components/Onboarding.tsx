@@ -1,4 +1,3 @@
-// components/Onboarding.tsx
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -8,6 +7,26 @@ import { useState, useEffect, useRef } from "react";
 // ----------------------
 export type OnboardingPath = "Independent" | "Party" | "thirdParty";
 export type FilingOption = "signatures" | "filingFee";
+
+// ----------------------
+// Declare SpeechRecognition types
+// ----------------------
+declare global {
+  interface Window {
+    webkitSpeechRecognition: {
+      new (): SpeechRecognition;
+    };
+  }
+}
+
+type SpeechRecognition = {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  start: () => void;
+  stop: () => void;
+  onresult: (event: any) => void;
+};
 
 // ----------------------
 // Interfaces
@@ -39,12 +58,12 @@ interface OnboardingProps {
 // Component
 // ----------------------
 export default function Onboarding({ path, filingOption }: OnboardingProps) {
-  const [userId] = useState("user123"); // TODO: Replace with auth/session user
+  const [userId] = useState("user123"); // TODO: Replace with real auth/session user
   const [task, setTask] = useState<ModuleTask | null>(null);
   const [answers, setAnswers] = useState<Record<string, any>>({});
   const [showQuiz, setShowQuiz] = useState(false);
   const [speechActive, setSpeechActive] = useState(false);
-  const recognitionRef = useRef<any>(null); // fixed type issue
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   // ----------------------
   // Init user state
@@ -52,7 +71,7 @@ export default function Onboarding({ path, filingOption }: OnboardingProps) {
   useEffect(() => {
     fetch("/api/simulator", {
       method: "POST",
-      body: JSON.stringify({ userId, action: "init" }),
+      body: JSON.stringify({ userId, action: "init", payload: { path, filingOption } }),
     })
       .then((res) => res.json())
       .then((data) => {
@@ -76,7 +95,7 @@ export default function Onboarding({ path, filingOption }: OnboardingProps) {
         ];
         setTask(data);
       });
-  }, [userId]);
+  }, [userId, path, filingOption]);
 
   // ----------------------
   // Quiz logic

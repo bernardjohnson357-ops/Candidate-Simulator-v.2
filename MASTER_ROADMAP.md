@@ -178,5 +178,45 @@ Federal law requires accurate reporting of contributions, expenditures, and comm
 
 ---
 
-✅ **Completion:**  
-By finishing Modules 1–10, participants complete a full campaign simulation—from **state SOS filing and FEC Forms 1 & 2** through **FEC Form 3 compliance, campaign expansion, and Election Day preparation**.
+# >>> ELECTION WEEK BRANCH  
+
+## Module 11 – October 30: School Visit  
+- **Parent Dialogue**: Respond to anxious single mom about hogs and armed teachers.  
+- **Principal’s Office Ensemble**: Mediate between superintendent, principal, and PTO gun range owner.  
+- **Classroom Visit**: Reassure children (ages 8–11) with playful but responsible answers.  
+- Outcome: Voter approval adjusted based on tone, empathy, and clarity.  
+
+## Module 12 – October 31: Television Interview  
+- **Softball Opening** → casual questions.  
+- **Policy Questions** → hogs, armed admins, foreign policy.  
+- **“Gotcha” Phase** → scandals and contrast questions.  
+- **Closing Challenge** → commit to stance before debate.  
+- Outcome: Performance impacts credibility and voter approval.  
+
+## Module 13 – November 1: Pro-Israel Group Meeting  
+- Choice: Accept or decline conditional endorsement.  
+- **Accept** → +1000 CC, ad boost, backlash.  
+- **Decline** → mixed reviews, moral credibility praised.  
+- Outcome: Adjusted CC, credibility, voter approval.  
+
+## Module 14 – November 2: Debate Night  
+- AI moderator + AI opponent + live audience.  
+- 20–25 policy questions across all issue areas.  
+- Real-time fact-checks against earlier modules.  
+- Outcome: Debate performance strongly shapes final voter approval.  
+
+## Module 15 – Final Summary (Post-Debate)  
+- **Candidate Stats**: CC, voter approval, spending.  
+- **Path Taken**: Independent or Party, key turning points.  
+- **Strengths & Weaknesses**: Assessed by AI.  
+- **Final Outcome**:  
+  - Victory: 50%+  
+  - Competitive Candidate: 35–49%  
+  - Spoiler Role: 20–34%  
+  - Symbolic Voice: Below 20%  
+- Task: Candidate reflects. AI delivers narrative closure.  
+
+---
+
+✅ **Completion**:  
+By finishing Modules 0–15, participants complete a **full campaign simulation** from SOS filing through Election Day and post-debate reflection.

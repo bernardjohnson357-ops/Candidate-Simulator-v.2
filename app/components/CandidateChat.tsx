@@ -173,7 +173,7 @@ export default function CandidateChat({ path }: { path: string }) {
 
     // ===== Quiz Handling with Score-Based Rewards =====
     if (lastMsg.options && lastMsg.quizStep && currentQuiz) {
-      const correctAnswer = "B"; // dynamically set per question
+      const correctAnswer = "B";
       const stepKey = lastMsg.quizStep;
 
       let newCorrectAnswers = currentQuiz.correctAnswers;
@@ -188,7 +188,7 @@ export default function CandidateChat({ path }: { path: string }) {
       const attempts = quizAttempts[stepKey] || 0;
       setQuizAttempts({ ...quizAttempts, [stepKey]: attempts + 1 });
 
-      // Calculate score if quiz completed
+      // Quiz completed
       if (newCorrectAnswers >= currentQuiz.totalQuestions) {
         const scorePercent = (newCorrectAnswers / currentQuiz.totalQuestions) * 100;
 
@@ -204,7 +204,7 @@ export default function CandidateChat({ path }: { path: string }) {
           addMessage({ sender: "ai", text: `You scored below 80%. No extra CC or signatures awarded.` });
         }
 
-        setCurrentQuiz(null); // reset quiz
+        setCurrentQuiz(null);
       } else {
         setCurrentQuiz({ ...currentQuiz, correctAnswers: newCorrectAnswers });
       }
@@ -228,7 +228,44 @@ export default function CandidateChat({ path }: { path: string }) {
         {messages.map((msg, idx) => (
           <div key={idx} className={`mb-2 ${msg.sender === "ai" ? "text-blue-700" : "text-gray-800"}`}>
             <strong>{msg.sender === "ai" ? "AI" : "You"}:</strong> {msg.text}
+
             {msg.refs && msg.refs.length > 0 && (
               <ul className="text-xs text-gray-500 mt-1">
                 {msg.refs.map((ref, i) => (
-                  <li key={i}><a href={ref}
+                  <li key={i}>
+                    <a href={ref} target="_blank" rel="noreferrer" className="underline text-blue-500">
+                      {ref}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {msg.options && msg.options.length > 0 && (
+              <ul className="list-disc list-inside mt-2 text-gray-700">
+                {msg.options.map((opt, i) => (<li key={i}>{opt}</li>))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="flex">
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          className="flex-grow border px-2 py-1 rounded-l"
+          placeholder="Type your message..."
+        />
+        <button onClick={sendMessage} className="bg-blue-600 text-white px-4 rounded-r">Send</button>
+      </div>
+
+      <div className="mt-2 text-sm text-gray-600">
+        CC: {cc} | Voter Support: {signatures} signatures
+        {ballotAccessMethod === "Fee" && voterApproval > 0 && (
+          <span> | Minimum Approval Required: {voterApproval}%</span>
+        )}
+      </div>
+    </div>
+  );
+}

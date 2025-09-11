@@ -107,102 +107,134 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
     }, 500);
   }, []);
 
-  const sendMessage = () => {
-    if (!input.trim()) return;
-    const userText = input.trim();
-    addMessage({ sender: "user", text: userText });
-    const lastMsg = messages[messages.length - 1];
+const sendMessage = () => {
+  if (!input.trim()) return;
+  const userText = input.trim();
+  addMessage({ sender: "user", text: userText });
+  const lastMsg = messages[messages.length - 1];
 
-    // ===== Office Selection =====
-    if (!selectedOffice && lastMsg.options?.length === 3) {
-      let office = "";
-      const choice = userText.trim().toUpperCase();
-      if (choice === "A" || choice.includes("president")) office = "President";
-      if (choice === "B" || choice.includes("senate")) office = "U.S. Senate";
-      if (choice === "C" || choice.includes("house")) office = "U.S. House";
+  // ===== Office Selection =====
+  if (!selectedOffice && lastMsg.options?.length === 3) {
+    let office = "";
+    const choice = userText.trim().toUpperCase();
+    if (choice === "A" || choice.includes("president")) office = "President";
+    if (choice === "B" || choice.includes("senate")) office = "U.S. Senate";
+    if (choice === "C" || choice.includes("house")) office = "U.S. House";
 
-      if (!office) {
-        addMessage({ sender: "ai", text: `❌ Invalid choice. Please type A, B, or C.` });
-        setInput(""); return;
-      }
-
-      setSelectedOffice(office);
-
-      const options = office === "President" ? [
-        "A) Fee Option: 75 CC + 2.5% nationwide approval",
-        "B) Signature Option: 25% of nationwide voters"
-      ] : office === "U.S. Senate" ? [
-        "A) Fee Option: 50 CC + 2.5% statewide approval",
-        "B) Signature Option: 14% of statewide voters"
-      ] : [
-        "A) Fee Option: 31 CC + 2.5% district approval",
-        "B) Signature Option: 7% of district voters"
-      ];
-
-      addMessage({ sender: "ai", text: `📜 Eligibility for ${office}:\nChoose your ballot access method:`, options });
-      setInput(""); return;
+    if (!office) {
+      addMessage({ sender: "ai", text: `❌ Invalid choice. Please type A, B, or C.` });
+      setInput("");
+      return;
     }
 
-    // ===== Ballot Access =====
-    if (selectedOffice && !ballotAccessMethod && lastMsg.options?.length === 2) {
-      const choice = userText.trim().toUpperCase();
-      let fee = 0; let approvalTarget = 0;
+    setSelectedOffice(office);
 
-      if (choice === "A") {
-        setBallotAccessMethod("Fee");
-        if (selectedOffice === "President") { fee=75; approvalTarget=2.5; }
-        if (selectedOffice === "U.S. Senate") { fee=50; approvalTarget=2.5; }
-        if (selectedOffice === "U.S. House") { fee=31; approvalTarget=2.5; }
-        setCc(cc - fee); setVoterApproval(approvalTarget);
-        addMessage({ sender:"ai", text:`✅ Fee Option selected. ${fee} CC deducted. Minimum approval: ${approvalTarget}%.` });
-      } else if (choice==="B") {
-        setBallotAccessMethod("Signature");
-        if (selectedOffice==="President") approvalTarget=25;
-        if (selectedOffice==="U.S. Senate") approvalTarget=14;
-        if (selectedOffice==="U.S. House") approvalTarget=7;
-        const initSignatures=Math.ceil(approvalTarget*1000);
-        setSignatures(initSignatures);
-        setVoterApproval(initSignatures*SIGNATURE_TO_APPROVAL);
-        addMessage({ sender:"ai", text:`✅ Signature Option selected. You start with ${initSignatures} signatures (~${(initSignatures*SIGNATURE_TO_APPROVAL).toFixed(2)}% voter approval).` });
-      } else {
-        addMessage({ sender:"ai", text:`❌ Invalid choice. Type "A" or "B".` }); setInput(""); return;
-      }
+    const options = office === "President" ? [
+      "A) Fee Option: 75 CC + 2.5% nationwide approval",
+      "B) Signature Option: 25% of nationwide voters"
+    ] : office === "U.S. Senate" ? [
+      "A) Fee Option: 50 CC + 2.5% statewide approval",
+      "B) Signature Option: 14% of statewide voters"
+    ] : [
+      "A) Fee Option: 31 CC + 2.5% district approval",
+      "B) Signature Option: 7% of district voters"
+    ];
 
-      // Trigger first branch module
-      if(path==="Independent") { setCurrentModule("1A"); }
-      else { setCurrentModule("1B"); }
-
-      setInput(""); return;
-    }
-
-    // ===== Quiz Handling =====
-    if(lastMsg.options && lastMsg.quizStep && currentModule && branchQuizzes[currentModule]){
-      const quiz = branchQuizzes[currentModule][0];
-      const userAnswer = userText.trim().toUpperCase();
-      let earnedCC = 0; let earnedSigs = 0;
-
-      if(userAnswer === quiz.correct){ earnedCC=quiz.ccReward100; earnedSigs=quiz.sigReward100; addMessage({sender:"ai", text:"✅ Correct!"}); }
-      else { earnedCC=quiz.ccReward80; earnedSigs=quiz.sigReward80; addMessage({sender:"ai", text:"❌ Incorrect."}); }
-
-      setCc(prev=>prev+earnedCC);
-      setSignatures(prev=>{ const newSigs=prev+earnedSigs; if(ballotAccessMethod==="Signature") setVoterApproval(newSigs*SIGNATURE_TO_APPROVAL); return newSigs; });
-
-      addMessage({ sender:"ai", text:`🎯 Quiz complete! +${earnedSigs} signatures, +${earnedCC} CC. Voter approval: ${voterApproval.toFixed(2)}%.` });
-
-      // Next module
-      if(currentModule==="1A") setCurrentModule("2A");
-      else if(currentModule==="1B") setCurrentModule("2B");
-      else if(currentModule==="2A" || currentModule==="2B") {
-        setCurrentModule("GeneralElection");
-        addMessage({ sender:"ai", text:"🎉 Congratulations! You have unlocked the General Election branch." });
-      }
-
-      setCurrentQuiz(null); setInput(""); return;
-    }
-
-    addMessage({sender:"ai", text:`I’ll guide you. You can request "summary brief", "summary detailed", or confirm completion with "done".`});
+    addMessage({ sender: "ai", text: `📜 Eligibility for ${office}:\nChoose your ballot access method:`, options });
     setInput("");
-  };
+    return;
+  }
+
+  // ===== Ballot Access Selection =====
+  if (selectedOffice && !ballotAccessMethod && lastMsg.options?.length === 2) {
+    const choice = userText.trim().toUpperCase();
+    let fee = 0;
+    let approvalTarget = 0;
+
+    if (choice === "A") {
+      setBallotAccessMethod("Fee");
+      if (selectedOffice === "President") { fee = 75; approvalTarget = 2.5; }
+      if (selectedOffice === "U.S. Senate") { fee = 50; approvalTarget = 2.5; }
+      if (selectedOffice === "U.S. House") { fee = 31; approvalTarget = 2.5; }
+      setCc(cc - fee);
+      setVoterApproval(approvalTarget);
+      addMessage({ sender: "ai", text: `✅ Fee Option selected. ${fee} CC deducted. Minimum approval: ${approvalTarget}%.` });
+    } else if (choice === "B") {
+      setBallotAccessMethod("Signature");
+      if (selectedOffice === "President") approvalTarget = 25;
+      if (selectedOffice === "U.S. Senate") approvalTarget = 14;
+      if (selectedOffice === "U.S. House") approvalTarget = 7;
+      const initSignatures = Math.ceil(approvalTarget * 1000);
+      setSignatures(initSignatures);
+      setVoterApproval(initSignatures * SIGNATURE_TO_APPROVAL);
+      addMessage({ sender: "ai", text: `✅ Signature Option selected. You start with ${initSignatures} signatures (~${(initSignatures*SIGNATURE_TO_APPROVAL).toFixed(2)}% voter approval).` });
+    } else {
+      addMessage({ sender: "ai", text: `❌ Invalid choice. Type "A" or "B".` });
+      setInput("");
+      return;
+    }
+
+    // ===== Trigger First Module Quiz Immediately =====
+    let firstModule = path === "Independent" ? "1A" : "1B";
+    setCurrentModule(firstModule);
+
+    if (branchQuizzes[firstModule] && branchQuizzes[firstModule].length > 0) {
+      const quiz = branchQuizzes[firstModule][0];
+      setCurrentQuiz({ totalQuestions: 1, correctAnswers: 0, quizStep: 1 });
+      addMessage({
+        sender: "ai",
+        text: `📝 ${firstModule} Quiz: ${quiz.question}`,
+        options: quiz.options,
+        quizStep: 1
+      });
+    }
+
+    setInput("");
+    return;
+  }
+
+  // ===== Quiz Handling =====
+  if (lastMsg.options && lastMsg.quizStep && currentModule && branchQuizzes[currentModule]) {
+    const quiz = branchQuizzes[currentModule][0];
+    const userAnswer = userText.trim().toUpperCase();
+    let earnedCC = 0, earnedSigs = 0;
+
+    if (userAnswer === quiz.correct) {
+      earnedCC = quiz.ccReward100;
+      earnedSigs = quiz.sigReward100;
+      addMessage({ sender: "ai", text: "✅ Correct!" });
+    } else {
+      earnedCC = quiz.ccReward80;
+      earnedSigs = quiz.sigReward80;
+      addMessage({ sender: "ai", text: "❌ Incorrect." });
+    }
+
+    setCc(prev => prev + earnedCC);
+    setSignatures(prev => {
+      const newSigs = prev + earnedSigs;
+      if (ballotAccessMethod === "Signature") setVoterApproval(newSigs * SIGNATURE_TO_APPROVAL);
+      return newSigs;
+    });
+
+    addMessage({ sender: "ai", text: `🎯 Quiz complete! +${earnedSigs} signatures, +${earnedCC} CC. Voter approval: ${voterApproval.toFixed(2)}%.` });
+
+    // ===== Progress to next module or General Election =====
+    if (currentModule === "1A") setCurrentModule("2A");
+    else if (currentModule === "1B") setCurrentModule("2B");
+    else if (currentModule === "2A" || currentModule === "2B") {
+      setCurrentModule("GeneralElection");
+      addMessage({ sender: "ai", text: "🎉 Congratulations! You have unlocked the General Election branch." });
+    }
+
+    setCurrentQuiz(null);
+    setInput("");
+    return;
+  }
+
+  // ===== Default Guidance =====
+  addMessage({ sender: "ai", text: `I’ll guide you. You can request "summary brief", "summary detailed", or confirm completion with "done".` });
+  setInput("");
+};
 
   return (
     <div className="p-4 border rounded shadow-md w-full max-w-2xl">

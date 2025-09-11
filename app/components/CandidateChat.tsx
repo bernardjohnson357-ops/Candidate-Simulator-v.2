@@ -151,4 +151,58 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
           setInput(""); return;
         } else {
           setCurrentModule("3");
-          addMessage({
+          addMessage({ sender:"ai", text:"🎯 Module 3 – First Moves: Allocate CC for campaign setup (website, ads, infrastructure) and recruit team members." });
+          setInput(""); return;
+        }
+      }
+
+      setInput(""); return;
+    }
+
+    // Default guidance
+    addMessage({sender:"ai", text:`I’ll guide you. You can request "summary brief", "summary detailed", or confirm completion with "done".`});
+    setInput("");
+  };
+
+  return (
+    <div className="p-4 border rounded shadow-md w-full max-w-2xl">
+      <div className="h-96 overflow-y-auto border p-2 mb-2 bg-gray-50">
+        {messages.map((msg, idx) => (
+          <div key={idx} className={`mb-2 ${msg.sender==="ai"?"text-blue-700":"text-gray-800"}`}>
+            <strong>{msg.sender==="ai"?"AI":"You"}:</strong> {msg.text}
+
+            {msg.refs && msg.refs.length>0 && (
+              <ul className="text-xs text-gray-500 mt-1">
+                {msg.refs.map((ref,i)=>(
+                  <li key={i}><a href={ref} target="_blank" rel="noreferrer" className="underline text-blue-500">{ref}</a></li>
+                ))}
+              </ul>
+            )}
+
+            {msg.options && msg.options.length>0 && (
+              <ul className="list-disc list-inside mt-2 text-gray-700">
+                {msg.options.map((opt,i)=>(<li key={i}>{opt}</li>))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="flex">
+        <input
+          value={input}
+          onChange={e=>setInput(e.target.value)}
+          className="flex-grow border px-2 py-1 rounded-l"
+          placeholder="Type your message..."
+        />
+        <button onClick={sendMessage} className="bg-blue-600 text-white px-4 rounded-r">Send</button>
+      </div>
+
+      <div className="mt-2 text-sm text-gray-600">
+        CC: {cc} | Voter Support: {signatures} signatures
+        {ballotAccessMethod==="Fee" && voterApproval>0 && <span> | Minimum Approval Required: {voterApproval}%</span>}
+        {ballotAccessMethod==="Signature" && <span> | Current Voter Approval: {voterApproval.toFixed(2)}%</span>}
+      </div>
+    </div>
+  );
+}

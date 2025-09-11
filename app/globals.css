@@ -1,3 +1,8 @@
+/* Tailwind directives - must be at the very top */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Apply global resets */
 * {
   margin: 0;

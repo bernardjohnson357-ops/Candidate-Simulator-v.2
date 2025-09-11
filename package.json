@@ -16,14 +16,14 @@
     "ws": "^8.18.3"
   },
   "devDependencies": {
-    "tailwindcss": "^5.0.0",
-    "postcss": "^8.4.31",
-    "autoprefixer": "^10.4.16",
-    "@types/node": "^20.0.0",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "@types/ws": "^8.18.1",
-    "typescript": "^5.9.2",
-    "ts-node": "^10.9.2"
-  }
+  "tailwindcss": "^4.1.13",
+  "postcss": "^8.4.31",
+  "autoprefixer": "^10.4.16",
+  "@types/node": "^20.0.0",
+  "@types/react": "^19.0.0",
+  "@types/react-dom": "^19.0.0",
+  "@types/ws": "^8.18.1",
+  "typescript": "^5.9.2",
+  "ts-node": "^10.9.2"
+}
 }

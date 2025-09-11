@@ -29,12 +29,13 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
   const [currentModule, setCurrentModule] = useState<string | null>(null);
   const [currentQuiz, setCurrentQuiz] = useState<QuizState | null>(null);
 
+  const SIGNATURE_TO_APPROVAL = 0.0001; // 1 signature = 0.0001 voter approval
+
   const addMessage = (msg: Message) =>
     setMessages((prev) => [...prev, msg]);
 
   // ===== Module 0 Initialization =====
   useEffect(() => {
-    // Module 0 intro
     addMessage({
       sender: "ai",
       text: `### Module 0 – Introduction\n🎯 Purpose: Learn how the simulator works and prepare for federal candidacy.\n\nYou start with 50 CC. Your goal is to understand ballot access, FEC filings, and voter signatures.\n\nYou will earn CC and voter signatures by completing quizzes and tasks.`,
@@ -145,12 +146,13 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
         if (selectedOffice === "U.S. Senate") approvalTarget = 14;
         if (selectedOffice === "U.S. House") approvalTarget = 7;
 
-        setSignatures(Math.ceil(approvalTarget * 1000));
-        setVoterApproval(0);
+        const initSignatures = Math.ceil(approvalTarget * 1000);
+        setSignatures(initSignatures);
+        setVoterApproval(initSignatures * SIGNATURE_TO_APPROVAL);
 
         addMessage({
           sender: "ai",
-          text: `✅ You chose the Signature Option. Gather at least ${approvalTarget}% of voters as signatures to qualify for the ballot.`,
+          text: `✅ You chose the Signature Option. You start with ${initSignatures} signatures (≈${(initSignatures*SIGNATURE_TO_APPROVAL).toFixed(2)}% voter approval).`,
         });
       } else {
         addMessage({
@@ -184,10 +186,13 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
 
     // ===== Quiz Handling with Score-Based Rewards =====
     if (lastMsg.options && lastMsg.quizStep && currentQuiz) {
-      const correctAnswer = "B"; // placeholder, can vary per quiz
+      const correctAnswer = "B"; // placeholder
       const stepKey = lastMsg.quizStep;
 
       let newCorrectAnswers = currentQuiz.correctAnswers;
+      let earnedSignatures = 0;
+      let earnedCC = 0;
+
       if (userText.trim().toUpperCase() === correctAnswer) {
         newCorrectAnswers += 1;
         addMessage({ sender: "ai", text: `✅ Correct!` });
@@ -204,18 +209,29 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
         const scorePercent = (newCorrectAnswers / currentQuiz.totalQuestions) * 100;
 
         if (scorePercent === 100) {
-          setSignatures(signatures + 100);
-          setCc(cc + 2);
-          addMessage({ sender: "ai", text: `🎉 Perfect score! You earned +100 signatures and +2 CC.` });
+          earnedSignatures = 100;
+          earnedCC = 2;
         } else if (scorePercent >= 80) {
-          setSignatures(signatures + 80);
-          setCc(cc + 1);
-          addMessage({ sender: "ai", text: `✅ Great job! You scored 80%+. You earned +80 signatures and +1 CC.` });
-        } else {
-          addMessage({ sender: "ai", text: `You scored below 80%. No extra CC or signatures awarded.` });
+          earnedSignatures = 80;
+          earnedCC = 1;
         }
 
-        // Trigger next module (Module 2) after Module 1 completion
+        // Update CC and signatures
+        setSignatures(prev => {
+          const newSigs = prev + earnedSignatures;
+          if (ballotAccessMethod === "Signature") {
+            setVoterApproval(newSigs * SIGNATURE_TO_APPROVAL);
+          }
+          return newSigs;
+        });
+        setCc(prev => prev + earnedCC);
+
+        addMessage({
+          sender: "ai",
+          text: `🎯 Quiz complete! You earned +${earnedSignatures} signatures and +${earnedCC} CC. Current voter approval: ${(voterApproval).toFixed(2)}%.`,
+        });
+
+        // Trigger next module
         if (currentModule === "1A") {
           setCurrentModule("2A");
           addMessage({
@@ -257,41 +273,4 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
 
             {msg.refs && msg.refs.length > 0 && (
               <ul className="text-xs text-gray-500 mt-1">
-                {msg.refs.map((ref, i) => (
-                  <li key={i}>
-                    <a href={ref} target="_blank" rel="noreferrer" className="underline text-blue-500">
-                      {ref}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            {msg.options && msg.options.length > 0 && (
-              <ul className="list-disc list-inside mt-2 text-gray-700">
-                {msg.options.map((opt, i) => (<li key={i}>{opt}</li>))}
-              </ul>
-            )}
-          </div>
-        ))}
-      </div>
-
-      <div className="flex">
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="flex-grow border px-2 py-1 rounded-l"
-          placeholder="Type your message..."
-        />
-        <button onClick={sendMessage} className="bg-blue-600 text-white px-4 rounded-r">Send</button>
-      </div>
-
-      <div className="mt-2 text-sm text-gray-600">
-        CC: {cc} | Voter Support: {signatures} signatures
-        {ballotAccessMethod === "Fee" && voterApproval > 0 && (
-          <span> | Minimum Approval Required: {voterApproval}%</span>
-        )}
-      </div>
-    </div>
-  );
-}
+                {msg.refs

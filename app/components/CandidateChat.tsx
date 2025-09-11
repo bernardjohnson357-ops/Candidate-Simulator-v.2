@@ -29,7 +29,7 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
   const [currentModule, setCurrentModule] = useState<string | null>(null);
   const [currentQuiz, setCurrentQuiz] = useState<QuizState | null>(null);
 
-  const SIGNATURE_TO_APPROVAL = 0.0001; // 1 signature = 0.0001 voter approval
+  const SIGNATURE_TO_APPROVAL = 0.0001; // 1 signature = 0.0001 approval
 
   const addMessage = (msg: Message) =>
     setMessages((prev) => [...prev, msg]);
@@ -46,7 +46,6 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
       text: `💡 Key Rules:\n- Read tasks before writing.\n- Writing tasks must be typed.\n- Speaking tasks must use voice input.\n\nThis scaffolding ensures clear thinking before persuasive action.`,
     });
 
-    // Prompt to choose office
     setTimeout(() => {
       addMessage({
         sender: "ai",
@@ -66,7 +65,7 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
     addMessage({ sender: "user", text: userText });
     const lastMsg = messages[messages.length - 1];
 
-    // ===== Federal Office Selection =====
+    // ===== Office Selection =====
     if (!selectedOffice && lastMsg.options?.length === 3) {
       let office = "";
       const choice = userText.trim().toUpperCase();
@@ -86,40 +85,28 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
       setSelectedOffice(office);
 
       // Show eligibility + ballot options
-      if (office === "President") {
-        addMessage({
-          sender: "ai",
-          text: `📜 **Eligibility for President**\n- Natural-born U.S. citizen\n- At least 35 years old\n- Resident of the U.S. for 14+ years\n\nHow do you plan to reach the ballot?`,
-          options: [
-            "A) Fee Option: 75 CC + 2.5% nationwide approval",
-            "B) Signature Option: 25% of nationwide voters",
-          ],
-        });
-      } else if (office === "U.S. Senate") {
-        addMessage({
-          sender: "ai",
-          text: `📜 **Eligibility for U.S. Senate**\n- At least 30 years old\n- U.S. citizen for 9+ years\n- Resident of the state you're running in\n\nHow do you plan to reach the ballot?`,
-          options: [
-            "A) Fee Option: 50 CC + 2.5% statewide approval",
-            "B) Signature Option: 14% of statewide voters",
-          ],
-        });
-      } else if (office === "U.S. House") {
-        addMessage({
-          sender: "ai",
-          text: `📜 **Eligibility for U.S. House**\n- At least 25 years old\n- U.S. citizen for 7+ years\n- Resident of the state/district you're running in\n\nHow do you plan to reach the ballot?`,
-          options: [
-            "A) Fee Option: 31 CC + 2.5% district approval",
-            "B) Signature Option: 7% of district voters",
-          ],
-        });
-      }
+      const options = office === "President" ? [
+        "A) Fee Option: 75 CC + 2.5% nationwide approval",
+        "B) Signature Option: 25% of nationwide voters"
+      ] : office === "U.S. Senate" ? [
+        "A) Fee Option: 50 CC + 2.5% statewide approval",
+        "B) Signature Option: 14% of statewide voters"
+      ] : [
+        "A) Fee Option: 31 CC + 2.5% district approval",
+        "B) Signature Option: 7% of district voters"
+      ];
+
+      addMessage({
+        sender: "ai",
+        text: `📜 Eligibility for ${office}:\nPlease choose your ballot access method:`,
+        options
+      });
 
       setInput("");
       return;
     }
 
-    // ===== Ballot Access Decision =====
+    // ===== Ballot Access =====
     if (selectedOffice && !ballotAccessMethod && lastMsg.options?.length === 2) {
       const choice = userText.trim().toUpperCase();
       let fee = 0;
@@ -127,7 +114,6 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
 
       if (choice === "A") {
         setBallotAccessMethod("Fee");
-
         if (selectedOffice === "President") { fee = 75; approvalTarget = 2.5; }
         if (selectedOffice === "U.S. Senate") { fee = 50; approvalTarget = 2.5; }
         if (selectedOffice === "U.S. House") { fee = 31; approvalTarget = 2.5; }
@@ -137,7 +123,7 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
 
         addMessage({
           sender: "ai",
-          text: `✅ You chose the Fee Option. ${fee} CC deducted. You must reach at least ${approvalTarget}% voter approval to qualify for the ballot.`,
+          text: `✅ Fee Option selected. ${fee} CC deducted. Minimum approval required: ${approvalTarget}%.`,
         });
       } else if (choice === "B") {
         setBallotAccessMethod("Signature");
@@ -152,18 +138,18 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
 
         addMessage({
           sender: "ai",
-          text: `✅ You chose the Signature Option. You start with ${initSignatures} signatures (≈${(initSignatures*SIGNATURE_TO_APPROVAL).toFixed(2)}% voter approval).`,
+          text: `✅ Signature Option selected. You start with ${initSignatures} signatures (≈${(initSignatures*SIGNATURE_TO_APPROVAL).toFixed(2)}% voter approval).`,
         });
       } else {
         addMessage({
           sender: "ai",
-          text: `❌ Invalid choice. Please type "A" for Fee Option or "B" for Signature Option.`,
+          text: `❌ Invalid choice. Type "A" or "B".`,
         });
         setInput("");
         return;
       }
 
-      // Trigger Module 1 quiz based on path
+      // Trigger first branch module
       if (path === "Independent") {
         setCurrentModule("1A");
         setCurrentQuiz({ totalQuestions: 1, correctAnswers: 0, quizStep: 1 });
@@ -184,11 +170,10 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
       return;
     }
 
-    // ===== Quiz Handling with Score-Based Rewards =====
+    // ===== Quiz Handling =====
     if (lastMsg.options && lastMsg.quizStep && currentQuiz) {
-      const correctAnswer = "B"; // placeholder
+      const correctAnswer = "B";
       const stepKey = lastMsg.quizStep;
-
       let newCorrectAnswers = currentQuiz.correctAnswers;
       let earnedSignatures = 0;
       let earnedCC = 0;
@@ -200,11 +185,9 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
         addMessage({ sender: "ai", text: `❌ Incorrect.` });
       }
 
-      // Update attempts
       const attempts = quizAttempts[stepKey] || 0;
       setQuizAttempts({ ...quizAttempts, [stepKey]: attempts + 1 });
 
-      // Quiz completed
       if (newCorrectAnswers >= currentQuiz.totalQuestions) {
         const scorePercent = (newCorrectAnswers / currentQuiz.totalQuestions) * 100;
 
@@ -216,7 +199,7 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
           earnedCC = 1;
         }
 
-        // Update CC and signatures
+        // Update signatures & voter approval
         setSignatures(prev => {
           const newSigs = prev + earnedSignatures;
           if (ballotAccessMethod === "Signature") {
@@ -228,10 +211,10 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
 
         addMessage({
           sender: "ai",
-          text: `🎯 Quiz complete! You earned +${earnedSignatures} signatures and +${earnedCC} CC. Current voter approval: ${(voterApproval).toFixed(2)}%.`,
+          text: `🎯 Quiz complete! You earned +${earnedSignatures} signatures and +${earnedCC} CC. Current voter approval: ${voterApproval.toFixed(2)}%.`,
         });
 
-        // Trigger next module
+        // Next module
         if (currentModule === "1A") {
           setCurrentModule("2A");
           addMessage({
@@ -273,4 +256,38 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
 
             {msg.refs && msg.refs.length > 0 && (
               <ul className="text-xs text-gray-500 mt-1">
-                {msg.refs
+                {msg.refs.map((ref, i) => (
+                  <li key={i}>
+                    <a href={ref} target="_blank" rel="noreferrer" className="underline text-blue-500">{ref}</a>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {msg.options && msg.options.length > 0 && (
+              <ul className="list-disc list-inside mt-2 text-gray-700">
+                {msg.options.map((opt, i) => (
+                  <li key={i}>{opt}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="flex">
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          className="flex-grow border px-2 py-1 rounded-l"
+          placeholder="Type your message..."
+        />
+        <button onClick={sendMessage} className="bg-blue-600 text-white px-4 rounded-r">Send</button>
+      </div>
+
+      <div className="mt-2 text-sm text-gray-600">
+        CC: {cc} | Voter Support: {signatures} signatures
+        {ballotAccessMethod === "Fee" && voterApproval > 0 && (
+          <span> | Minimum Approval Required: {voterApproval}%</span>
+        )}
+        {ballotAccessMethod

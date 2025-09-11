@@ -5,15 +5,17 @@ import { useState } from "react";
 import CandidateChat from "./components/CandidateChat";
 
 export default function HomePage() {
-  const [showOrientation, setShowOrientation] = useState(true);
   const [path, setPath] = useState<"Party" | "Independent" | null>(null);
 
-  if (showOrientation) {
+  // ===== Orientation / Module 0 =====
+  if (!path) {
     return (
       <div className="p-8 max-w-3xl mx-auto space-y-6">
         <h2 className="text-2xl font-bold">🗳 Candidate Simulator Orientation</h2>
 
-        <p>Welcome to the Candidate Simulator! This simulator is designed to prepare you for the realities of running for office. Every stage is scaffolded — which means you’ll move through reading, writing, and speaking in a deliberate order.</p>
+        <p>
+          Welcome to the Candidate Simulator! This simulator is designed to prepare you for the realities of running for office. Every stage is scaffolded — which means you’ll move through reading, writing, and speaking in a deliberate order.
+        </p>
 
         <h3 className="font-semibold">Why Scaffolded?</h3>
         <p>In politics, some people rely on quick talking points without deep understanding. This simulator is different. It forces you to:</p>
@@ -119,6 +121,6 @@ export default function HomePage() {
     );
   }
 
-  // Step 1: Once path is chosen, go directly to chat
-  return <CandidateChat path={path} />;
+  // ===== Step 1: Path chosen → go to CandidateChat =====
+  return <CandidateChat path={path!} />;
 }

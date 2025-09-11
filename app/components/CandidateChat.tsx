@@ -54,10 +54,12 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
       if(choice==="A" || choice.includes("president")) office="President";
       if(choice==="B" || choice.includes("senate")) office="U.S. Senate";
       if(choice==="C" || choice.includes("house")) office="U.S. House";
-      if(!office){ addMessage({sender:"ai", text:"❌ Invalid choice. Type A, B, or C."}); setInput(""); return; }
+      if(!office){ addMessage({sender:"ai", text:"❌ Invalid. Type A, B, or C."}); setInput(""); return; }
       setSelectedOffice(office);
-      const options = office==="President"?["A) Fee Option: 75 CC + 2.5%","B) Signature Option: 25%"]: office==="U.S. Senate"?["A) Fee Option: 50 CC + 2.5%","B) Signature Option: 14%"]:["A) Fee Option: 31 CC + 2.5%","B) Signature Option: 7%"];
-      addMessage({sender:"ai", text:`📜 Eligibility for ${office} – choose ballot access:`, options});
+      const options = office==="President"?["A) Fee Option: 75 CC + 2.5%","B) Signature Option: 25%"]
+                    : office==="U.S. Senate"?["A) Fee Option: 50 CC + 2.5%","B) Signature Option: 14%"]
+                    : ["A) Fee Option: 31 CC + 2.5%","B) Signature Option: 7%"];
+      addMessage({ sender:"ai", text: `📜 Eligibility for ${office} – choose ballot access:`, options });
       setInput(""); return;
     }
 
@@ -87,8 +89,8 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
       const firstModule = path==="Independent"?"1A":"1B";
       setCurrentModule(firstModule);
       const quiz = branchQuizzes[firstModule][0];
-      setCurrentQuiz({ totalQuestions:1, correctAnswers:0, quizStep:1 });
-      addMessage({sender:"ai", text:`📝 ${firstModule} Quiz: ${quiz.question}`, options: quiz.options, quizStep:1});
+      setCurrentQuiz({ totalQuestions: 1, correctAnswers: 0, quizStep: 1 });
+      addMessage({ sender: "ai", text: `📝 ${firstModule} Quiz: ${quiz.question}`, options: quiz.options, quizStep: 1 });
       setInput(""); return;
     }
 
@@ -99,15 +101,15 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
       const quiz = currentModule==="Form3"?branchQuizzes["Form3"][0]:branchQuizzes[moduleKey][0];
       const answer = userText.toUpperCase();
 
-      // Handle incorrect answers
-      if(answer !== quiz.correct){
+      // Incorrect answer handling
+      if(answer!==quiz.correct){
         if(moduleKey==="Form3"){
-          const penaltyCC = quiz.penaltyCC || 1;
-          const penaltySignatures = quiz.penaltySignatures || 50;
-          const multiplier = retakesUsed>0?2:1;
+          const penaltyCC=quiz.penaltyCC||1;
+          const penaltySignatures=quiz.penaltySignatures||50;
+          const multiplier=retakesUsed>0?2:1;
           setCc(prev=>Math.max(prev-penaltyCC*multiplier,0));
           setSignatures(prev=>Math.max(prev-penaltySignatures*multiplier,0));
-          setQuizRetakes({...quizRetakes,[moduleKey]:(quizRetakes[moduleKey]||0)+1});
+          setQuizRetakes({...quizRetakes,[moduleKey]:retakesUsed+1});
           addMessage({sender:"ai", text:`❌ Incorrect Form 3. Lost ${penaltyCC*multiplier} CC and ${penaltySignatures*multiplier} signatures. Retake allowed once.`});
           setInput(""); return;
         } else if(retakesUsed===0){
@@ -121,11 +123,11 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
         addMessage({sender:"ai", text:"✅ Correct!"});
       }
 
-      // Update rewards for regular modules
+      // Update rewards for normal modules
       if(moduleKey!=="Form3"){
         setCc(prev=>prev+(answer===quiz.correct?quiz.ccReward100:quiz.ccReward80));
         setSignatures(prev=>{
-          const newSigs = prev+(answer===quiz.correct?quiz.sigReward100:quiz.sigReward80);
+          const newSigs=prev+(answer===quiz.correct?quiz.sigReward100:quiz.sigReward80);
           if(ballotAccessMethod==="Signature") setVoterApproval(newSigs*SIGNATURE_TO_APPROVAL);
           return newSigs;
         });
@@ -136,9 +138,32 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
       // Progression logic
       if(currentModule==="1A") setCurrentModule("2A");
       else if(currentModule==="1B") setCurrentModule("2B");
-      else if(currentModule==="2A" || currentModule==="2B"){
-        // Check if Form 3 should trigger
+      else if(currentModule==="2A"||currentModule==="2B"){
         if(ballotAccessMethod==="Fee" && voterApproval>=2.5 && (selectedOffice==="President"||selectedOffice==="U.S. Senate")){
           setCurrentModule("Form3");
           setCurrentQuiz({totalQuestions:1,correctAnswers:0,quizStep:1});
-          addMessage({sender:"ai", text:`📝 Form 3 – Quarterly Report Quiz: Must file Form 3 correctly. Mistakes carry penalties.`, options:["A)
+          addMessage({sender:"ai", text:"📝 Form 3 – Quarterly Report Quiz: You must file Form 3 correctly. Mistakes carry penalties.", options:["A) Submit accurate Form 3","B) Submit inaccurate Form 3","C) Skip filing"], quizStep:1});
+          setInput(""); return;
+        } else {
+          setCurrentModule("3");
+          addMessage({sender:"ai", text:"🎯 Module 3 – First Moves: Allocate CC for campaign setup (website, ads, infrastructure) and recruit team members."});
+        }
+      }
+
+      setInput(""); return;
+    }
+
+    // Default guidance
+    addMessage({sender:"ai", text:`I’ll guide you. You can request "summary brief", "summary detailed", or confirm completion with "done".`});
+    setInput("");
+  };
+
+  return (
+    <div className="p-4 border rounded shadow-md w-full max-w-2xl">
+      <div className="h-96 overflow-y-auto border p-2 mb-2 bg-gray-50">
+        {messages.map((msg, idx)=>(
+          <div key={idx} className={`mb-2 ${msg.sender==="ai"?"text-blue-700":"text-gray-800"}`}>
+            <strong>{msg.sender==="ai"?"AI":"You"}:</strong> {msg.text}
+            {msg.options && (
+              <ul className="list-disc list-inside mt-2 text-gray-700">
+                {msg

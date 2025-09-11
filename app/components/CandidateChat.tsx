@@ -17,7 +17,7 @@ type QuizState = {
   quizStep?: number;
 };
 
-export default function CandidateChat({ path }: { path: string }) {
+export default function CandidateChat({ path }: { path: "Party" | "Independent" }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [cc, setCc] = useState(50);
   const [signatures, setSignatures] = useState(0);
@@ -26,23 +26,30 @@ export default function CandidateChat({ path }: { path: string }) {
   const [quizAttempts, setQuizAttempts] = useState<Record<number, number>>({});
   const [selectedOffice, setSelectedOffice] = useState<string | null>(null);
   const [ballotAccessMethod, setBallotAccessMethod] = useState<string | null>(null);
-  const [step, setStep] = useState(1);
+  const [currentModule, setCurrentModule] = useState<string | null>(null);
   const [currentQuiz, setCurrentQuiz] = useState<QuizState | null>(null);
 
   const addMessage = (msg: Message) =>
     setMessages((prev) => [...prev, msg]);
 
-  // ===== Welcome + Office Prompt =====
+  // ===== Module 0 Initialization =====
   useEffect(() => {
+    // Module 0 intro
     addMessage({
       sender: "ai",
-      text: `Welcome to the Candidate Simulator. You’ve chosen the **${path} path**. Candidate Coins (CC) represent simulated campaign resources. **1 CC = $100 (simulated)**.`,
+      text: `### Module 0 – Introduction\n🎯 Purpose: Learn how the simulator works and prepare for federal candidacy.\n\nYou start with 50 CC. Your goal is to understand ballot access, FEC filings, and voter signatures.\n\nYou will earn CC and voter signatures by completing quizzes and tasks.`,
     });
 
+    addMessage({
+      sender: "ai",
+      text: `💡 Key Rules:\n- Read tasks before writing.\n- Writing tasks must be typed.\n- Speaking tasks must use voice input.\n\nThis scaffolding ensures clear thinking before persuasive action.`,
+    });
+
+    // Prompt to choose office
     setTimeout(() => {
       addMessage({
         sender: "ai",
-        text: `🗳️ **Step 1: Choose Your Federal Office**\nWhich office are you running for?`,
+        text: `🗳️ First, choose the federal office you want to run for:`,
         options: [
           "A) President",
           "B) U.S. Senate",
@@ -50,7 +57,7 @@ export default function CandidateChat({ path }: { path: string }) {
         ],
       });
     }, 500);
-  }, [path]);
+  }, []);
 
   const sendMessage = () => {
     if (!input.trim()) return;
@@ -119,6 +126,7 @@ export default function CandidateChat({ path }: { path: string }) {
 
       if (choice === "A") {
         setBallotAccessMethod("Fee");
+
         if (selectedOffice === "President") { fee = 75; approvalTarget = 2.5; }
         if (selectedOffice === "U.S. Senate") { fee = 50; approvalTarget = 2.5; }
         if (selectedOffice === "U.S. House") { fee = 31; approvalTarget = 2.5; }
@@ -132,6 +140,7 @@ export default function CandidateChat({ path }: { path: string }) {
         });
       } else if (choice === "B") {
         setBallotAccessMethod("Signature");
+
         if (selectedOffice === "President") approvalTarget = 25;
         if (selectedOffice === "U.S. Senate") approvalTarget = 14;
         if (selectedOffice === "U.S. House") approvalTarget = 7;
@@ -152,20 +161,22 @@ export default function CandidateChat({ path }: { path: string }) {
         return;
       }
 
-      // Trigger first quiz
-      setCurrentQuiz({ totalQuestions: 1, correctAnswers: 0, quizStep: 2 });
-      addMessage({
-        sender: "ai",
-        text: `📝 **Quiz – Module 2A (FEC Filing)**\nWhich FEC form registers a campaign committee?`,
-        options: [
-          "A) Form 1 – Statement of Candidacy",
-          "B) Form 2 – Statement of Organization",
-          "C) Form 3 – Quarterly Report",
-          "D) Form 5 – Independent Expenditures",
-        ],
-        refs: ["https://www.fec.gov/resources/cms-content/documents/policy-guidance/partygui.pdf"],
-        quizStep: 2,
-      });
+      // Trigger Module 1 quiz based on path
+      if (path === "Independent") {
+        setCurrentModule("1A");
+        setCurrentQuiz({ totalQuestions: 1, correctAnswers: 0, quizStep: 1 });
+        addMessage({
+          sender: "ai",
+          text: `📝 Module 1A – Independent Filing Quiz: Complete the SOS filing task.`,
+        });
+      } else {
+        setCurrentModule("1B");
+        setCurrentQuiz({ totalQuestions: 1, correctAnswers: 0, quizStep: 1 });
+        addMessage({
+          sender: "ai",
+          text: `📝 Module 1B – Party Filing Quiz: Complete the SOS + FEC basics.`,
+        });
+      }
 
       setInput("");
       return;
@@ -173,7 +184,7 @@ export default function CandidateChat({ path }: { path: string }) {
 
     // ===== Quiz Handling with Score-Based Rewards =====
     if (lastMsg.options && lastMsg.quizStep && currentQuiz) {
-      const correctAnswer = "B";
+      const correctAnswer = "B"; // placeholder, can vary per quiz
       const stepKey = lastMsg.quizStep;
 
       let newCorrectAnswers = currentQuiz.correctAnswers;
@@ -202,6 +213,21 @@ export default function CandidateChat({ path }: { path: string }) {
           addMessage({ sender: "ai", text: `✅ Great job! You scored 80%+. You earned +80 signatures and +1 CC.` });
         } else {
           addMessage({ sender: "ai", text: `You scored below 80%. No extra CC or signatures awarded.` });
+        }
+
+        // Trigger next module (Module 2) after Module 1 completion
+        if (currentModule === "1A") {
+          setCurrentModule("2A");
+          addMessage({
+            sender: "ai",
+            text: `📝 Module 2A – FEC Filing Fee Quiz (Independent). Complete Forms 1 & 2.`,
+          });
+        } else if (currentModule === "1B") {
+          setCurrentModule("2B");
+          addMessage({
+            sender: "ai",
+            text: `📝 Module 2B – FEC Filing Fee Quiz (Party). Complete Forms 1 & 2.`,
+          });
         }
 
         setCurrentQuiz(null);

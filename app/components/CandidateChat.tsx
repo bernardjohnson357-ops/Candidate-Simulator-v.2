@@ -124,7 +124,7 @@ Candidate Coins (CC) represent simulated campaign resources. **1 CC = $100 (simu
         return;
       }
 
-      // Optionally trigger first quiz after ballot decision
+      // Trigger first quiz after ballot decision
       addMessage({
         sender: "ai",
         text: `📝 **Quiz – Module 2A (FEC Filing)**\nWhich FEC form registers a campaign committee?`,
@@ -144,7 +144,7 @@ Candidate Coins (CC) represent simulated campaign resources. **1 CC = $100 (simu
 
     // ===== Quiz Handling =====
     if (lastMsg.options && lastMsg.quizStep) {
-      const correctAnswer = "B"; // dynamically set per quiz
+      const correctAnswer = "B";
       const stepKey = lastMsg.quizStep;
       const attempts = quizAttempts[stepKey] || 0;
 
@@ -265,12 +265,6 @@ Candidate Coins (CC) represent simulated campaign resources. **1 CC = $100 (simu
         </button>
       </div>
 
-      <div className="mt-2 text-sm text-gray-600">
-        CC: {cc} | Voter Support: {signatures} signatures
-      </div>
-    </div>
-  );
-}
       <div className="mt-2 text-sm text-gray-600">
         CC: {cc} | Voter Support: {signatures} signatures
       </div>

@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "tailwind:init": "tailwindcss init -p"
+    "tailwind:init": "npx tailwindcss-cli init -p"
+}
+
   },
   "dependencies": {
     "next": "^15.5.2",

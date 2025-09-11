@@ -296,8 +296,11 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
 }
 
       <div className="mt-2 text-sm text-gray-600">
-        CC: {cc} | Voter Support: {signatures} signatures
-        {ballotAccessMethod === "Fee" && voterApproval > 0 && (
-          <span> | Minimum Approval Required: {voterApproval}%</span>
-        )}
-        {ballotAccessMethod
+  CC: {cc} | Voter Support: {signatures} signatures
+  {ballotAccessMethod === "Fee" && voterApproval > 0 && (
+    <span> | Minimum Approval Required: {voterApproval}%</span>
+  )}
+  {ballotAccessMethod === "Signature" && (
+    <span> | Current Voter Approval: {voterApproval.toFixed(2)}%</span>
+  )}
+</div>

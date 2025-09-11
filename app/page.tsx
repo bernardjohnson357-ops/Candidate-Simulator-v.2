@@ -1,13 +1,12 @@
 // app/page.tsx
 "use client";
 
-import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import CandidateChat from "@/components/CandidateChat";
+import Card from "./components/ui/card";
+import CandidateChat from "./components/CandidateChat";
 
-export default function Page() {
-  const [orientationDone, setOrientationDone] = useState(false);
-  const [path, setPath] = useState<string | null>(null);
+export default function HomePage() {
+  return (
+    <main className="min-h-screen bg-gray-100 p-8 flex flex-col items-center">
 
   // ===== Step 1: Orientation =====
   if (!orientationDone) {

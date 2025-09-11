@@ -34,6 +34,54 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
   const addMessage = (msg: Message) =>
     setMessages(prev => [...prev, msg]);
 
+  // ===== Branch quiz data =====
+  const branchQuizzes: Record<string, any[]> = {
+    "1A": [
+      {
+        question: "Which step is required first for Independent/Write-In filing at the state level?",
+        options: ["A) Submit FEC Form 1", "B) File with Secretary of State", "C) Fundraise $500", "D) Launch campaign website"],
+        correct: "B",
+        ccReward80: 1,
+        ccReward100: 2,
+        sigReward80: 80,
+        sigReward100: 100
+      }
+    ],
+    "2A": [
+      {
+        question: "Which FEC form registers an independent campaign committee?",
+        options: ["A) Form 3 – Quarterly Report", "B) Form 2 – Statement of Organization", "C) Form 1 – Statement of Candidacy", "D) Form 5 – Independent Expenditures"],
+        correct: "B",
+        ccReward80: 1,
+        ccReward100: 2,
+        sigReward80: 80,
+        sigReward100: 100
+      }
+    ],
+    "1B": [
+      {
+        question: "Party candidates must submit which state form first?",
+        options: ["A) SOS Nomination Form", "B) FEC Form 1", "C) FEC Form 3", "D) State Campaign Fee Receipt"],
+        correct: "A",
+        ccReward80: 1,
+        ccReward100: 2,
+        sigReward80: 80,
+        sigReward100: 100
+      }
+    ],
+    "2B": [
+      {
+        question: "Which FEC form is required to register a party campaign committee?",
+        options: ["A) Form 1 – Statement of Candidacy", "B) Form 2 – Statement of Organization", "C) Form 3 – Quarterly Report", "D) Form 5 – Independent Expenditures"],
+        correct: "B",
+        ccReward80: 1,
+        ccReward100: 2,
+        sigReward80: 80,
+        sigReward100: 100
+      }
+    ]
+  };
+
   // ===== Module 0 Initialization =====
   useEffect(() => {
     addMessage({
@@ -120,43 +168,36 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
         addMessage({ sender:"ai", text:`❌ Invalid choice. Type "A" or "B".` }); setInput(""); return;
       }
 
-      // Trigger branch module
-      if(path==="Independent") { setCurrentModule("1A"); setCurrentQuiz({totalQuestions:1, correctAnswers:0, quizStep:1});
-        addMessage({sender:"ai", text:"📝 Module 1A – Independent Filing Quiz: Complete the SOS filing task."});
-      } else { setCurrentModule("1B"); setCurrentQuiz({totalQuestions:1, correctAnswers:0, quizStep:1});
-        addMessage({sender:"ai", text:"📝 Module 1B – Party Filing Quiz: Complete the SOS + FEC basics."});
-      }
+      // Trigger first branch module
+      if(path==="Independent") { setCurrentModule("1A"); }
+      else { setCurrentModule("1B"); }
+
       setInput(""); return;
     }
 
     // ===== Quiz Handling =====
-    if(lastMsg.options && lastMsg.quizStep && currentQuiz){
-      const correctAnswer="B"; let newCorrectAnswers=currentQuiz.correctAnswers;
-      let earnedSignatures=0; let earnedCC=0;
-      if(userText.trim().toUpperCase()===correctAnswer) { newCorrectAnswers+=1; addMessage({sender:"ai", text:"✅ Correct!"}); }
-      else { addMessage({sender:"ai", text:"❌ Incorrect."}); }
+    if(lastMsg.options && lastMsg.quizStep && currentModule && branchQuizzes[currentModule]){
+      const quiz = branchQuizzes[currentModule][0];
+      const userAnswer = userText.trim().toUpperCase();
+      let earnedCC = 0; let earnedSigs = 0;
 
-      const attempts = quizAttempts[lastMsg.quizStep]||0;
-      setQuizAttempts({...quizAttempts, [lastMsg.quizStep]: attempts+1});
+      if(userAnswer === quiz.correct){ earnedCC=quiz.ccReward100; earnedSigs=quiz.sigReward100; addMessage({sender:"ai", text:"✅ Correct!"}); }
+      else { earnedCC=quiz.ccReward80; earnedSigs=quiz.sigReward80; addMessage({sender:"ai", text:"❌ Incorrect."}); }
 
-      if(newCorrectAnswers>=currentQuiz.totalQuestions){
-        const scorePercent=(newCorrectAnswers/currentQuiz.totalQuestions)*100;
-        if(scorePercent===100){ earnedSignatures=100; earnedCC=2; }
-        else if(scorePercent>=80){ earnedSignatures=80; earnedCC=1; }
+      setCc(prev=>prev+earnedCC);
+      setSignatures(prev=>{ const newSigs=prev+earnedSigs; if(ballotAccessMethod==="Signature") setVoterApproval(newSigs*SIGNATURE_TO_APPROVAL); return newSigs; });
 
-        setSignatures(prev => { const newSigs=prev+earnedSignatures; 
-          if(ballotAccessMethod==="Signature") setVoterApproval(newSigs*SIGNATURE_TO_APPROVAL); return newSigs; });
-        setCc(prev => prev+earnedCC);
+      addMessage({ sender:"ai", text:`🎯 Quiz complete! +${earnedSigs} signatures, +${earnedCC} CC. Voter approval: ${voterApproval.toFixed(2)}%.` });
 
-        addMessage({sender:"ai", text:`🎯 Quiz complete! +${earnedSignatures} signatures, +${earnedCC} CC. Voter approval: ${voterApproval.toFixed(2)}%.`});
+      // Next module
+      if(currentModule==="1A") setCurrentModule("2A");
+      else if(currentModule==="1B") setCurrentModule("2B");
+      else if(currentModule==="2A" || currentModule==="2B") {
+        setCurrentModule("GeneralElection");
+        addMessage({ sender:"ai", text:"🎉 Congratulations! You have unlocked the General Election branch." });
+      }
 
-        if(currentModule==="1A"){ setCurrentModule("2A"); addMessage({sender:"ai", text:"📝 Module 2A – FEC Filing Fee Quiz (Independent). Complete Forms 1 & 2."}); }
-        else if(currentModule==="1B"){ setCurrentModule("2B"); addMessage({sender:"ai", text:"📝 Module 2B – FEC Filing Fee Quiz (Party). Complete Forms 1 & 2."}); }
-
-        setCurrentQuiz(null);
-      } else { setCurrentQuiz({...currentQuiz, correctAnswers:newCorrectAnswers}); }
-
-      setInput(""); return;
+      setCurrentQuiz(null); setInput(""); return;
     }
 
     addMessage({sender:"ai", text:`I’ll guide you. You can request "summary brief", "summary detailed", or confirm completion with "done".`});
@@ -196,7 +237,7 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
           className="flex-grow border px-2 py-1 rounded-l"
           placeholder="Type your message..."
         />
-        <button onClick={sendMessage} className="bg-blue-600 text-white px-4 rounded-r">Send</button>
+        <button onClick={()=>sendMessage()} className="bg-blue-600 text-white px-4 rounded-r">Send</button>
       </div>
 
       <div className="mt-2 text-sm text-gray-600">

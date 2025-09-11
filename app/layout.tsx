@@ -1,19 +1,10 @@
-import React from "react";
-import "./globals.css"; // ✅ make sure this line is here
+import './globals.css';
 
 export const metadata = {
-  title: "Candidate Simulator",
-  description: "Federal Candidate Simulator App",
-};
+  title: 'Candidate Simulator',
+  description: 'AI-driven campaign simulator'
+}
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
-  );
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return <html lang="en"><body>{children}</body></html>
 }

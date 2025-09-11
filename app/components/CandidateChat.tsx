@@ -11,6 +11,12 @@ type Message = {
   quizStep?: number;
 };
 
+type QuizState = {
+  totalQuestions: number;
+  correctAnswers: number;
+  quizStep?: number;
+};
+
 export default function CandidateChat({ path }: { path: string }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [cc, setCc] = useState(50);
@@ -20,9 +26,8 @@ export default function CandidateChat({ path }: { path: string }) {
   const [quizAttempts, setQuizAttempts] = useState<Record<number, number>>({});
   const [selectedOffice, setSelectedOffice] = useState<string | null>(null);
   const [ballotAccessMethod, setBallotAccessMethod] = useState<string | null>(null);
-
-  // ✅ Add this line here, with the other state declarations
   const [step, setStep] = useState(1);
+  const [currentQuiz, setCurrentQuiz] = useState<QuizState | null>(null);
 
   const addMessage = (msg: Message) =>
     setMessages((prev) => [...prev, msg]);
@@ -114,7 +119,6 @@ export default function CandidateChat({ path }: { path: string }) {
 
       if (choice === "A") {
         setBallotAccessMethod("Fee");
-
         if (selectedOffice === "President") { fee = 75; approvalTarget = 2.5; }
         if (selectedOffice === "U.S. Senate") { fee = 50; approvalTarget = 2.5; }
         if (selectedOffice === "U.S. House") { fee = 31; approvalTarget = 2.5; }
@@ -128,7 +132,6 @@ export default function CandidateChat({ path }: { path: string }) {
         });
       } else if (choice === "B") {
         setBallotAccessMethod("Signature");
-
         if (selectedOffice === "President") approvalTarget = 25;
         if (selectedOffice === "U.S. Senate") approvalTarget = 14;
         if (selectedOffice === "U.S. House") approvalTarget = 7;
@@ -149,7 +152,8 @@ export default function CandidateChat({ path }: { path: string }) {
         return;
       }
 
-      // Trigger first quiz after ballot selection
+      // Trigger first quiz
+      setCurrentQuiz({ totalQuestions: 1, correctAnswers: 0, quizStep: 2 });
       addMessage({
         sender: "ai",
         text: `📝 **Quiz – Module 2A (FEC Filing)**\nWhich FEC form registers a campaign committee?`,
@@ -167,42 +171,54 @@ export default function CandidateChat({ path }: { path: string }) {
       return;
     }
 
-    // ===== Quiz Handling =====
-    if (lastMsg.options && lastMsg.quizStep) {
-      const correctAnswer = "B";
+    // ===== Quiz Handling with Score-Based Rewards =====
+    if (lastMsg.options && lastMsg.quizStep && currentQuiz) {
+      const correctAnswer = "B"; // dynamically set per question
       const stepKey = lastMsg.quizStep;
-      const attempts = quizAttempts[stepKey] || 0;
 
+      let newCorrectAnswers = currentQuiz.correctAnswers;
       if (userText.trim().toUpperCase() === correctAnswer) {
-        const ccReward = 5;
-        const sigReward = 50;
-        setCc(cc + ccReward);
-        setSignatures(signatures + sigReward);
-        addMessage({
-          sender: "ai",
-          text: `✅ Correct! You earned +${ccReward} CC and +${sigReward} signatures.\nCC: ${cc + ccReward} | Voter Support: ${signatures + sigReward} signatures`,
-        });
+        newCorrectAnswers += 1;
+        addMessage({ sender: "ai", text: `✅ Correct!` });
       } else {
-        const ccPenalty = attempts === 0 ? 1 : 2;
-        const sigPenalty = attempts === 0 ? 50 : 100;
-        setCc(cc - ccPenalty);
-        setSignatures(signatures - sigPenalty);
-        addMessage({
-          sender: "ai",
-          text: `❌ Incorrect. –${ccPenalty} CC and –${sigPenalty} signatures.\nCC: ${cc - ccPenalty} | Voter Support: ${signatures - sigPenalty} signatures`,
-        });
+        addMessage({ sender: "ai", text: `❌ Incorrect.` });
       }
 
+      // Update attempts
+      const attempts = quizAttempts[stepKey] || 0;
       setQuizAttempts({ ...quizAttempts, [stepKey]: attempts + 1 });
+
+      // Calculate score if quiz completed
+      if (newCorrectAnswers >= currentQuiz.totalQuestions) {
+        const scorePercent = (newCorrectAnswers / currentQuiz.totalQuestions) * 100;
+
+        if (scorePercent === 100) {
+          setSignatures(signatures + 100);
+          setCc(cc + 2);
+          addMessage({ sender: "ai", text: `🎉 Perfect score! You earned +100 signatures and +2 CC.` });
+        } else if (scorePercent >= 80) {
+          setSignatures(signatures + 80);
+          setCc(cc + 1);
+          addMessage({ sender: "ai", text: `✅ Great job! You scored 80%+. You earned +80 signatures and +1 CC.` });
+        } else {
+          addMessage({ sender: "ai", text: `You scored below 80%. No extra CC or signatures awarded.` });
+        }
+
+        setCurrentQuiz(null); // reset quiz
+      } else {
+        setCurrentQuiz({ ...currentQuiz, correctAnswers: newCorrectAnswers });
+      }
+
       setInput("");
       return;
     }
 
-    // ===== Default fallback =====
+    // ===== Default Guidance =====
     addMessage({
       sender: "ai",
-      text: `I’ll guide you through Module ${step}. You can request a "summary brief" or "summary detailed", or confirm completion by typing "done".`,
+      text: `I’ll guide you through the simulation. You can request a "summary brief" or "summary detailed", or confirm completion by typing "done".`,
     });
+
     setInput("");
   };
 
@@ -215,35 +231,4 @@ export default function CandidateChat({ path }: { path: string }) {
             {msg.refs && msg.refs.length > 0 && (
               <ul className="text-xs text-gray-500 mt-1">
                 {msg.refs.map((ref, i) => (
-                  <li key={i}><a href={ref} target="_blank" className="underline text-blue-500">{ref}</a></li>
-                ))}
-              </ul>
-            )}
-            {msg.options && msg.options.length > 0 && (
-              <ul className="list-disc list-inside mt-2 text-gray-700">
-                {msg.options.map((opt, i) => (<li key={i}>{opt}</li>))}
-              </ul>
-            )}
-          </div>
-        ))}
-      </div>
-
-      <div className="flex">
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="flex-grow border px-2 py-1 rounded-l"
-          placeholder="Type your message..."
-        />
-        <button onClick={sendMessage} className="bg-blue-600 text-white px-4 rounded-r">Send</button>
-      </div>
-
-      <div className="mt-2 text-sm text-gray-600">
-        CC: {cc} | Voter Support: {signatures} signatures
-        {ballotAccessMethod === "Fee" && voterApproval > 0 && (
-          <span> | Minimum Approval Required: {voterApproval}%</span>
-        )}
-      </div>
-    </div>
-  );
-}
+                  <li key={i}><a href={ref}

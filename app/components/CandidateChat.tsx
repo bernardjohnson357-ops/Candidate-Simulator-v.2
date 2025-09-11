@@ -27,7 +27,6 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
   const [ballotAccessMethod, setBallotAccessMethod] = useState<string | null>(null);
   const [currentModule, setCurrentModule] = useState<string | null>(null);
   const [currentQuiz, setCurrentQuiz] = useState<QuizState | null>(null);
-
   const [quizRetakes, setQuizRetakes] = useState<Record<string, number>>({});
   const SIGNATURE_TO_APPROVAL = 0.0001;
 
@@ -199,15 +198,18 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
           addMessage({sender:"ai", text:`❌ Incorrect. You can retake this quiz once without penalty. Please try again.`});
           setInput(""); return;
         }
-        // For Form 3 later, apply penalties here
+        // Penalties will apply for Form 3 later
       } else {
         // Correct answer
         let earnedCC = quiz.ccReward100;
         let earnedSigs = quiz.sigReward100;
-        if(retakesUsed > 0) { /* optional: bonus or no change */ }
 
         setCc(prev=>prev+earnedCC);
-        setSignatures(prev=>{ const newSigs=prev+earnedSigs; if(ballotAccessMethod==="Signature") setVoterApproval(newSigs*SIGNATURE_TO_APPROVAL); return newSigs; });
+        setSignatures(prev=>{
+          const newSigs = prev+earnedSigs;
+          if(ballotAccessMethod==="Signature") setVoterApproval(newSigs*SIGNATURE_TO_APPROVAL);
+          return newSigs;
+        });
         addMessage({ sender:"ai", text:`✅ Correct! +${earnedSigs} signatures, +${earnedCC} CC.`});
 
         // Move to next module or General Election
@@ -227,3 +229,52 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
     addMessage({sender:"ai", text:`I’ll guide you. You can request "summary brief", "summary detailed", or confirm completion with "done".`});
     setInput("");
   };
+
+  return (
+    <div className="p-4 border rounded shadow-md w-full max-w-2xl">
+      <div className="h-96 overflow-y-auto border p-2 mb-2 bg-gray-50">
+        {messages.map((msg, idx)=>(
+          <div key={idx} className={`mb-2 ${msg.sender==="ai"?"text-blue-700":"text-gray-800"}`}>
+            <strong>{msg.sender==="ai"?"AI":"You"}:</strong> {msg.text}
+
+            {msg.refs && msg.refs.length>0 && (
+              <ul className="text-xs text-gray-500 mt-1">
+                {msg.refs.map((ref,i)=>(
+                  <li key={i}>
+                    <a href={ref} target="_blank" rel="noreferrer" className="underline text-blue-500">{ref}</a>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {msg.options && msg.options.length>0 && (
+              <ul className="list-disc list-inside mt-2 text-gray-700">
+                {msg.options.map((opt,i)=>(<li key={i}>{opt}</li>))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="flex">
+        <input
+          value={input}
+          onChange={e=>setInput(e.target.value)}
+          className="flex-grow border px-2 py-1 rounded-l"
+          placeholder="Type your message..."
+        />
+        <button onClick={()=>sendMessage()} className="bg-blue-600 text-white px-4 rounded-r">Send</button>
+      </div>
+
+      <div className="mt-2 text-sm text-gray-600">
+        CC: {cc} | Voter Support: {signatures} signatures
+        {ballotAccessMethod==="Fee" && voterApproval>0 && (
+          <span> | Minimum Approval Required: {voterApproval}%</span>
+        )}
+        {ballotAccessMethod==="Signature" && (
+          <span> | Current Voter Approval: {voterApproval.toFixed(2)}%</span>
+        )}
+      </div>
+    </div>
+  );
+}

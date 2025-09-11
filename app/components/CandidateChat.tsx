@@ -21,6 +21,9 @@ export default function CandidateChat({ path }: { path: string }) {
   const [selectedOffice, setSelectedOffice] = useState<string | null>(null);
   const [ballotAccessMethod, setBallotAccessMethod] = useState<string | null>(null);
 
+  // ✅ Add this line here, with the other state declarations
+  const [step, setStep] = useState(1);
+
   const addMessage = (msg: Message) =>
     setMessages((prev) => [...prev, msg]);
 

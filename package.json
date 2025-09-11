@@ -11,20 +11,20 @@
   },
   "dependencies": {
     "next": "^15.5.2",
-    "openai": "^4.x.x",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "openai": "^4.21.0",
     "ws": "^8.18.3"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@types/ws": "^8.18.1",
     "tailwindcss": "^5.0.0",
     "postcss": "^8.4.31",
     "autoprefixer": "^10.4.16",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.2"
+    "@types/node": "^20.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/ws": "^8.18.1",
+    "typescript": "^5.9.2",
+    "ts-node": "^10.9.2"
   }
 }

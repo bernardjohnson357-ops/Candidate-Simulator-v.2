@@ -142,28 +142,13 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
         if(ballotAccessMethod==="Fee" && voterApproval>=2.5 && (selectedOffice==="President"||selectedOffice==="U.S. Senate")){
           setCurrentModule("Form3");
           setCurrentQuiz({totalQuestions:1,correctAnswers:0,quizStep:1});
-          addMessage({sender:"ai", text:"📝 Form 3 – Quarterly Report Quiz: You must file Form 3 correctly. Mistakes carry penalties.", options:["A) Submit accurate Form 3","B) Submit inaccurate Form 3","C) Skip filing"], quizStep:1});
+          addMessage({
+            sender:"ai",
+            text:"📝 Form 3 – Quarterly Report Quiz: You must file Form 3 correctly. Mistakes carry penalties.",
+            options:["A) Submit accurate Form 3","B) Submit inaccurate Form 3","C) Skip filing"],
+            quizStep:1
+          });
           setInput(""); return;
         } else {
           setCurrentModule("3");
-          addMessage({sender:"ai", text:"🎯 Module 3 – First Moves: Allocate CC for campaign setup (website, ads, infrastructure) and recruit team members."});
-        }
-      }
-
-      setInput(""); return;
-    }
-
-    // Default guidance
-    addMessage({sender:"ai", text:`I’ll guide you. You can request "summary brief", "summary detailed", or confirm completion with "done".`});
-    setInput("");
-  };
-
-  return (
-    <div className="p-4 border rounded shadow-md w-full max-w-2xl">
-      <div className="h-96 overflow-y-auto border p-2 mb-2 bg-gray-50">
-        {messages.map((msg, idx)=>(
-          <div key={idx} className={`mb-2 ${msg.sender==="ai"?"text-blue-700":"text-gray-800"}`}>
-            <strong>{msg.sender==="ai"?"AI":"You"}:</strong> {msg.text}
-            {msg.options && (
-              <ul className="list-disc list-inside mt-2 text-gray-700">
-                {msg
+          addMessage({

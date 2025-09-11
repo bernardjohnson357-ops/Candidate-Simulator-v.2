@@ -29,7 +29,7 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
   const [currentModule, setCurrentModule] = useState<string | null>(null);
   const [currentQuiz, setCurrentQuiz] = useState<QuizState | null>(null);
 
-  const SIGNATURE_TO_APPROVAL = 0.0001; // 1 signature = 0.0001 approval
+  const SIGNATURE_TO_APPROVAL = 0.0001; // 1 signature = 0.0001 voter approval
 
   const addMessage = (msg: Message) =>
     setMessages((prev) => [...prev, msg]);
@@ -84,7 +84,6 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
 
       setSelectedOffice(office);
 
-      // Show eligibility + ballot options
       const options = office === "President" ? [
         "A) Fee Option: 75 CC + 2.5% nationwide approval",
         "B) Signature Option: 25% of nationwide voters"
@@ -199,7 +198,6 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
           earnedCC = 1;
         }
 
-        // Update signatures & voter approval
         setSignatures(prev => {
           const newSigs = prev + earnedSignatures;
           if (ballotAccessMethod === "Signature") {
@@ -238,7 +236,6 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
       return;
     }
 
-    // ===== Default Guidance =====
     addMessage({
       sender: "ai",
       text: `I’ll guide you through the simulation. You can request a "summary brief" or "summary detailed", or confirm completion by typing "done".`,
@@ -284,6 +281,19 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
         />
         <button onClick={sendMessage} className="bg-blue-600 text-white px-4 rounded-r">Send</button>
       </div>
+
+      <div className="mt-2 text-sm text-gray-600">
+        CC: {cc} | Voter Support: {signatures} signatures
+        {ballotAccessMethod === "Fee" && voterApproval > 0 && (
+          <span> | Minimum Approval Required: {voterApproval}%</span>
+        )}
+        {ballotAccessMethod === "Signature" && (
+          <span> | Current Voter Approval: {voterApproval.toFixed(2)}%</span>
+        )}
+      </div>
+    </div>
+  );
+}
 
       <div className="mt-2 text-sm text-gray-600">
         CC: {cc} | Voter Support: {signatures} signatures

@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "tailwind:init": "tailwindcss init -p"   🚨
+    "tailwind:init": "tailwindcss init -p"
   },
   "dependencies": {
     "next": "^15.5.2",
@@ -21,9 +21,9 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/ws": "^8.18.1",
-    "tailwindcss": "^5.0.0",   🚨 (upgrade to v5)
-    "postcss": "^8.4.31",      🚨 (needed for Tailwind)
-    "autoprefixer": "^10.4.16",🚨 (needed for Tailwind)
+    "tailwindcss": "^5.0.0",
+    "postcss": "^8.4.31",
+    "autoprefixer": "^10.4.16",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   }

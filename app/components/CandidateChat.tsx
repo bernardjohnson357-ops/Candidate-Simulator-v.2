@@ -1,7 +1,7 @@
 // app/components/CandidateChat.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // Placeholder reference maps
 const realWorldReferences: Record<number, string[]> = {};
@@ -16,14 +16,7 @@ type Message = {
 };
 
 export default function CandidateChat({ path }: { path: string }) {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      sender: "ai",
-      text: `Welcome to the Candidate Simulator. You’ve chosen the **${path} path**. 
-Candidate Coins (CC) represent simulated campaign resources. **1 CC = $100 (simulated)**.`,
-    },
-  ]);
-
+  const [messages, setMessages] = useState<Message[]>([]);
   const [step, setStep] = useState(1);
   const [cc, setCc] = useState(50);
   const [signatures, setSignatures] = useState(0);
@@ -32,7 +25,30 @@ Candidate Coins (CC) represent simulated campaign resources. **1 CC = $100 (simu
   const [selectedOffice, setSelectedOffice] = useState<string | null>(null);
   const [ballotAccessMethod, setBallotAccessMethod] = useState<string | null>(null);
 
-  const addMessage = (msg: Message) => setMessages((prev) => [...prev, msg]);
+  // Helper to add messages
+  const addMessage = (msg: Message) =>
+    setMessages((prev) => [...prev, msg]);
+
+  // ===== Initial Welcome + Office Prompt =====
+  useEffect(() => {
+    addMessage({
+      sender: "ai",
+      text: `Welcome to the Candidate Simulator. You’ve chosen the **${path} path**. Candidate Coins (CC) represent simulated campaign resources. **1 CC = $100 (simulated)**.`,
+    });
+
+    // Prompt for federal office immediately after welcome
+    setTimeout(() => {
+      addMessage({
+        sender: "ai",
+        text: `🗳️ **Step 1: Choose Your Federal Office**\nWhich office are you running for?`,
+        options: [
+          "A) President",
+          "B) U.S. Senate",
+          "C) U.S. House of Representatives",
+        ],
+      });
+    }, 500);
+  }, [path]);
 
   const sendMessage = () => {
     if (!input.trim()) return;
@@ -53,7 +69,7 @@ Candidate Coins (CC) represent simulated campaign resources. **1 CC = $100 (simu
       if (office) {
         setSelectedOffice(office);
 
-        // Display eligibility + ballot access options
+        // Show eligibility + ballot access
         if (office === "President") {
           addMessage({
             sender: "ai",
@@ -124,7 +140,7 @@ Candidate Coins (CC) represent simulated campaign resources. **1 CC = $100 (simu
         return;
       }
 
-      // Trigger first quiz after ballot decision
+      // Trigger first quiz
       addMessage({
         sender: "ai",
         text: `📝 **Quiz – Module 2A (FEC Filing)**\nWhich FEC form registers a campaign committee?`,

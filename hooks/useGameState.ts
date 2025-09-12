@@ -6,7 +6,6 @@ export function useGameState() {
   const [state, setState] = useState<GameState | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch the current game state from the API
   const fetchState = async () => {
     setLoading(true);
     const res = await fetch("/api/gameState");
@@ -15,7 +14,6 @@ export function useGameState() {
     setLoading(false);
   };
 
-  // Update the game state
   const updateState = async (newState: GameState) => {
     setState(newState); // optimistic update
     await fetch("/api/gameState", {

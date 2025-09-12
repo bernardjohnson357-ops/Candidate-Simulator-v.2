@@ -2,86 +2,99 @@
 "use client";
 
 import { useState } from "react";
-import Card from "./components/ui/card";
-import CandidateChat from "./components/CandidateChat";
 
 export default function HomePage() {
   const [orientationDone, setOrientationDone] = useState(false);
-  const [path, setPath] = useState<"Party" | "Independent" | null>(null);
 
-  // ===== Step 1: Orientation =====
   if (!orientationDone) {
     return (
-      <div style={{ maxWidth: "768px", margin: "0 auto", padding: "24px", gap: "24px", display: "flex", flexDirection: "column" }}>
-        <h2 style={{ fontSize: "1.5rem", fontWeight: "bold" }}>🗳 Candidate Simulator Orientation</h2>
+      <div style={{ maxWidth: "768px", margin: "0 auto", padding: "32px" }}>
+        <h2 style={{ fontSize: "1.75rem", fontWeight: "bold", marginBottom: "16px" }}>
+          🗳 Candidate Simulator Orientation
+        </h2>
 
-        <Card>
-          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-            <p>
-              Welcome to the Candidate Simulator! This simulator is designed to
-              prepare you for the realities of running for office. Every stage is
-              <strong> scaffolded</strong> — you move through reading, writing, and speaking in order.
-            </p>
+        <p style={{ marginBottom: "16px" }}>
+          Welcome to the Candidate Simulator!
+        </p>
 
-            <h3 style={{ fontSize: "1.25rem", fontWeight: "bold" }}>📚 Why Scaffolded?</h3>
-            <ul style={{ paddingLeft: "24px", listStyle: "disc", gap: "4px", display: "flex", flexDirection: "column" }}>
-              <li><strong>Read first</strong> – absorb the rules, guides, and case studies.</li>
-              <li><strong>Write next</strong> – organize ideas and commit to text.</li>
-              <li><strong>Speak last</strong> – deliver your message clearly and persuasively.</li>
+        <p style={{ marginBottom: "16px" }}>
+          This simulator is designed to prepare you for the realities of running
+          for office. Every stage is <strong>scaffolded</strong> — which means
+          you’ll move through reading, writing, and speaking in a deliberate
+          order.
+        </p>
+
+        <h3 style={{ fontSize: "1.25rem", fontWeight: "bold", marginTop: "24px" }}>
+          Why Scaffolded?
+        </h3>
+        <p>
+          In politics, some people rely on quick talking points without deep
+          understanding. This simulator is different. It forces you to:
+        </p>
+        <ol style={{ paddingLeft: "20px", marginBottom: "16px" }}>
+          <li><strong>Read first</strong> – absorb the actual rules, guides, and case studies.</li>
+          <li><strong>Write next</strong> – organize your ideas and commit them to text.</li>
+          <li><strong>Speak last</strong> – deliver your message with clarity and impact.</li>
+        </ol>
+        <p>
+          By moving step by step, you’ll build habits that separate serious
+          candidates from surface-level ones.
+        </p>
+
+        <h3 style={{ fontSize: "1.25rem", fontWeight: "bold", marginTop: "24px" }}>
+          Candidate Coins (CC)
+        </h3>
+        <ul style={{ paddingLeft: "20px", marginBottom: "16px" }}>
+          <li>1 CC = $100 simulated campaign funds.</li>
+          <li>Earn CC by passing quizzes and completing assignments.</li>
+          <li>
+            Spend CC on campaign resources <strong>or</strong> on{" "}
+            <strong>communication coaching</strong>:
+            <ul style={{ paddingLeft: "20px", marginTop: "8px" }}>
+              <li><strong>Upload + Review (10 CC):</strong> Get structured feedback on your draft.</li>
+              <li><strong>Revision Suggestions (15 CC):</strong> Receive guidance on improving clarity and tone.</li>
+              <li><strong>Delivery Hints (20 CC):</strong> Learn pacing and communication tips.</li>
             </ul>
+          </li>
+        </ul>
+        <p>
+          The AI will never give you political advice — only feedback on
+          clarity, structure, and effectiveness.
+        </p>
 
-            <h3 style={{ fontSize: "1.25rem", fontWeight: "bold" }}>💰 Candidate Coins (CC)</h3>
-            <ul style={{ paddingLeft: "24px", listStyle: "disc", gap: "4px", display: "flex", flexDirection: "column" }}>
-              <li>1 CC = $100 simulated campaign funds.</li>
-              <li>Earn CC by passing quizzes and completing assignments.</li>
-              <li>Spend CC on campaign resources or communication coaching.</li>
-            </ul>
-
-            <h3 style={{ fontSize: "1.25rem", fontWeight: "bold" }}>⚖️ Key Rule</h3>
-            <p>Tasks must be completed in order: Read → Write → Speak.</p>
-          </div>
-        </Card>
+        <h3 style={{ fontSize: "1.25rem", fontWeight: "bold", marginTop: "24px" }}>
+          Key Rule
+        </h3>
+        <p>If a task requires <strong>reading</strong>, you must read.</p>
+        <p>If a task requires <strong>writing</strong>, you must type.</p>
+        <p>If a task requires <strong>speaking</strong>, you must use voice input.</p>
+        <p style={{ marginBottom: "24px" }}>
+          That’s by design. Thinking clearly comes before speaking persuasively.
+        </p>
 
         <button
-          style={{ padding: "8px 16px", borderRadius: "8px", fontWeight: "bold", backgroundColor: "#16a34a", color: "#fff", border: "none", cursor: "pointer" }}
+          style={{
+            padding: "10px 20px",
+            border: "none",
+            borderRadius: "8px",
+            backgroundColor: "#16a34a",
+            color: "#fff",
+            fontWeight: "bold",
+            cursor: "pointer",
+          }}
           onClick={() => setOrientationDone(true)}
         >
-          Continue to Path Selection
+          Continue
         </button>
       </div>
     );
   }
 
-  // ===== Step 2: Path Selection =====
-  if (!path) {
-    return (
-      <div style={{ maxWidth: "768px", margin: "0 auto", padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
-        <p style={{ fontWeight: "bold" }}>Choose your path to start the simulation:</p>
-        <div style={{ display: "flex", gap: "16px" }}>
-          <button
-            style={{ padding: "8px 16px", borderRadius: "8px", fontWeight: "bold", backgroundColor: "#2563eb", color: "#fff", border: "none", cursor: "pointer" }}
-            onClick={() => setPath("Party")}
-          >
-            Libertarian
-          </button>
-          <button
-            style={{ padding: "8px 16px", borderRadius: "8px", fontWeight: "bold", backgroundColor: "#16a34a", color: "#fff", border: "none", cursor: "pointer" }}
-            onClick={() => setPath("Independent")}
-          >
-            Independent / Write-In
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // ===== Step 3: CandidateChat =====
+  // After Orientation, placeholder for next steps (path selection, CandidateChat, etc.)
   return (
-    <div style={{ minHeight: "100vh", padding: "32px", backgroundColor: "#f3f4f6", display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <h1 style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "24px" }}>
-        Federal Candidate Simulator - {path} Path
-      </h1>
-      <CandidateChat path={path} />
+    <div style={{ maxWidth: "768px", margin: "0 auto", padding: "32px" }}>
+      <h2 style={{ fontSize: "1.5rem", fontWeight: "bold" }}>Orientation Complete ✅</h2>
+      <p>Next: Path selection will go here...</p>
     </div>
   );
 }

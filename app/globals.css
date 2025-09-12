@@ -1,6 +1,6 @@
-//* globals.css */
+/* globals.css */
 
-/* Basic page styling */
+/* Body */
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
@@ -8,39 +8,52 @@ body {
   color: #1f2937;
 }
 
-/* Card component */
-.card {
+/* Card styling for message boxes */
+.chat-box {
   border: 1px solid #ccc;
   border-radius: 12px;
   padding: 16px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  margin-bottom: 8px;
   background-color: #fff;
-  margin-bottom: 16px;
+  width: 100%;
 }
 
-/* Button styling */
-.button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
+/* AI / User message styles */
+.ai-msg {
+  color: #1e40af;
 }
 
-.button-blue {
-  background-color: #2563eb;
-  color: white;
+.user-msg {
+  color: #374151;
 }
 
-.button-green {
-  background-color: #16a34a;
-  color: white;
+/* Input area */
+.input-container {
+  display: flex;
+  width: 100%;
+  margin-top: 8px;
 }
 
-/* Input box */
-.input {
+.input-box {
+  flex-grow: 1;
   padding: 8px;
   border: 1px solid #ccc;
-  border-radius: 8px;
-  flex-grow: 1;
+  border-radius: 8px 0 0 8px;
+}
+
+.send-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 0 8px 8px 0;
+  background-color: #2563eb;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Summary / status display */
+.status-bar {
+  margin-top: 8px;
+  font-size: 0.875rem;
+  color: #4b5563;
 }

@@ -33,16 +33,11 @@ export default function CandidateChat({ path }: { path: "Party" | "Independent" 
     <div style={{ width: "100%", maxWidth: "768px" }}>
       <div style={{ maxHeight: "384px", overflowY: "auto" }}>
         {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            className={`chat-box ${msg.sender === "ai" ? "ai-msg" : "user-msg"}`}
-          >
+          <div key={idx} className={`chat-box ${msg.sender === "ai" ? "ai-msg" : "user-msg"}`}>
             <strong>{msg.sender === "ai" ? "AI" : "You"}:</strong> {msg.text}
             {msg.options && (
               <ul style={{ marginTop: "8px", paddingLeft: "16px" }}>
-                {msg.options.map((opt, i) => (
-                  <li key={i}>{opt}</li>
-                ))}
+                {msg.options.map((opt, i) => (<li key={i}>{opt}</li>))}
               </ul>
             )}
           </div>

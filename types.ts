@@ -1,7 +1,7 @@
-// types.d.ts
+// types.ts
 declare module '@neondatabase/serverless';
 
-type GameState = {
+export type GameState = {
   currentModule: number;
   candidateCoins: number;
   signatures: number;

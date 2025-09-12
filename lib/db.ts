@@ -8,7 +8,7 @@ if (!process.env.DATABASE_URL) {
 // Initialize Neon client
 export const client = neon(process.env.DATABASE_URL);
 
-// Example helper function to query
+// Optional helper query function
 export async function queryDB<T = any>(sql: string, params?: any[]): Promise<T[]> {
   const result = await client.query(sql, params);
   return result.rows as T[];

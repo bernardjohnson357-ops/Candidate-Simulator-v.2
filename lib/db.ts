@@ -1,10 +1,9 @@
 // lib/db.ts
-import { NeonClient } from "@neondatabase/serverless";
+import { neon } from "@neondatabase/serverless";
 
 if (!process.env.DATABASE_URL) {
   throw new Error("❌ Missing DATABASE_URL in environment variables");
 }
 
-export const client = new NeonClient({
-  connectionString: process.env.DATABASE_URL,
-});
+// Create a query client
+export const client = neon(process.env.DATABASE_URL);

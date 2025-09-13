@@ -1,18 +1,25 @@
 // types.ts
-declare module '@neondatabase/serverless';
 
-export type GameState = {
-  currentModule: number;
-  candidateCoins: number;
-  signatures: number;
-  voterApproval: number;
-};
+export type QuizType = "multiple-choice" | "open-ended";
 
-export interface Quiz {
-  id: string;         // unique identifier, e.g. "1A_q1"
-  module: string;     // module ID, e.g. "1A", "2A", "2B"
-  question: string;   // the question text
-  options: string[];  // multiple-choice options
-  answer: string;     // the correct option
-  explanation?: string; // optional: show feedback after answering
+export interface QuizBase {
+  id: string;        // unique identifier (e.g., "1A_q1")
+  module: string;    // module ID (e.g., "1A", "2A")
+  type: QuizType;    // question type
+  question: string;  // the prompt text
+  answer: string;    // correct answer or expected response
+  explanation?: string; // optional feedback after answering
 }
+
+// Multiple-choice adds options
+export interface MultipleChoiceQuiz extends QuizBase {
+  type: "multiple-choice";
+  options: string[];
+}
+
+// Open-ended has no options
+export interface OpenEndedQuiz extends QuizBase {
+  type: "open-ended";
+}
+
+export type Quiz = MultipleChoiceQuiz | OpenEndedQuiz;

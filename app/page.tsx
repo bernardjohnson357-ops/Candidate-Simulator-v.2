@@ -245,16 +245,6 @@ export default function HomePage() {
     return <Module1B onNext={() => setCurrentModule(6)} />;
   }
 
-  // ===== Placeholder after Module 1A/1B =====
-  return (
-    <div style={{ maxWidth: "768px", margin: "0 auto", padding: "32px" }}>
-      <h2>🚧 Next Module Coming Soon</h2>
-      <p>
-        Path: {path}, Office: {office}, Ballot: {ballotMethod}
-      </p>
-    </div>
-  );
-}
 function Module1A({ onNext }: { onNext: () => void }) {
   return (
     <div style={{ maxWidth: "768px", margin: "0 auto", padding: "32px" }}>

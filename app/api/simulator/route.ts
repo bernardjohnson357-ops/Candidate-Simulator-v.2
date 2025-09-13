@@ -1,14 +1,11 @@
 // app/api/simulator/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
-import fs from "fs";
-
-// ✅ Import quiz data + type
-import quizData from "../../../data/quizzes.json";
+import fs from "fs/promises";
 import type { Quiz } from "@/types";
 
 // ---------------------------
-// Types + State
+// User State
 // ---------------------------
 interface UserState {
   userId: string;
@@ -17,6 +14,7 @@ interface UserState {
   currentModule: string;
   cc: number;
   signatures: number;
+  voterApproval: number;
   completedQuizzes: string[];
   fecFilings: string[];
 }
@@ -36,6 +34,7 @@ function getUserState(
       currentModule: "0",
       cc: 50,
       signatures: 0,
+      voterApproval: 0,
       completedQuizzes: [],
       fecFilings: [],
     };
@@ -50,113 +49,90 @@ function saveUserState(userId: string, state: UserState) {
 }
 
 // ---------------------------
-// Quiz Handling
+// OpenAI Setup
 // ---------------------------
-function getQuizzesForModule(moduleId: string): Quiz[] {
-  return (quizData as Quiz[]).filter(q => q.module === moduleId);
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+// ---------------------------
+// Dynamic Quiz Generation
+// ---------------------------
+async function generateQuizzes(moduleId: string): Promise<Quiz[]> {
+  const systemPrompt = await fs.readFile("./data/system_prompt.md", "utf-8");
+  const master = await fs.readFile("./data/master_roadmap.md", "utf-8");
+  const reference = await fs.readFile("./data/reference_roadmap.md", "utf-8");
+
+  const prompt = `
+You are an experienced federal campaign manager. 
+Generate 1-3 quiz questions for module "${moduleId}" based ONLY on the following simulator roadmap and references. 
+Output valid JSON array of Quiz objects matching this schema:
+
+[
+  {
+    "id": "string",
+    "module": "string",
+    "type": "multiple-choice" | "open-ended",
+    "prompt": "string",
+    "options": ["string", ...], // only for multiple-choice
+    "answer": "string",
+    "explanation": "string"
+  }
+]
+
+Master Roadmap:
+${master}
+
+Reference Roadmap:
+${reference}
+`;
+
+  const response = await client.chat.completions.create({
+    model: "gpt-5-mini",
+    messages: [{ role: "user", content: prompt }],
+  });
+
+  const raw = response.choices[0].message?.content || "[]";
+  try {
+    return JSON.parse(raw) as Quiz[];
+  } catch {
+    console.error("Failed to parse AI quiz JSON:", raw);
+    return [];
+  }
 }
 
-function keywordMatch(expected: string, userAnswer: string): boolean {
-  const expectedWords = expected.toLowerCase().split(/\W+/).filter(w => w.length > 2);
-  const userWords = userAnswer.toLowerCase().split(/\W+/);
-
-  let matches = 0;
-  for (const word of expectedWords) {
-    if (userWords.includes(word)) matches++;
-  }
-  return matches >= Math.ceil(expectedWords.length / 2);
-}
-
-async function evaluateQuiz(
-  quizId: string,
-  answers: Record<string, string>,
-  useAI = false
-): Promise<{ score: number; earnedCC: number; earnedSignatures: number; error?: string }> {
-  const quiz = (quizData as Quiz[]).find(q => q.id === quizId);
-  if (!quiz) {
-    return { score: 0, earnedCC: 0, earnedSignatures: 0, error: "Quiz not found" };
-  }
-
-  const userAnswer = answers[quiz.id] || "";
-  let isCorrect = false;
+// ---------------------------
+// Answer Evaluation
+// ---------------------------
+function evaluateAnswer(
+  quiz: Quiz,
+  userAnswer: string
+): { score: number; earnedCC: number; earnedSignatures: number } {
+  let correct = false;
 
   if (quiz.type === "multiple-choice") {
-    isCorrect = userAnswer === quiz.answer;
+    correct = userAnswer === quiz.answer;
   } else if (quiz.type === "open-ended") {
-    isCorrect = keywordMatch(quiz.answer, userAnswer);
+    const expectedWords = quiz.answer.toLowerCase().split(/\W+/).filter(w => w.length > 2);
+    const userWords = userAnswer.toLowerCase().split(/\W+/);
+    const matches = expectedWords.filter(word => userWords.includes(word)).length;
+    correct = matches >= Math.ceil(expectedWords.length / 2);
   }
 
-  const score = isCorrect ? 100 : 60;
+  const score = correct ? 100 : 60;
   const earnedCC = score === 100 ? 2 : 1;
   const earnedSignatures = score;
 
   return { score, earnedCC, earnedSignatures };
 }
 
-function checkFECTrigger(user: UserState): boolean {
-  return user.cc >= 50 && !user.fecFilings.includes(user.currentModule);
-}
+function updateUserState(user: UserState, quiz: Quiz, userAnswer: string) {
+  const { score, earnedCC, earnedSignatures } = evaluateAnswer(quiz, userAnswer);
 
-function getNextStep(user: UserState) {
-  if (user.currentModule === "0") {
-    if (user.path === "Independent" || user.path === "thirdParty") {
-      if (user.filingOption === "signatures") {
-        return {
-          message: `Welcome! You chose path: ${user.path}, filing option: signatures.\n\nStep 1: Read Independent/Third-Party signature filing guide.\nStep 2: Take the Signature Verification Quiz.`,
-          nextTask: "Signature Verification Quiz",
-          currentModule: "1A",
-        };
-      } else {
-        return {
-          message: `Welcome! You chose path: ${user.path}, filing option: filing fee.\n\nStep 1: Read Independent/Third-Party filing fee guide.\nStep 2: Take the Filing Fee Quiz.`,
-          nextTask: "Filing Fee Quiz",
-          currentModule: "2A",
-        };
-      }
-    }
+  user.cc += earnedCC;
+  user.signatures += earnedSignatures;
+  user.voterApproval = user.signatures / 100; // 100 signatures = 1%
+  user.completedQuizzes.push(quiz.id);
 
-    if (user.path === "Party") {
-      return {
-        message: `Welcome! You chose path: Party candidate.\n\nStep 1: Read Party filing guide.\nStep 2: Take the Party Filing Quiz.`,
-        nextTask: "Party Filing Quiz",
-        currentModule: "1B",
-      };
-    }
-  }
-
-  return {
-    message: "Continue your current module or complete the next task.",
-    nextTask: null,
-    currentModule: user.currentModule,
-  };
-}
-
-// ---------------------------
-// OpenAI Integration
-// ---------------------------
-const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
-async function runSimulatorAI(userInput: string, user: UserState) {
-  const systemPrompt = `
-${fs.readFileSync("./data/system_prompt.md", "utf-8")}
----
-Master Roadmap:
-${fs.readFileSync("./data/master_roadmap.md", "utf-8")}
----
-Reference Roadmap:
-${fs.readFileSync("./data/reference_roadmap.md", "utf-8")}
-  `;
-
-  const response = await client.chat.completions.create({
-    model: "gpt-5",
-    messages: [
-      { role: "system", content: systemPrompt },
-      { role: "assistant", content: `Current state: ${JSON.stringify(user)}` },
-      { role: "user", content: userInput },
-    ],
-  });
-
-  return response.choices[0].message?.content || "";
+  return { score, earnedCC, earnedSignatures, voterApproval: user.voterApproval };
 }
 
 // ---------------------------
@@ -173,88 +149,32 @@ export async function POST(req: NextRequest) {
 
     switch (action) {
       case "init": {
-        const narration = await runSimulatorAI(
-          "Begin simulation at orientation.",
-          user
-        );
-        return NextResponse.json({ narration, state: user });
-      }
-
-      case "getQuiz": {
-        const { moduleId } = payload;
-        const quizzes = getQuizzesForModule(moduleId);
-
-        if (!quizzes.length) {
-          return NextResponse.json(
-            { error: "No quizzes found for this module" },
-            { status: 404 }
-          );
-        }
-
-        return NextResponse.json({ quizzes });
+        // Generate first module quizzes
+        const quizzes = await generateQuizzes(user.currentModule);
+        return NextResponse.json({ quizzes, state: user });
       }
 
       case "completeQuiz": {
-        const { quizId, answers } = payload;
-        const result = await evaluateQuiz(quizId, answers);
+        const { quiz, answer } = payload; // quiz object returned by generateQuizzes
+        const result = updateUserState(user, quiz, answer);
 
-        user.cc += result.earnedCC;
-        user.signatures += result.earnedSignatures;
-        user.completedQuizzes.push(quizId);
+        // Generate AI narration for next steps
+        const systemPrompt = await fs.readFile("./data/system_prompt.md", "utf-8");
+        const narrationPrompt = `
+You are a campaign manager guiding a candidate.
+Current state: ${JSON.stringify(user)}
+User just completed quiz "${quiz.id}" with score ${result.score}.
+Narrate consequences and suggest the next task.
+`;
+        const narrationResp = await client.chat.completions.create({
+          model: "gpt-5-mini",
+          messages: [{ role: "user", content: narrationPrompt }],
+        });
 
-        let fecTriggered = false;
-        if (checkFECTrigger(user)) {
-          fecTriggered = true;
-          user.fecFilings.push(user.currentModule);
-          user.currentModule += "_FECQuiz";
-        }
+        const narration = narrationResp.choices[0].message?.content || "";
 
         saveUserState(userId, user);
-
-        const narration = await runSimulatorAI(
-          `User completed quiz ${quizId} with score ${result.score}. 
-Update CC, signatures, and narrate next steps.`,
-          user
-        );
-
-        return NextResponse.json({
-          narration,
-          score: result.score,
-          earnedCC: result.earnedCC,
-          earnedSignatures: result.earnedSignatures,
-          fecTriggered,
-          state: user,
-        });
-      }
-
-      case "spendCC": {
-        const { amount } = payload;
-        if (amount > user.cc) {
-          return NextResponse.json({ error: "Not enough CC" }, { status: 400 });
-        }
-        user.cc -= amount;
-
-        let fecTriggered = false;
-        if (checkFECTrigger(user)) {
-          fecTriggered = true;
-          user.fecFilings.push(user.currentModule);
-          user.currentModule += "_FECQuiz";
-        }
-
-        saveUserState(userId, user);
-
-        const narration = await runSimulatorAI(
-          `User spent ${amount} Candidate Coins. 
-Update CC balance and narrate outcome.`,
-          user
-        );
-
-        return NextResponse.json({
-          narration,
-          spent: amount,
-          fecTriggered,
-          state: user,
-        });
+        return NextResponse.json({ result, narration, state: user });
       }
 
       case "nextModule": {
@@ -262,21 +182,14 @@ Update CC balance and narrate outcome.`,
         user.currentModule = nextModule;
         saveUserState(userId, user);
 
-        const narration = await runSimulatorAI(
-          `Move candidate into module ${nextModule}. Present scenario.`,
-          user
-        );
-
-        return NextResponse.json({ narration, state: user });
+        const quizzes = await generateQuizzes(nextModule);
+        return NextResponse.json({ quizzes, state: user });
       }
 
       default:
         return NextResponse.json({ error: "Unknown action" }, { status: 400 });
     }
   } catch (err) {
-    return NextResponse.json(
-      { error: "Failed to process request", details: String(err) },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: String(err) }, { status: 500 });
   }
 }

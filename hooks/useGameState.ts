@@ -1,13 +1,14 @@
 // hooks/useGameState.ts
 import { useState, useEffect } from "react";
-import { GameState, Quiz } from "../types";
+import { GameState, ChatMessage, Quiz } from "../types";
 
 interface UseGameStateReturn {
   state: GameState | null;
   loading: boolean;
   currentQuizzes: Quiz[];
-  completeQuiz: (quiz: Quiz, answer: string) => Promise<void>;
-  nextModule: (moduleId: string) => Promise<void>;
+  chatHistory: ChatMessage[];
+  sendMessage: (content: string) => Promise<void>;
+  uploadFile: (file: File) => Promise<void>;
   fetchState: () => Promise<void>;
 }
 
@@ -16,18 +17,13 @@ export function useGameState(): UseGameStateReturn {
   const [currentQuizzes, setCurrentQuizzes] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch initial user state and first module quizzes
   const fetchState = async () => {
     setLoading(true);
     try {
       const res = await fetch("/api/simulator", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "init",
-          userId: "user123",
-          payload: { path: "Independent", filingOption: "signatures" },
-        }),
+        body: JSON.stringify({ action: "init", userId: "user123", payload: { path: "Independent", filingOption: "signatures" } }),
       });
       const data = await res.json();
       setState(data.state);
@@ -39,53 +35,46 @@ export function useGameState(): UseGameStateReturn {
     }
   };
 
-  // Complete a quiz, update state, and get AI narration
-  const completeQuiz = async (quiz: Quiz, answer: string) => {
+  const sendMessage = async (content: string) => {
     if (!state) return;
+    const userMessage: ChatMessage = { id: crypto.randomUUID(), role: "user", content, type: "text" };
+    setState(prev => prev ? { ...prev, chatHistory: [...prev.chatHistory, userMessage] } : null);
 
     setLoading(true);
     try {
       const res = await fetch("/api/simulator", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "completeQuiz",
-          userId: state.userId,
-          payload: { quiz, answer },
-        }),
+        body: JSON.stringify({ action: "chatInput", userId: state.userId, payload: { input: content } }),
       });
-
       const data = await res.json();
-      if (data.state) setState(data.state);
-      if (data.narration) console.log("AI Narration:", data.narration);
-    } catch (err) {
-      console.error("Failed to complete quiz:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  // Move to next module (triggers AI-generated quizzes)
-  const nextModule = async (moduleId: string) => {
-    if (!state) return;
+      const aiMessage: ChatMessage = { id: crypto.randomUUID(), role: "assistant", content: data.narration || "", type: "text" };
+      setState(prev => prev ? { ...prev, chatHistory: [...prev.chatHistory, aiMessage], cc: data.state?.cc ?? prev.cc, signatures: data.state?.signatures ?? prev.signatures, voterApproval: data.state?.voterApproval ?? prev.voterApproval, currentModule: data.state?.currentModule ?? prev.currentModule } : null);
 
-    setLoading(true);
-    try {
-      const res = await fetch("/api/simulator", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "nextModule",
-          userId: state.userId,
-          payload: { nextModule: moduleId },
-        }),
-      });
-
-      const data = await res.json();
-      if (data.state) setState(data.state);
       if (data.quizzes) setCurrentQuizzes(data.quizzes);
     } catch (err) {
-      console.error("Failed to load next module:", err);
+      console.error("Failed to send message:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const uploadFile = async (file: File) => {
+    if (!state) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/simulator/upload", { method: "POST", body: formData });
+      const data = await res.json();
+
+      const aiMessage: ChatMessage = { id: crypto.randomUUID(), role: "assistant", content: data.narration || "File uploaded.", type: "text" };
+      setState(prev => prev ? { ...prev, chatHistory: [...prev.chatHistory, aiMessage], cc: data.state?.cc ?? prev.cc, signatures: data.state?.signatures ?? prev.signatures, voterApproval: data.state?.voterApproval ?? prev.voterApproval, currentModule: data.state?.currentModule ?? prev.currentModule } : null);
+    } catch (err) {
+      console.error("Failed to upload file:", err);
     } finally {
       setLoading(false);
     }
@@ -95,12 +84,5 @@ export function useGameState(): UseGameStateReturn {
     fetchState();
   }, []);
 
-  return { state, loading, currentQuizzes, completeQuiz, nextModule, fetchState };
-}
-
-  useEffect(() => {
-    fetchState();
-  }, []);
-
-  return { state, loading, updateState };
+  return { state, loading, currentQuizzes, chatHistory: state?.chatHistory ?? [], sendMessage, uploadFile, fetchState };
 }

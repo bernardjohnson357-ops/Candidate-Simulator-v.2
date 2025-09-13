@@ -1,6 +1,11 @@
 // app/api/simulator/route.ts
 import { NextRequest, NextResponse } from "next/server";
+import OpenAI from "openai";
+import fs from "fs";
 
+// ---------------------------
+// State + DB
+// ---------------------------
 interface UserState {
   userId: string;
   path: "Independent" | "Party" | "thirdParty";
@@ -14,10 +19,11 @@ interface UserState {
 
 const userDB = new Map<string, UserState>();
 
-// ---------------------------
-// Utility helpers
-// ---------------------------
-function getUserState(userId: string, path: UserState["path"], filingOption: UserState["filingOption"]): UserState {
+function getUserState(
+  userId: string,
+  path: UserState["path"],
+  filingOption: UserState["filingOption"]
+): UserState {
   if (!userDB.has(userId)) {
     const defaultState: UserState = {
       userId,
@@ -40,7 +46,7 @@ function saveUserState(userId: string, state: UserState) {
 }
 
 function evaluateQuiz(quizId: string, answers: any) {
-  const score = Math.floor(Math.random() * 41) + 60; // 60-100
+  const score = Math.floor(Math.random() * 41) + 60; // 60–100
   const earnedCC = score === 100 ? 2 : 1;
   const earnedSignatures = Math.floor(score);
   return { score, earnedCC, earnedSignatures };
@@ -51,7 +57,6 @@ function checkFECTrigger(user: UserState): boolean {
 }
 
 function getNextStep(user: UserState) {
-  // Branching logic based on path + filing option
   if (user.currentModule === "0") {
     if (user.path === "Independent" || user.path === "thirdParty") {
       if (user.filingOption === "signatures") {
@@ -86,13 +91,42 @@ function getNextStep(user: UserState) {
 }
 
 // ---------------------------
+// OpenAI Integration
+// ---------------------------
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+async function runSimulatorAI(userInput: string, user: UserState) {
+  const systemPrompt = `
+${fs.readFileSync("🗳 Candidate Simulator – System Prompt.md", "utf-8")}
+---
+Developer Notes:
+${fs.readFileSync("9_12_25_Developer Notes to GPTs.pdf", "utf-8")}
+---
+Master Roadmap:
+${fs.readFileSync("Candidate Simulator Federal Master Roadmap.md", "utf-8")}
+---
+Reference Roadmap:
+${fs.readFileSync("REFERENCE_ROADMAP.md", "utf-8")}
+  `;
+
+  const response = await client.chat.completions.create({
+    model: "gpt-5",
+    messages: [
+      { role: "system", content: systemPrompt },
+      { role: "assistant", content: `Current state: ${JSON.stringify(user)}` },
+      { role: "user", content: userInput },
+    ],
+  });
+
+  return response.choices[0].message?.content || "";
+}
+
+// ---------------------------
 // API Route
 // ---------------------------
 export async function POST(req: NextRequest) {
   try {
     const { userId, action, payload } = await req.json();
-
-    // Ensure we pass path + filingOption when initializing
     const user = getUserState(
       userId,
       payload?.path || "thirdParty",
@@ -100,8 +134,13 @@ export async function POST(req: NextRequest) {
     );
 
     switch (action) {
-      case "init":
-        return NextResponse.json(getNextStep(user));
+      case "init": {
+        const narration = await runSimulatorAI(
+          "Begin simulation at orientation.",
+          user
+        );
+        return NextResponse.json({ narration, state: user });
+      }
 
       case "completeQuiz": {
         const { quizId, answers } = payload;
@@ -112,27 +151,27 @@ export async function POST(req: NextRequest) {
         user.completedQuizzes.push(quizId);
 
         let fecTriggered = false;
-        let nextTask = null;
-
         if (checkFECTrigger(user)) {
           fecTriggered = true;
-          nextTask = "FEC Filing Quiz";
           user.fecFilings.push(user.currentModule);
           user.currentModule += "_FECQuiz";
         }
 
         saveUserState(userId, user);
 
+        const narration = await runSimulatorAI(
+          `User completed quiz ${quizId} with score ${result.score}. 
+Update CC, signatures, and narrate next steps.`,
+          user
+        );
+
         return NextResponse.json({
-          message: "Quiz completed",
+          narration,
           score: result.score,
           earnedCC: result.earnedCC,
           earnedSignatures: result.earnedSignatures,
           fecTriggered,
-          nextTask,
-          currentModule: user.currentModule,
-          cc: user.cc,
-          signatures: user.signatures,
+          state: user,
         });
       }
 
@@ -144,23 +183,25 @@ export async function POST(req: NextRequest) {
         user.cc -= amount;
 
         let fecTriggered = false;
-        let nextTask = null;
-
         if (checkFECTrigger(user)) {
           fecTriggered = true;
-          nextTask = "FEC Filing Quiz";
           user.fecFilings.push(user.currentModule);
           user.currentModule += "_FECQuiz";
         }
 
         saveUserState(userId, user);
 
+        const narration = await runSimulatorAI(
+          `User spent ${amount} Candidate Coins. 
+Update CC balance and narrate outcome.`,
+          user
+        );
+
         return NextResponse.json({
-          message: `Spent ${amount} CC`,
-          cc: user.cc,
+          narration,
+          spent: amount,
           fecTriggered,
-          nextTask,
-          currentModule: user.currentModule,
+          state: user,
         });
       }
 
@@ -169,10 +210,12 @@ export async function POST(req: NextRequest) {
         user.currentModule = nextModule;
         saveUserState(userId, user);
 
-        return NextResponse.json({
-          message: `Moved to module ${nextModule}`,
-          currentModule: user.currentModule,
-        });
+        const narration = await runSimulatorAI(
+          `Move candidate into module ${nextModule}. Present scenario.`,
+          user
+        );
+
+        return NextResponse.json({ narration, state: user });
       }
 
       default:
@@ -180,7 +223,7 @@ export async function POST(req: NextRequest) {
     }
   } catch (err) {
     return NextResponse.json(
-      { error: "Failed to process request", details: err },
+      { error: "Failed to process request", details: String(err) },
       { status: 500 }
     );
   }

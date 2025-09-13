@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import fs from "fs";
 
-// ✅ Import quiz data
+// ✅ Import quiz data + type
 import quizData from "../../../data/quizzes.json";
 import type { Quiz } from "@/types";
 
@@ -56,15 +56,42 @@ function getQuizzesForModule(moduleId: string): Quiz[] {
   return (quizData as Quiz[]).filter(q => q.module === moduleId);
 }
 
-function evaluateQuiz(quizId: string, answers: Record<string, string>) {
-  const quiz: Quiz | undefined = (quizData as Quiz[]).find(q => q.id === quizId);
+// Simple keyword matcher for open-ended
+function keywordMatch(expected: string, userAnswer: string): boolean {
+  const expectedWords = expected.toLowerCase().split(/\W+/).filter(w => w.length > 2);
+  const userWords = userAnswer.toLowerCase().split(/\W+/);
 
+  let matches = 0;
+  for (const word of expectedWords) {
+    if (userWords.includes(word)) matches++;
+  }
+  return matches >= Math.ceil(expectedWords.length / 2);
+}
+
+async function evaluateQuiz(
+  quizId: string,
+  answers: Record<string, string>,
+  useAI = false
+): Promise<{ score: number; earnedCC: number; earnedSignatures: number; error?: string }> {
+  const quiz = (quizData as Quiz[]).find(q => q.id === quizId);
   if (!quiz) {
     return { score: 0, earnedCC: 0, earnedSignatures: 0, error: "Quiz not found" };
   }
 
-  // Basic correctness check (expand later for multi-question quizzes)
-  const isCorrect = answers[quiz.id] === quiz.answer;
+  const userAnswer = answers[quiz.id] || "";
+  let isCorrect = false;
+
+  if (quiz.type === "multiple-choice") {
+    isCorrect = userAnswer === quiz.answer;
+  } else if (quiz.type === "open-ended") {
+    if (useAI) {
+      // 🔹 Future: integrate GPT scoring here
+      isCorrect = keywordMatch(quiz.answer, userAnswer);
+    } else {
+      isCorrect = keywordMatch(quiz.answer, userAnswer);
+    }
+  }
+
   const score = isCorrect ? 100 : 60;
   const earnedCC = score === 100 ? 2 : 1;
   const earnedSignatures = score;
@@ -178,7 +205,7 @@ export async function POST(req: NextRequest) {
 
       case "completeQuiz": {
         const { quizId, answers } = payload;
-        const result = evaluateQuiz(quizId, answers);
+        const result = await evaluateQuiz(quizId, answers);
 
         user.cc += result.earnedCC;
         user.signatures += result.earnedSignatures;

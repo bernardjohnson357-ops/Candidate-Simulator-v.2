@@ -56,7 +56,6 @@ function getQuizzesForModule(moduleId: string): Quiz[] {
   return (quizData as Quiz[]).filter(q => q.module === moduleId);
 }
 
-// Simple keyword matcher for open-ended
 function keywordMatch(expected: string, userAnswer: string): boolean {
   const expectedWords = expected.toLowerCase().split(/\W+/).filter(w => w.length > 2);
   const userWords = userAnswer.toLowerCase().split(/\W+/);
@@ -84,12 +83,7 @@ async function evaluateQuiz(
   if (quiz.type === "multiple-choice") {
     isCorrect = userAnswer === quiz.answer;
   } else if (quiz.type === "open-ended") {
-    if (useAI) {
-      // 🔹 Future: integrate GPT scoring here
-      isCorrect = keywordMatch(quiz.answer, userAnswer);
-    } else {
-      isCorrect = keywordMatch(quiz.answer, userAnswer);
-    }
+    isCorrect = keywordMatch(quiz.answer, userAnswer);
   }
 
   const score = isCorrect ? 100 : 60;
@@ -144,16 +138,13 @@ const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 async function runSimulatorAI(userInput: string, user: UserState) {
   const systemPrompt = `
-${fs.readFileSync("🗳 Candidate Simulator – System Prompt.md", "utf-8")}
----
-Developer Notes:
-${fs.readFileSync("9_12_25_Developer Notes to GPTs.pdf", "utf-8")}
+${fs.readFileSync("./data/system_prompt.md", "utf-8")}
 ---
 Master Roadmap:
-${fs.readFileSync("Candidate Simulator Federal Master Roadmap.md", "utf-8")}
+${fs.readFileSync("./data/master_roadmap.md", "utf-8")}
 ---
 Reference Roadmap:
-${fs.readFileSync("REFERENCE_ROADMAP.md", "utf-8")}
+${fs.readFileSync("./data/reference_roadmap.md", "utf-8")}
   `;
 
   const response = await client.chat.completions.create({

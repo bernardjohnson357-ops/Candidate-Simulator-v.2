@@ -1,0 +1,75 @@
+{
+  "0_orientation": {
+    "title": "Module 0 – Candidate Simulator Orientation",
+    "questions": [
+      {
+        "id": "q1",
+        "type": "multiple-choice",
+        "prompt": "In the Candidate Simulator, how many Candidate Coins (CC) does each participant start with?",
+        "options": ["25", "50", "75", "100"],
+        "answer": "50"
+      },
+      {
+        "id": "q2",
+        "type": "multiple-choice",
+        "prompt": "What does 1 Candidate Coin (CC) represent?",
+        "options": ["$10", "$100", "$1,000", "$10,000"],
+        "answer": "$100"
+      },
+      {
+        "id": "q3",
+        "type": "open-ended",
+        "prompt": "What are the three federal offices you can run for in this simulator?",
+        "answer": "President of the United States, U.S. Senate, U.S. House of Representatives"
+      },
+      {
+        "id": "q4",
+        "type": "open-ended",
+        "prompt": "Why does the simulator require tasks to be completed in a scaffolded order (read → write → speak)?",
+        "answer": "It ensures candidates build understanding step by step instead of relying on surface-level talking points."
+      }
+    ]
+  },
+
+  "1A_signature_verification": {
+    "title": "Module 1A – Independent/Write-In Filing (Texas)",
+    "questions": [
+      {
+        "id": "q1",
+        "type": "multiple-choice",
+        "prompt": "Which office oversees independent candidate filings in Texas?",
+        "options": [
+          "Federal Election Commission",
+          "Texas Secretary of State",
+          "U.S. House Clerk",
+          "Texas Ethics Commission"
+        ],
+        "answer": "Texas Secretary of State"
+      },
+      {
+        "id": "q2",
+        "type": "multiple-choice",
+        "prompt": "What are the two options for ballot access for independent candidates in Texas?",
+        "options": [
+          "Pay filing fee or collect signatures",
+          "Pay federal fee or collect endorsements",
+          "Secure party nomination or collect donations",
+          "Register with county clerk or state chair"
+        ],
+        "answer": "Pay filing fee or collect signatures"
+      },
+      {
+        "id": "q3",
+        "type": "open-ended",
+        "prompt": "When must independent and write-in candidates complete state-level filing before pursuing federal filings?",
+        "answer": "Before federal filings can begin; state-level filing comes first."
+      },
+      {
+        "id": "q4",
+        "type": "open-ended",
+        "prompt": "What happens if a candidate fails to meet Texas Secretary of State filing requirements?",
+        "answer": "They are disqualified from the ballot."
+      }
+    ]
+  }
+}

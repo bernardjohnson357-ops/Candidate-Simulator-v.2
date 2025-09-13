@@ -9,7 +9,6 @@
         "prompt": "In the Candidate Simulator, how many Candidate Coins (CC) does each participant start with?",
         "options": ["25", "50", "75", "100"],
         "answer": "50"
-      }
       {
         "id": "q2",
         "type": "multiple-choice",

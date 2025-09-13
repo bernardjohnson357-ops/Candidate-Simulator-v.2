@@ -255,11 +255,6 @@ export default function HomePage() {
     </div>
   );
 }
-// app/page.tsx
-"use client";
-
-import { useState } from "react";
-
 function Module1A({ onNext }: { onNext: () => void }) {
   return (
     <div style={{ maxWidth: "768px", margin: "0 auto", padding: "32px" }}>

@@ -3,106 +3,156 @@
 
 import { useState } from "react";
 
+// Stub components for later modules
+function Module1A({ onNext }: { onNext: () => void }) {
+  return (
+    <div style={{ maxWidth: "768px", margin: "0 auto", padding: "32px" }}>
+      <h2>Module 1A – Independent / Write-In Filing</h2>
+      <p>Learn Texas SOS filing requirements for independent and write-in candidates.</p>
+      <div style={{ marginTop: "32px", textAlign: "right" }}>
+        <button
+          onClick={onNext}
+          style={{
+            padding: "12px 20px",
+            borderRadius: "8px",
+            backgroundColor: "#2563eb",
+            color: "#fff",
+            border: "none",
+            cursor: "pointer",
+          }}
+        >
+          Next →
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function Module1B({ onNext }: { onNext: () => void }) {
+  return (
+    <div style={{ maxWidth: "768px", margin: "0 auto", padding: "32px" }}>
+      <h2>Module 1B – Party Filing</h2>
+      <p>Learn Texas SOS filing requirements for party candidates.</p>
+      <div style={{ marginTop: "32px", textAlign: "right" }}>
+        <button
+          onClick={onNext}
+          style={{
+            padding: "12px 20px",
+            borderRadius: "8px",
+            backgroundColor: "#16a34a",
+            color: "#fff",
+            border: "none",
+            cursor: "pointer",
+          }}
+        >
+          Next →
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function HomePage() {
-  const [orientationDone, setOrientationDone] = useState(false);
-  const [path, setPath] = useState<"Independent" | "Third-Party" | null>(null);
+  const [currentModule, setCurrentModule] = useState(0);
+  const [path, setPath] = useState<"Independent" | "Party" | null>(null);
   const [office, setOffice] = useState<"President" | "Senate" | "House" | null>(null);
   const [ballotMethod, setBallotMethod] = useState<"Fee" | "Signature" | null>(null);
 
-  // ===== Step 1: Orientation =====
-   if (!orientationDone) {
+  // ===== Orientation =====
+  if (currentModule === 0) {
     return (
       <div style={{ maxWidth: "768px", margin: "0 auto", padding: "32px" }}>
-        <h2 style={{ fontSize: "1.75rem", fontWeight: "bold", marginBottom: "16px" }}>
-          🗳 Candidate Simulator Orientation
-        </h2>
-
-        <p style={{ marginBottom: "16px" }}>
-          Welcome to the Candidate Simulator!
-        </p>
-
-        <p style={{ marginBottom: "16px" }}>
-          This simulator is designed to prepare you for the realities of running
-          for office. Every stage is <strong>scaffolded</strong> — which means
-          you’ll move through reading, writing, and speaking in a deliberate
-          order.
-        </p>
-
-        <h3 style={{ fontSize: "1.25rem", fontWeight: "bold", marginTop: "24px" }}>
-          Why Scaffolded?
-        </h3>
+        <h2>🗳 Candidate Simulator Orientation</h2>
         <p>
-          In politics, some people rely on quick talking points without deep
-          understanding. This simulator is different. It forces you to:
+          Welcome to the Candidate Simulator! This simulator prepares you for the realities of
+          running for office through scaffolded learning: read → write → speak.
         </p>
-        <ol style={{ paddingLeft: "20px", marginBottom: "16px" }}>
-          <li><strong>Read first</strong> – absorb the actual rules, guides, and case studies.</li>
-          <li><strong>Write next</strong> – organize your ideas and commit them to text.</li>
-          <li><strong>Speak last</strong> – deliver your message with clarity and impact.</li>
-        </ol>
         <p>
-          By moving step by step, you’ll build habits that separate serious
-          candidates from surface-level ones.
+          You’ll earn Candidate Coins (CC), gain signatures, and convert them into voter approval
+          as you complete tasks.
         </p>
 
-        <h3 style={{ fontSize: "1.25rem", fontWeight: "bold", marginTop: "24px" }}>
-          Candidate Coins (CC)
-        </h3>
-        <ul style={{ paddingLeft: "20px", marginBottom: "16px" }}>
-          <li>1 CC = $100 simulated campaign funds.</li>
-          <li>Earn CC by passing quizzes and completing assignments.</li>
-          <li>
-            Spend CC on campaign resources <strong>or</strong> on{" "}
-            <strong>communication coaching</strong>:
-            <ul style={{ paddingLeft: "20px", marginTop: "8px" }}>
-              <li><strong>Upload + Review (10 CC):</strong> Get structured feedback on your draft.</li>
-              <li><strong>Revision Suggestions (15 CC):</strong> Receive guidance on improving clarity and tone.</li>
-              <li><strong>Delivery Hints (20 CC):</strong> Learn pacing and communication tips.</li>
-            </ul>
-          </li>
-        </ul>
-        <p>
-          The AI will never give you political advice — only feedback on
-          clarity, structure, and effectiveness.
-        </p>
-
-        <h3 style={{ fontSize: "1.25rem", fontWeight: "bold", marginTop: "24px" }}>
-          Key Rule
-        </h3>
-        <p>If a task requires <strong>reading</strong>, you must read.</p>
-        <p>If a task requires <strong>writing</strong>, you must type.</p>
-        <p>If a task requires <strong>speaking</strong>, you must use voice input.</p>
-        <p style={{ marginBottom: "24px" }}>
-          That’s by design. Thinking clearly comes before speaking persuasively.
-        </p>
-
-        <h3 style={{ marginTop: "24px" }}>👉 Choose Your Path</h3>
-        <div style={{ display: "flex", gap: "16px", marginTop: "16px" }}>
+        <div style={{ marginTop: "32px", textAlign: "right" }}>
           <button
+            onClick={() => setCurrentModule(1)}
             style={{
-              padding: "10px 20px",
+              padding: "12px 20px",
               borderRadius: "8px",
               backgroundColor: "#2563eb",
               color: "#fff",
-              fontWeight: "bold",
-              cursor: "pointer",
               border: "none",
+              cursor: "pointer",
             }}
-            onClick={() => setPath("Third-Party")}
           >
-            Third-Party
+            Next →
           </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ===== Module 0: Introduction =====
+  if (currentModule === 1) {
+    return (
+      <div style={{ maxWidth: "768px", margin: "0 auto", padding: "32px" }}>
+        <h2>Module 0 – Introduction</h2>
+        <p>
+          The Candidate Simulator combines real-world campaign processes (filings, ballot access,
+          FEC compliance) with simulation mechanics (Candidate Coins, quizzes, signatures).
+        </p>
+
+        <h3>🏛 The Real Candidate Process</h3>
+        <ol>
+          <li>Choosing an Office</li>
+          <li>Meeting Ballot Requirements</li>
+          <li>FEC Reporting</li>
+          <li>Building Voter Support</li>
+        </ol>
+
+        <h3>🎮 How the Simulator Works</h3>
+        <ul>
+          <li>Start with 50 Candidate Coins (CC)</li>
+          <li>Quizzes simulate fundraising → earn CC + signatures</li>
+          <li>Signatures convert to voter approval</li>
+        </ul>
+
+        <h3>Eligibility Example</h3>
+        <p>
+          President requires 75 CC + 2.5% approval (fee) or 25% nationwide (signatures). Senate
+          and House have their own thresholds.
+        </p>
+
+        {/* Branch decision buttons at bottom */}
+        <div style={{ marginTop: "32px", display: "flex", justifyContent: "space-between" }}>
           <button
+            onClick={() => {
+              setPath("Party");
+              setCurrentModule(2);
+            }}
             style={{
-              padding: "10px 20px",
+              padding: "12px 20px",
               borderRadius: "8px",
               backgroundColor: "#16a34a",
               color: "#fff",
-              fontWeight: "bold",
-              cursor: "pointer",
               border: "none",
+              cursor: "pointer",
             }}
-            onClick={() => setPath("Independent")}
+          >
+            Third-Party Nominee
+          </button>
+          <button
+            onClick={() => {
+              setPath("Independent");
+              setCurrentModule(2);
+            }}
+            style={{
+              padding: "12px 20px",
+              borderRadius: "8px",
+              backgroundColor: "#2563eb",
+              color: "#fff",
+              border: "none",
+              cursor: "pointer",
+            }}
           >
             Independent / Write-In
           </button>
@@ -111,70 +161,74 @@ export default function HomePage() {
     );
   }
 
-  // ===== Step 3: Office Selection =====
-  if (!office) {
+  // ===== Office Selection =====
+  if (currentModule === 2) {
     return (
       <div style={{ maxWidth: "768px", margin: "0 auto", padding: "32px" }}>
-        <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", marginBottom: "16px" }}>
-          Choose Your Office
-        </h2>
-        <p>
-          This is where you decide what office you are running for and how you
-          will seek ballot access on the way to the general election.
-        </p>
+        <h2>Choose Your Office</h2>
+        <p>Now select the office you’re running for.</p>
 
-        <div style={{ marginTop: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
-          <button
-            style={{ padding: "12px", borderRadius: "8px", border: "1px solid #ccc", cursor: "pointer" }}
-            onClick={() => setOffice("President")}
-          >
-            🏛 President
-            <div style={{ fontSize: "0.9rem", marginTop: "4px" }}>
-              Fee: 75 CC + 2.5% approval • Signature: 25% nationwide
-            </div>
-          </button>
-          <button
-            style={{ padding: "12px", borderRadius: "8px", border: "1px solid #ccc", cursor: "pointer" }}
-            onClick={() => setOffice("Senate")}
-          >
-            🏛 U.S. Senate
-            <div style={{ fontSize: "0.9rem", marginTop: "4px" }}>
-              Fee: 50 CC + 2.5% approval • Signature: 14% statewide
-            </div>
-          </button>
-          <button
-            style={{ padding: "12px", borderRadius: "8px", border: "1px solid #ccc", cursor: "pointer" }}
-            onClick={() => setOffice("House")}
-          >
-            🏛 U.S. House
-            <div style={{ fontSize: "0.9rem", marginTop: "4px" }}>
-              Fee: 31 CC + 2.5% approval • Signature: 7% districtwide
-            </div>
-          </button>
+        <div style={{ marginTop: "32px", display: "flex", flexDirection: "column", gap: "12px" }}>
+          {["President", "Senate", "House"].map((o) => (
+            <button
+              key={o}
+              onClick={() => {
+                setOffice(o as typeof office);
+                setCurrentModule(3);
+              }}
+              style={{
+                padding: "12px 20px",
+                borderRadius: "8px",
+                border: "1px solid #ccc",
+                cursor: "pointer",
+                textAlign: "left",
+              }}
+            >
+              🏛 {o}
+            </button>
+          ))}
         </div>
       </div>
     );
   }
 
-  // ===== Step 4: Ballot Access Method =====
-  if (!ballotMethod) {
+  // ===== Ballot Access =====
+  if (currentModule === 3 && office) {
     return (
       <div style={{ maxWidth: "768px", margin: "0 auto", padding: "32px" }}>
-        <h2 style={{ fontSize: "1.5rem", fontWeight: "bold" }}>
-          Ballot Access for {office}
-        </h2>
+        <h2>Ballot Access for {office}</h2>
         <p>Now choose how you want to qualify for the general election.</p>
 
-        <div style={{ marginTop: "24px", display: "flex", gap: "16px" }}>
+        <div style={{ marginTop: "32px", display: "flex", gap: "16px" }}>
           <button
-            style={{ padding: "12px 20px", borderRadius: "8px", backgroundColor: "#2563eb", color: "#fff", cursor: "pointer", border: "none" }}
-            onClick={() => setBallotMethod("Fee")}
+            onClick={() => {
+              setBallotMethod("Fee");
+              setCurrentModule(path === "Independent" ? 4 : 5);
+            }}
+            style={{
+              padding: "12px 20px",
+              borderRadius: "8px",
+              backgroundColor: "#2563eb",
+              color: "#fff",
+              border: "none",
+              cursor: "pointer",
+            }}
           >
-            Pay Fee + Meet Approval
+            Pay Fee
           </button>
           <button
-            style={{ padding: "12px 20px", borderRadius: "8px", backgroundColor: "#16a34a", color: "#fff", cursor: "pointer", border: "none" }}
-            onClick={() => setBallotMethod("Signature")}
+            onClick={() => {
+              setBallotMethod("Signature");
+              setCurrentModule(path === "Independent" ? 4 : 5);
+            }}
+            style={{
+              padding: "12px 20px",
+              borderRadius: "8px",
+              backgroundColor: "#16a34a",
+              color: "#fff",
+              border: "none",
+              cursor: "pointer",
+            }}
           >
             Gather Signatures
           </button>
@@ -183,16 +237,21 @@ export default function HomePage() {
     );
   }
 
-  // ===== Step 5: Confirmation =====
+  // ===== Module 1A or 1B =====
+  if (currentModule === 4 && path === "Independent") {
+    return <Module1A onNext={() => setCurrentModule(6)} />;
+  }
+  if (currentModule === 5 && path === "Party") {
+    return <Module1B onNext={() => setCurrentModule(6)} />;
+  }
+
+  // ===== Placeholder after Module 1A/1B =====
   return (
     <div style={{ maxWidth: "768px", margin: "0 auto", padding: "32px" }}>
-      <h2 style={{ fontSize: "1.5rem", fontWeight: "bold" }}>✅ Path Locked In</h2>
+      <h2>🚧 Next Module Coming Soon</h2>
       <p>
-        You’ve chosen the <strong>{path}</strong> path, running for{" "}
-        <strong>{office}</strong>, using the{" "}
-        <strong>{ballotMethod}</strong> method to reach the general election.
+        Path: {path}, Office: {office}, Ballot: {ballotMethod}
       </p>
-      <p>Next: Begin quizzes and simulator challenges.</p>
     </div>
   );
 }

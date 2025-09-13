@@ -9,9 +9,9 @@ type CandidateState = {
   currentModule: string;
   path: "Independent" | "Party" | null;
   quizAttempts: Record<string, number>;
-  setCandidateCoins: (val: number) => void;
-  setSignatures: (val: number) => void;
-  setVoterApproval: (val: number) => void;
+  setCandidateCoins: (val: number | ((prev: number) => number)) => void;
+  setSignatures: (val: number | ((prev: number) => number)) => void;
+  setVoterApproval: (val: number | ((prev: number) => number)) => void;
   setCurrentModule: (val: string) => void;
   setPath: (val: "Independent" | "Party" | null) => void;
   incrementQuizAttempt: (quizId: string) => void;

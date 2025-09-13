@@ -9,7 +9,7 @@
         "prompt": "In the Candidate Simulator, how many Candidate Coins (CC) does each participant start with?",
         "options": ["25", "50", "75", "100"],
         "answer": "50"
-      },
+      }
       {
         "id": "q2",
         "type": "multiple-choice",
@@ -30,7 +30,7 @@
         "answer": "It ensures candidates build understanding step by step instead of relying on surface-level talking points."
       }
     ]
-  },
+  }
 
   "1A_signature_verification": {
     "title": "Module 1A – Independent/Write-In Filing (Texas)",

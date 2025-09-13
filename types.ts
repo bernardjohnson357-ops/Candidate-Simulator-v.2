@@ -3,21 +3,19 @@
 export type QuizType = "multiple-choice" | "open-ended";
 
 export interface QuizBase {
-  id: string;        // unique identifier (e.g., "1A_q1")
-  module: string;    // module ID (e.g., "1A", "2A")
-  type: QuizType;    // question type
-  question: string;  // the prompt text
-  answer: string;    // correct answer or expected response
-  explanation?: string; // optional feedback after answering
+  id: string;
+  module: string;
+  type: QuizType;
+  question: string;
+  answer: string;
+  explanation?: string;
 }
 
-// Multiple-choice adds options
 export interface MultipleChoiceQuiz extends QuizBase {
   type: "multiple-choice";
   options: string[];
 }
 
-// Open-ended has no options
 export interface OpenEndedQuiz extends QuizBase {
   type: "open-ended";
 }
@@ -25,7 +23,7 @@ export interface OpenEndedQuiz extends QuizBase {
 export type Quiz = MultipleChoiceQuiz | OpenEndedQuiz;
 
 // ---------------------------
-// GameState type for simulator
+// Game state
 // ---------------------------
 export interface GameState {
   userId: string;
@@ -37,4 +35,15 @@ export interface GameState {
   voterApproval: number;
   completedQuizzes: string[];
   fecFilings: string[];
+}
+
+// ---------------------------
+// Chat message type
+// ---------------------------
+export interface ChatMessage {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  type?: "text" | "image" | "voice";
+  attachmentUrl?: string;
 }

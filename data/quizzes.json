@@ -73,3 +73,44 @@
     ]
   }
 }
+[
+  {
+    "id": "1A_q1",
+    "module": "1A",
+    "question": "Which office must independent and write-in candidates file with at the state level?",
+    "options": [
+      "The U.S. Federal Election Commission (FEC)",
+      "The Texas Secretary of State (SOS)",
+      "The Texas Ethics Commission",
+      "The U.S. House Clerk"
+    ],
+    "answer": "The Texas Secretary of State (SOS)",
+    "explanation": "Independent and write-in candidates must file at the state level with the Secretary of State before pursuing federal filings."
+  },
+  {
+    "id": "2A_q1",
+    "module": "2A",
+    "question": "Which FEC form declares that an individual is officially a candidate?",
+    "options": [
+      "Form 1 – Statement of Organization",
+      "Form 2 – Statement of Candidacy",
+      "Form 3 – Quarterly Report",
+      "Form 99 – Miscellaneous Filing"
+    ],
+    "answer": "Form 2 – Statement of Candidacy",
+    "explanation": "Form 2 is used to declare an individual as a federal candidate, while Form 1 registers the campaign committee."
+  },
+  {
+    "id": "2B_q1",
+    "module": "2B",
+    "question": "Party candidates in Texas must submit nomination forms to:",
+    "options": [
+      "The Governor’s Office",
+      "The Texas Secretary of State",
+      "The State Party Chair only",
+      "The Federal Election Commission"
+    ],
+    "answer": "The Texas Secretary of State",
+    "explanation": "Party candidates file nomination paperwork with the Texas SOS to gain state ballot access."
+  }
+]

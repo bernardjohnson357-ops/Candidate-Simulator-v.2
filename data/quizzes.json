@@ -28,8 +28,6 @@
         "type": "open-ended",
         "prompt": "Why does the simulator require tasks to be completed in a scaffolded order (read → write → speak)?",
         "answer": "It ensures candidates build understanding step by step instead of relying on surface-level talking points."
-      }
-    ]
   }
 
   "1A_signature_verification": {

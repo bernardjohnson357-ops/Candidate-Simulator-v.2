@@ -1,8 +1,9 @@
 {
   "0_orientation": {
     "title": "Module 0 – Candidate Simulator Orientation",
-    "questions": [
-      {
+    "questions": []
+  }
+}
         "id": "q1",
         "type": "multiple-choice",
         "prompt": "In the Candidate Simulator, how many Candidate Coins (CC) does each participant start with?",
@@ -72,7 +73,7 @@
       }
     ]
   }
-}
+},
 [
   {
     "id": "1A_q1",

@@ -23,3 +23,18 @@ export interface OpenEndedQuiz extends QuizBase {
 }
 
 export type Quiz = MultipleChoiceQuiz | OpenEndedQuiz;
+
+// ---------------------------
+// GameState type for simulator
+// ---------------------------
+export interface GameState {
+  userId: string;
+  path: "Independent" | "Party" | "thirdParty";
+  filingOption: "signatures" | "filingFee";
+  currentModule: string;
+  cc: number;
+  signatures: number;
+  voterApproval: number;
+  completedQuizzes: string[];
+  fecFilings: string[];
+}

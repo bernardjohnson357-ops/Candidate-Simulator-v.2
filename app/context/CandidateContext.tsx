@@ -13,7 +13,7 @@ type CandidateState = {
   setSignatures: (val: number) => void;
   setVoterApproval: (val: number) => void;
   setCurrentModule: (val: string) => void;
-  setPath: (val: "Independent" | "Party") => void;
+  setPath: (val: "Independent" | "Party" | null) => void;
   incrementQuizAttempt: (quizId: string) => void;
 };
 

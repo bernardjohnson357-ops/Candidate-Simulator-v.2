@@ -1,63 +1,59 @@
 // app/context/CandidateContext.tsx
 "use client";
-import { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState } from "react";
+
+type PathType = "Independent" | "Party";
 
 type CandidateState = {
   candidateCoins: number;
+  setCandidateCoins: React.Dispatch<React.SetStateAction<number>>;
+
   signatures: number;
+  setSignatures: React.Dispatch<React.SetStateAction<number>>;
+
   voterApproval: number;
+  setVoterApproval: React.Dispatch<React.SetStateAction<number>>;
+
+  path: PathType | null;
+  setPath: React.Dispatch<React.SetStateAction<PathType | null>>;
+
   currentModule: string;
-  path: "Independent" | "Party" | null;
-  quizAttempts: Record<string, number>;
-  setCandidateCoins: (val: number | ((prev: number) => number)) => void;
-  setSignatures: (val: number | ((prev: number) => number)) => void;
-  setVoterApproval: (val: number | ((prev: number) => number)) => void;
-  setCurrentModule: (val: string) => void;
-  setPath: (val: "Independent" | "Party" | null) => void;
-  incrementQuizAttempt: (quizId: string) => void;
+  setCurrentModule: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const CandidateContext = createContext<CandidateState | undefined>(undefined);
 
-export const CandidateProvider = ({ children }: { children: ReactNode }) => {
-  const [candidateCoins, setCandidateCoins] = useState(50);
-  const [signatures, setSignatures] = useState(0);
-  const [voterApproval, setVoterApproval] = useState(0);
-  const [currentModule, setCurrentModule] = useState("0");
-  const [path, setPath] = useState<"Independent" | "Party" | null>(null);
-  const [quizAttempts, setQuizAttempts] = useState<Record<string, number>>({});
-
-  const incrementQuizAttempt = (quizId: string) => {
-    setQuizAttempts(prev => ({
-      ...prev,
-      [quizId]: (prev[quizId] || 0) + 1,
-    }));
-  };
+export function CandidateProvider({ children }: { children: React.ReactNode }) {
+  const [candidateCoins, setCandidateCoins] = useState<number>(50); // start with 50 CC
+  const [signatures, setSignatures] = useState<number>(0);
+  const [voterApproval, setVoterApproval] = useState<number>(0);
+  const [path, setPath] = useState<PathType | null>(null);
+  const [currentModule, setCurrentModule] = useState<string>("0");
 
   return (
     <CandidateContext.Provider
       value={{
         candidateCoins,
-        signatures,
-        voterApproval,
-        currentModule,
-        path,
-        quizAttempts,
         setCandidateCoins,
+        signatures,
         setSignatures,
+        voterApproval,
         setVoterApproval,
-        setCurrentModule,
+        path,
         setPath,
-        incrementQuizAttempt,
+        currentModule,
+        setCurrentModule,
       }}
     >
       {children}
     </CandidateContext.Provider>
   );
-};
+}
 
-export const useCandidate = () => {
+export function useCandidate() {
   const context = useContext(CandidateContext);
-  if (!context) throw new Error("useCandidate must be used within CandidateProvider");
+  if (!context) {
+    throw new Error("useCandidate must be used within a CandidateProvider");
+  }
   return context;
-};
+}

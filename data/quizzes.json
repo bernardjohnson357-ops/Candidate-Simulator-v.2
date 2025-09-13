@@ -1,34 +1,35 @@
 {
   "0_orientation": {
     "title": "Module 0 – Candidate Simulator Orientation",
-    "questions": []
-  }
-}
+    "questions": [
+      {
         "id": "q1",
         "type": "multiple-choice",
         "prompt": "In the Candidate Simulator, how many Candidate Coins (CC) does each participant start with?",
         "options": ["25", "50", "75", "100"],
         "answer": "50"
+      },
       {
         "id": "q2",
         "type": "multiple-choice",
         "prompt": "What does 1 Candidate Coin (CC) represent?",
         "options": ["$10", "$100", "$1,000", "$10,000"],
         "answer": "$100"
-      }
+      },
       {
         "id": "q3",
         "type": "open-ended",
         "prompt": "What are the three federal offices you can run for in this simulator?",
         "answer": "President of the United States, U.S. Senate, U.S. House of Representatives"
-      }
+      },
       {
         "id": "q4",
         "type": "open-ended",
         "prompt": "Why does the simulator require tasks to be completed in a scaffolded order (read → write → speak)?",
         "answer": "It ensures candidates build understanding step by step instead of relying on surface-level talking points."
-  }
-
+      }
+    ]
+  },
   "1A_signature_verification": {
     "title": "Module 1A – Independent/Write-In Filing (Texas)",
     "questions": [
@@ -41,9 +42,9 @@
           "Texas Secretary of State",
           "U.S. House Clerk",
           "Texas Ethics Commission"
-        ]
+        ],
         "answer": "Texas Secretary of State"
-      }
+      },
       {
         "id": "q2",
         "type": "multiple-choice",
@@ -55,13 +56,13 @@
           "Register with county clerk or state chair"
         ],
         "answer": "Pay filing fee or collect signatures"
-      }
+      },
       {
         "id": "q3",
         "type": "open-ended",
         "prompt": "When must independent and write-in candidates complete state-level filing before pursuing federal filings?",
         "answer": "Before federal filings can begin; state-level filing comes first."
-      }
+      },
       {
         "id": "q4",
         "type": "open-ended",
@@ -69,45 +70,46 @@
         "answer": "They are disqualified from the ballot."
       }
     ]
-  }
-[
-  {
-    "id": "1A_q1",
-    "module": "1A",
-    "question": "Which office must independent and write-in candidates file with at the state level?",
-    "options": [
-      "The U.S. Federal Election Commission (FEC)",
-      "The Texas Secretary of State (SOS)",
-      "The Texas Ethics Commission",
-      "The U.S. House Clerk"
-    ],
-    "answer": "The Texas Secretary of State (SOS)",
-    "explanation": "Independent and write-in candidates must file at the state level with the Secretary of State before pursuing federal filings."
   },
-  {
-    "id": "2A_q1",
-    "module": "2A",
-    "question": "Which FEC form declares that an individual is officially a candidate?",
-    "options": [
-      "Form 1 – Statement of Organization",
-      "Form 2 – Statement of Candidacy",
-      "Form 3 – Quarterly Report",
-      "Form 99 – Miscellaneous Filing"
-    ],
-    "answer": "Form 2 – Statement of Candidacy",
-    "explanation": "Form 2 is used to declare an individual as a federal candidate, while Form 1 registers the campaign committee."
-  },
-  {
-    "id": "2B_q1",
-    "module": "2B",
-    "question": "Party candidates in Texas must submit nomination forms to:",
-    "options": [
-      "The Governor’s Office",
-      "The Texas Secretary of State",
-      "The State Party Chair only",
-      "The Federal Election Commission"
-    ],
-    "answer": "The Texas Secretary of State",
-    "explanation": "Party candidates file nomination paperwork with the Texas SOS to gain state ballot access."
-  }
-]
+  "flat_quizzes": [
+    {
+      "id": "1A_q1",
+      "module": "1A",
+      "question": "Which office must independent and write-in candidates file with at the state level?",
+      "options": [
+        "The U.S. Federal Election Commission (FEC)",
+        "The Texas Secretary of State (SOS)",
+        "The Texas Ethics Commission",
+        "The U.S. House Clerk"
+      ],
+      "answer": "The Texas Secretary of State (SOS)",
+      "explanation": "Independent and write-in candidates must file at the state level with the Secretary of State before pursuing federal filings."
+    },
+    {
+      "id": "2A_q1",
+      "module": "2A",
+      "question": "Which FEC form declares that an individual is officially a candidate?",
+      "options": [
+        "Form 1 – Statement of Organization",
+        "Form 2 – Statement of Candidacy",
+        "Form 3 – Quarterly Report",
+        "Form 99 – Miscellaneous Filing"
+      ],
+      "answer": "Form 2 – Statement of Candidacy",
+      "explanation": "Form 2 is used to declare an individual as a federal candidate, while Form 1 registers the campaign committee."
+    },
+    {
+      "id": "2B_q1",
+      "module": "2B",
+      "question": "Party candidates in Texas must submit nomination forms to:",
+      "options": [
+        "The Governor’s Office",
+        "The Texas Secretary of State",
+        "The State Party Chair only",
+        "The Federal Election Commission"
+      ],
+      "answer": "The Texas Secretary of State",
+      "explanation": "Party candidates file nomination paperwork with the Texas SOS to gain state ballot access."
+    }
+  ]
+}

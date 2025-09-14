@@ -35,7 +35,9 @@ export default function ChatSimulator() {
         </div>
       )}
 
-      {currentTask.type === "read" && <button onClick={handleSubmit}>Next</button>}
+      {currentTask.type === "read" && (
+        <button onClick={handleSubmit}>Next</button>
+      )}
     </div>
   );
 }

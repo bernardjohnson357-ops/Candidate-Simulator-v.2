@@ -1,10 +1,21 @@
 import { useState } from "react";
 import { GameState, Task } from "@/types";
+import { tasks as allTasks } from "@/data/tasks";
 
-// -----------------------------
-// Example tasks (Module 0)
-// -----------------------------
-const initialTasks: Task[] = [
+export function useGameState() {
+  const [state, setState] = useState<GameState>({
+    candidateCoins: 50,
+    signatures: 0,
+    voterApproval: 0,
+    currentModule: 0,
+    currentTaskIndex: 0,
+    quizzesCompleted: []
+  });
+
+  const [tasks] = useState<Task[]>(allTasks);
+
+  // ... keep handleTaskCompletion exactly as before
+}
   {
     id: "t0_read",
     module: 0,

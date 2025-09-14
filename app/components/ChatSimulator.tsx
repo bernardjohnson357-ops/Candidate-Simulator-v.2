@@ -5,7 +5,7 @@ import { Task } from "@/types";
 import { useState } from "react";
 
 export default function ChatSimulator() {
-  const { state, tasks, handleTaskCompletion, loading } = useGameState();
+  const { state, tasks, handleTaskCompletion } = useGameState();
   const [userInput, setUserInput] = useState("");
 
   const currentTask: Task | undefined = tasks[state.currentTaskIndex];
@@ -40,7 +40,9 @@ export default function ChatSimulator() {
       {currentTask.type === "upload" && (
         <input
           type="file"
-          onChange={(e) => e.target.files && handleTaskCompletion(currentTask, e.target.files[0])}
+          onChange={(e) =>
+            e.target.files && handleTaskCompletion(currentTask, e.target.files[0])
+          }
         />
       )}
 

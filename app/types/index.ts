@@ -7,7 +7,7 @@ export interface Task {
   module: number;      // 0–15
   type: TaskType;
   content: string;
-  quizId?: string;     // for quiz tasks
+  quizId?: string;     // optional, for quizzes
 }
 
 export interface GameState {

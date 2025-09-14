@@ -3,7 +3,7 @@ import { GameState, Task } from "@/types";
 
 const initialTasks: Task[] = [
   { id: "t0_read", module: 0, type: "read", content: "Welcome to the Federal Candidate Simulator..." },
-  { id: "t0_write", module: 0, type: "write", content: "Choose your office: President, Senate, or House." },
+  { id: "t0_write", module: 0, type: "write", content: "Choose your office: President, Senate, or House." }
 ];
 
 export function useGameState() {
@@ -13,13 +13,22 @@ export function useGameState() {
     voterApproval: 0,
     currentModule: 0,
     currentTaskIndex: 0,
-    quizzesCompleted: [],
-    branch: "Independent",
+    quizzesCompleted: []
   });
 
   const [tasks] = useState<Task[]>(initialTasks);
 
   const handleTaskCompletion = async (task: Task, userInput: string | File) => {
+    let narration = task.content;
+    setState(prev => ({
+      ...prev,
+      currentTaskIndex: prev.currentTaskIndex + 1
+    }));
+    return { narration };
+  };
+
+  return { state, tasks, handleTaskCompletion };
+}
     let narration = task.content;
     setState(prev => ({ ...prev, currentTaskIndex: prev.currentTaskIndex + 1 }));
     return { narration };

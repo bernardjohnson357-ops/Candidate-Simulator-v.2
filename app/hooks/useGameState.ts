@@ -20,17 +20,12 @@ export function useGameState() {
 
   const handleTaskCompletion = async (task: Task, userInput: string | File) => {
     let narration = task.content;
+
     setState(prev => ({
       ...prev,
       currentTaskIndex: prev.currentTaskIndex + 1
     }));
-    return { narration };
-  };
 
-  return { state, tasks, handleTaskCompletion };
-}
-    let narration = task.content;
-    setState(prev => ({ ...prev, currentTaskIndex: prev.currentTaskIndex + 1 }));
     return { narration };
   };
 

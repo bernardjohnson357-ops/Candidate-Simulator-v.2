@@ -1,69 +1,79 @@
 import { useState } from "react";
-import { GameState, ChatMessage, Task } from "@/types";
-import { useGameState } from "@/hooks/useGameState";
-import styles from "./ChatCard.module.css";
+import { GameState, Task } from "@/types";
 
-export default function ChatSimulator() {
-  const { state, tasks, handleTaskCompletion, loading } = useGameState(); // use a linear task queue
-  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
-  const [inputValue, setInputValue] = useState("");
+// Example linear tasks
+const initialTasks: Task[] = [
+  { module: 0, type: "read", content: "Welcome to the Federal Candidate Simulator..." },
+  { module: 0, type: "write", content: "Choose your office: President, Senate, or House." },
+  // Add remaining tasks here...
+];
 
-  if (loading) return <div>Loading...</div>;
-  if (!state) return <div>Error loading state.</div>;
+export function useGameState() {
+  const [state, setState] = useState<GameState>({
+    cc: 50,
+    signatures: 0,
+    voterApproval: 0,
+    currentModule: 0,
+    currentTaskIndex: 0,
+    quizzesCompleted: [],
+    branch: "Independent",
+  });
 
-  const handleUserInput = async (text: string) => {
-    if (!text) return;
+  const [tasks] = useState<Task[]>(initialTasks);
+  const [loading, setLoading] = useState(false);
 
-    const userMsg: ChatMessage = { id: crypto.randomUUID(), role: "user", content: text, type: "text" };
-    setChatHistory(prev => [...prev, userMsg]);
-    setInputValue("");
+  const handleTaskCompletion = async (task: Task, userInput: string | File) => {
+    let narration = "";
 
-    // Complete the current task (quiz, write, etc.)
-    const task: Task = tasks[state.currentTaskIndex];
-    const aiResponse = await handleTaskCompletion(task, text);
+    setState(prev => {
+      let newCC = prev.cc;
+      let newSignatures = prev.signatures;
+      let newVoterApproval = prev.voterApproval;
+      let newQuizzesCompleted = [...prev.quizzesCompleted];
 
-    const aiMsg: ChatMessage = { id: crypto.randomUUID(), role: "assistant", content: aiResponse.narration || "Next task ready.", type: "text" };
-    setChatHistory(prev => [...prev, aiMsg]);
+      if (task.type === "quiz" && task.quizId) {
+        if (!newQuizzesCompleted.includes(task.quizId)) {
+          const score = typeof userInput === "string" ? parseInt(userInput) || 0 : 0;
+          const bonusCC = score === 100 ? 2 : score >= 80 ? 1 : 0;
+          const penaltyCC = score < 80 ? -1 : 0;
+
+          newCC += bonusCC + penaltyCC;
+          newSignatures += score;
+          newVoterApproval = newSignatures / 100;
+
+          newQuizzesCompleted.push(task.quizId);
+          narration = `You scored ${score}. CC: ${newCC}, Signatures: ${newSignatures}, Approval: ${newVoterApproval.toFixed(1)}%`;
+        } else {
+          narration = "Quiz already completed.";
+        }
+      } else if (task.type === "write") {
+        newCC += 1;
+        newSignatures += 10;
+        newVoterApproval = newSignatures / 100;
+        narration = "Your written task was received. CC and signatures updated.";
+      } else if (task.type === "read") {
+        narration = task.content;
+      } else if (task.type === "upload") {
+        newCC += 1;
+        narration = "File uploaded successfully. CC increased by 1.";
+      }
+
+      const nextTaskIndex = prev.currentTaskIndex + 1;
+      const nextModule = nextTaskIndex < tasks.length ? tasks[nextTaskIndex].module : prev.currentModule;
+
+      return {
+        ...prev,
+        cc: newCC,
+        signatures: newSignatures,
+        voterApproval: newVoterApproval,
+        currentTaskIndex: nextTaskIndex,
+        currentModule: nextModule,
+        quizzesCompleted: newQuizzesCompleted,
+      };
+    });
+
+    return { narration };
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length === 0) return;
-    const file = e.target.files[0];
-
-    const aiResponse = await handleTaskCompletion(tasks[state.currentTaskIndex], file);
-
-    const aiMsg: ChatMessage = { id: crypto.randomUUID(), role: "assistant", content: aiResponse.narration || "File uploaded.", type: "text" };
-    setChatHistory(prev => [...prev, aiMsg]);
-  };
-
-  return (
-    <div className={styles.chat-container}>
-      <div className={styles.dashboard}>
-        <div>Module: {state.currentModule}</div>
-        <div>CC: {state.cc}</div>
-        <div>Signatures: {state.signatures}</div>
-        <div>Voter Approval: {state.voterApproval.toFixed(1)}%</div>
-      </div>
-
-      <div className={styles.chat-history}>
-        {chatHistory.map(msg => (
-          <div key={msg.id} className={`${styles.message} ${msg.role === "user" ? "user" : "assistant"}`}>
-            {msg.content}
-          </div>
-        ))}
-      </div>
-
-      <div className={styles.input-bar}>
-        <input
-          type="text"
-          placeholder="Type your message..."
-          value={inputValue}
-          onChange={e => setInputValue(e.target.value)}
-          onKeyDown={e => { if (e.key === "Enter") handleUserInput(inputValue); }}
-        />
-        <button onClick={() => handleUserInput(inputValue)}>Send</button>
-        <input type="file" accept="image/*" onChange={handleFileUpload} />
-      </div>
-    </div>
-  );
+  return { state, tasks, handleTaskCompletion, loading };
 }

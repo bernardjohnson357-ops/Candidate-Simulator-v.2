@@ -36,21 +36,6 @@ export default function ChatSimulator() {
       )}
 
       {currentTask.type === "read" && <button onClick={handleSubmit}>Next</button>}
-
-      {currentTask.type === "upload" && (
-        <input
-          type="file"
-          onChange={(e) =>
-            e.target.files && handleTaskCompletion(currentTask, e.target.files[0])
-          }
-        />
-      )}
-
-      <div>
-        <p>CC: {state.cc}</p>
-        <p>Signatures: {state.signatures}</p>
-        <p>Voter Approval: {state.voterApproval.toFixed(1)}%</p>
-      </div>
     </div>
   );
 }

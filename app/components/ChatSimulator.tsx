@@ -1,21 +1,13 @@
 "use client";
 
-import { useGameState } from "@/hooks/useGameState";
-import { Task } from "@/types";
-import { useState } from "react";
-
 export default function ChatSimulator() {
-  const { state, tasks, handleTaskCompletion } = useGameState();
-  const [userInput, setUserInput] = useState("");
-
-  const currentTask: Task | undefined = tasks[state.currentTaskIndex];
-
-  const handleSubmit = async () => {
-    if (!currentTask) return;
-    const result = await handleTaskCompletion(currentTask, userInput);
-    alert(result.narration);
-    setUserInput("");
-  };
+  return (
+    <div style={{ padding: "2rem", border: "1px solid #ccc" }}>
+      <h2>✅ ChatSimulator Loaded</h2>
+      <p>If you see this, the default export works.</p>
+    </div>
+  );
+}
 
   if (!currentTask) return <div>All tasks completed!</div>;
 

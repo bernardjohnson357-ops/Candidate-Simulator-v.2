@@ -1,11 +1,38 @@
 import { useState } from "react";
-import { GameState, Task } from "@/types";
 
+// -----------------------------
+// Inline types (no imports)
+// -----------------------------
+type TaskType = "read" | "write" | "quiz" | "upload";
+
+interface Task {
+  id: string;
+  module: number;
+  type: TaskType;
+  content: string;
+  quizId?: string;
+}
+
+interface GameState {
+  cc: number;
+  signatures: number;
+  voterApproval: number;
+  currentModule: number;
+  currentTaskIndex: number;
+  quizzesCompleted: string[];
+}
+
+// -----------------------------
+// Initial tasks
+// -----------------------------
 const initialTasks: Task[] = [
   { id: "t0_read", module: 0, type: "read", content: "Welcome to the Federal Candidate Simulator..." },
   { id: "t0_write", module: 0, type: "write", content: "Choose your office: President, Senate, or House." }
 ];
 
+// -----------------------------
+// Hook
+// -----------------------------
 export function useGameState() {
   const [state, setState] = useState<GameState>({
     cc: 50,

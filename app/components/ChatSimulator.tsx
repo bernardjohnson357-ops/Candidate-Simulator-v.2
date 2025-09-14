@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { GameState, ChatMessage, Quiz } from "@/types";
+import { GameState, ChatMessage, Task } from "@/types";
 import { useGameState } from "@/hooks/useGameState";
 import styles from "./ChatCard.module.css";
 
 export default function ChatSimulator() {
-  const { state, currentQuizzes, completeQuiz, nextModule, loading } = useGameState();
+  const { state, tasks, handleTaskCompletion, loading } = useGameState(); // use a linear task queue
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState("");
 
@@ -18,10 +18,11 @@ export default function ChatSimulator() {
     setChatHistory(prev => [...prev, userMsg]);
     setInputValue("");
 
-    // Send to API for AI evaluation
-    const response = await completeQuiz({ id: "chat", module: state.currentModule, type: "open-ended", question: text, answer: "" }, text);
-    
-    const aiMsg: ChatMessage = { id: crypto.randomUUID(), role: "assistant", content: response.narration || "Next task generated.", type: "text" };
+    // Complete the current task (quiz, write, etc.)
+    const task: Task = tasks[state.currentTaskIndex];
+    const aiResponse = await handleTaskCompletion(task, text);
+
+    const aiMsg: ChatMessage = { id: crypto.randomUUID(), role: "assistant", content: aiResponse.narration || "Next task ready.", type: "text" };
     setChatHistory(prev => [...prev, aiMsg]);
   };
 
@@ -29,19 +30,14 @@ export default function ChatSimulator() {
     if (!e.target.files || e.target.files.length === 0) return;
     const file = e.target.files[0];
 
-    const formData = new FormData();
-    formData.append("file", file);
+    const aiResponse = await handleTaskCompletion(tasks[state.currentTaskIndex], file);
 
-    const res = await fetch("/api/simulator/upload", { method: "POST", body: formData });
-    const data = await res.json();
-
-    const aiMsg: ChatMessage = { id: crypto.randomUUID(), role: "assistant", content: data.narration || "File uploaded.", type: "text" };
+    const aiMsg: ChatMessage = { id: crypto.randomUUID(), role: "assistant", content: aiResponse.narration || "File uploaded.", type: "text" };
     setChatHistory(prev => [...prev, aiMsg]);
   };
 
   return (
     <div className={styles.chat-container}>
-      {/* Dashboard */}
       <div className={styles.dashboard}>
         <div>Module: {state.currentModule}</div>
         <div>CC: {state.cc}</div>
@@ -49,7 +45,6 @@ export default function ChatSimulator() {
         <div>Voter Approval: {state.voterApproval.toFixed(1)}%</div>
       </div>
 
-      {/* Chat History */}
       <div className={styles.chat-history}>
         {chatHistory.map(msg => (
           <div key={msg.id} className={`${styles.message} ${msg.role === "user" ? "user" : "assistant"}`}>
@@ -58,7 +53,6 @@ export default function ChatSimulator() {
         ))}
       </div>
 
-      {/* Input Bar */}
       <div className={styles.input-bar}>
         <input
           type="text"

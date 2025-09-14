@@ -1,21 +1,18 @@
-export type Branch = "Independent" | "Party" | "Write-In";
-
 export type TaskType = "read" | "write" | "quiz" | "upload";
 
 export interface Task {
   id: string;
-  module: number;      // 0–15
+  module: number;
   type: TaskType;
   content: string;
-  quizId?: string;     // optional, for quizzes
+  quizId?: string;
 }
 
 export interface GameState {
-  cc: number;                 // Candidate Coins
+  cc: number;
   signatures: number;
-  voterApproval: number;      // %
+  voterApproval: number;
   currentModule: number;
   currentTaskIndex: number;
   quizzesCompleted: string[];
-  branch: Branch;
 }

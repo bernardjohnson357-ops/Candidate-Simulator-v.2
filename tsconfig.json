@@ -17,11 +17,9 @@
     "paths": {
       "@/components/*": ["app/components/*"],
       "@/hooks/*": ["app/hooks/*"],
-      "@/app/*": ["app/*"],
+      "@/types/*": ["app/types/*"],
       "@/context/*": ["app/context/*"],
-      "@/module0/*": ["app/module0/*"],
-      "@/module1a/*": ["app/module1a/*"],
-      "@/module2a/*": ["app/module2a/*"]
+      "@/app/*": ["app/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

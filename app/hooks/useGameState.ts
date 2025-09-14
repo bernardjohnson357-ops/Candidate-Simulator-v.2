@@ -18,7 +18,6 @@ export function useGameState() {
   });
 
   const [tasks] = useState<Task[]>(initialTasks);
-  const [loading] = useState(false);
 
   const handleTaskCompletion = async (task: Task, userInput: string | File) => {
     let narration = task.content;
@@ -26,5 +25,5 @@ export function useGameState() {
     return { narration };
   };
 
-  return { state, tasks, handleTaskCompletion, loading };
+  return { state, tasks, handleTaskCompletion };
 }

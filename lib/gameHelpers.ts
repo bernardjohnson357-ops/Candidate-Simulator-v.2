@@ -5,7 +5,6 @@ export async function applyGameChanges(
   changes: Partial<Pick<GameState, "candidateCoins" | "signatures" | "voterApproval" | "currentModule">>,
   id = 1
 ): Promise<GameState> {
-  // Always fall back to a *complete* GameState
   const state: GameState = (await getGameState(id)) || {
     currentModule: 0,
     candidateCoins: 50,
@@ -24,7 +23,7 @@ export async function applyGameChanges(
     quizzesCompleted: state.quizzesCompleted,
   };
 
-  // Auto-convert signatures → approval (1% per 100 signatures)
+  // ✅ Convert signatures → voter approval
   if (changes.signatures) {
     newState.voterApproval = newState.signatures / 100;
   }

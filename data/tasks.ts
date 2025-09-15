@@ -1,4 +1,4 @@
-import { Task } from "@/types";
+import { Task } from "types";
 
 // -----------------------------
 // All simulator tasks (Modules 0–15)

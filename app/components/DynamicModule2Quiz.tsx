@@ -24,7 +24,9 @@ export function DynamicModule2Quiz({ branch, moduleRefText }: { branch: "2A"|"2B
     setCC(cc + result.ccBonus);
     setSignatures(signatures + result.signaturesEarned);
     setVoterApproval((signatures + result.signaturesEarned)/10000);
-    setCurrentModule("3"); // advance to Module 3
+
+    // Advance to Module 3
+    setCurrentModule("3");
   };
 
   if (loading) return <div>Loading Module 2 Quiz...</div>;

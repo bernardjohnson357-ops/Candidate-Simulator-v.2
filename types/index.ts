@@ -1,28 +1,20 @@
-// -----------------------------
-// Types for Candidate Simulator
-// -----------------------------
+// /types/index.ts
 
-export type TaskType = "read" | "write" | "quiz" | "upload";
-
-export interface Quiz {
-  question: string;
-  options: string[];
-  answer: string;
+export interface QuizOption {
+  label: string;
+  text: string;
+  correct: boolean;
 }
 
-export interface Task {
+export interface QuizQuestion {
   id: string;
-  module: number;
-  type: TaskType;
-  content: string;
-  quiz?: Quiz;
+  prompt: string;
+  options: QuizOption[];
 }
 
-export interface GameState {
-  candidateCoins: number;     // CC available
-  signatures: number;         // Collected voter signatures
-  voterApproval: number;      // Approval rating (percentage)
-  currentModule: number;      // Active module
-  currentTaskIndex: number;   // Position in current module
-  quizzesCompleted: string[]; // IDs of completed quizzes
+export interface QuizResult {
+  totalQuestions: number;
+  correctAnswers: number;
+  signaturesEarned: number;
+  ccBonus: number;
 }

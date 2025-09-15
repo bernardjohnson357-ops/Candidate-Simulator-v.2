@@ -1,4 +1,8 @@
-// DynamicModule2Quiz.tsx
+// app/components/DynamicModule2Quiz.tsx
+"use client";
+
+import { useState } from "react";
+import { QuizResult } from "@/types";
 import { module2Quizzes } from "@quizzes/module2Quizzes";
 import { MultipleChoiceQuiz } from "@/components/MultipleChoiceQuiz";
 import { useGameState } from "@/context/GameStateContext";
@@ -17,6 +21,8 @@ export function DynamicModule2Quiz({ branch, startingCC = 50, startingSignatures
   const [voterApproval, setVoterApproval] = useState(startingSignatures / 10000);
   const [result, setResult] = useState<QuizResult | null>(null);
 
+  const { setCurrentModule } = useGameState();
+
   const handleComplete = (quizResult: QuizResult) => {
     const newCC = cc + quizResult.ccBonus;
     const newSignatures = signatures + quizResult.signaturesEarned;
@@ -27,6 +33,9 @@ export function DynamicModule2Quiz({ branch, startingCC = 50, startingSignatures
     setVoterApproval(newVoterApproval);
     setResult(quizResult);
     setCompleted(true);
+
+    // Advance to General Election
+    setCurrentModule("GeneralElection");
   };
 
   if (completed && result) {

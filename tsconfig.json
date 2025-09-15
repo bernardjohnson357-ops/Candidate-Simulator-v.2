@@ -20,6 +20,7 @@
       "@/types/*": ["/types/index.ts*"],
       "@/context/*": ["app/context/*"],
       "@/app/*": ["app/*"]
+      "@quizzes/*": ["./quizzes/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

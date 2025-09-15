@@ -2,35 +2,49 @@
 
 import { createContext, useContext, useState, ReactNode } from "react";
 
-interface GameState {
+export interface GameState {
   cc: number;
   signatures: number;
   voterApproval: number;
-  currentModule: "1" | "2" | "GeneralElection";
+  currentModule: number; // 0–15, General Election can be 16
   branch: "1A" | "1B" | null;
+  history: string[]; // optional: record narrative steps
 }
 
 interface GameStateContextType extends GameState {
-  setCC: (cc: number) => void;
-  setSignatures: (sig: number) => void;
-  setVoterApproval: (va: number) => void;
-  setCurrentModule: (mod: GameState["currentModule"]) => void;
-  setBranch: (branch: GameState["branch"]) => void;
+  setState: (changes: Partial<GameState>) => void;
+  resetGame: () => void;
 }
 
 const GameStateContext = createContext<GameStateContextType | undefined>(undefined);
 
 export function GameStateProvider({ children }: { children: ReactNode }) {
-  const [cc, setCC] = useState(50);
-  const [signatures, setSignatures] = useState(0);
-  const [voterApproval, setVoterApproval] = useState(0);
-  const [currentModule, setCurrentModule] = useState<GameState["currentModule"]>("1");
-  const [branch, setBranch] = useState<GameState["branch"]>(null);
+  const [state, setInternalState] = useState<GameState>({
+    cc: 50,
+    signatures: 0,
+    voterApproval: 0,
+    currentModule: 0,
+    branch: null,
+    history: [],
+  });
+
+  const setState = (changes: Partial<GameState>) => {
+    setInternalState(prev => ({ ...prev, ...changes }));
+  };
+
+  const resetGame = () => {
+    setInternalState({
+      cc: 50,
+      signatures: 0,
+      voterApproval: 0,
+      currentModule: 0,
+      branch: null,
+      history: [],
+    });
+  };
 
   return (
-    <GameStateContext.Provider
-      value={{ cc, signatures, voterApproval, currentModule, branch, setCC, setSignatures, setVoterApproval, setCurrentModule, setBranch }}
-    >
+    <GameStateContext.Provider value={{ ...state, setState, resetGame }}>
       {children}
     </GameStateContext.Provider>
   );

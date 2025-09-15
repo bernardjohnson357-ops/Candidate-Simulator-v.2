@@ -1,15 +1,11 @@
-// lib/gameHelpers.ts
 import { getGameState, updateGameState } from "./gameState";
 import { GameState } from "../types";
 
-/**
- * Apply quiz/module changes to the game state
- */
 export async function applyGameChanges(
   changes: Partial<Pick<GameState, "candidateCoins" | "signatures" | "voterApproval" | "currentModule">>,
   id = 1
 ): Promise<GameState> {
-  // ✅ ensure fallback is a full GameState
+  // Always fall back to a *complete* GameState
   const state: GameState = (await getGameState(id)) || {
     currentModule: 0,
     candidateCoins: 50,
@@ -28,7 +24,7 @@ export async function applyGameChanges(
     quizzesCompleted: state.quizzesCompleted,
   };
 
-  // ✅ Automatically convert signatures → voter approval
+  // Auto-convert signatures → approval (1% per 100 signatures)
   if (changes.signatures) {
     newState.voterApproval = newState.signatures / 100;
   }

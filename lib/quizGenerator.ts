@@ -1,4 +1,3 @@
-// /lib/quizGenerator.ts
 import OpenAI from "openai";
 import { QuizQuestion } from "@/types";
 

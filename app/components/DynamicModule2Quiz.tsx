@@ -1,8 +1,8 @@
-// components/DynamicModule2Quiz.tsx
-import { useState } from "react";
-import { module2Quizzes } from "@/quizzes/module2Quizzes";
-import { MultipleChoiceQuiz } from "./MultipleChoiceQuiz";
-import { QuizResult } from "@/types";
+// DynamicModule2Quiz.tsx
+import { module2Quizzes } from "@quizzes/module2Quizzes";
+import { MultipleChoiceQuiz } from "@/components/MultipleChoiceQuiz";
+import { useGameState } from "@/context/GameStateContext";
+import GeneralElection from "@/components/GeneralElection";
 
 interface DynamicModule2QuizProps {
   branch: "2A" | "2B";

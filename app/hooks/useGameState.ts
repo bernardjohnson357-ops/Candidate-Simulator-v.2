@@ -36,18 +36,47 @@ export function useGameState() {
     setState((prev) => updateState(prev, changes));
   };
 
-  const handleTaskCompletion = (taskId: string) => {
-    if (!state.quizzesCompleted.includes(taskId)) {
-      modifyState({
-        quizzesCompleted: [...state.quizzesCompleted, taskId],
-      });
+  /**
+   * Handle quiz completion and apply scoring rules
+   */
+  const handleQuizCompletion = (taskId: string, scorePercent: number) => {
+    if (state.quizzesCompleted.includes(taskId)) {
+      // ✅ Retake penalties
+      if (scorePercent < 80) {
+        modifyState({ candidateCoins: -2 }); // double penalty
+      } else {
+        modifyState({ signatures: -100 }); // double penalty (-50 × 2)
+      }
+      return;
     }
+
+    let coinChange = 0;
+    let signatureChange = scorePercent; // 1% = 1 signature
+
+    if (scorePercent >= 80 && scorePercent < 100) {
+      coinChange = 1;
+    } else if (scorePercent === 100) {
+      coinChange = 2;
+    } else {
+      // Wrong answer penalty
+      if (scorePercent === 0) {
+        coinChange = -1;
+      } else {
+        signatureChange = -50;
+      }
+    }
+
+    modifyState({
+      candidateCoins: coinChange,
+      signatures: signatureChange,
+      quizzesCompleted: [...state.quizzesCompleted, taskId],
+    });
   };
 
   return {
     state,
     setState: modifyState,
     tasks: allTasks,
-    handleTaskCompletion,
+    handleQuizCompletion, // ✅ replaces generic handleTaskCompletion
   };
 }

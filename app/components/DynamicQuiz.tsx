@@ -27,18 +27,24 @@ export function DynamicQuiz({ branch, startingCC = 50, startingSignatures = 0 }:
     setCompleted(true);
   };
 
-  if (completed) {
-    return (
-      <div className="p-4">
-        <h2 className="text-lg font-bold mb-2">Quiz Complete!</h2>
-        <p>Correct Answers: {result.correctAnswers} / {result.totalQuestions}</p>
-        <p>Signatures Earned: {result.signaturesEarned}</p>
-        <p>CC Bonus: {result.ccBonus}</p>
-        <p>Voter Approval: {(voterApproval * 100).toFixed(1)}%</p>
-        <p>Updated CC: {cc}</p>
-      </div>
-    );
+  // components/DynamicQuiz.tsx (excerpt)
+const handleComplete = (result: QuizResult) => {
+  const newCC = cc + result.ccBonus;
+  const newSignatures = signatures + result.signaturesEarned;
+  const newVoterApproval = newSignatures / 10000;
+
+  setCC(newCC);
+  setSignatures(newSignatures);
+  setVoterApproval(newVoterApproval);
+  setCompleted(true);
+
+  // Advance to next module
+  if (currentModule === "1") {
+    setCurrentModule("2"); // Module 2
+  } else if (currentModule === "2") {
+    setCurrentModule("GeneralElection"); // General Election branch
   }
+};
 
   const questions: QuizQuestion[] = moduleQuizzes[branch];
 

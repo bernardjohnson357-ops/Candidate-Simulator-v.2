@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { GameState, Task } from "@/types";
+import { GameState, Task } from "types";
 
 // -----------------------------
 // Initial tasks (Modules 0–15 skeleton)

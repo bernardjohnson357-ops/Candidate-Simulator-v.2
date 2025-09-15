@@ -1,15 +1,10 @@
 // app/layout.tsx
-import "./globals.css";
-import { CandidateProvider } from "./context/CandidateContext";
+import { GameStateProvider } from "@/context/GameStateContext";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body>
-        <CandidateProvider>
-          {children}
-        </CandidateProvider>
-      </body>
-    </html>
+    <GameStateProvider>
+      {children}
+    </GameStateProvider>
   );
 }

@@ -1,43 +1,40 @@
-// app/components/DynamicQuiz.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { QuizQuestion, QuizResult } from "@/types";
-import { moduleQuizzes } from "@quizzes/moduleQuizzes";
-import { MultipleChoiceQuiz } from "./MultipleChoiceQuiz";
+import { MultipleChoiceQuiz } from "@/components/MultipleChoiceQuiz";
 import { useGameState } from "@/context/GameStateContext";
+import { generateQuizFromReference } from "@/lib/quizGenerator";
 
 interface DynamicQuizProps {
-  branch: "1A" | "1B"; // chosen path
-  startingCC?: number;
-  startingSignatures?: number;
+  branch: "1A" | "1B";
+  moduleRefText: string; // The reference text for AI to generate questions
 }
 
-export function DynamicQuiz({ branch, startingCC = 50, startingSignatures = 0 }: DynamicQuizProps) {
-  const [completed, setCompleted] = useState(false);
-  const [cc, setCC] = useState(startingCC);
-  const [signatures, setSignatures] = useState(startingSignatures);
-  const [voterApproval, setVoterApproval] = useState(startingSignatures / 10000);
+export function DynamicQuiz({ branch, moduleRefText }: DynamicQuizProps) {
+  const { currentModule, setCurrentModule, cc, setCC, signatures, setSignatures, voterApproval, setVoterApproval } = useGameState();
+  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const { currentModule, setCurrentModule } = useGameState();
+  useEffect(() => {
+    async function loadQuestions() {
+      const generated = await generateQuizFromReference(moduleRefText, branch);
+      setQuestions(generated);
+      setLoading(false);
+    }
+    loadQuestions();
+  }, [moduleRefText, branch]);
 
   const handleComplete = (result: QuizResult) => {
-    const newCC = cc + result.ccBonus;
-    const newSignatures = signatures + result.signaturesEarned;
-    const newVoterApproval = newSignatures / 10000;
-
-    setCC(newCC);
-    setSignatures(newSignatures);
-    setVoterApproval(newVoterApproval);
-    setCompleted(true);
+    setCC(cc + result.ccBonus);
+    setSignatures(signatures + result.signaturesEarned);
+    setVoterApproval((signatures + result.signaturesEarned) / 10000);
 
     // Advance to Module 2
-    if (currentModule === "1") {
-      setCurrentModule("2");
-    }
+    setCurrentModule(branch === "1A" ? "2A" : "2B");
   };
 
-  const questions: QuizQuestion[] = moduleQuizzes[branch];
+  if (loading) return <div>Loading Module 1 Quiz...</div>;
 
   return <MultipleChoiceQuiz questions={questions} onComplete={handleComplete} />;
 }

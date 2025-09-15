@@ -1,5 +1,3 @@
-// /types/index.ts
-
 export interface QuizOption {
   label: string;
   text: string;
@@ -19,7 +17,6 @@ export interface QuizResult {
   ccBonus: number;
 }
 
-// Add this GameState export:
 export interface GameState {
   cc: number;
   signatures: number;

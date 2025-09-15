@@ -1,11 +1,7 @@
-// app/hooks/useGameState.ts
 import { useState } from "react";
-import { GameState } from "../../types"; // adjust if needed
+import { GameState } from "../../types";
 import { tasks as allTasks } from "../../data/tasks";
 
-// -----------------------------
-// Type for partial updates
-// -----------------------------
 interface StateChanges {
   currentModule?: number;
   candidateCoins?: number;
@@ -15,9 +11,6 @@ interface StateChanges {
   quizzesCompleted?: string[];
 }
 
-// -----------------------------
-// Update helper
-// -----------------------------
 function updateState(state: GameState, changes: StateChanges): GameState {
   return {
     currentModule: changes.currentModule ?? state.currentModule,
@@ -29,9 +22,6 @@ function updateState(state: GameState, changes: StateChanges): GameState {
   };
 }
 
-// -----------------------------
-// Hook
-// -----------------------------
 export function useGameState() {
   const [state, setState] = useState<GameState>({
     candidateCoins: 50,
@@ -54,7 +44,6 @@ export function useGameState() {
     }
   };
 
-  // ✅ Single return — no duplicate / extra braces
   return {
     state,
     setState: modifyState,

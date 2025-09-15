@@ -2,7 +2,6 @@
 import { useGameState } from "@/context/GameStateContext";
 import { DynamicQuiz } from "./DynamicQuiz";
 import { DynamicModule2Quiz } from "./DynamicModule2Quiz";
-import GeneralElection from "@/pages/GeneralElection";
 
 export default function ModuleRouter() {
   const { currentModule, branch } = useGameState();

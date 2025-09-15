@@ -1,32 +1,22 @@
 import { useState } from "react";
 import { GameState, Task } from "@/types";
-import { tasks as allTasks } from "@/data/tasks";
 
-export function useGameState() {
-  const [state, setState] = useState<GameState>({
-    candidateCoins: 50,
-    signatures: 0,
-    voterApproval: 0,
-    currentModule: 0,
-    currentTaskIndex: 0,
-    quizzesCompleted: []
-  });
-
-  const [tasks] = useState<Task[]>(allTasks);
-
-  // ... keep handleTaskCompletion exactly as before
-}
+// -----------------------------
+// Initial tasks (Modules 0–15 skeleton)
+// -----------------------------
+const initialTasks: Task[] = [
+  // Module 0
   {
     id: "t0_read",
     module: 0,
     type: "read",
-    content: "Welcome to the Federal Candidate Simulator! You start with 50 Candidate Coins (CC)."
+    content: "Welcome to the Federal Candidate Simulator! You start with 50 Candidate Coins (CC).",
   },
   {
     id: "t0_write",
     module: 0,
     type: "write",
-    content: "Choose your office: President, Senate, or House."
+    content: "Choose your office: President, Senate, or House.",
   },
   {
     id: "t0_quiz",
@@ -36,9 +26,28 @@ export function useGameState() {
     quiz: {
       question: "How many Candidate Coins (CC) does each player start with?",
       options: ["25", "50", "75", "100"],
-      answer: "50"
-    }
-  }
+      answer: "50",
+    },
+  },
+  // Module 1
+  {
+    id: "m1_read",
+    module: 1,
+    type: "read",
+    content: "Module 1 introduces ballot access rules and filing basics.",
+  },
+  {
+    id: "m1_quiz",
+    module: 1,
+    type: "quiz",
+    content: "Test your knowledge of filing requirements.",
+    quiz: {
+      question: "Roughly how many signatures are required for a U.S. House candidate in many states?",
+      options: ["500", "1,000", "5,000", "10,000"],
+      answer: "1,000",
+    },
+  },
+  // Modules 2–15: continue skeleton in same pattern...
 ];
 
 // -----------------------------
@@ -51,7 +60,7 @@ export function useGameState() {
     voterApproval: 0,
     currentModule: 0,
     currentTaskIndex: 0,
-    quizzesCompleted: []
+    quizzesCompleted: [],
   });
 
   const [tasks] = useState<Task[]>(initialTasks);
@@ -62,10 +71,9 @@ export function useGameState() {
   // -----------------------------
   const handleTaskCompletion = async (task: Task, userInput: string | File) => {
     let narration = "";
-
     setLoading(true);
 
-    setState(prev => {
+    setState((prev) => {
       let newCC = prev.candidateCoins;
       let newSignatures = prev.signatures;
       let newApproval = prev.voterApproval;
@@ -112,7 +120,7 @@ export function useGameState() {
         voterApproval: newApproval,
         currentTaskIndex: nextTaskIndex,
         currentModule: nextModule,
-        quizzesCompleted: newQuizzesCompleted
+        quizzesCompleted: newQuizzesCompleted,
       };
     });
 

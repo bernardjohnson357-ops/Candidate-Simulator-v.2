@@ -37,7 +37,7 @@ export function DynamicModule2Quiz({
     setCompleted(true);
 
     // Advance to a placeholder next stage
-    setCurrentModule("Finished"); // or any string that indicates the end
+    setCurrentModule("GeneralElection"); // or any string that indicates the end
   };
 
   if (completed && result) {

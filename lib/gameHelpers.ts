@@ -17,15 +17,13 @@ export async function applyGameChanges(
   };
 
   const newState: GameState = {
-    ...state,
-    currentModule: changes.currentModule ?? state.currentModule,
-    candidateCoins: state.candidateCoins + (changes.candidateCoins ?? 0),
-    signatures: state.signatures + (changes.signatures ?? 0),
-    voterApproval:
-      changes.voterApproval !== undefined
-        ? changes.voterApproval
-        : state.voterApproval,
-  };
+  currentModule: changes.currentModule ?? state.currentModule,
+  candidateCoins: state.candidateCoins + (changes.candidateCoins ?? 0),
+  signatures: state.signatures + (changes.signatures ?? 0),
+  voterApproval: state.voterApproval + (changes.voterApproval ?? 0),
+  currentTaskIndex: state.currentTaskIndex ?? 0,
+  quizzesCompleted: state.quizzesCompleted ?? [],
+};
 
   // Automatically convert signatures → voter approval
   if (changes.signatures) {

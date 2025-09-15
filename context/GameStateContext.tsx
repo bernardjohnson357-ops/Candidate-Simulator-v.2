@@ -15,7 +15,7 @@ export function GameStateProvider({ children }: { children: ReactNode }) {
     cc: 50,
     signatures: 0,
     voterApproval: 0,
-    currentModule: "0",
+    currentModule: "0", // Start at Orientation
     branch: null,
     quizzesCompleted: [],
   });

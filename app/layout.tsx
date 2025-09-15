@@ -1,10 +1,6 @@
 // app/layout.tsx
-import { GameStateProvider } from "@/context/GameStateContext";
+import "@/styles/globals.css";
 
-export default function RootLayout({ children }) {
-  return (
-    <GameStateProvider>
-      {children}
-    </GameStateProvider>
-  );
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return <html><body>{children}</body></html>;
 }

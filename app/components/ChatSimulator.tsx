@@ -40,7 +40,7 @@ export default function ChatSimulator() {
       )}
 
       <div style={{ marginTop: "1rem" }}>
-        <p>CC: {state.candidateCoin}</p>
+        <p>CC: {state.candidateCoins}</p>
         <p>Signatures: {state.signatures}</p>
         <p>Voter Approval: {state.voterApproval.toFixed(1)}%</p>
       </div>

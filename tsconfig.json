@@ -17,7 +17,7 @@
     "paths": {
       "@/components/*": ["app/components/*"],
       "@/hooks/*": ["app/hooks/*"],
-      "@/types/*": ["app/types/*"],
+      "@/types/*": ["/types/index.ts*"],
       "@/context/*": ["app/context/*"],
       "@/app/*": ["app/*"]
     }

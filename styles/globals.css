@@ -1,66 +1,7 @@
-/* globals.css */
-body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
-  background-color: #f3f4f6;
-  color: #1f2937;
-}
-
-/* Card component */
-.card {
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  background-color: #fff;
-  margin-bottom: 16px;
-}
-
-/* Input and buttons */
-.input-container {
-  display: flex;
-  width: 100%;
-  margin-top: 8px;
-}
-
-.input-box {
-  flex-grow: 1;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 8px 0 0 8px;
-}
-
-.send-btn {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 0 8px 8px 0;
-  background-color: #2563eb;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-/* Chat messages */
-.chat-box {
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 8px;
-  background-color: #fff;
-  width: 100%;
-}
-
-.ai-msg {
-  color: #1e40af;
-}
-
-.user-msg {
-  color: #374151;
-}
-
-/* Status bar */
-.status-bar {
-  margin-top: 8px;
-  font-size: 0.875rem;
-  color: #4b5563;
-}
+/* app/styles/globals.css */
+body { margin: 0; font-family: sans-serif; background: #f7f7f7; }
+.chat-container { display: flex; flex-direction: column; padding: 1rem; max-height: 80vh; overflow-y: auto; }
+.chat-bubble { padding: 10px; margin: 5px; border-radius: 10px; max-width: 70%; }
+.chat-bubble.ai { background-color: #e2e2e2; align-self: flex-start; }
+.chat-bubble.user { background-color: #0070f3; color: white; align-self: flex-end; }
+.quiz-container button { margin: 5px; padding: 5px 10px; }

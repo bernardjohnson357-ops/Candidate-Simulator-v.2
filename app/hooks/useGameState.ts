@@ -1,7 +1,7 @@
 // app/hooks/useGameState.ts
 import { useState } from "react";
-import { GameState } from "../../types"; // adjust path if needed
-import { tasks as allTasks } from "../../data/tasks"; // import tasks
+import { GameState } from "../../types"; // adjust if needed
+import { tasks as allTasks } from "../../data/tasks";
 
 // -----------------------------
 // Type for partial updates
@@ -54,16 +54,11 @@ export function useGameState() {
     }
   };
 
-  // ✅ Only one return
+  // ✅ Single return — no duplicate / extra braces
   return {
     state,
     setState: modifyState,
     tasks: allTasks,
     handleTaskCompletion,
-  };
-}
-  return {
-    state,
-    setState: modifyState,
   };
 }

@@ -54,21 +54,14 @@ export function useGameState() {
     }
   };
 
+  // ✅ Only one return
   return {
     state,
     setState: modifyState,
-    tasks: allTasks,              // ✅ now available in ChatSimulator
-    handleTaskCompletion,         // ✅ now available in ChatSimulator
+    tasks: allTasks,
+    handleTaskCompletion,
   };
 }
-  return {
-    state,
-    setState: modifyState,
-    tasks: allTasks,              // <-- include tasks here
-    handleTaskCompletion,         // <-- include handler here
-  };
-}
-
   return {
     state,
     setState: modifyState,

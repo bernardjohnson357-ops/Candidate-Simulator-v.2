@@ -14,14 +14,14 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "baseUrl": ".",
-    "paths": {
-      "@/components/*": ["app/components/*"],
-      "@/hooks/*": ["app/hooks/*"],
-      "@/types/*": ["/types/index.ts*"],
-      "@/context/*": ["app/context/*"],
-      "@/app/*": ["app/*"]
-      "@quizzes/*": ["./quizzes/*"]
-    }
+   "paths": {
+  "@/components/*": ["app/components/*"],
+  "@/hooks/*": ["app/hooks/*"],
+  "@/types/*": ["types/*"],
+  "@/context/*": ["app/context/*"],
+  "@/app/*": ["app/*"],
+  "@quizzes/*": ["quizzes/*"]
+}
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

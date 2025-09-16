@@ -1,13 +1,28 @@
-// app/components/ChatSimulator.tsx
 "use client";
 
 import { useState, useEffect } from "react";
-import { Quiz } from "./Quiz";
 
-// Instead of importing Markdown, just fetch text from a local API or inline string
-const ORIENTATION_TEXT = `### 🗳 Candidate Simulator Orientation
-Welcome to the Candidate Simulator!`;
+// Minimal Quiz component
+interface QuizProps {
+  question: string;
+  options: string[];
+  correctAnswer: string;
+  signatureValue?: number;
+  onAnswer: (answer: string) => void;
+}
 
+export const Quiz: React.FC<QuizProps> = ({ question, options, onAnswer }) => (
+  <div className="quiz-container">
+    <p>{question}</p>
+    {options.map((opt, idx) => (
+      <button key={idx} onClick={() => onAnswer(opt)}>
+        {opt}
+      </button>
+    ))}
+  </div>
+);
+
+// Module type
 interface Module {
   question: string;
   options: string[];
@@ -17,7 +32,8 @@ interface Module {
   choices?: string[];
 }
 
-const ChatSimulator = () => {
+// ChatSimulator component
+const ChatSimulator: React.FC = () => {
   const [chatHistory, setChatHistory] = useState<string[]>([]);
   const [currentModule, setCurrentModule] = useState<Module | null>(null);
   const [CC, setCC] = useState(50);
@@ -26,20 +42,21 @@ const ChatSimulator = () => {
   const [moduleIndex, setModuleIndex] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  // AI generates quiz from text
+  const MODULES_TEXT = [
+    `### Module 0: Orientation
+Welcome to the Candidate Simulator! Read carefully and prepare for your first quiz.`,
+    `### Module 1
+Next module content here...`,
+    // Add more module text as needed
+  ];
+
   const generateQuiz = async (moduleText: string): Promise<Module> => {
     setLoading(true);
 
     const prompt = `
-      You are the Candidate Simulator AI. Generate a quiz from the following module content.
-      Provide:
-        - question
-        - options (multiple choice)
-        - correctAnswer
-        - signatureValue (optional)
-        - scenarioText (optional)
-        - choices (optional)
-      Module content:
+      You are the Candidate Simulator AI. Generate a quiz from this module content.
+      Provide question, multiple-choice options, correctAnswer, signatureValue.
+      Module text:
       ${moduleText}
     `;
 
@@ -47,6 +64,7 @@ const ChatSimulator = () => {
       method: "POST",
       body: JSON.stringify({ prompt }),
     });
+
     const data = await response.json();
     setLoading(false);
     return data as Module;
@@ -54,8 +72,8 @@ const ChatSimulator = () => {
 
   useEffect(() => {
     const loadModule = async () => {
-      const moduleText = moduleIndex === 0 ? ORIENTATION_TEXT : "Next module text here";
-      const generated = await generateQuiz(moduleText);
+      if (moduleIndex >= MODULES_TEXT.length) return;
+      const generated = await generateQuiz(MODULES_TEXT[moduleIndex]);
       setCurrentModule(generated);
     };
     loadModule();
@@ -72,14 +90,14 @@ const ChatSimulator = () => {
       newCC += 1;
       setChatHistory(prev => [
         ...prev,
-        `AI [neutral]: Correct! You earned ${currentModule.signatureValue || 20} signatures and +1 CC.`,
+        `AI: Correct! You earned ${currentModule.signatureValue || 20} signatures and +1 CC.`,
       ]);
     } else {
       newCC -= 1;
       newSignatures -= 50;
       setChatHistory(prev => [
         ...prev,
-        `AI [neutral]: Incorrect. Penalty applied: -1 CC, -50 signatures.`,
+        `AI: Incorrect. Penalty applied: -1 CC, -50 signatures.`,
       ]);
     }
 
@@ -110,7 +128,9 @@ const ChatSimulator = () => {
         <div className="chat-scenario">
           <p>{currentModule.scenarioText}</p>
           {currentModule.choices.map((choice, idx) => (
-            <button key={idx} onClick={() => handleAnswer(choice)}>{choice}</button>
+            <button key={idx} onClick={() => handleAnswer(choice)}>
+              {choice}
+            </button>
           ))}
         </div>
       ) : (

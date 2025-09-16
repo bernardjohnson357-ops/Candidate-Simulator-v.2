@@ -1,4 +1,6 @@
 // app/components/ChatSimulator.tsx
+"use client";
+
 import { useState } from "react";
 import { useGameContext } from "../context/GameContext";
 import { Quiz } from "./Quiz";

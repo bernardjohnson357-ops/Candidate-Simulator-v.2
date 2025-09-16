@@ -1,7 +1,7 @@
 // app/components/Quiz.tsx
 import { useState } from "react";
 import { useGameContext } from "../context/GameContext";
-import { applyQuizResult, advanceModule } from "../lib/simulatorHelpers";
+import { applyQuizResult, advanceModule } from "../../lib/simulatorHelpers";
 
 type QuizProps = {
   question: string;

@@ -23,7 +23,7 @@ export async function getAINarrative(
   const prompt = `
 You are the Candidate Simulator AI. 
 Module text: ${moduleText}
-Current state: CC=${state.cc}, Signatures=${state.signatures}, VoterApproval=${state.voterApproval}, Module=${state.currentModule}
+Current state: CC=${state.CC}, Signatures=${state.signatures}, VoterApproval=${state.voterApproval}, Module=${state.module}
 User input: ${userInput ?? "none"}
 Respond with structured JSON: narrative, optional quiz, CC and signature changes.
 `;

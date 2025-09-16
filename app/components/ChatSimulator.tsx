@@ -5,12 +5,13 @@ import { useState, useEffect } from "react";
 import { useGameContext } from "../context/GameContext";
 import { Quiz } from "./Quiz";
 
-// Import Markdown modules
-import ORIENTATION from '../../ORIENTATION.md';
-import SCRIPT from '../../SCRIPT.md';
-import MASTER_ROADMAP from '../../MASTER_ROADMAP.md';
-import REFERENCE_ROADMAP from '../../REFERENCE_ROADMAP.md';
-import CAMPAIGN_SEQUENCE from '../../CAMPAIGN_SEQUENCE.md';
+// --- Load Markdown as raw text ---
+// The `?raw` suffix tells Next.js / Vite to import the file as a plain string
+import ORIENTATION from '../../ORIENTATION.md?raw';
+import SCRIPT from '../../SCRIPT.md?raw';
+import MASTER_ROADMAP from '../../MASTER_ROADMAP.md?raw';
+import REFERENCE_ROADMAP from '../../REFERENCE_ROADMAP.md?raw';
+import CAMPAIGN_SEQUENCE from '../../CAMPAIGN_SEQUENCE.md?raw';
 
 interface Module {
   question: string;
@@ -27,11 +28,10 @@ const ChatSimulator = () => {
   const [currentModule, setCurrentModule] = useState<Module | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // --- Generate quiz dynamically using AI ---
+  // --- AI-generated quiz ---
   const generateQuiz = async (moduleText: string): Promise<Module> => {
     setLoading(true);
 
-    // Call AI (pseudo-code; replace with your API integration)
     const prompt = `
       You are the Candidate Simulator AI. Generate a quiz from the following module content.
       Provide:
@@ -45,7 +45,7 @@ const ChatSimulator = () => {
       ${moduleText}
     `;
 
-    // Replace with actual API call
+    // Example: replace with your AI API integration
     const response = await fetch("/api/generateQuiz", {
       method: "POST",
       body: JSON.stringify({ prompt }),
@@ -56,18 +56,17 @@ const ChatSimulator = () => {
     return data as Module;
   };
 
-  // --- Load current module ---
+  // --- Load module based on state.module ---
   useEffect(() => {
     const loadModule = async () => {
       let moduleText = "";
 
-      // Determine Markdown content based on module number
       switch (state.module) {
         case 0:
           moduleText = ORIENTATION;
           break;
         default:
-          moduleText = SCRIPT; // fallback or use mapping from MASTER_ROADMAP
+          moduleText = SCRIPT; // or map via MASTER_ROADMAP / CAMPAIGN_SEQUENCE
           break;
       }
 
@@ -110,7 +109,7 @@ const ChatSimulator = () => {
       module: state.module + 1,
     });
 
-    setCurrentModule(null); // trigger reload for next module
+    setCurrentModule(null); // reload next module
   };
 
   const handleScenarioChoice = (choice: string) => {
@@ -124,7 +123,7 @@ const ChatSimulator = () => {
       module: state.module + 1,
     });
 
-    setCurrentModule(null); // trigger reload
+    setCurrentModule(null); // reload next module
   };
 
   if (loading || !currentModule) {
@@ -167,4 +166,5 @@ const ChatSimulator = () => {
   );
 };
 
+export default ChatSimulator;
 export default ChatSimulator;

@@ -2,8 +2,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useGameContext } from "../context/GameContext";
 import { Quiz } from "./Quiz";
+
+// Instead of importing Markdown, just fetch text from a local API or inline string
+const ORIENTATION_TEXT = `### 🗳 Candidate Simulator Orientation
+Welcome to the Candidate Simulator!`;
 
 interface Module {
   question: string;
@@ -14,20 +17,19 @@ interface Module {
   choices?: string[];
 }
 
-interface ChatSimulatorProps {
-  initialModuleText: string;
-  fallbackScriptText: string;
-}
-
-const ChatSimulator: React.FC<ChatSimulatorProps> = ({ initialModuleText, fallbackScriptText }) => {
-  const { state, setState } = useGameContext();
+const ChatSimulator = () => {
   const [chatHistory, setChatHistory] = useState<string[]>([]);
   const [currentModule, setCurrentModule] = useState<Module | null>(null);
+  const [CC, setCC] = useState(50);
+  const [signatures, setSignatures] = useState(0);
+  const [voterApproval, setVoterApproval] = useState(0);
+  const [moduleIndex, setModuleIndex] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  // --- AI-generated quiz ---
+  // AI generates quiz from text
   const generateQuiz = async (moduleText: string): Promise<Module> => {
     setLoading(true);
+
     const prompt = `
       You are the Candidate Simulator AI. Generate a quiz from the following module content.
       Provide:
@@ -45,27 +47,25 @@ const ChatSimulator: React.FC<ChatSimulatorProps> = ({ initialModuleText, fallba
       method: "POST",
       body: JSON.stringify({ prompt }),
     });
-
     const data = await response.json();
     setLoading(false);
     return data as Module;
   };
 
-  // --- Load current module ---
   useEffect(() => {
     const loadModule = async () => {
-      let moduleText = state.module === 0 ? initialModuleText : fallbackScriptText;
+      const moduleText = moduleIndex === 0 ? ORIENTATION_TEXT : "Next module text here";
       const generated = await generateQuiz(moduleText);
       setCurrentModule(generated);
     };
     loadModule();
-  }, [state.module, initialModuleText, fallbackScriptText]);
+  }, [moduleIndex]);
 
-  const handleQuizAnswer = (answer: string) => {
+  const handleAnswer = (answer: string) => {
     if (!currentModule) return;
 
-    let newCC = state.CC;
-    let newSignatures = state.signatures;
+    let newCC = CC;
+    let newSignatures = signatures;
 
     if (answer === currentModule.correctAnswer) {
       newSignatures += currentModule.signatureValue || 20;
@@ -83,36 +83,14 @@ const ChatSimulator: React.FC<ChatSimulatorProps> = ({ initialModuleText, fallba
       ]);
     }
 
-    const newVoterApproval = newSignatures * 0.0001;
-
-    setState({
-      ...state,
-      CC: newCC,
-      signatures: newSignatures,
-      voterApproval: newVoterApproval,
-      module: state.module + 1,
-    });
-
+    setCC(newCC);
+    setSignatures(newSignatures);
+    setVoterApproval(newSignatures * 0.0001);
+    setModuleIndex(moduleIndex + 1);
     setCurrentModule(null);
   };
 
-  const handleScenarioChoice = (choice: string) => {
-    setChatHistory(prev => [
-      ...prev,
-      `AI [neutral]: You chose "${choice}". Consequences applied per simulator rules.`,
-    ]);
-
-    setState({
-      ...state,
-      module: state.module + 1,
-    });
-
-    setCurrentModule(null);
-  };
-
-  if (loading || !currentModule) {
-    return <div className="chat-bubble ai">Loading module...</div>;
-  }
+  if (loading || !currentModule) return <div className="chat-bubble ai">Loading module...</div>;
 
   return (
     <div className="chat-container">
@@ -126,25 +104,21 @@ const ChatSimulator: React.FC<ChatSimulatorProps> = ({ initialModuleText, fallba
           options={currentModule.options}
           correctAnswer={currentModule.correctAnswer}
           signatureValue={currentModule.signatureValue || 20}
-          onAnswer={handleQuizAnswer}
+          onAnswer={handleAnswer}
         />
       ) : currentModule.scenarioText && currentModule.choices ? (
         <div className="chat-scenario">
           <p>{currentModule.scenarioText}</p>
           {currentModule.choices.map((choice, idx) => (
-            <button key={idx} onClick={() => handleScenarioChoice(choice)}>
-              {choice}
-            </button>
+            <button key={idx} onClick={() => handleAnswer(choice)}>{choice}</button>
           ))}
         </div>
       ) : (
-        <div className="chat-bubble ai">
-          {currentModule.scenarioText || "Module content unavailable."}
-        </div>
+        <div className="chat-bubble ai">Module content unavailable.</div>
       )}
 
       <div className="chat-status">
-        <p>CC: {state.CC} | Signatures: {state.signatures} | Voter Approval: {(state.voterApproval * 100).toFixed(2)}%</p>
+        <p>CC: {CC} | Signatures: {signatures} | Voter Approval: {(voterApproval * 100).toFixed(2)}%</p>
       </div>
     </div>
   );

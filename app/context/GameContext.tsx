@@ -1,4 +1,6 @@
 // app/context/GameContext.tsx
+"use client";
+
 import { createContext, useContext, useState, ReactNode } from "react";
 
 export type GameState = {
@@ -42,6 +44,8 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
 
 export const useGameContext = () => {
   const context = useContext(GameContext);
-  if (!context) throw new Error("useGameContext must be used within GameProvider");
+  if (!context) {
+    throw new Error("useGameContext must be used within a GameProvider");
+  }
   return context;
 };

@@ -1,5 +1,5 @@
 // app/layout.tsx
-import "./styles/globals.css";
+import "../styles/globals.css";
 import { ReactNode } from "react";
 import { GameProvider } from "./context/GameContext";
 
@@ -12,9 +12,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <GameProvider>
-          {children}
-        </GameProvider>
+        <GameProvider>{children}</GameProvider>
       </body>
     </html>
   );

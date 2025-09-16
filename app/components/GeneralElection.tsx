@@ -1,6 +1,6 @@
 "use client";
 
-import { useGameState } from "@/context/GameStateContext";
+import { useGameState } from "@/context/GameContext";
 
 export default function GeneralElection() {
   const { cc, signatures, voterApproval } = useGameState();

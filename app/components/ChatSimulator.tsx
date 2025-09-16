@@ -4,7 +4,7 @@ import { useGameContext } from "../context/GameContext";
 import { Quiz } from "./Quiz";
 import referenceRoadmap from "../../config/reference_roadmap.json";
 
-export const ChatSimulator = () => {
+const ChatSimulator = () => {
   const { state } = useGameContext();
   const [chatHistory, setChatHistory] = useState<string[]>([]);
 
@@ -26,3 +26,5 @@ export const ChatSimulator = () => {
     </div>
   );
 };
+
+export default ChatSimulator;

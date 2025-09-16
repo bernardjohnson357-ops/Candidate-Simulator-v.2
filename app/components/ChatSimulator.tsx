@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useGameContext } from "../context/GameContext";
 import { Quiz } from "./Quiz";
-import referenceRoadmap from "../config/reference_roadmap.json";
+import referenceRoadmap from "../../config/reference_roadmap.json";
 
 export const ChatSimulator = () => {
   const { state } = useGameContext();

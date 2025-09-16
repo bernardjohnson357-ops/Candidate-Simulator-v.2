@@ -1,89 +1,103 @@
 // app/components/ChatSimulator.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGameContext } from "../context/GameContext";
 import { Quiz } from "./Quiz";
-import referenceRoadmapData from "../../config/reference_roadmap.json";
 
-// --- Type Definitions ---
+// Import Markdown modules
+import ORIENTATION from '../../ORIENTATION.md';
+import SCRIPT from '../../SCRIPT.md';
+import MASTER_ROADMAP from '../../MASTER_ROADMAP.md';
+import REFERENCE_ROADMAP from '../../REFERENCE_ROADMAP.md';
+import CAMPAIGN_SEQUENCE from '../../CAMPAIGN_SEQUENCE.md';
+
 interface Module {
-  question?: string;
-  options?: string[];
-  correctAnswer?: string;
+  question: string;
+  options: string[];
+  correctAnswer: string;
   signatureValue?: number;
   scenarioText?: string;
   choices?: string[];
 }
 
-interface ReferenceRoadmap {
-  modules: Record<string, Module>;
-}
-
-interface GameState {
-  module: number; // numeric index
-  CC: number;
-  signatures: number;
-  voterApproval: number;
-  path: "Independent" | "Party" | "Write-In";
-}
-
-// --- Module Mapping (numeric state.module → JSON key) ---
-const moduleMap: Record<number, string> = {
-  0: "0",
-  1: "1A",
-  2: "2A",
-  3: "1B",
-  4: "2B",
-  5: "3",
-  6: "4",
-  7: "5",
-  8: "6",
-  9: "7",
-  10: "8",
-  11: "9",
-  12: "10",
-  13: "11",
-  14: "12",
-  15: "13",
-  // add remaining mappings up to module 15 as needed
-};
-
-const referenceRoadmap: ReferenceRoadmap = referenceRoadmapData;
-
-// --- Chat Simulator Component ---
 const ChatSimulator = () => {
   const { state, setState } = useGameContext();
   const [chatHistory, setChatHistory] = useState<string[]>([]);
+  const [currentModule, setCurrentModule] = useState<Module | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const moduleKey = moduleMap[state.module];
-  const currentModule = moduleKey ? referenceRoadmap.modules[moduleKey] : null;
+  // --- Generate quiz dynamically using AI ---
+  const generateQuiz = async (moduleText: string): Promise<Module> => {
+    setLoading(true);
 
-  if (!currentModule) {
-    return <div className="chat-bubble ai">Simulation complete!</div>;
-  }
+    // Call AI (pseudo-code; replace with your API integration)
+    const prompt = `
+      You are the Candidate Simulator AI. Generate a quiz from the following module content.
+      Provide:
+        - question
+        - options (multiple choice)
+        - correctAnswer
+        - signatureValue (optional)
+        - scenarioText (optional)
+        - choices (optional)
+      Module content:
+      ${moduleText}
+    `;
+
+    // Replace with actual API call
+    const response = await fetch("/api/generateQuiz", {
+      method: "POST",
+      body: JSON.stringify({ prompt }),
+    });
+    const data = await response.json();
+
+    setLoading(false);
+    return data as Module;
+  };
+
+  // --- Load current module ---
+  useEffect(() => {
+    const loadModule = async () => {
+      let moduleText = "";
+
+      // Determine Markdown content based on module number
+      switch (state.module) {
+        case 0:
+          moduleText = ORIENTATION;
+          break;
+        default:
+          moduleText = SCRIPT; // fallback or use mapping from MASTER_ROADMAP
+          break;
+      }
+
+      const generated = await generateQuiz(moduleText);
+      setCurrentModule(generated);
+    };
+
+    loadModule();
+  }, [state.module]);
 
   const handleQuizAnswer = (answer: string) => {
+    if (!currentModule) return;
+
     let newCC = state.CC;
     let newSignatures = state.signatures;
 
-    // Evaluate multiple-choice
-    if (currentModule.correctAnswer) {
-      if (answer === currentModule.correctAnswer) {
-        newSignatures += currentModule.signatureValue || 20;
-        newCC += 1; // bonus CC for >=80%
-        setChatHistory(prev => [
-          ...prev,
-          `AI [neutral]: Correct! You earned ${currentModule.signatureValue || 20} signatures and +1 CC.`,
-        ]);
-      } else {
-        newCC -= 1;
-        newSignatures -= 50;
-        setChatHistory(prev => [
-          ...prev,
-          `AI [neutral]: Incorrect. Penalty applied: -1 CC, -50 signatures.`,
-        ]);
-      }
+    if (answer === currentModule.correctAnswer) {
+      newSignatures += currentModule.signatureValue || 20;
+      newCC += 1;
+      setChatHistory(prev => [
+        ...prev,
+        `AI [neutral]: Correct! You earned ${currentModule.signatureValue || 20} signatures and +1 CC.`,
+      ]);
+    } else {
+      newCC -= 1;
+      newSignatures -= 50;
+      setChatHistory(prev => [
+        ...prev,
+        `AI [neutral]: Incorrect. Penalty applied: -1 CC, -50 signatures.`,
+      ]);
     }
 
     const newVoterApproval = newSignatures * 0.0001;
@@ -95,10 +109,11 @@ const ChatSimulator = () => {
       voterApproval: newVoterApproval,
       module: state.module + 1,
     });
+
+    setCurrentModule(null); // trigger reload for next module
   };
 
   const handleScenarioChoice = (choice: string) => {
-    // Simple placeholder: increment module, update chat
     setChatHistory(prev => [
       ...prev,
       `AI [neutral]: You chose "${choice}". Consequences applied per simulator rules.`,
@@ -108,7 +123,13 @@ const ChatSimulator = () => {
       ...state,
       module: state.module + 1,
     });
+
+    setCurrentModule(null); // trigger reload
   };
+
+  if (loading || !currentModule) {
+    return <div className="chat-bubble ai">Loading module...</div>;
+  }
 
   return (
     <div className="chat-container">
@@ -120,7 +141,7 @@ const ChatSimulator = () => {
         <Quiz
           question={currentModule.question}
           options={currentModule.options}
-          correctAnswer={currentModule.correctAnswer || ""}
+          correctAnswer={currentModule.correctAnswer}
           signatureValue={currentModule.signatureValue || 20}
           onAnswer={handleQuizAnswer}
         />

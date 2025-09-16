@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { GameState } from "@/context/GameStateContext";
+import { GameState } from "@/context/GameContext";
 
 export interface AIResponse {
   narrative: string;

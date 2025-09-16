@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
-// Minimal Quiz component
+// --- Quiz Component ---
 interface QuizProps {
   question: string;
   options: string[];
@@ -11,18 +11,28 @@ interface QuizProps {
   onAnswer: (answer: string) => void;
 }
 
-export const Quiz: React.FC<QuizProps> = ({ question, options, onAnswer }) => (
+const Quiz: React.FC<QuizProps> = ({
+  question,
+  options,
+  onAnswer,
+}) => (
   <div className="quiz-container">
-    <p>{question}</p>
-    {options.map((opt, idx) => (
-      <button key={idx} onClick={() => onAnswer(opt)}>
-        {opt}
-      </button>
-    ))}
+    <p className="mb-4">{question}</p>
+    <div className="flex flex-col gap-2">
+      {options.map((opt, idx) => (
+        <button
+          key={idx}
+          onClick={() => onAnswer(opt)}
+          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+        >
+          {opt}
+        </button>
+      ))}
+    </div>
   </div>
 );
 
-// Module type
+// --- Module type ---
 interface Module {
   question: string;
   options: string[];
@@ -32,7 +42,7 @@ interface Module {
   choices?: string[];
 }
 
-// ChatSimulator component
+// --- ChatSimulator ---
 const ChatSimulator: React.FC = () => {
   const [chatHistory, setChatHistory] = useState<string[]>([]);
   const [currentModule, setCurrentModule] = useState<Module | null>(null);
@@ -40,44 +50,39 @@ const ChatSimulator: React.FC = () => {
   const [signatures, setSignatures] = useState(0);
   const [voterApproval, setVoterApproval] = useState(0);
   const [moduleIndex, setModuleIndex] = useState(0);
-  const [loading, setLoading] = useState(false);
 
+  // Mock module text
   const MODULES_TEXT = [
-    `### Module 0: Orientation
-Welcome to the Candidate Simulator! Read carefully and prepare for your first quiz.`,
-    `### Module 1
-Next module content here...`,
-    // Add more module text as needed
+    "Welcome to Candidate Simulator. Orientation module.",
+    "Module 1: Filing requirements and ballot access.",
   ];
 
-  const generateQuiz = async (moduleText: string): Promise<Module> => {
-    setLoading(true);
-
-    const prompt = `
-      You are the Candidate Simulator AI. Generate a quiz from this module content.
-      Provide question, multiple-choice options, correctAnswer, signatureValue.
-      Module text:
-      ${moduleText}
-    `;
-
-    const response = await fetch("/api/generateQuiz", {
-      method: "POST",
-      body: JSON.stringify({ prompt }),
-    });
-
-    const data = await response.json();
-    setLoading(false);
-    return data as Module;
+  // Mock quiz generator
+  const generateQuiz = (moduleText: string): Module => {
+    if (moduleIndex === 0) {
+      return {
+        question: "What is the purpose of this simulator?",
+        options: ["Entertainment", "Campaign training", "Cooking lessons"],
+        correctAnswer: "Campaign training",
+        signatureValue: 50,
+      };
+    }
+    return {
+      question: "What is required to file as an independent candidate?",
+      options: [
+        "Pay the fee or gather enough signatures",
+        "Only announce on social media",
+        "Nothing, anyone can run",
+      ],
+      correctAnswer: "Pay the fee or gather enough signatures",
+      signatureValue: 100,
+    };
   };
 
-  useEffect(() => {
-    const loadModule = async () => {
-      if (moduleIndex >= MODULES_TEXT.length) return;
-      const generated = await generateQuiz(MODULES_TEXT[moduleIndex]);
-      setCurrentModule(generated);
-    };
-    loadModule();
-  }, [moduleIndex]);
+  // Load module quiz
+  if (!currentModule && moduleIndex < MODULES_TEXT.length) {
+    setCurrentModule(generateQuiz(MODULES_TEXT[moduleIndex]));
+  }
 
   const handleAnswer = (answer: string) => {
     if (!currentModule) return;
@@ -90,14 +95,14 @@ Next module content here...`,
       newCC += 1;
       setChatHistory(prev => [
         ...prev,
-        `AI: Correct! You earned ${currentModule.signatureValue || 20} signatures and +1 CC.`,
+        `✅ Correct! +${currentModule.signatureValue || 20} signatures, +1 CC`,
       ]);
     } else {
       newCC -= 1;
-      newSignatures -= 50;
+      newSignatures = Math.max(0, newSignatures - 50);
       setChatHistory(prev => [
         ...prev,
-        `AI: Incorrect. Penalty applied: -1 CC, -50 signatures.`,
+        `❌ Incorrect. Penalty: -1 CC, -50 signatures`,
       ]);
     }
 
@@ -108,37 +113,32 @@ Next module content here...`,
     setCurrentModule(null);
   };
 
-  if (loading || !currentModule) return <div className="chat-bubble ai">Loading module...</div>;
+  if (moduleIndex >= MODULES_TEXT.length) {
+    return <div className="chat-bubble ai">🎉 Simulation complete!</div>;
+  }
 
   return (
-    <div className="chat-container">
+    <div className="chat-container space-y-4">
       {chatHistory.map((msg, idx) => (
-        <div key={idx} className="chat-bubble user">{msg}</div>
+        <div key={idx} className="chat-bubble ai">
+          {msg}
+        </div>
       ))}
 
-      {currentModule.question && currentModule.options ? (
+      {currentModule && (
         <Quiz
           question={currentModule.question}
           options={currentModule.options}
           correctAnswer={currentModule.correctAnswer}
-          signatureValue={currentModule.signatureValue || 20}
+          signatureValue={currentModule.signatureValue}
           onAnswer={handleAnswer}
         />
-      ) : currentModule.scenarioText && currentModule.choices ? (
-        <div className="chat-scenario">
-          <p>{currentModule.scenarioText}</p>
-          {currentModule.choices.map((choice, idx) => (
-            <button key={idx} onClick={() => handleAnswer(choice)}>
-              {choice}
-            </button>
-          ))}
-        </div>
-      ) : (
-        <div className="chat-bubble ai">Module content unavailable.</div>
       )}
 
-      <div className="chat-status">
-        <p>CC: {CC} | Signatures: {signatures} | Voter Approval: {(voterApproval * 100).toFixed(2)}%</p>
+      <div className="chat-status mt-4 text-sm">
+        <p>💰 CC: {CC}</p>
+        <p>🖊️ Signatures: {signatures}</p>
+        <p>📊 Voter Approval: {(voterApproval * 100).toFixed(2)}%</p>
       </div>
     </div>
   );

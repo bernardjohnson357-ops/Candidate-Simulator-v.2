@@ -6,13 +6,13 @@ import { useGameContext } from "../context/GameContext";
 import { Quiz } from "./Quiz";
 
 // --- Load Markdown as raw text ---
-// The `?raw` suffix tells Next.js / Vite to import the file as a plain string
 import ORIENTATION from '../../ORIENTATION.md?raw';
 import SCRIPT from '../../SCRIPT.md?raw';
 import MASTER_ROADMAP from '../../MASTER_ROADMAP.md?raw';
 import REFERENCE_ROADMAP from '../../REFERENCE_ROADMAP.md?raw';
 import CAMPAIGN_SEQUENCE from '../../CAMPAIGN_SEQUENCE.md?raw';
 
+// --- Module type for AI-generated quizzes ---
 interface Module {
   question: string;
   options: string[];
@@ -22,6 +22,7 @@ interface Module {
   choices?: string[];
 }
 
+// --- Main Chat Simulator component ---
 const ChatSimulator = () => {
   const { state, setState } = useGameContext();
   const [chatHistory, setChatHistory] = useState<string[]>([]);
@@ -45,18 +46,18 @@ const ChatSimulator = () => {
       ${moduleText}
     `;
 
-    // Example: replace with your AI API integration
+    // Replace this with your actual API call to OpenAI or AI backend
     const response = await fetch("/api/generateQuiz", {
       method: "POST",
       body: JSON.stringify({ prompt }),
     });
-    const data = await response.json();
 
+    const data = await response.json();
     setLoading(false);
     return data as Module;
   };
 
-  // --- Load module based on state.module ---
+  // --- Load current module based on state.module ---
   useEffect(() => {
     const loadModule = async () => {
       let moduleText = "";
@@ -66,7 +67,7 @@ const ChatSimulator = () => {
           moduleText = ORIENTATION;
           break;
         default:
-          moduleText = SCRIPT; // or map via MASTER_ROADMAP / CAMPAIGN_SEQUENCE
+          moduleText = SCRIPT; // fallback or map via MASTER_ROADMAP
           break;
       }
 
@@ -77,6 +78,7 @@ const ChatSimulator = () => {
     loadModule();
   }, [state.module]);
 
+  // --- Quiz answer handler ---
   const handleQuizAnswer = (answer: string) => {
     if (!currentModule) return;
 
@@ -109,9 +111,10 @@ const ChatSimulator = () => {
       module: state.module + 1,
     });
 
-    setCurrentModule(null); // reload next module
+    setCurrentModule(null); // trigger reload
   };
 
+  // --- Scenario choice handler ---
   const handleScenarioChoice = (choice: string) => {
     setChatHistory(prev => [
       ...prev,
@@ -123,13 +126,15 @@ const ChatSimulator = () => {
       module: state.module + 1,
     });
 
-    setCurrentModule(null); // reload next module
+    setCurrentModule(null); // trigger reload
   };
 
+  // --- Loading state ---
   if (loading || !currentModule) {
     return <div className="chat-bubble ai">Loading module...</div>;
   }
 
+  // --- Render ---
   return (
     <div className="chat-container">
       {chatHistory.map((msg, idx) => (
@@ -166,5 +171,4 @@ const ChatSimulator = () => {
   );
 };
 
-export default ChatSimulator;
 export default ChatSimulator;

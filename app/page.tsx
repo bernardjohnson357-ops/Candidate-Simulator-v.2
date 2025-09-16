@@ -1,6 +1,11 @@
 // app/page.tsx
-import ChatSimulator from "./components/ChatSimulator";
+import ChatSimulator from './components/ChatSimulator';
 
 export default function Page() {
-  return <ChatSimulator />;
+  return (
+    <main>
+      <h1>Candidate Simulator</h1>
+      <ChatSimulator /> {/* ✅ render as a component */}
+    </main>
+  );
 }

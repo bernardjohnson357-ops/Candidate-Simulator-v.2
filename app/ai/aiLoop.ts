@@ -1,58 +1,72 @@
 // app/ai/aiLoop.ts
-import { modules, Module, Task } from "./moduleLogic";
+"use client";
 
-export interface GameState {
-  currentModuleIndex: number;
-  currentTaskIndex: number;
-  CC: number;
-  signatures: number;
-  voterApproval: number;
-}
+import React, { useState } from "react";
+import { initialState, runAIModule, GameState } from "./ai/aiLoop";
 
-export const initialState: GameState = {
-  currentModuleIndex: 0,
-  currentTaskIndex: 0,
-  CC: 50,
-  signatures: 0,
-  voterApproval: 0,
+let gameState: GameState = { ...initialState };
+
+const Page: React.FC = () => {
+  const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]);
+  const [input, setInput] = useState("");
+
+  const handleSend = async () => {
+    if (!input.trim()) return;
+
+    setMessages((prev) => [...prev, { sender: "User", text: input }]);
+
+    const result = await runAIModule(gameState, input);
+    gameState = result.state;
+
+    setMessages((prev) => [...prev, { sender: "AI", text: result.aiResponse }]);
+    setInput("");
+  };
+
+  return (
+    <div style={{ maxWidth: 600, width: "100%", margin: "2rem auto" }}>
+      <h1 style={{ textAlign: "center" }}>Candidate Simulator AI</h1>
+      <div
+        style={{
+          border: "1px solid #ccc",
+          borderRadius: 8,
+          padding: "1rem",
+          height: "60vh",
+          overflowY: "auto",
+          marginBottom: "1rem",
+          backgroundColor: "#fff",
+        }}
+      >
+        {messages.map((msg, idx) => (
+          <div key={idx} style={{ marginBottom: 8 }}>
+            <strong>{msg.sender}: </strong>
+            <span>{msg.text}</span>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ display: "flex", gap: 8 }}>
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          style={{ flex: 1, padding: "0.5rem", borderRadius: 4, border: "1px solid #ccc" }}
+          placeholder="Type your action..."
+        />
+        <button
+          onClick={handleSend}
+          style={{
+            padding: "0.5rem 1rem",
+            borderRadius: 4,
+            border: "none",
+            backgroundColor: "#2563eb",
+            color: "#fff",
+          }}
+        >
+          Send
+        </button>
+      </div>
+    </div>
+  );
 };
 
-export async function runAIModule(state: GameState, userInput: string) {
-  const currentModule: Module = modules[state.currentModuleIndex];
-  const task: Task = currentModule.tasks[state.currentTaskIndex];
-
-  let aiResponse = `Module: ${currentModule.title}\nTask: ${task.prompt}\n`;
-
-  if (task.type === "quiz" && task.correctAnswer) {
-    if (userInput.trim().toLowerCase() === task.correctAnswer.toLowerCase()) {
-      state.signatures += 50;
-      state.CC += 1;
-      state.voterApproval += 0.5;
-      aiResponse += "✅ Correct! +50 signatures, +1 CC, +0.5% approval.\n";
-    } else {
-      state.signatures -= 20;
-      aiResponse += "❌ Incorrect. -20 signatures.\n";
-    }
-  }
-
-  if (task.type === "write" || task.type === "read" || task.type === "scenario") {
-    aiResponse += "Task completed.\n";
-  }
-
-  state.currentTaskIndex += 1;
-
-  if (state.currentTaskIndex >= currentModule.tasks.length) {
-    state.currentModuleIndex =
-      state.currentModuleIndex + 1 < modules.length
-        ? state.currentModuleIndex + 1
-        : state.currentModuleIndex;
-    state.currentTaskIndex = 0;
-    aiResponse += `\n➡ Moving to next module: ${modules[state.currentModuleIndex].title}\n`;
-  }
-
-  aiResponse += `Current Stats → CC: ${state.CC}, Signatures: ${state.signatures}, Voter Approval: ${state.voterApproval.toFixed(
-    1
-  )}%`;
-
-  return { state, aiResponse };
-}
+export default Page;

@@ -2,7 +2,6 @@
 "use client";
 
 import React, { useState } from "react";
-import ChatSimulator from "../components/ChatSimulator"; // Optional, can be replaced with inline component
 
 // Example AI loop function (replace with your actual AI logic)
 async function runModuleAI(userInput: string) {
@@ -31,7 +30,7 @@ const Page: React.FC = () => {
   };
 
   return (
-    <div style={{ maxWidth: 600, width: "100%" }}>
+    <div style={{ maxWidth: 600, width: "100%", margin: "2rem auto" }}>
       <h1 style={{ textAlign: "center" }}>Candidate Simulator AI</h1>
       <div
         style={{
@@ -62,7 +61,13 @@ const Page: React.FC = () => {
         />
         <button
           onClick={handleSend}
-          style={{ padding: "0.5rem 1rem", borderRadius: 4, border: "none", backgroundColor: "#2563eb", color: "#fff" }}
+          style={{
+            padding: "0.5rem 1rem",
+            borderRadius: 4,
+            border: "none",
+            backgroundColor: "#2563eb",
+            color: "#fff",
+          }}
         >
           Send
         </button>

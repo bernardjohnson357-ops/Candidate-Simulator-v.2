@@ -1,5 +1,4 @@
 // app/ai/moduleLogic.ts
-
 export interface Module {
   id: string;
   title: string;
@@ -10,12 +9,14 @@ export interface Module {
 export interface Task {
   type: "read" | "write" | "quiz" | "scenario";
   prompt: string;
-  options?: string[];       // for quizzes
-  correctAnswer?: string;   // for quizzes
+  options?: string[];
+  correctAnswer?: string;
 }
 
 // Full 15-module simulator scaffold
 export const modules: Module[] = [
+];
+
   {
     id: "0",
     title: "Orientation & Introduction",

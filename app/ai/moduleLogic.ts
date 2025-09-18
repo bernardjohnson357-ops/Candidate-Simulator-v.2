@@ -17,6 +17,11 @@ export interface Task {
 
 // ✅ Load all module content from JSON
 export const modules: Module[] = (modulesData as any[]).map(m => ({
-  ...m,
-  description: `${m.brief}\n\n${m.detailed}``
+  id: m.id,
+  title: m.title,
+  description: `${m.brief}\n\n${m.detailed}`,
+  tasks: m.tasks.map((t: string) => ({
+    type: t as "read" | "write" | "quiz" | "scenario",
+    prompt: "" // You can later fill in the task-specific prompt
+  }))
 }));

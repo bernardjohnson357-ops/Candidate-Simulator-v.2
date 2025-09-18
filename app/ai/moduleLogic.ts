@@ -15,13 +15,14 @@ export interface Task {
   correctAnswer?: string;
 }
 
-// ✅ Load all module content from JSON with expanded quizzes
+// ✅ Fully expanded modules with multiple tasks and quizzes
 export const modules: Module[] = (modulesData as any[]).map(m => {
   let taskObjects: Task[] = [];
 
   m.tasks.forEach((t: string) => {
     switch (t) {
       case "read":
+        // Single read task per module, can expand if desired
         taskObjects.push({
           type: "read",
           prompt: `Please read the following summary:\n\n${m.brief}`
@@ -29,14 +30,124 @@ export const modules: Module[] = (modulesData as any[]).map(m => {
         break;
 
       case "write":
-        taskObjects.push({
-          type: "write",
-          prompt: `Please respond to the following task:\n\n${m.detailed}`
-        });
+        // Split write tasks into actionable prompts based on module
+        switch (m.id) {
+          case "0": // Orientation
+            taskObjects.push({
+              type: "write",
+              prompt: `Reflect on the simulator rules, scoring, and campaign structure. How will you plan your campaign?`
+            });
+            break;
+          case "3": // First Moves
+            taskObjects.push(
+              {
+                type: "write",
+                prompt: "Decide how to allocate your campaign funds for advertising. Describe your strategy."
+              },
+              {
+                type: "write",
+                prompt: "Plan your travel schedule to key districts. Explain which areas you will prioritize and why."
+              },
+              {
+                type: "write",
+                prompt: "Outline your press outreach plan. How will you engage the media effectively?"
+              }
+            );
+            break;
+          case "4": // Campaign Identity
+            taskObjects.push(
+              {
+                type: "write",
+                prompt: "Draft a campaign slogan that reflects your platform."
+              },
+              {
+                type: "write",
+                prompt: "Write a brief mission statement for your campaign."
+              },
+              {
+                type: "write",
+                prompt: "Prepare your campaign announcement speech. Ensure it aligns with your chosen office and message."
+              }
+            );
+            break;
+          case "5": // Campaign Expansion
+            taskObjects.push(
+              {
+                type: "write",
+                prompt: "Design your campaign visuals (logo, yard signs, T-shirts). Describe your choices."
+              },
+              {
+                type: "write",
+                prompt: "Respond to constituent questions. How will you balance community feedback with campaign priorities?"
+              }
+            );
+            break;
+          case "7": // Early October Ops
+            taskObjects.push(
+              {
+                type: "write",
+                prompt: "Allocate staff resources: door-to-door, fundraising calls, or media prep. Explain your choices."
+              },
+              {
+                type: "write",
+                prompt: "Prepare your community safety speech for local audiences."
+              }
+            );
+            break;
+          case "8": // Mid-October Ops
+            taskObjects.push(
+              {
+                type: "write",
+                prompt: "Answer press questions on healthcare, fiscal ethics, and other current issues."
+              },
+              {
+                type: "write",
+                prompt: "Respond to constituent concerns on fairness, community resources, and policy."
+              }
+            );
+            break;
+          case "9": // Final Push
+            taskObjects.push(
+              {
+                type: "write",
+                prompt: "Prepare for a podcast interview highlighting your top priorities."
+              },
+              {
+                type: "write",
+                prompt: "Plan your final media engagement (ad buy, social media campaign, press release)."
+              },
+              {
+                type: "write",
+                prompt: "Draft a short closing pitch to persuade undecided voters."
+              }
+            );
+            break;
+          case "10": // Election Countdown
+            taskObjects.push(
+              {
+                type: "write",
+                prompt: "Prepare town hall answers for live constituent questions."
+              },
+              {
+                type: "write",
+                prompt: "Engage in rapid-response Q&A to maintain message consistency."
+              },
+              {
+                type: "write",
+                prompt: "Finalize your endgame strategy: ads, ground game, or debate prep."
+              }
+            );
+            break;
+          default:
+            taskObjects.push({
+              type: "write",
+              prompt: `Please respond to the following task:\n\n${m.detailed}`
+            });
+        }
         break;
 
       case "quiz":
-        // Add multiple quiz questions per module
+        // Multiple quiz questions per module
         switch (m.id) {
           case "1A":
             taskObjects.push(
@@ -60,7 +171,6 @@ export const modules: Module[] = (modulesData as any[]).map(m => {
               }
             );
             break;
-
           case "1B":
             taskObjects.push(
               {
@@ -83,7 +193,6 @@ export const modules: Module[] = (modulesData as any[]).map(m => {
               }
             );
             break;
-
           case "2A":
             taskObjects.push(
               {
@@ -106,7 +215,6 @@ export const modules: Module[] = (modulesData as any[]).map(m => {
               }
             );
             break;
-
           case "2B":
             taskObjects.push(
               {
@@ -129,7 +237,6 @@ export const modules: Module[] = (modulesData as any[]).map(m => {
               }
             );
             break;
-
           case "6":
             taskObjects.push(
               {
@@ -152,7 +259,6 @@ export const modules: Module[] = (modulesData as any[]).map(m => {
               }
             );
             break;
-
           default:
             taskObjects.push({
               type: "quiz",
@@ -164,10 +270,28 @@ export const modules: Module[] = (modulesData as any[]).map(m => {
         break;
 
       case "scenario":
-        taskObjects.push({
-          type: "scenario",
-          prompt: `Engage with the following scenario:\n\n${m.detailed}`
-        });
+        // Split scenario tasks into multiple if module mentions multiple actions
+        if (m.id === "6") {
+          taskObjects.push(
+            {
+              type: "scenario",
+              prompt: "Constitution Day outreach: Decide how to engage constituents while remaining compliant."
+            },
+            {
+              type: "scenario",
+              prompt: "Respond to a constituent postcard request. Prioritize your response and explain your approach."
+            },
+            {
+              type: "scenario",
+              prompt: "You are invited to a debate. Decide whether to accept and outline your preparation steps."
+            }
+          );
+        } else {
+          taskObjects.push({
+            type: "scenario",
+            prompt: `Engage with the following scenario:\n\n${m.detailed}`
+          });
+        }
         break;
 
       default:

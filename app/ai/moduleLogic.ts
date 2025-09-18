@@ -1,5 +1,7 @@
 // app/ai/moduleLogic.ts
 
+import modulesData from "../../config/modules.json";
+
 export interface Module {
   id: string;
   title: string;
@@ -14,8 +16,8 @@ export interface Task {
   correctAnswer?: string;
 }
 
-// Full 15-module simulator scaffold
-export const modules: Module[] = [
+// Load modules from JSON
+export const modules: Module[] = modulesData as Module[];
   {
     id: "0",
     title: "Orientation & Introduction",

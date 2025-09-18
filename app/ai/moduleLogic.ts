@@ -16,4 +16,7 @@ export interface Task {
 }
 
 // ✅ Load all module content from JSON
-export const modules: Module[] = modulesData as Module[];
+export const modules: Module[] = (modulesData as any[]).map(m => ({
+  ...m,
+  description: `${m.brief}\n\n${m.detailed}``
+}));

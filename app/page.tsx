@@ -1,13 +1,10 @@
 // app/page.tsx
-import { initialState, runAIModule, GameState } from "../ai/aiLoop";
+"use client";
+
+import React, { useState } from "react";
+import { initialState, runAIModule, GameState } from "./ai/aiLoop"; // ✅ Correct path
 
 let gameState: GameState = { ...initialState };
-
-async function runModuleAI(userInput: string) {
-  const result = await runAIModule(gameState, userInput);
-  gameState = result.state;
-  return result.aiResponse;
-}
 
 const Page: React.FC = () => {
   const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]);
@@ -20,10 +17,11 @@ const Page: React.FC = () => {
     setMessages((prev) => [...prev, { sender: "User", text: input }]);
 
     // Get AI response
-    const aiResponse = await runModuleAI(input);
+    const result = await runAIModule(gameState, input);
+    gameState = result.state;
 
     // Add AI message
-    setMessages((prev) => [...prev, { sender: "AI", text: aiResponse }]);
+    setMessages((prev) => [...prev, { sender: "AI", text: result.aiResponse }]);
 
     // Clear input
     setInput("");

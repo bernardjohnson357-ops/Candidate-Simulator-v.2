@@ -1,0 +1,34 @@
+[
+  {
+    "id": "0",
+    "title": "Orientation & Introduction",
+    "description": "Introduce simulator rules, scoring, and campaign structure.",
+    "tasks": [
+      {
+        "type": "read",
+        "prompt": "Candidates learn about Candidate Coins (CC), signatures, voter approval, and ballot eligibility. This module explains scoring: CC = funds, signatures = grassroots support, approval = polling."
+      },
+      {
+        "type": "write",
+        "prompt": "Declare your candidacy: Are you running for President, Senate, or House?"
+      }
+    ]
+  },
+  {
+    "id": "1A",
+    "title": "Independent / Write-In Filing",
+    "description": "Teach filing requirements for independents and write-ins.",
+    "tasks": [
+      {
+        "type": "read",
+        "prompt": "Independents must submit an Application of Candidacy with the TX Secretary of State. They may pay a filing fee or collect petition signatures. Deadlines differ: May (independent) vs August (write-in)."
+      },
+      {
+        "type": "quiz",
+        "prompt": "Which TWO options are valid ways to file as an independent/write-in candidate?",
+        "options": ["Pay filing fee", "Collect valid signatures", "Skip filing", "Only campaign announcement"],
+        "correctAnswer": "Pay filing fee, Collect valid signatures"
+      }
+    ]
+  }
+]

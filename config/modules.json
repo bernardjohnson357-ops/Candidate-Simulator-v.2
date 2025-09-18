@@ -6,7 +6,7 @@
     "tasks": [
       {
         "type": "read",
-        "prompt": "Candidates learn about Candidate Coins (CC), signatures, voter approval, and ballot eligibility. This module explains scoring: CC = funds, signatures = grassroots support, approval = polling."
+        "prompt": "Welcome to the Federal Candidate Simulator! You'll manage Candidate Coins (CC), signatures, and voter approval. CC = funds, signatures = grassroots support, approval = polling."
       },
       {
         "type": "write",
@@ -21,14 +21,182 @@
     "tasks": [
       {
         "type": "read",
-        "prompt": "Independents must submit an Application of Candidacy with the TX Secretary of State. They may pay a filing fee or collect petition signatures. Deadlines differ: May (independent) vs August (write-in)."
+        "prompt": "Independents and write-ins must file with the Texas Secretary of State. They can either pay a filing fee or collect petition signatures. Deadlines: May (independent) and August (write-in)."
       },
       {
         "type": "quiz",
-        "prompt": "Which TWO options are valid ways to file as an independent/write-in candidate?",
+        "prompt": "Which TWO options are valid ways to file as an independent or write-in candidate?",
         "options": ["Pay filing fee", "Collect valid signatures", "Skip filing", "Only campaign announcement"],
         "correctAnswer": "Pay filing fee, Collect valid signatures"
       }
+    ]
+  },
+  {
+    "id": "1B",
+    "title": "Party Filing",
+    "description": "Teach filing requirements for party candidates.",
+    "tasks": [
+      {
+        "type": "read",
+        "prompt": "Party candidates must be nominated through primaries or conventions, then file with the Secretary of State. They must pay the filing fee or collect valid signatures."
+      },
+      {
+        "type": "quiz",
+        "prompt": "How do party candidates usually secure nomination?",
+        "options": ["Primary", "Convention", "Both", "None"],
+        "correctAnswer": "Both"
+      }
+    ]
+  },
+  {
+    "id": "2A",
+    "title": "Independent FEC Filing Quiz",
+    "description": "Quiz on federal filing rules for independents.",
+    "tasks": [
+      {
+        "type": "quiz",
+        "prompt": "Which FEC form names your treasurer and requires bank account info?",
+        "options": ["Form 1", "Form 2", "Form 3", "Form 4"],
+        "correctAnswer": "Form 2"
+      }
+    ]
+  },
+  {
+    "id": "2B",
+    "title": "Party FEC Filing Quiz",
+    "description": "Quiz on federal filing rules for party candidates.",
+    "tasks": [
+      {
+        "type": "quiz",
+        "prompt": "Which FEC form starts quarterly reporting for party candidates?",
+        "options": ["Form 1", "Form 2", "Form 3", "Form 4"],
+        "correctAnswer": "Form 3"
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "title": "First Moves (Strategy & Spending)",
+    "description": "Practice early campaign decisions and budgeting.",
+    "tasks": [
+      {
+        "type": "write",
+        "prompt": "Plan your first campaign moves: advertising, travel, or press outreach."
+      },
+      {
+        "type": "scenario",
+        "prompt": "AI will evaluate your strategy and update CC, signatures, and approval."
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Campaign Identity",
+    "description": "Define slogans, mission, and public messaging.",
+    "tasks": [
+      { "type": "write", "prompt": "Draft your campaign slogan." },
+      { "type": "write", "prompt": "Write your mission statement." },
+      { "type": "write", "prompt": "Prepare your campaign announcement speech." }
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Campaign Expansion",
+    "description": "Design visuals and expand community outreach.",
+    "tasks": [
+      { "type": "write", "prompt": "Describe your campaign logo, yard signs, or T-shirt design." },
+      { "type": "scenario", "prompt": "Decide how to spend CC on design, volunteers, and endorsements." }
+    ]
+  },
+  {
+    "id": "6",
+    "title": "September Compliance & Scenarios",
+    "description": "Review FEC Form 3, complete compliance quiz, and handle scenarios.",
+    "tasks": [
+      {
+        "type": "quiz",
+        "prompt": "When must FEC Form 3 be filed?",
+        "options": ["Monthly", "Quarterly", "Yearly", "Never"],
+        "correctAnswer": "Quarterly"
+      },
+      {
+        "type": "scenario",
+        "prompt": "Choose how to handle Constitution Day outreach, a constituent postcard, and a debate invitation."
+      }
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Early October Ops",
+    "description": "Manage team, deliver a community safety speech, and respond to weekly news.",
+    "tasks": [
+      { "type": "write", "prompt": "Assign staff to outreach, fundraising, or media prep." },
+      { "type": "write", "prompt": "Deliver a community safety speech." }
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Mid-October Ops",
+    "description": "Practice press conferences and constituent engagement.",
+    "tasks": [
+      { "type": "scenario", "prompt": "Answer questions from reporters and constituents." }
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Final Push",
+    "description": "Manage podcast appearance, media engagement, and final narrative.",
+    "tasks": [
+      { "type": "write", "prompt": "Draft your final campaign message for undecided voters." }
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Election Countdown",
+    "description": "Handle rapid Q&A, town halls, and endgame strategy.",
+    "tasks": [
+      { "type": "scenario", "prompt": "Answer lightning round questions from voters." },
+      { "type": "write", "prompt": "Decide your endgame strategy: ads, ground game, or debate prep." }
+    ]
+  },
+  {
+    "id": "11",
+    "title": "School Visit",
+    "description": "Engage with students, teachers, and parents.",
+    "tasks": [
+      { "type": "write", "prompt": "Deliver a short speech on education and civic engagement." }
+    ]
+  },
+  {
+    "id": "12",
+    "title": "TV Interview",
+    "description": "Prepare for live, high-pressure media questioning.",
+    "tasks": [
+      { "type": "write", "prompt": "Answer journalist questions about your campaign platform." }
+    ]
+  },
+  {
+    "id": "13",
+    "title": "Endorsements",
+    "description": "Weigh benefits and risks of endorsements.",
+    "tasks": [
+      { "type": "scenario", "prompt": "Decide whether to accept or decline endorsements." }
+    ]
+  },
+  {
+    "id": "14",
+    "title": "Debate",
+    "description": "Demonstrate debate readiness.",
+    "tasks": [
+      { "type": "write", "prompt": "Deliver your opening statement and answer 2 debate-style questions." }
+    ]
+  },
+  {
+    "id": "15",
+    "title": "Final Summary",
+    "description": "AI generates a narrative summary of the campaign.",
+    "tasks": [
+      { "type": "scenario", "prompt": "Review your final campaign stats and narrative outcome." }
     ]
   }
 ]

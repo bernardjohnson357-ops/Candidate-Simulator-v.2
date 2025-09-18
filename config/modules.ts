@@ -1,4 +1,5 @@
 // modules.ts
+
 export interface Task {
   type: "read" | "write" | "quiz" | "scenario";
   prompt: string;
@@ -60,4 +61,5 @@ export const modules: Module[] = [
       "https://www.fec.gov/resources/cms-content/documents/policy-guidance/partygui.pdf"
     ]
   }
+  // Continue with modules 2A–15 using the same structure
 ];

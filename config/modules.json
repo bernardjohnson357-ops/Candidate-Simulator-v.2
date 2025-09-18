@@ -2,201 +2,199 @@
   {
     "id": "0",
     "title": "Orientation & Introduction",
-    "description": "Introduce simulator rules, scoring, and campaign structure.",
-    "tasks": [
-      {
-        "type": "read",
-        "prompt": "Welcome to the Federal Candidate Simulator! You'll manage Candidate Coins (CC), signatures, and voter approval. CC = funds, signatures = grassroots support, approval = polling."
-      },
-      {
-        "type": "write",
-        "prompt": "Declare your candidacy: Are you running for President, Senate, or House?"
-      }
-    ]
+    "purpose": "Introduce simulator rules, scoring, and campaign structure.",
+    "brief": "Candidates learn about Candidate Coins (CC), signatures, voter approval, and ballot eligibility. They choose whether to run for President, Senate, or House.",
+    "detailed": "This module serves as the campaign “boot camp.” Players are introduced to the simulator’s scoring system (CC = campaign funds, signatures = grassroots support, voter approval = polling). The AI explains task types (read, write, upload, speak, or button-choice) and how each affects campaign performance. Candidates declare for President, Senate, or House — each with different thresholds for CC and signatures. This decision determines the difficulty of the road ahead.",
+    "tasks": ["read", "write", "speak"],
+    "referenceLinks": []
   },
   {
     "id": "1A",
     "title": "Independent / Write-In Filing",
-    "description": "Teach filing requirements for independents and write-ins.",
-    "tasks": [
-      {
-        "type": "read",
-        "prompt": "Independents and write-ins must file with the Texas Secretary of State. They can either pay a filing fee or collect petition signatures. Deadlines: May (independent) and August (write-in)."
-      },
-      {
-        "type": "quiz",
-        "prompt": "Which TWO options are valid ways to file as an independent or write-in candidate?",
-        "options": ["Pay filing fee", "Collect valid signatures", "Skip filing", "Only campaign announcement"],
-        "correctAnswer": "Pay filing fee, Collect valid signatures"
-      }
+    "purpose": "Teach filing requirements for independents and write-ins.",
+    "brief": "Candidates must file with the Texas Secretary of State, choosing between paying a filing fee or collecting petition signatures. Quiz scores convert into signatures and CC bonuses.",
+    "detailed": "Independents and write-ins must submit an Application of Candidacy with the Secretary of State. They can either pay the filing fee or collect valid signatures (from voters who didn’t vote in another party’s primary). Deadlines differ: independents must file by May, write-ins by August. Candidates learn about disqualification risks, such as missing deadlines or submitting invalid petitions. In the simulator, filing mistakes cost CC, while high quiz performance earns signatures and voter approval. This establishes the first real 'make or break' decision for their campaign.",
+    "tasks": ["read", "write", "quiz"],
+    "referenceLinks": [
+      "https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml",
+      "https://www.sos.state.tx.us/elections/candidates/guide/2024/writein2024.shtml",
+      "https://www.fec.gov/resources/cms-content/documents/policy-guidance/partygui.pdf"
     ]
   },
   {
     "id": "1B",
     "title": "Party Filing",
-    "description": "Teach filing requirements for party candidates.",
-    "tasks": [
-      {
-        "type": "read",
-        "prompt": "Party candidates must be nominated through primaries or conventions, then file with the Secretary of State. They must pay the filing fee or collect valid signatures."
-      },
-      {
-        "type": "quiz",
-        "prompt": "How do party candidates usually secure nomination?",
-        "options": ["Primary", "Convention", "Both", "None"],
-        "correctAnswer": "Both"
-      }
+    "purpose": "Teach filing requirements for party candidates.",
+    "brief": "Party candidates must be nominated through conventions or primaries, then file with the Secretary of State. Quiz performance converts into signatures and CC bonuses.",
+    "detailed": "Party candidates must secure nomination through their party (e.g., convention for Libertarians, primaries for Democrats/Republicans). After nomination, they must still file with the SOS, choosing between a filing fee or signature path. Deadlines usually occur in December before the election year. Signature rules mirror independents (voters cannot have voted in another primary). The simulator emphasizes that nomination is not the finish line — compliance with both party rules and state filing laws is mandatory. Mistakes here reduce CC, while mastery boosts credibility, signatures, and approval.",
+    "tasks": ["read", "write", "quiz"],
+    "referenceLinks": [
+      "https://www.sos.state.tx.us/elections/candidates/guide/2024/lib-green-nom2024.shtml",
+      "https://www.fec.gov/resources/cms-content/documents/policy-guidance/partygui.pdf"
     ]
   },
   {
     "id": "2A",
-    "title": "Independent FEC Filing Quiz",
-    "description": "Quiz on federal filing rules for independents.",
-    "tasks": [
-      {
-        "type": "quiz",
-        "prompt": "Which FEC form names your treasurer and requires bank account info?",
-        "options": ["Form 1", "Form 2", "Form 3", "Form 4"],
-        "correctAnswer": "Form 2"
-      }
+    "title": "Independent FEC Filing Quizzes",
+    "purpose": "Test knowledge of independent candidate federal filing rules.",
+    "brief": "Candidates must learn about and complete quizzes on FEC Forms 1 and 2. Performance directly impacts signatures and CC.",
+    "detailed": "Independents must register federally once they raise or spend more than $5,000. This requires filing Form 1 (Statement of Candidacy) and Form 2 (Statement of Organization) within 15 days. Form 2 requires naming a treasurer and providing banking info. Errors in these filings in real life result in penalties; in the simulator, they cost signatures or CC. Quiz questions simulate filing errors or missing deadlines. Each correct answer adds signatures, while errors deduct them. This reinforces the importance of compliance and begins teaching candidates about campaign finance accountability.",
+    "tasks": ["read", "quiz"],
+    "referenceLinks": [
+      "https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml",
+      "https://www.sos.state.tx.us/elections/candidates/guide/2024/writein2024.shtml",
+      "https://www.fec.gov/resources/cms-content/documents/policy-guidance/partygui.pdf"
     ]
   },
   {
     "id": "2B",
-    "title": "Party FEC Filing Quiz",
-    "description": "Quiz on federal filing rules for party candidates.",
-    "tasks": [
-      {
-        "type": "quiz",
-        "prompt": "Which FEC form starts quarterly reporting for party candidates?",
-        "options": ["Form 1", "Form 2", "Form 3", "Form 4"],
-        "correctAnswer": "Form 3"
-      }
+    "title": "Party FEC Filing Quizzes",
+    "purpose": "Test knowledge of party candidate federal filing rules.",
+    "brief": "Similar to Module 2A, but with party-specific context. Candidates complete quizzes on FEC filing forms.",
+    "detailed": "Party candidates follow nearly identical federal rules as independents. Once they raise or spend over $5,000, they must file Form 1 and Form 2. In addition, party candidates must begin quarterly reports (Form 3) after filing. The simulator presents quiz questions on deadlines, form content, and reporting requirements. Correct answers reward signatures and CC, while errors simulate costly compliance mistakes. This module reinforces that party backing does not exempt candidates from federal compliance — all must operate under the same FEC rules.",
+    "tasks": ["read", "quiz"],
+    "referenceLinks": [
+      "https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml",
+      "https://www.sos.state.tx.us/elections/candidates/guide/2024/writein2024.shtml",
+      "https://www.fec.gov/resources/cms-content/documents/policy-guidance/partygui.pdf"
     ]
   },
   {
     "id": "3",
     "title": "First Moves (Strategy & Spending)",
-    "description": "Practice early campaign decisions and budgeting.",
-    "tasks": [
-      {
-        "type": "write",
-        "prompt": "Plan your first campaign moves: advertising, travel, or press outreach."
-      },
-      {
-        "type": "scenario",
-        "prompt": "AI will evaluate your strategy and update CC, signatures, and approval."
-      }
+    "purpose": "Practice early campaign decisions and budgeting.",
+    "brief": "Candidates make their first strategic choices — press outreach, travel, and advertising. Each choice adjusts CC, signatures, and voter approval.",
+    "detailed": "This module simulates the early summer stage of campaigning. Candidates must decide how to allocate limited CC: whether to spend on advertising, travel to districts, or invest in press outreach. Each path has different risks and rewards: advertising may increase approval but burn CC quickly, while travel can earn signatures but drain time. Press outreach can improve visibility but risks negative coverage. The AI narrates consequences based on the player’s priorities, emphasizing trade-offs. This teaches candidates that early moves set the tone for the campaign’s viability.",
+    "tasks": ["read", "write", "decision"],
+    "referenceLinks": [
+      "https://www.bernardjohnson4congress.com/candidate_simulator_general_election_cycle_-_first_moves_-_test_mode"
     ]
   },
   {
     "id": "4",
     "title": "Campaign Identity",
-    "description": "Define slogans, mission, and public messaging.",
-    "tasks": [
-      { "type": "write", "prompt": "Draft your campaign slogan." },
-      { "type": "write", "prompt": "Write your mission statement." },
-      { "type": "write", "prompt": "Prepare your campaign announcement speech." }
+    "purpose": "Define the campaign’s mission, branding, and public presence.",
+    "brief": "Candidates draft slogans, mission statements, and an announcement speech. They also review examples of real campaign committees.",
+    "detailed": "This module focuses on candidate identity and message discipline. Candidates must write a slogan, outline a mission statement, and prepare an announcement speech. They are shown real-world committee filings (FEC examples) and asked to draw lessons. A poor or inconsistent message reduces approval and credibility, while a strong, concise identity increases signatures and CC. Upload tasks may include designing mock campaign logos or slogans. The AI evaluates whether the candidate’s choices align with their chosen office (President, Senate, House). This reinforces that public image is as critical as compliance.",
+    "tasks": ["read", "write", "upload"],
+    "referenceLinks": [
+      "https://www.fec.gov/data/committee/C00588657/?cycle=2026",
+      "https://www.fec.gov/resources/cms-content/documents/FECFile_GettingStartedManual_Candidates.pdf",
+      "https://www.bernardjohnson4congress.com/candidate_simulator_general_election_cycle_may_and_june_test_mode"
     ]
   },
   {
     "id": "5",
-    "title": "Campaign Expansion",
-    "description": "Design visuals and expand community outreach.",
-    "tasks": [
-      { "type": "write", "prompt": "Describe your campaign logo, yard signs, or T-shirt design." },
-      { "type": "scenario", "prompt": "Decide how to spend CC on design, volunteers, and endorsements." }
+    "title": "Campaign Expansion (Visuals & Community)",
+    "purpose": "Expand campaign visibility through imagery and outreach.",
+    "brief": "Candidates design logos, yard signs, and T-shirts. They also collect petitions, respond to constituent concerns, and handle endorsements.",
+    "detailed": "This module introduces campaign visuals and community presence. Players may upload mock images of logos, signs, or T-shirts (or describe them). They must decide whether to invest CC in design and distribution or rely on volunteers. Candidates also face constituent Q&A — for example, responding to emails or town hall feedback. Endorsements may be offered by local groups; accepting increases credibility but may alienate some voters. Skipping these tasks costs approval, as visibility and responsiveness are vital by midsummer. The AI narrates these interactions to highlight trade-offs between spending and grassroots energy.",
+    "tasks": ["read", "write", "upload", "decision"],
+    "referenceLinks": [
+      "https://www.bernardjohnson4congress.com/general_election_cycle_july_and_august_test_mode"
     ]
   },
   {
     "id": "6",
     "title": "September Compliance & Scenarios",
-    "description": "Review FEC Form 3, complete compliance quiz, and handle scenarios.",
-    "tasks": [
-      {
-        "type": "quiz",
-        "prompt": "When must FEC Form 3 be filed?",
-        "options": ["Monthly", "Quarterly", "Yearly", "Never"],
-        "correctAnswer": "Quarterly"
-      },
-      {
-        "type": "scenario",
-        "prompt": "Choose how to handle Constitution Day outreach, a constituent postcard, and a debate invitation."
-      }
+    "purpose": "Teach federal compliance and late-campaign challenges.",
+    "brief": "Candidates review FEC Form 3, complete a compliance quiz, and respond to September campaign scenarios.",
+    "detailed": "By September, candidates must file FEC quarterly reports (Form 3) detailing contributions and expenditures. This module includes a short compliance quiz on reporting requirements and penalties. Beyond compliance, players handle scenarios: Constitution Day outreach, a constituent postcard request, and a debate invitation. Candidates must decide which to prioritize. For example, skipping a debate lowers approval but conserves CC. Accepting the debate boosts exposure but risks penalties if poorly prepared. The AI ensures every choice has a clear narrative consequence. This stage builds urgency as Election Day nears.",
+    "tasks": ["read", "quiz", "decision"],
+    "referenceLinks": [
+      "https://www.fec.gov/resources/cms-content/documents/policy-guidance/fecfrm3.pdf",
+      "https://www.bernardjohnson4congress.com/general_election_cycle_september_test_mode"
     ]
   },
   {
     "id": "7",
-    "title": "Early October Ops",
-    "description": "Manage team, deliver a community safety speech, and respond to weekly news.",
-    "tasks": [
-      { "type": "write", "prompt": "Assign staff to outreach, fundraising, or media prep." },
-      { "type": "write", "prompt": "Deliver a community safety speech." }
+    "title": "Early October Ops (Safe)",
+    "purpose": "Introduce final-month campaign challenges.",
+    "brief": "Candidates manage their team, give a moderated speech on community safety, and respond to evolving weekly news. Language is softened but issues remain realistic.",
+    "detailed": "This module simulates the first week of October, when campaigns shift into high visibility mode. Candidates face three key tasks: Team Management (allocate staff), Community Safety Speech, Weekly News Response. Choices affect CC and voter approval. AI ensures language is safe but scenarios remain realistic.",
+    "tasks": ["write", "speak", "decision"],
+    "referenceLinks": [
+      "https://www.bernardjohnson4congress.com/general_election_cycle_october_1_7_test_mode"
     ]
   },
   {
     "id": "8",
-    "title": "Mid-October Ops",
-    "description": "Practice press conferences and constituent engagement.",
-    "tasks": [
-      { "type": "scenario", "prompt": "Answer questions from reporters and constituents." }
+    "title": "Mid-October Ops (Safe)",
+    "purpose": "Practice press conferences and constituent engagement.",
+    "brief": "Candidates face questions from reporters and constituents on healthcare, Second Amendment, and fiscal ethics. Responses impact voter approval and CC.",
+    "detailed": "In mid-October, pressure intensifies as undecided voters demand clarity. Candidates hold a press conference and a constituent roundtable: Press Conference questions are direct but safe; Constituent Concerns focus on gender identity, taxation, and community resources. Skipping tasks reduces approval.",
+    "tasks": ["write", "speak", "decision"],
+    "referenceLinks": [
+      "https://www.bernardjohnson4congress.com/general_election_october_8_14_test_mode"
     ]
   },
   {
     "id": "9",
-    "title": "Final Push",
-    "description": "Manage podcast appearance, media engagement, and final narrative.",
-    "tasks": [
-      { "type": "write", "prompt": "Draft your final campaign message for undecided voters." }
+    "title": "Final Push (Safe)",
+    "purpose": "Simulate campaign momentum in the last two weeks.",
+    "brief": "Candidates appear on a podcast, manage campaign media, and shape their final message. Scenarios test discipline under pressure.",
+    "detailed": "This module focuses on messaging discipline in the final sprint. Podcast Appearance evaluates tone and empathy. Media Engagement tests ad buys or press campaigns. Final Narrative requires drafting a closing pitch. Each choice affects CC, signatures, and voter approval.",
+    "tasks": ["write", "speak", "decision"],
+    "referenceLinks": [
+      "https://www.bernardjohnson4congress.com/general_election_october_15-22_a_test_mode",
+      "https://www.bernardjohnson4congress.com/general_election_october_15-22_b_test_mode"
     ]
   },
   {
     "id": "10",
-    "title": "Election Countdown",
-    "description": "Handle rapid Q&A, town halls, and endgame strategy.",
-    "tasks": [
-      { "type": "scenario", "prompt": "Answer lightning round questions from voters." },
-      { "type": "write", "prompt": "Decide your endgame strategy: ads, ground game, or debate prep." }
+    "title": "Election Countdown (Safe)",
+    "purpose": "Prepare for Election Day with rapid response strategy.",
+    "brief": "Candidates conduct town halls, engage in fast-moving Q&A, and finalize their endgame strategy. All outcomes directly affect Module 15 results.",
+    "detailed": "The final stretch before Election Day tests stamina and agility. Town Halls, Rapid Q&A, and Endgame Strategy decisions impact final CC, signatures, and voter approval. AI ensures scenarios are safe but realistic.",
+    "tasks": ["write", "speak", "decision"],
+    "referenceLinks": [
+      "https://www.bernardjohnson4congress.com/general_election_cycle_october_23_29_test_mode",
+      "https://www.bernardjohnson4congress.com/general_election_cycle_october_23_29_b_test_mode"
     ]
   },
   {
     "id": "11",
     "title": "School Visit",
-    "description": "Engage with students, teachers, and parents.",
-    "tasks": [
-      { "type": "write", "prompt": "Deliver a short speech on education and civic engagement." }
-    ]
+    "purpose": "Practice connecting with students, teachers, and parents in a nonpartisan setting, highlighting education and community engagement.",
+    "brief": "Candidates visit a local school and must deliver a short speech that balances inspiration with respect for different perspectives.",
+    "detailed": "In this module, candidates practice speaking to a neutral audience — students and educators. They prepare a 1–2 paragraph speech focused on education, opportunity, and civic engagement. The AI evaluates clarity, empathy, and tone. Approval rises for thoughtful, inclusive messaging, while skipping or mishandling the event may reduce voter trust.",
+    "tasks": ["write", "speak"],
+    "referenceLinks": []
   },
   {
     "id": "12",
     "title": "TV Interview",
-    "description": "Prepare for live, high-pressure media questioning.",
-    "tasks": [
-      { "type": "write", "prompt": "Answer journalist questions about your campaign platform." }
-    ]
+    "purpose": "Prepare for live, high-pressure questioning from the media.",
+    "brief": "A journalist interviews the candidate on their campaign platform and recent decisions. Questions are direct but safely moderated.",
+    "detailed": "This module simulates a televised interview. Candidates answer 2–3 questions about their platform, past decisions in the simulator, and how they would represent constituents. The AI evaluates answers for conciseness, credibility, and persuasion. Positive performances increase voter approval and momentum; stumbling or skipping answers reduces trust. Candidates must balance confidence with authenticity — showcasing how they perform under pressure.",
+    "tasks": ["write", "speak", "decision"],
+    "referenceLinks": []
   },
   {
     "id": "13",
     "title": "Endorsements",
-    "description": "Weigh benefits and risks of endorsements.",
-    "tasks": [
-      { "type": "scenario", "prompt": "Decide whether to accept or decline endorsements." }
-    ]
+    "purpose": "Weigh the benefits and risks of public endorsements.",
+    "brief": "Organizations, public figures, or local groups may offer endorsements. Candidates must decide whether to accept or decline.",
+    "detailed": "Endorsements can provide legitimacy and support, but they can also polarize. The AI presents scenarios where candidates are offered backing from different groups. Each endorsement has trade-offs: accepting may boost CC or approval but alienate certain voters; declining may protect independence but miss opportunities. Candidates justify their choices in writing. Approval and CC adjust based on alignment with voter expectations.",
+    "tasks": ["write", "decision"],
+    "referenceLinks": []
   },
   {
     "id": "14",
     "title": "Debate",
-    "description": "Demonstrate debate readiness.",
-    "tasks": [
-      { "type": "write", "prompt": "Deliver your opening statement and answer 2 debate-style questions." }
-    ]
+    "purpose": "Demonstrate debate readiness under simulated conditions.",
+    "brief": "Candidates participate in a final public debate, giving an opening statement and answering 2 questions.",
+    "detailed": "This module is the campaign’s climactic moment. Candidates deliver a concise opening statement (typed or spoken) and respond to 2 debate-style questions. Questions focus on issues like healthcare, fiscal ethics, and representation. The AI evaluates tone, persuasiveness, and credibility. Strong performances can swing undecided voters, while weak or skipped responses lower approval. This is a key test of communication under pressure.",
+    "tasks": ["write", "speak", "decision"],
+    "referenceLinks": []
   },
   {
     "id": "15",
     "title": "Final Summary",
-    "description": "AI generates a narrative summary of the campaign.",
-    "tasks": [
-      { "type": "scenario", "prompt": "Review your final campaign stats and narrative outcome." }
-    ]
+    "purpose": "Provide closure to the campaign simulation with a narrative outcome.",
+    "brief": "At the end of Election Week, the AI generates a narrative summarizing the candidate’s performance and outcome.",
+    "detailed": "This module closes the simulator. The AI calculates final CC, signatures, and voter approval, then delivers a tailored narrative: whether the candidate qualified for the ballot or won the election; strengths and weaknesses across modules; key decisions that shaped their path; and practical lessons for real-world constituent engagement. Candidates may review results, reflect on their learning, and export or save their campaign summary.",
+    "tasks": ["read", "write"],
+    "referenceLinks": []
   }
 ]

@@ -2,22 +2,7 @@
 
 import modulesData from "../../config/modules.json";
 
-export interface Module {
-  id: string;
-  title: string;
-  description: string;
-  tasks: Task[];
-}
-
-export interface Task {
-  type: "read" | "write" | "quiz" | "scenario";
-  prompt: string;
-  options?: string[];
-  correctAnswer?: string;
-}
-
-// Load modules from JSON
-export const modules: Module[] = modulesData as Module[];
+export const modules = modulesData as Module[];
   {
     id: "0",
     title: "Orientation & Introduction",

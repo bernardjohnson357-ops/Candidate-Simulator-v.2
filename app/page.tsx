@@ -1,12 +1,12 @@
 // app/page.tsx
-"use client";
+import { initialState, runAIModule, GameState } from "../ai/aiLoop";
 
-import React, { useState } from "react";
+let gameState: GameState = { ...initialState };
 
-// Example AI loop function (replace with your actual AI logic)
 async function runModuleAI(userInput: string) {
-  // Simulate AI response; replace with actual AI Control Loop call
-  return `AI response to: "${userInput}"`;
+  const result = await runAIModule(gameState, userInput);
+  gameState = result.state;
+  return result.aiResponse;
 }
 
 const Page: React.FC = () => {

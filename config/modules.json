@@ -4,7 +4,16 @@
     "title": "Orientation & Introduction",
     "brief": "Candidates learn about Candidate Coins (CC), signatures, voter approval, and ballot eligibility. They choose whether to run for President, Senate, or House.",
     "detailed": "This module serves as the campaign “boot camp.” Players are introduced to the simulator’s scoring system (CC = campaign funds, signatures = grassroots support, voter approval = polling). The AI explains task types (read, write, upload, speak, or button-choice) and how each affects campaign performance. Candidates declare for President, Senate, or House — each with different thresholds for CC and signatures. This decision determines the difficulty of the road ahead.",
-    "tasks": ["read", "write"]
+    "tasks": [
+      {
+        "type": "read",
+        "prompt": "Please read the following summary:\n\nCandidates learn about Candidate Coins (CC), signatures, voter approval, and ballot eligibility. They choose whether to run for President, Senate, or House."
+      },
+      {
+        "type": "write",
+        "prompt": "Reflect on the simulator rules, scoring, and campaign structure. How will you plan your campaign?"
+      }
+    ]
   },
   {
     "id": "1A",
@@ -110,5 +119,5 @@
       "https://www.fec.gov/resources/cms-content/documents/policy-guidance/partygui.pdf"
     ]
   }
-  // ... remaining modules 2B–15 follow the same pattern with read/write/quiz/scenario tasks ...
+  // Continue the same pattern for modules 2B–15, expanding read/write/quiz/scenario tasks similarly
 ]

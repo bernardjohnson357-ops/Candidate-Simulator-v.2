@@ -1,6 +1,5 @@
 // app/ai/moduleLogic.ts
-import modulesData from "../../config/modules.ts";
-
+import { modules as modulesData } from "../../config/modules";
 export interface Module {
   id: string;
   title: string;

@@ -89,3 +89,4 @@ export default function ChatSimulator() {
     </div>
   );
 }
+

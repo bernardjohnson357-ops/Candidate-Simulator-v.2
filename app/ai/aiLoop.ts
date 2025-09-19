@@ -1,5 +1,5 @@
 // app/ai/aiLoop.ts
-import { modules, Module, Task } from "./moduleLogic";
+import { libertarianSimulator } from "./libertarianSimulator";
 
 export interface GameState {
   currentModuleIndex: number;

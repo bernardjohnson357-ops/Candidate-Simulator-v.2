@@ -155,3 +155,4 @@ Mistakes cost CC and signatures.`,
 
   // ... Repeat pattern for Modules 7–15 with narration, prompt, and outcome logic
 ];
+export const libertarianSimulator = [ ... ];

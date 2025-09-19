@@ -1,5 +1,5 @@
 // app/ai/moduleLogic.ts
-import { modules as modulesData } from "../../config/modules";
+import { libertarianSimulator } from "./libertarianSimulator";
 export interface Module {
   id: string;
   title: string;

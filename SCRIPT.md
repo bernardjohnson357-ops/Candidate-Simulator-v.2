@@ -1,104 +1,228 @@
-# **🗳 Candidate Simulator Script – Safe Edition**
+# **🗳 Candidate Simulator Script – Linear Edition (Libertarian \+ Filing Fee)**
 
 ---
 
 ## **Module 0 – Orientation & Introduction**
 
 **Narrator \[calm, professional\]:**  
- “Welcome to the Federal Candidate Simulator — AI Edition.  
- This simulator will take you through the entire election cycle, one step at a time. You’ll experience the real requirements of filing, fundraising, compliance, and campaigning — all safely in a simulation.”
+ “Welcome to the Federal Candidate Simulator.  
+ This simulation follows a campaign from filing day through Election Day. You’ll practice fundraising, compliance, messaging, and public engagement — all safely in a chat format.
+
+Here are the basics:
+
+* **Candidate Coins (CC):** Your campaign funds. 1 CC \= $100. You begin with 50 CC.
+
+* **Voter Approval:** Your polling support. Gained through good answers, lost through mistakes or skipped tasks.
+
+* **Ballot Access:** To qualify, you must pay the filing fee in CC and maintain at least 2.5% approval.
+
+At each stage, I’ll describe what’s happening. You’ll respond in writing or speech. Afterward, I’ll update your CC and approval, then advance the story.
+
+Let’s begin your campaign.”
 
 ---
 
-## **How the Simulator Works**
+## **Module 1 – Filing (Libertarian)**
+
+**Narrator \[neutral, matter-of-fact\]:**  
+ “It’s December, and the filing deadline has arrived.
+
+As a Libertarian candidate, you qualify for the ballot by paying your filing fee. Here are the requirements:
+
+* **House:** 31 CC \+ 2.5% approval
+
+* **Senate:** 50 CC \+ 2.5% approval
+
+* **President:** 75 CC \+ 2.5% approval
+
+Write a short response explaining how your campaign covers the filing fee. I’ll deduct CC and check your approval.”
+
+---
+
+## **Module 2 – FEC Filing**
+
+**Narrator \[professional\]:**  
+ “Your filing is in. Now comes the federal paperwork.
+
+Once you raise or spend more than $5,000, you must file with the FEC:
+
+* **Form 1 – Statement of Candidacy**
+
+* **Form 2 – Statement of Organization (naming a treasurer and bank)**
+
+You’ll take a short quiz to see if your forms are correct. Each correct answer raises approval and CC. Mistakes cost resources.
+
+Answer the quiz questions now.”
+
+---
+
+## **Module 3 – First Moves (Strategy)**
+
+**Narrator \[encouraging\]:**  
+ “It’s early summer. Your campaign has limited funds and must choose a direction.
+
+Do you focus on **advertising**, **grassroots travel**, or **press outreach**?
+
+Write a short note describing your first move.”
+
+---
+
+## **Module 4 – Campaign Identity**
+
+**Narrator \[inspirational\]:**  
+ “Voters are asking: *Who are you? What do you stand for?*
+
+This is about defining your campaign identity. Please provide:
+
+* A campaign slogan
+
+* A one-sentence mission statement
+
+* A 1–2 paragraph announcement speech
+
+This will shape how voters see you.”
+
+---
+
+## **Module 5 – Campaign Expansion**
+
+**Narrator \[energetic\]:**  
+ “It’s midsummer. Visibility matters now. Supporters want logos, signs, shirts, and answers to community concerns.
+
+Describe your campaign logo (or slogan design) and write a short reply to a voter’s concern about your district or state.”
+
+---
+
+## **Module 6 – September Compliance & Scenarios**
+
+**Narrator \[measured\]:**  
+ “It’s September. Time for compliance and new challenges.
+
+You must file your **FEC quarterly report (Form 3\)**. I’ll give you a short compliance quiz.
+
+After that, three scenarios arrive at once:
+
+* A Constitution Day outreach request
+
+* A constituent postcard request
+
+* A debate invitation
+
+Respond to each in writing, balancing your CC and approval.”
+
+---
+
+## **Module 7 – Early October Operations**
+
+**Narrator \[calm, steady\]:**  
+ “It’s October 1st. The final month begins.
+
+Your campaign faces three key tasks:
+
+1. Team management — focus staff on door-to-door outreach, fundraising, or media prep.
+
+2. A short speech on community safety and trust.
+
+3. A quick response to weekly news.
+
+Work through each task one by one.”
+
+---
+
+## **Module 8 – Mid-October Operations**
+
+**Narrator \[pressured, brisk\]:**  
+ “It’s October 10th. The pressure is rising.
+
+You must:
+
+* Hold a press conference and answer questions on healthcare, gun rights, and fiscal ethics.
+
+* Respond to constituent concerns on fairness, taxation, and community needs.
+
+Write your responses directly.”
+
+---
+
+## **Module 9 – Final Push**
+
+**Narrator \[intense\]:**  
+ “It’s October 20th. Two weeks to go. Momentum is everything.
+
+You face three challenges:
+
+* Appear on a podcast about your priorities
+
+* Decide how to handle media (ad buy, social media push, or press release)
+
+* Draft a short closing pitch — why voters should support you
+
+Respond to each now.”
+
+---
+
+## **Module 10 – Election Countdown**
+
+**Narrator \[fast-paced\]:**  
+ “It’s the final week. Every move counts.
+
+You must:
+
+* Hold a town hall and answer voter questions
+
+* Handle a rapid-fire Q\&A round (3–5 short prompts)
+
+* Spend your last CC wisely: ads, ground game, or debate prep
+
+Your choices will lock in approval heading into Election Week.”
+
+---
+
+## **Module 11 – School Visit**
+
+**Narrator \[warm, approachable\]:**  
+ “You visit a local school. Students, teachers, and parents are eager to hear from you.
+
+Write a short 1–2 paragraph speech focusing on education, opportunity, and civic engagement.”
+
+---
+
+## **Module 12 – TV Interview**
+
+**Narrator \[professional, probing\]:**  
+ “You’re invited to a televised interview.
+
+Answer 2–3 questions about your platform, your past decisions in this campaign, and how you’d represent your constituents. Keep your answers concise and credible.”
+
+---
+
+## **Module 13 – Endorsements**
 
 **Narrator \[neutral\]:**  
- “Here are the ground rules. Think of them as your campaign manual.”
+ “Organizations and local groups are offering endorsements.
 
-1. **Candidate Coins (CC)**  
-   * 1 CC \= $100 simulated.  
-   * You start with 50 CC.  
-   * Earn CC by passing quizzes or completing tasks.  
-   * Spend CC on campaign needs like filing fees, ads, or communication coaching.  
-2. **Signatures & Voter Approval**  
-   * Each quiz score \= the same number of signatures.  
-   * 100 signatures \= 1% voter approval.  
-   * Example: scoring 80% on a quiz \= 80 signatures \= 0.8% approval.  
-3. **Ballot Access**  
-   * Qualify by either: paying CC (filing fee), OR gathering enough signatures.  
-4. **Eligibility thresholds:**  
-   * President → 75 CC \+ 2.5% approval OR 25% signatures.  
-   * Senate → 50 CC \+ 2.5% approval OR 14% signatures.  
-   * House → 31 CC \+ 2.5% approval OR 7% signatures.  
-5. **Task Types**  
-   * **Read**: Summaries of laws, filing guides, or news.  
-   * **Write**: Announcements, strategy documents, responses.  
-   * **Upload**: Images (Module 5 – signs, T-shirts, bumper stickers).  
-   * **Speak**: Speeches, press conferences, debates (Modules 7+).  
-   * Some decisions appear as **chat buttons**. Click to choose your action.  
-6. **Feedback & Progress**  
-   * After each task, I’ll update your CC, signatures, and approval.  
-   * I’ll narrate consequences: “Because you chose X, Y happened.”  
-   * All choices and scores carry forward — just like a real campaign.
-
-**Special Note:**  
- Users may **skip tasks**, but every skip has a narrated consequence (e.g., loss of CC, signatures, or approval). You may revisit skipped tasks later with reduced rewards.
+For each offer, explain whether you accept or decline, and why. Each choice carries risks and benefits.”
 
 ---
 
-## **Your First Step**
+## **Module 14 – Debate**
 
-**Narrator \[encouraging\]:**  
- “Now it’s time to make your first campaign decision: which office are you running for? This choice determines how tough the road ahead will be.”
+**Narrator \[serious\]:**  
+ “It’s the final public debate.
 
-\[Buttons appear\]
-
-* 🏛 President (75 CC \+ 2.5% approval OR 25% signatures)  
-* 🏛 U.S. Senate (50 CC \+ 2.5% approval OR 14% signatures)  
-* 🏛 U.S. House (31 CC \+ 2.5% approval OR 7% signatures)
+Write your opening statement, then answer two debate-style questions about healthcare, fiscal responsibility, and representation. Your performance could sway undecided voters.”
 
 ---
 
-## **Modules 1–6**
+## **Module 15 – Final Summary**
 
-* Module 1A – Independent / Write-In Filing  
-* Module 1B – Party Filing  
-* Module 2A – Independent FEC Filing Quizzes  
-* Module 2B – Party FEC Filing Quizzes  
-* Module 3 – First Moves (strategy & spending)  
-* Module 4 – Campaign Identity (slogans, mission, announcement speech)  
-* Module 5 – Campaign Imagery (logos, yard signs, shirts, endorsements, petitions, legislative response)  
-* Module 6 – September Compliance (FEC quiz, constituent Q\&A, postcards, debate invite)
+**Narrator \[calm, reflective\]:**  
+ “Election Week concludes. I’ll now calculate your campaign’s results based on CC, approval, and your decisions.
 
-All narration and quizzes in these modules remain unchanged. Rules, scoring, and narration follow the Candidate Simulator System Prompt.
+You’ll receive a closing narrative highlighting your strengths, weaknesses, and outcome — win or lose.
+
+Congratulations on completing the Federal Candidate Simulator.”
 
 ---
 
-## **Modules 7–10 – General Election Final Month**
 
-**Narrator \[calm, professional\]:**  
- “These modules represent the final stretch of your campaign. The issues are sensitive and realistic, but language has been carefully moderated for safety. You will still practice addressing the core subjects: healthcare, foreign conflict, Second Amendment, gender identity, fiscal ethics, and political morality. Expect tough choices, but without violent or graphic detail.”
-
-* **Module 7 – Early October Ops:** Team management, community safety speech, weekly news response.  
-* **Module 8 – Mid-October Ops:** Press conferences, constituent concerns, evolving campaign issues.  
-* **Module 9 – Final Push:** Podcast appearance, media engagement, final campaign narrative.  
-* **Module 10 – Election Countdown:** Live town halls, rapid-response messaging, endgame strategy.
-
----
-
-## **Modules 11–15 – Election Week & Results**
-
-* Module 11 – School Visit  
-* Module 12 – TV Interview  
-* Module 13 – Endorsements  
-* Module 14 – Debate  
-* Module 15 – Final Summary
-
-These modules conclude the simulator. You’ll give speeches, respond to voters, and see your campaign outcome.
-
----
-
-## **Closing Note**
-
-**Narrator \[encouraging\]:**  
- “Every decision you make carries consequences. Whether you succeed or fall short, this simulator prepares you to engage with real constituents — with clarity, confidence, and a strong grasp of the issues.”

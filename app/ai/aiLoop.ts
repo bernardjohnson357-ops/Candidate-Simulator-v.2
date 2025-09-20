@@ -1,27 +1,61 @@
 // app/ai/aiLoop.ts
-import { modules, initialState, ModuleState } from "./moduleLogic";
+import { libertarianSimulator } from "./libertarianSimulator";
+import { ModuleState, initialState } from "./moduleLogic";
 
 let currentIndex = 0;
 let state: ModuleState = { ...initialState };
 
-export const getNextModule = () => {
-  if (currentIndex >= modules.length) {
-    return null; // Simulation finished
-  }
-  return modules[currentIndex];
+/**
+ * Get the current module (for narration + prompt).
+ */
+export const getCurrentModule = () => {
+  if (!libertarianSimulator[currentIndex]) return null;
+  return libertarianSimulator[currentIndex];
 };
 
-export const processModuleInput = (input: string) => {
-  const current = modules[currentIndex];
-  if (!current) return { output: "Simulation complete.", state };
-
-  let output = "";
-  if (current.logic) {
-    output = current.logic(input, state);
+/**
+ * Advance the simulator with user input.
+ */
+export const processInputLoop = (input: string) => {
+  const current = getCurrentModule();
+  if (!current) {
+    return {
+      state,
+      aiResponse: "🎉 Simulation complete!",
+    };
   }
 
+  let aiResponse = "";
+
+  if (current.logic) {
+    aiResponse = current.logic(input, state);
+  } else {
+    aiResponse = "⚠️ This module has no logic defined.";
+  }
+
+  // Move to next module
   currentIndex++;
-  return { output, state };
+
+  if (libertarianSimulator[currentIndex]) {
+    const next = libertarianSimulator[currentIndex];
+    aiResponse += `\n\n--- ${next.title} ---\n${next.narrator}\n\n${next.prompt}`;
+  } else {
+    aiResponse += "\n\n🎉 You’ve completed the Libertarian Candidate Simulator!";
+  }
+
+  return { state, aiResponse };
+};
+
+/**
+ * Reset the simulator back to Module 0.
+ */
+export const resetSimulator = () => {
+  currentIndex = 0;
+  state = { ...initialState };
+  return {
+    state,
+    aiResponse: `${libertarianSimulator[0].narrator}\n\n${libertarianSimulator[0].prompt}`,
+  };
 };
   aiResponse += `Current Stats → CC: ${state.CC}, Signatures: ${state.signatures}, Voter Approval: ${state.voterApproval.toFixed(
     1

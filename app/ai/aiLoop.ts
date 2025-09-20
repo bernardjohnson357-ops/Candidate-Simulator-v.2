@@ -57,9 +57,3 @@ export const resetSimulator = () => {
     aiResponse: `${libertarianSimulator[0].narrator}\n\n${libertarianSimulator[0].prompt}`,
   };
 };
-  aiResponse += `Current Stats → CC: ${state.CC}, Signatures: ${state.signatures}, Voter Approval: ${state.voterApproval.toFixed(
-    1
-  )}%`;
-
-  return { state, aiResponse };
-}

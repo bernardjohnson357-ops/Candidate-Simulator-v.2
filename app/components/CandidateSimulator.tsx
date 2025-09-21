@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { libertarianSimulator } from "../ai/libertarianSimulator";
 
 interface CandidateState {
-  CC: number;
+  cc: number;
   signatures: number;
   approval: number;
   threshold?: {
@@ -21,7 +21,7 @@ interface Message {
 }
 
 const initialCandidateState: CandidateState = {
-  CC: 50,
+  cc: 50,
   signatures: 0,
   approval: 0,
 };

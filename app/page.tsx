@@ -2,34 +2,48 @@
 "use client";
 
 import React, { useState } from "react";
-import { initialState, runAIModule, GameState } from "./ai/aiLoop"; // ✅ Correct path
+import { resetSimulator, processInputLoop } from "./ai/aiLoop";
+import { ModuleState } from "./ai/moduleLogic";
 
-let gameState: GameState = { ...initialState };
+interface Message {
+  sender: "AI" | "User";
+  text: string;
+}
 
-const Page: React.FC = () => {
-  const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]);
+export default function HomePage() {
+  // Start simulator at Module 0
+  const start = resetSimulator();
+
+  const [messages, setMessages] = useState<Message[]>([
+    { sender: "AI", text: start.aiResponse },
+  ]);
+  const [state, setState] = useState<ModuleState>(start.state);
   const [input, setInput] = useState("");
 
-  const handleSend = async () => {
+  const handleUserInput = () => {
     if (!input.trim()) return;
 
     // Add user message
-    setMessages((prev) => [...prev, { sender: "User", text: input }]);
+    const userMsg: Message = { sender: "User", text: input };
+    setMessages((prev) => [...prev, userMsg]);
 
-    // Get AI response
-    const result = await runAIModule(gameState, input);
-    gameState = result.state;
+    // Run through simulator loop
+    const result = processInputLoop(input);
+    setState(result.state);
 
-    // Add AI message
+    // Add AI response
     setMessages((prev) => [...prev, { sender: "AI", text: result.aiResponse }]);
 
-    // Clear input
     setInput("");
   };
 
   return (
-    <div style={{ maxWidth: 600, width: "100%", margin: "2rem auto" }}>
-      <h1 style={{ textAlign: "center" }}>Candidate Simulator AI</h1>
+    <div style={{ maxWidth: 700, margin: "2rem auto", fontFamily: "sans-serif" }}>
+      <h1 style={{ textAlign: "center", marginBottom: "1rem" }}>
+        Libertarian Candidate Simulator
+      </h1>
+
+      {/* Chat Window */}
       <div
         style={{
           border: "1px solid #ccc",
@@ -49,16 +63,40 @@ const Page: React.FC = () => {
         ))}
       </div>
 
+      {/* Live Stats */}
+      <div
+        style={{
+          border: "1px solid #eee",
+          borderRadius: 8,
+          padding: "0.5rem 1rem",
+          marginBottom: "1rem",
+          background: "#f9f9f9",
+          fontSize: "0.9rem",
+        }}
+      >
+        <p>
+          <strong>Candidate Coins (cc):</strong> {state.cc}
+        </p>
+        <p>
+          <strong>Signatures:</strong> {state.signatures}
+        </p>
+        <p>
+          <strong>Approval:</strong> {state.approval}%
+        </p>
+      </div>
+
+      {/* Input Box */}
       <div style={{ display: "flex", gap: 8 }}>
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           style={{ flex: 1, padding: "0.5rem", borderRadius: 4, border: "1px solid #ccc" }}
-          placeholder="Type your action..."
+          placeholder="Type your response..."
+          onKeyDown={(e) => e.key === "Enter" && handleUserInput()}
         />
         <button
-          onClick={handleSend}
+          onClick={handleUserInput}
           style={{
             padding: "0.5rem 1rem",
             borderRadius: 4,
@@ -72,6 +110,4 @@ const Page: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default Page;
+}

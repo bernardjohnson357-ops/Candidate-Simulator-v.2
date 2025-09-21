@@ -44,3 +44,14 @@ export interface GameState {
   branch: "1A" | "1B" | "2A" | "2B" | null;
   quizzesCompleted?: string[];
 }
+
+// ------------------------------
+// Shared ModuleState for Libertarian Simulator
+// ------------------------------
+export interface ModuleState {
+  office: "President" | "Senate" | "House";
+  cc: number;
+  signatures: number;
+  approval: number;
+  threshold?: { cc: number; approval: number; sigs: number };
+}

@@ -176,7 +176,6 @@ Every typed decision will affect these metrics.`,
       }
     },
   },
-];
 
   {
     id: "4",

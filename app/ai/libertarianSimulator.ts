@@ -83,11 +83,6 @@ Every typed decision will affect these metrics.`,
   },
 },
 
- // ------------------------------
-// Libertarian-Only Candidate Simulator Starter
-// Modules 1B (Party Filing) + 2B (Federal Filing Compliance)
-// ------------------------------
-
 interface ModuleState {
   office: "President" | "Senate" | "House";
   cc: number;

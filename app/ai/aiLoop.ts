@@ -27,15 +27,15 @@ export const processInputLoop = (input: string) => {
 
   let aiResponse = "";
 
-  // Run current module logic if available
+  // Run logic only for the current module
   if (current.logic) {
     aiResponse = current.logic(input, state) || "";
   }
 
-  // Move to next module
+  // ✅ Move to next module AFTER logic
   currentIndex++;
 
-  // Append next module prompt if it exists
+  // ✅ Show next module if available
   if (libertarianSimulator[currentIndex]) {
     const next = libertarianSimulator[currentIndex];
     aiResponse += `\n\n--- ${next.title} ---\n${next.narrator}\n\n${next.prompt}`;

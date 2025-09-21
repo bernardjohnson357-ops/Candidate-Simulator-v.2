@@ -1,6 +1,6 @@
 // app/ai/aiLoop.ts
 import { libertarianSimulator } from "./libertarianSimulator";
-import { ModuleState, initialState } from "./moduleLogic";
+import { ModuleState } from "./types";
 
 let currentIndex = 0;
 let state: ModuleState = { ...initialState };

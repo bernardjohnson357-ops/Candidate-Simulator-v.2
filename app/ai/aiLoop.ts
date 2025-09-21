@@ -45,3 +45,14 @@ export const processInputLoop = (input: string) => {
 
   return { state, aiResponse };
 };
+/**
+ * Reset the simulator back to Module 0.
+ */
+export const resetSimulator = () => {
+  currentIndex = 0;
+  state = { ...initialState };
+  return {
+    state,
+    aiResponse: `${libertarianSimulator[0].narrator}\n\n${libertarianSimulator[0].prompt}`,
+  };
+};

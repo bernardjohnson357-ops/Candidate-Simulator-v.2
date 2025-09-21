@@ -83,22 +83,95 @@ Every typed decision will affect these metrics.`,
   },
 },
 
+ // ------------------------------
+// Libertarian-Only Candidate Simulator Starter
+// Modules 1B (Party Filing) + 2B (Federal Filing Compliance)
+// ------------------------------
+
+interface ModuleState {
+  office: "President" | "Senate" | "House";
+  cc: number;
+  signatures: number;
+  approval: number;
+}
+
+export const modules = [
+  {
+    id: "1",
+    title: "Libertarian Party Filing",
+    narrator: `As a Libertarian candidate, you must secure the party’s nomination and file with the Secretary of State.`,
+    prompt: `Will you pay the filing fee, collect signatures, or attempt both?`,
+    logic: (input: string, state: ModuleState) => {
+      const normalized = input.toLowerCase().replace(/[^a-z\s]/g, "").trim();
+      const hasFee = normalized.includes("fee");
+      const hasSign = normalized.includes("sign");
+
+      if (hasFee && hasSign) {
+        state.cc -= 10;
+        state.signatures += 200;
+        state.approval += 0.8;
+      } else if (hasFee) {
+        state.cc -= 10;
+        state.approval += 0.5;
+      } else if (hasSign) {
+        state.signatures += 200;
+        state.approval += 0.3;
+      } else {
+        return "Your filing approach is unclear. Try mentioning 'fee', 'signatures', or both.";
+      }
+
+      // Check eligibility thresholds
+      let thresholdMet = false;
+      switch (state.office) {
+        case "President":
+          thresholdMet =
+            (state.cc >= 75 && state.approval >= 2.5) ||
+            state.signatures >= 25_000;
+          break;
+        case "Senate":
+          thresholdMet =
+            (state.cc >= 50 && state.approval >= 2.5) ||
+            state.signatures >= 14_000;
+          break;
+        case "House":
+          thresholdMet =
+            (state.cc >= 31 && state.approval >= 2.5) ||
+            state.signatures >= 7_000;
+          break;
+      }
+
+      if (thresholdMet) {
+        return "Filing complete! You meet eligibility requirements and may advance to the next module.";
+      } else {
+        return "Filing recorded, but you have not yet met eligibility requirements. Consider collecting more signatures or ensuring sufficient CC + approval.";
+      }
+    },
+  },
+
   {
     id: "2",
     title: "Federal Filing Compliance",
-    narrator: `Crossing $5,000 triggers federal reporting: Form 1 (Candidacy) and Form 2 (Organization).`,
-    prompt: `How will you file correctly (treasurer, bank, 15-day deadline)?`,
+    narrator: `Crossing $5,000 in campaign funds triggers federal reporting: Form 1 (Statement of Candidacy) and Form 2 (Statement of Organization).`,
+    prompt: `How will you file correctly? Mention a treasurer, banking info, and the 15-day deadline.`,
     logic: (input: string, state: ModuleState) => {
-      if (input.includes("treasurer") && input.includes("bank")) {
+      const normalized = input.toLowerCase().replace(/[^a-z\s]/g, "").trim();
+
+      const mentionsTreasurer = normalized.includes("treasurer");
+      const mentionsBank = normalized.includes("bank");
+      const mentionsDeadline = normalized.includes("15") || normalized.includes("fifteen");
+
+      if (mentionsTreasurer && mentionsBank && mentionsDeadline) {
         state.cc += 2;
         state.signatures += 100;
-        return "Filed correctly! +2 cc, +100 signatures.";
+        return "FEC forms filed correctly! +2 CC, +100 signatures.";
+      } else {
+        state.cc -= 1;
+        state.signatures -= 50;
+        return "Filing errors cost you –1 CC and –50 signatures. Make sure to include treasurer, bank info, and the 15-day deadline.";
       }
-      state.cc -= 1;
-      state.signatures -= 50;
-      return "Filing errors cost you –1 cc, –50 signatures.";
     },
   },
+];
 
   {
     id: "3",

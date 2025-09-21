@@ -1,5 +1,10 @@
 // app/ai/libertarianSimulator.ts
 
+// ------------------------------
+// Libertarian-Only Candidate Simulator
+// Modules 0 → 1B → 2B → 3
+// ------------------------------
+
 // Module state interface
 export interface ModuleState {
   office: "President" | "Senate" | "House";
@@ -9,8 +14,11 @@ export interface ModuleState {
   threshold?: { cc: number; approval: number; sigs: number };
 }
 
-// Module 0
+// Full simulator modules
 export const libertarianSimulator = [
+  // ------------------------------
+  // Module 0 – Orientation & Introduction
+  // ------------------------------
   {
     id: "0",
     title: "Orientation & Introduction",
@@ -24,41 +32,31 @@ Every typed decision will affect these metrics.`,
       if (office.includes("president")) {
         state.office = "President";
         state.threshold = { cc: 75, approval: 2.5, sigs: 25 };
-        return `Running for President requires 75 cc + 2.5% approval OR 25% nationwide signatures.`;
+        return `Running for President requires 75 CC + 2.5% approval OR 25% nationwide signatures.`;
       }
       if (office.includes("senate")) {
         state.office = "Senate";
         state.threshold = { cc: 50, approval: 2.5, sigs: 14 };
-        return `Running for Senate requires 50 cc + 2.5% approval OR 14% statewide signatures.`;
+        return `Running for Senate requires 50 CC + 2.5% approval OR 14% statewide signatures.`;
       }
       if (office.includes("house")) {
         state.office = "House";
         state.threshold = { cc: 31, approval: 2.5, sigs: 7 };
-        return `Running for House requires 31 cc + 2.5% approval OR 7% district signatures.`;
+        return `Running for House requires 31 CC + 2.5% approval OR 7% district signatures.`;
       }
       return "Please choose President, Senate, or House.";
     },
   },
 
-  // Module 1B and Module 2B can follow here
-];
-
-export interface ModuleState {
-  office: "President" | "Senate" | "House";
-  cc: number;
-  signatures: number;
-  approval: number;
-}
-
-// Modules array
-export const modules = [
+  // ------------------------------
+  // Module 1B – Libertarian Party Filing
+  // ------------------------------
   {
     id: "1",
     title: "Libertarian Party Filing",
     narrator: `As a Libertarian candidate, you must secure the party’s nomination and file with the Secretary of State.`,
     prompt: `Will you pay the filing fee, collect signatures, or attempt both?`,
     logic: (input: string, state: ModuleState) => {
-      // Normalize input
       const normalized = input.toLowerCase().replace(/[^a-z\s]/g, "").trim();
       const hasFee = normalized.includes("fee");
       const hasSign = normalized.includes("sign");
@@ -106,13 +104,15 @@ export const modules = [
     },
   },
 
+  // ------------------------------
+  // Module 2B – Federal Filing Compliance
+  // ------------------------------
   {
     id: "2",
     title: "Federal Filing Compliance",
     narrator: `Crossing $5,000 in campaign funds triggers federal reporting: Form 1 (Statement of Candidacy) and Form 2 (Statement of Organization).`,
     prompt: `How will you file correctly? Mention a treasurer, banking info, and the 15-day deadline.`,
     logic: (input: string, state: ModuleState) => {
-      // Normalize input
       const normalized = input.toLowerCase().replace(/[^a-z\s]/g, "").trim();
 
       const mentionsTreasurer = normalized.includes("treasurer");
@@ -130,50 +130,53 @@ export const modules = [
       }
     },
   },
-];
 
-{
-  id: "3",
-  title: "First Moves – Strategy & Spending",
-  narrator: `It's time to make your early campaign decisions. You have limited Candidate Coins (CC) and must choose how to spend them to maximize signatures and voter approval.`,
-  prompt: `Choose one: "advertising", "travel", or "press outreach".`,
-  logic: (input: string, state: ModuleState) => {
-    const choice = input.toLowerCase().trim();
+  // ------------------------------
+  // Module 3 – First Moves (Strategy & Spending)
+  // ------------------------------
+  {
+    id: "3",
+    title: "First Moves – Strategy & Spending",
+    narrator: `It's time to make your early campaign decisions. You have limited Candidate Coins (CC) and must choose how to spend them to maximize signatures and voter approval.`,
+    prompt: `Choose one: "advertising", "travel", or "press outreach".`,
+    logic: (input: string, state: ModuleState) => {
+      const choice = input.toLowerCase().trim();
 
-    switch (choice) {
-      case "advertising":
-        if (state.cc >= 10) {
-          state.cc -= 10;
-          state.approval += 1.0;
-          return "You ran an advertising campaign. –10 CC, +1.0% approval.";
-        } else {
-          return "Not enough CC for advertising. Choose another action.";
-        }
+      switch (choice) {
+        case "advertising":
+          if (state.cc >= 10) {
+            state.cc -= 10;
+            state.approval += 1.0;
+            return "You ran an advertising campaign. –10 CC, +1.0% approval.";
+          } else {
+            return "Not enough CC for advertising. Choose another action.";
+          }
 
-      case "travel":
-        if (state.cc >= 8) {
-          state.cc -= 8;
-          state.signatures += 150;
-          return "You traveled to key districts. –8 CC, +150 signatures.";
-        } else {
-          return "Not enough CC for travel. Choose another action.";
-        }
+        case "travel":
+          if (state.cc >= 8) {
+            state.cc -= 8;
+            state.signatures += 150;
+            return "You traveled to key districts. –8 CC, +150 signatures.";
+          } else {
+            return "Not enough CC for travel. Choose another action.";
+          }
 
-      case "press outreach":
-        if (state.cc >= 5) {
-          state.cc -= 5;
-          state.approval += 0.5;
-          state.signatures += 50;
-          return "You engaged in press outreach. –5 CC, +50 signatures, +0.5% approval.";
-        } else {
-          return "Not enough CC for press outreach. Choose another action.";
-        }
+        case "press outreach":
+          if (state.cc >= 5) {
+            state.cc -= 5;
+            state.signatures += 50;
+            state.approval += 0.5;
+            return "You engaged in press outreach. –5 CC, +50 signatures, +0.5% approval.";
+          } else {
+            return "Not enough CC for press outreach. Choose another action.";
+          }
 
-      default:
-        return 'Action unclear. Please type "advertising", "travel", or "press outreach".';
-    }
+        default:
+          return 'Action unclear. Please type "advertising", "travel", or "press outreach".';
+      }
+    },
   },
-},
+];
 
   {
     id: "4",

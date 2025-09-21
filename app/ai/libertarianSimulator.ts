@@ -29,25 +29,41 @@ Every typed decision will affect these metrics.`,
     },
   },
 
-  {
-    id: "1",
-    title: "Libertarian Party Filing",
-    narrator: `As a Libertarian candidate, you must secure the party’s nomination and file with the Secretary of State.`,
-    prompt: `Will you pay the filing fee, collect signatures, or attempt both?`,
-    logic: (input: string, state: ModuleState) => {
-      if (input.includes("fee")) {
-        state.cc -= 10;
-        state.approval += 0.5;
-        return "You paid the filing fee. –10 cc, +0.5% approval.";
-      }
-      if (input.includes("sign")) {
-        state.signatures += 200;
-        state.approval += 0.3;
-        return "You collected signatures. +200 signatures, +0.3% approval.";
-      }
-      return "Your filing approach is unclear. Try mentioning 'fee' or 'signatures'.";
-    },
+{
+  id: "1",
+  title: "Libertarian Party Filing",
+  narrator: `As a Libertarian candidate, you must secure the party’s nomination and file with the Secretary of State.`,
+  prompt: `Will you pay the filing fee, collect signatures, or attempt both?`,
+  logic: (input: string, state: ModuleState) => {
+    // Normalize input: lowercase, remove punctuation, collapse spaces
+    const normalized = input.toLowerCase().replace(/[^a-z\s]/g, "").trim();
+
+    // Check for both fee and signatures
+    const hasFee = normalized.includes("fee");
+    const hasSign = normalized.includes("sign");
+
+    if (hasFee && hasSign) {
+      state.cc -= 10;             // fee cost
+      state.signatures += 200;    // signature gain
+      state.approval += 0.8;      // combined approval
+      return "You paid the filing fee and collected signatures. –10 CC, +200 signatures, +0.8% approval.";
+    }
+
+    if (hasFee) {
+      state.cc -= 10;
+      state.approval += 0.5;
+      return "You paid the filing fee. –10 CC, +0.5% approval.";
+    }
+
+    if (hasSign) {
+      state.signatures += 200;
+      state.approval += 0.3;
+      return "You collected signatures. +200 signatures, +0.3% approval.";
+    }
+
+    return "Your filing approach is unclear. Try mentioning 'fee', 'signatures', or both.";
   },
+},
 
   {
     id: "2",

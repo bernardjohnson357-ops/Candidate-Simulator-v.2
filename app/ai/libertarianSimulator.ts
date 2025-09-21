@@ -29,67 +29,20 @@ Every typed decision will affect these metrics.`,
     },
   },
 
-{
-  id: "1",
-  title: "Libertarian Party Filing",
-  narrator: `As a Libertarian candidate, you must secure the party’s nomination and file with the Secretary of State.`,
-  prompt: `Will you pay the filing fee, collect signatures, or attempt both?`,
-  logic: (input: string, state: ModuleState) => {
-    // Normalize input
-    const normalized = input.toLowerCase().replace(/[^a-z\s]/g, "").trim();
-    const hasFee = normalized.includes("fee");
-    const hasSign = normalized.includes("sign");
+// ------------------------------
+// Libertarian-Only Candidate Simulator Starter
+// Modules 1B (Party Filing) + 2B (Federal Filing Compliance)
+// ------------------------------
 
-    // Apply actions
-    if (hasFee && hasSign) {
-      state.cc -= 10;
-      state.signatures += 200;
-      state.approval += 0.8;
-    } else if (hasFee) {
-      state.cc -= 10;
-      state.approval += 0.5;
-    } else if (hasSign) {
-      state.signatures += 200;
-      state.approval += 0.3;
-    } else {
-      return "Your filing approach is unclear. Try mentioning 'fee', 'signatures', or both.";
-    }
-
-    // Check eligibility based on office
-    let thresholdMet = false;
-    switch (state.office) {
-      case "President":
-        thresholdMet =
-          (state.cc >= 75 && state.approval >= 2.5) ||
-          state.signatures >= 25_000; 
-        break;
-      case "Senate":
-        thresholdMet =
-          (state.cc >= 50 && state.approval >= 2.5) ||
-          state.signatures >= 14_000; 
-        break;
-      case "House":
-        thresholdMet =
-          (state.cc >= 31 && state.approval >= 2.5) ||
-          state.signatures >= 7_000; 
-        break;
-    }
-
-    if (thresholdMet) {
-      return "Filing complete! You meet eligibility requirements and may advance to the next module.";
-    } else {
-      return "Filing recorded, but you have not yet met eligibility requirements. Consider collecting more signatures or ensuring sufficient CC + approval.";
-    }
-  },
-},
-
-interface ModuleState {
+// Module state interface
+export interface ModuleState {
   office: "President" | "Senate" | "House";
   cc: number;
   signatures: number;
   approval: number;
 }
 
+// Modules array
 export const modules = [
   {
     id: "1",
@@ -97,10 +50,12 @@ export const modules = [
     narrator: `As a Libertarian candidate, you must secure the party’s nomination and file with the Secretary of State.`,
     prompt: `Will you pay the filing fee, collect signatures, or attempt both?`,
     logic: (input: string, state: ModuleState) => {
+      // Normalize input
       const normalized = input.toLowerCase().replace(/[^a-z\s]/g, "").trim();
       const hasFee = normalized.includes("fee");
       const hasSign = normalized.includes("sign");
 
+      // Apply actions
       if (hasFee && hasSign) {
         state.cc -= 10;
         state.signatures += 200;
@@ -149,6 +104,7 @@ export const modules = [
     narrator: `Crossing $5,000 in campaign funds triggers federal reporting: Form 1 (Statement of Candidacy) and Form 2 (Statement of Organization).`,
     prompt: `How will you file correctly? Mention a treasurer, banking info, and the 15-day deadline.`,
     logic: (input: string, state: ModuleState) => {
+      // Normalize input
       const normalized = input.toLowerCase().replace(/[^a-z\s]/g, "").trim();
 
       const mentionsTreasurer = normalized.includes("treasurer");

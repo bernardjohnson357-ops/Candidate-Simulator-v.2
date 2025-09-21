@@ -1,21 +1,4 @@
 // app/ai/aiLoop.ts
-import { libertarianSimulator } from "./libertarianSimulator";
-import { ModuleState, initialState } from "./moduleLogic";
-
-let currentIndex = 0;
-let state: ModuleState = { ...initialState };
-
-/**
- * Get the current module (for narration + prompt).
- */
-export const getCurrentModule = () => {
-  if (!libertarianSimulator[currentIndex]) return null;
-  return libertarianSimulator[currentIndex];
-};
-
-/**
- * Advance the simulator with user input.
- */
 export const processInputLoop = (input: string) => {
   const current = getCurrentModule();
   if (!current) {
@@ -28,9 +11,7 @@ export const processInputLoop = (input: string) => {
   let aiResponse = "";
 
   if (current.logic) {
-    aiResponse = current.logic(input, state);
-  } else {
-    aiResponse = "⚠️ This module has no logic defined.";
+    aiResponse = current.logic(input, state) || "";
   }
 
   // Move to next module
@@ -45,7 +26,6 @@ export const processInputLoop = (input: string) => {
 
   return { state, aiResponse };
 };
-
 /**
  * Reset the simulator back to Module 0.
  */

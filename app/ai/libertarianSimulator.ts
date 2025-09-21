@@ -35,33 +35,51 @@ Every typed decision will affect these metrics.`,
   narrator: `As a Libertarian candidate, you must secure the party’s nomination and file with the Secretary of State.`,
   prompt: `Will you pay the filing fee, collect signatures, or attempt both?`,
   logic: (input: string, state: ModuleState) => {
-    // Normalize input: lowercase, remove punctuation, collapse spaces
+    // Normalize input
     const normalized = input.toLowerCase().replace(/[^a-z\s]/g, "").trim();
-
-    // Check for both fee and signatures
     const hasFee = normalized.includes("fee");
     const hasSign = normalized.includes("sign");
 
+    // Apply actions
     if (hasFee && hasSign) {
-      state.cc -= 10;             // fee cost
-      state.signatures += 200;    // signature gain
-      state.approval += 0.8;      // combined approval
-      return "You paid the filing fee and collected signatures. –10 CC, +200 signatures, +0.8% approval.";
-    }
-
-    if (hasFee) {
+      state.cc -= 10;
+      state.signatures += 200;
+      state.approval += 0.8;
+    } else if (hasFee) {
       state.cc -= 10;
       state.approval += 0.5;
-      return "You paid the filing fee. –10 CC, +0.5% approval.";
-    }
-
-    if (hasSign) {
+    } else if (hasSign) {
       state.signatures += 200;
       state.approval += 0.3;
-      return "You collected signatures. +200 signatures, +0.3% approval.";
+    } else {
+      return "Your filing approach is unclear. Try mentioning 'fee', 'signatures', or both.";
     }
 
-    return "Your filing approach is unclear. Try mentioning 'fee', 'signatures', or both.";
+    // Check eligibility based on office
+    let thresholdMet = false;
+    switch (state.office) {
+      case "President":
+        thresholdMet =
+          (state.cc >= 75 && state.approval >= 2.5) ||
+          state.signatures >= 25_000; 
+        break;
+      case "Senate":
+        thresholdMet =
+          (state.cc >= 50 && state.approval >= 2.5) ||
+          state.signatures >= 14_000; 
+        break;
+      case "House":
+        thresholdMet =
+          (state.cc >= 31 && state.approval >= 2.5) ||
+          state.signatures >= 7_000; 
+        break;
+    }
+
+    if (thresholdMet) {
+      return "Filing complete! You meet eligibility requirements and may advance to the next module.";
+    } else {
+      return "Filing recorded, but you have not yet met eligibility requirements. Consider collecting more signatures or ensuring sufficient CC + approval.";
+    }
   },
 },
 

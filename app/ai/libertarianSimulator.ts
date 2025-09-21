@@ -1,7 +1,15 @@
 // app/ai/libertarianSimulator.ts
 
-import { ModuleState } from "./moduleLogic";
+// Module state interface
+export interface ModuleState {
+  office: "President" | "Senate" | "House";
+  cc: number;
+  signatures: number;
+  approval: number;
+  threshold?: { cc: number; approval: number; sigs: number };
+}
 
+// Module 0
 export const libertarianSimulator = [
   {
     id: "0",
@@ -14,20 +22,26 @@ Every typed decision will affect these metrics.`,
     logic: (input: string, state: ModuleState) => {
       const office = input.toLowerCase();
       if (office.includes("president")) {
+        state.office = "President";
         state.threshold = { cc: 75, approval: 2.5, sigs: 25 };
         return `Running for President requires 75 cc + 2.5% approval OR 25% nationwide signatures.`;
       }
       if (office.includes("senate")) {
+        state.office = "Senate";
         state.threshold = { cc: 50, approval: 2.5, sigs: 14 };
         return `Running for Senate requires 50 cc + 2.5% approval OR 14% statewide signatures.`;
       }
       if (office.includes("house")) {
+        state.office = "House";
         state.threshold = { cc: 31, approval: 2.5, sigs: 7 };
         return `Running for House requires 31 cc + 2.5% approval OR 7% district signatures.`;
       }
       return "Please choose President, Senate, or House.";
     },
   },
+
+  // Module 1B and Module 2B can follow here
+];
 
 export interface ModuleState {
   office: "President" | "Senate" | "House";

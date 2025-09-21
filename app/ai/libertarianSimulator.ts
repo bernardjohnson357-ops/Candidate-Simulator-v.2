@@ -132,30 +132,48 @@ export const modules = [
   },
 ];
 
-  {
-    id: "3",
-    title: "First Moves: Strategy & Spending",
-    narrator: `It’s early summer. Allocate resources between advertising, travel, and press.`,
-    prompt: `Where do you spend your campaign resources first?`,
-    logic: (input: string, state: ModuleState) => {
-      if (input.includes("advert")) {
-        state.cc -= 15;
-        state.approval += 1;
-        return "Advertising boosted approval but drained funds. –15 cc, +1% approval.";
-      }
-      if (input.includes("travel")) {
-        state.cc -= 10;
-        state.signatures += 150;
-        return "Travel gained signatures. –10 cc, +150 signatures.";
-      }
-      if (input.includes("press")) {
-        state.cc -= 5;
-        state.approval += 0.5;
-        return "Press outreach improved recognition. –5 cc, +0.5% approval.";
-      }
-      return "Your early moves weren’t clear.";
-    },
+{
+  id: "3",
+  title: "First Moves – Strategy & Spending",
+  narrator: `It's time to make your early campaign decisions. You have limited Candidate Coins (CC) and must choose how to spend them to maximize signatures and voter approval.`,
+  prompt: `Choose one: "advertising", "travel", or "press outreach".`,
+  logic: (input: string, state: ModuleState) => {
+    const choice = input.toLowerCase().trim();
+
+    switch (choice) {
+      case "advertising":
+        if (state.cc >= 10) {
+          state.cc -= 10;
+          state.approval += 1.0;
+          return "You ran an advertising campaign. –10 CC, +1.0% approval.";
+        } else {
+          return "Not enough CC for advertising. Choose another action.";
+        }
+
+      case "travel":
+        if (state.cc >= 8) {
+          state.cc -= 8;
+          state.signatures += 150;
+          return "You traveled to key districts. –8 CC, +150 signatures.";
+        } else {
+          return "Not enough CC for travel. Choose another action.";
+        }
+
+      case "press outreach":
+        if (state.cc >= 5) {
+          state.cc -= 5;
+          state.approval += 0.5;
+          state.signatures += 50;
+          return "You engaged in press outreach. –5 CC, +50 signatures, +0.5% approval.";
+        } else {
+          return "Not enough CC for press outreach. Choose another action.";
+        }
+
+      default:
+        return 'Action unclear. Please type "advertising", "travel", or "press outreach".';
+    }
   },
+},
 
   {
     id: "4",

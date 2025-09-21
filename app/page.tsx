@@ -2,7 +2,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { resetSimulator, processInputLoop } from "./ai/aiLoop";
 import { ModuleState } from "./ai/moduleLogic";
 
 interface Message {

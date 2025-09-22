@@ -155,23 +155,32 @@ You begin with 50 Candidate Coins (cc), 0 signatures, and 0% voter approval.`,
       }
     },
   },
-];
 
+  // ------------------------------
+  // Module 4 – Campaign Identity
+  // ------------------------------
   {
     id: "4",
     title: "Campaign Identity",
     narrator: `Define your campaign’s message. Libertarian values include liberty, fiscal responsibility, and limited government.`,
     prompt: `Write your slogan, mission statement, and announcement speech.`,
     logic: (input: string, state: ModuleState) => {
-      if (input.length > 50) {
-        state.cc += 2;
-        state.approval += 1;
-        return "Strong identity! +2 cc, +1% approval.";
+      const normalized = input.toLowerCase().trim();
+
+      if (normalized.length < 10) {
+        return "Your statement is too short. Try to write a clear slogan or mission statement (at least 10 characters).";
       }
-      state.approval -= 0.5;
-      return "Your message felt weak. –0.5% approval.";
+
+      const approvalBoost = Math.min(1.5, normalized.length / 50);
+      const signaturesBoost = Math.min(100, normalized.length * 2);
+
+      state.approval += approvalBoost;
+      state.signatures += signaturesBoost;
+
+      return `Campaign identity set! +${approvalBoost.toFixed(1)}% approval, +${signaturesBoost} signatures.`;
     },
   },
+];
 
   {
     id: "5",

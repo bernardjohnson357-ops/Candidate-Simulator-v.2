@@ -241,7 +241,7 @@ You begin with 50 Candidate Coins (cc), 0 signatures, and 0% voter approval.`,
   },
 
 // ------------------------------
-// Module 7 – Local Media Outreach
+// Module 7 – Local Media Outreach with Audio
 // ------------------------------
 {
   id: "7",
@@ -251,6 +251,31 @@ You begin with 50 Candidate Coins (cc), 0 signatures, and 0% voter approval.`,
   logic: (input: string, state: ModuleState) => {
     const choice = input.toLowerCase().trim();
 
+    // --------------------------
+    // Browser-safe audio output
+    // --------------------------
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      let audioMessage = "";
+      switch (choice) {
+        case "interview":
+          audioMessage = "You are giving an interview on local radio.";
+          break;
+        case "press release":
+          audioMessage = "You have released a press statement to local news.";
+          break;
+        case "community event":
+          audioMessage = "You are hosting a community event for voters.";
+          break;
+        default:
+          audioMessage = "No action detected for audio output.";
+      }
+      const utterance = new SpeechSynthesisUtterance(audioMessage);
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // --------------------------
+    // Update ModuleState based on choice
+    // --------------------------
     switch (choice) {
       case "interview":
         state.approval += 0.7;

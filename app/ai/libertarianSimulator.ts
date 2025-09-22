@@ -181,100 +181,203 @@ You begin with 50 Candidate Coins (cc), 0 signatures, and 0% voter approval.`,
     },
   },
 
-  // ------------------------------
-  // Module 5 – Fundraising & Donor Outreach
-  // ------------------------------
-  {
-    id: "5",
-    title: "Fundraising & Donor Outreach",
-    narrator: `It's time to raise funds for your campaign. Effective fundraising increases your CC and helps with campaign activities.`,
-    prompt: `Choose one: "host event", "online campaign", or "personal donors".`,
-    logic: (input: string, state: ModuleState) => {
-      const choice = input.toLowerCase().trim();
+ // ------------------------------
+// Module 5 – Fundraising & Donor Outreach
+// ------------------------------
+{
+  id: "5",
+  title: "Fundraising & Donor Outreach",
+  narrator: `It's time to raise funds for your campaign. Effective fundraising increases your CC and helps with campaign activities.`,
+  prompt: `Choose one: "host event", "online campaign", or "personal donors".`,
+  logic: (input: string, state: ModuleState) => {
+    const choice = input.toLowerCase().trim();
 
-      switch (choice) {
-        case "host event":
-          state.cc += 15;
-          state.approval += 0.5;
-          return "You hosted a fundraising event. +15 CC, +0.5% approval.";
-        case "online campaign":
-          state.cc += 10;
-          state.signatures += 100;
-          return "You ran an online fundraising campaign. +10 CC, +100 signatures.";
-        case "personal donors":
-          state.cc += 8;
-          state.approval += 0.2;
-          return "You contacted personal donors. +8 CC, +0.2% approval.";
-        default:
-          return 'Action unclear. Please type "host event", "online campaign", or "personal donors".';
-      }
-    },
+    switch (choice) {
+      case "host event":
+        state.cc += 15;
+        state.approval += 0.5;
+        return "You hosted a fundraising event. +15 CC, +0.5% approval.";
+      case "online campaign":
+        state.cc += 10;
+        state.signatures += 100;
+        return "You ran an online fundraising campaign. +10 CC, +100 signatures.";
+      case "personal donors":
+        state.cc += 8;
+        state.approval += 0.2;
+        return "You contacted personal donors. +8 CC, +0.2% approval.";
+      default:
+        return 'Action unclear. Please type "host event", "online campaign", or "personal donors".';
+    }
   },
+},
 
-  // ------------------------------
-  // Module 6 – Campaign Messaging
-  // ------------------------------
-  {
-    id: "6",
-    title: "Campaign Messaging",
-    narrator: `Now you need to craft your campaign messaging. Clear and consistent messaging can boost voter approval.`,
-    prompt: `Choose one focus: "liberty", "fiscal responsibility", or "limited government".`,
-    logic: (input: string, state: ModuleState) => {
-      const choice = input.toLowerCase().trim();
+// ------------------------------
+// Module 6 – Campaign Messaging
+// ------------------------------
+{
+  id: "6",
+  title: "Campaign Messaging",
+  narrator: `Now you need to craft your campaign messaging. Clear and consistent messaging can boost voter approval.`,
+  prompt: `Choose one focus: "liberty", "fiscal responsibility", or "limited government".`,
+  logic: (input: string, state: ModuleState) => {
+    const choice = input.toLowerCase().trim();
 
-      switch (choice) {
-        case "liberty":
-          state.approval += 1.0;
-          return "You focused your message on liberty. +1.0% approval.";
-        case "fiscal responsibility":
-          state.approval += 0.8;
-          state.cc += 2;
-          return "You emphasized fiscal responsibility. +0.8% approval, +2 CC.";
-        case "limited government":
-          state.approval += 0.5;
-          state.signatures += 50;
-          return "You highlighted limited government. +0.5% approval, +50 signatures.";
-        default:
-          return 'Action unclear. Please type "liberty", "fiscal responsibility", or "limited government".';
-      }
-    },
+    switch (choice) {
+      case "liberty":
+        state.approval += 1.0;
+        return "You focused your message on liberty. +1.0% approval.";
+      case "fiscal responsibility":
+        state.approval += 0.8;
+        state.cc += 2;
+        return "You emphasized fiscal responsibility. +0.8% approval, +2 CC.";
+      case "limited government":
+        state.approval += 0.5;
+        state.signatures += 50;
+        return "You highlighted limited government. +0.5% approval, +50 signatures.";
+      default:
+        return 'Action unclear. Please type "liberty", "fiscal responsibility", or "limited government".';
+    }
   },
+},
+
+// ------------------------------
+// Module 7 – Local Media Outreach with Audio
+// ------------------------------
+{
+  id: "7",
+  title: "Local Media Outreach",
+  narrator: `Engage with local media to raise awareness about your campaign.`,
+  prompt: `Choose one: "interview", "press release", or "community event".`,
+  logic: (input: string, state: ModuleState) => {
+    const choice = input.toLowerCase().trim();
+
+    // Browser-safe audio
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      let audioMessage = "";
+      switch (choice) {
+        case "interview":
+          audioMessage = "You are giving an interview on local radio.";
+          break;
+        case "press release":
+          audioMessage = "You have released a press statement to local news.";
+          break;
+        case "community event":
+          audioMessage = "You are hosting a community event for voters.";
+          break;
+        default:
+          audioMessage = "No action detected for audio output.";
+      }
+      const utterance = new SpeechSynthesisUtterance(audioMessage);
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // Update ModuleState
+    switch (choice) {
+      case "interview":
+        state.approval += 0.7;
+        return "You did a local interview. +0.7% approval.";
+      case "press release":
+        state.signatures += 50;
+        return "You issued a press release. +50 signatures.";
+      case "community event":
+        state.cc -= 5;
+        state.approval += 0.5;
+        state.signatures += 30;
+        return "You held a community event. –5 CC, +0.5% approval, +30 signatures.";
+      default:
+        return 'Action unclear. Please type "interview", "press release", or "community event".';
+    }
+  },
+},
+
+// ------------------------------
+// Module 8 – Social Media Engagement
+// ------------------------------
+{
+  id: "8",
+  title: "Social Media Engagement",
+  narrator: `Use social media to spread your campaign message and interact with voters.`,
+  prompt: `Choose one: "tweet", "facebook post", or "video message".`,
+  logic: (input: string, state: ModuleState) => {
+    const choice = input.toLowerCase().trim();
+
+    switch (choice) {
+      case "tweet":
+        state.approval += 0.3;
+        state.signatures += 20;
+        return "You tweeted about your campaign. +0.3% approval, +20 signatures.";
+      case "facebook post":
+        state.approval += 0.5;
+        state.signatures += 40;
+        return "You posted on Facebook. +0.5% approval, +40 signatures.";
+      case "video message":
+        state.approval += 0.7;
+        state.cc -= 3;
+        return "You recorded a video message. +0.7% approval, –3 CC.";
+      default:
+        return 'Action unclear. Please type "tweet", "facebook post", or "video message".';
+    }
+  },
+},
+
+// ------------------------------
+// Module 9 – Community Outreach
+// ------------------------------
+{
+  id: "9",
+  title: "Community Outreach",
+  narrator: `Meet voters directly to increase support and gather signatures.`,
+  prompt: `Choose one: "door-to-door", "town hall", or "volunteer event".`,
+  logic: (input: string, state: ModuleState) => {
+    const choice = input.toLowerCase().trim();
+
+    switch (choice) {
+      case "door-to-door":
+        state.signatures += 100;
+        state.approval += 0.4;
+        return "You canvassed door-to-door. +100 signatures, +0.4% approval.";
+      case "town hall":
+        state.approval += 0.7;
+        return "You hosted a town hall meeting. +0.7% approval.";
+      case "volunteer event":
+        state.cc -= 2;
+        state.signatures += 50;
+        return "You organized a volunteer event. –2 CC, +50 signatures.";
+      default:
+        return 'Action unclear. Please type "door-to-door", "town hall", or "volunteer event".';
+    }
+  },
+},
+
+// ------------------------------
+// Module 10 – Fundraising Strategy
+// ------------------------------
+{
+  id: "10",
+  title: "Fundraising Strategy",
+  narrator: `Plan your next fundraising campaign to maximize resources.`,
+  prompt: `Choose one: "major donors", "small donors", or "online fundraiser".`,
+  logic: (input: string, state: ModuleState) => {
+    const choice = input.toLowerCase().trim();
+
+    switch (choice) {
+      case "major donors":
+        state.cc += 20;
+        state.approval += 0.3;
+        return "You focused on major donors. +20 CC, +0.3% approval.";
+      case "small donors":
+        state.cc += 10;
+        state.signatures += 100;
+        return "You reached out to small donors. +10 CC, +100 signatures.";
+      case "online fundraiser":
+        state.cc += 15;
+        return "You ran an online fundraiser. +15 CC.";
+      default:
+        return 'Action unclear. Please type "major donors", "small donors", or "online fundraiser".';
+    }
+  },
+},
   
-  {
-    id: "8",
-    title: "Mid-October Operations",
-    narrator: `Press conferences and voter Q&A test your consistency.`,
-    prompt: `Respond to questions on healthcare, spending, and Second Amendment rights.`,
-    logic: (input: string, state: ModuleState) => {
-      state.approval += 1;
-      return "Your answers were clear and consistent. +1% approval.";
-    },
-  },
-
-  {
-    id: "9",
-    title: "Final Push",
-    narrator: `The last two weeks: podcasts, ads, and final messaging.`,
-    prompt: `Describe your podcast themes and ad strategy.`,
-    logic: (input: string, state: ModuleState) => {
-      state.cc -= 10;
-      state.approval += 1;
-      return "Your final push gained momentum. –10 cc, +1% approval.";
-    },
-  },
-
-  {
-    id: "10",
-    title: "Election Countdown",
-    narrator: `Final week: town halls, rapid Q&A, and spending decisions.`,
-    prompt: `Give your town hall speech and decide final CC use (ads, ground game, or prep).`,
-    logic: (input: string, state: ModuleState) => {
-      state.cc -= 5;
-      state.approval += 1;
-      return "You energized supporters in the final week. –5 cc, +1% approval.";
-    },
-  },
-
   {
     id: "11",
     title: "School Visit",

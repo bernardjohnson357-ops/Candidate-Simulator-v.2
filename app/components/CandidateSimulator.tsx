@@ -1,4 +1,8 @@
 // File: app/components/CandidateSimulator.tsx
+"use client"; // ensure hooks work in Next.js app router
+import React, { useState, useEffect } from "react";
+import { speak } from "../ai/audioUtils"; // 👈 import helper
+
 import React, { useState } from "react";
 import { libertarianSimulator } from "../ai/libertarianSimulator";
 import { ModuleState } from "../ai/types";

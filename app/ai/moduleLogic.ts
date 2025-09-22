@@ -1,7 +1,6 @@
 // app/ai/moduleLogic.ts
-
 export interface ModuleState {
-  office: "President" | "Senate" | "House"; // required
+  office: "President" | "Senate" | "House";
   cc: number;
   signatures: number;
   approval: number;

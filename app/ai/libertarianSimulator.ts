@@ -1,17 +1,10 @@
 // app/ai/libertarianSimulator.ts
-
-// ------------------------------
-// Libertarian-Only Candidate Simulator
-// Modules 0 → 1B → 2B → 3
-// ------------------------------
-
-// Module state interface
-// app/ai/libertarianSimulator.ts
-
-import { ModuleState } from "./moduleLogic"; // use the original moduleLogic.ts for ModuleState
+import { ModuleState } from "./moduleLogic";
 
 export const libertarianSimulator = [
-  // Module 0 – Orientation / Office selection
+  // ------------------------------
+  // Module 0 – Orientation & Introduction
+  // ------------------------------
   {
     id: "0",
     title: "Orientation & Introduction",
@@ -24,23 +17,25 @@ You begin with 50 Candidate Coins (cc), 0 signatures, and 0% voter approval.`,
       if (office.includes("president")) {
         state.office = "President";
         state.threshold = { cc: 75, approval: 2.5, sigs: 25 };
-        return `Running for President requires 75 cc + 2.5% approval OR 25% nationwide signatures.`;
+        return `Running for President requires 75 CC + 2.5% approval OR 25% nationwide signatures.`;
       }
       if (office.includes("senate")) {
         state.office = "Senate";
         state.threshold = { cc: 50, approval: 2.5, sigs: 14 };
-        return `Running for Senate requires 50 cc + 2.5% approval OR 14% statewide signatures.`;
+        return `Running for Senate requires 50 CC + 2.5% approval OR 14% statewide signatures.`;
       }
       if (office.includes("house")) {
         state.office = "House";
         state.threshold = { cc: 31, approval: 2.5, sigs: 7 };
-        return `Running for House requires 31 cc + 2.5% approval OR 7% district signatures.`;
+        return `Running for House requires 31 CC + 2.5% approval OR 7% district signatures.`;
       }
       return "Please choose President, Senate, or House.";
     },
   },
 
-  // Module 1B – Party Filing
+  // ------------------------------
+  // Module 1B – Libertarian Party Filing
+  // ------------------------------
   {
     id: "1",
     title: "Libertarian Party Filing",
@@ -65,7 +60,6 @@ You begin with 50 Candidate Coins (cc), 0 signatures, and 0% voter approval.`,
         return "Your filing approach is unclear. Try mentioning 'fee', 'signatures', or both.";
       }
 
-      // Check thresholds for eligibility
       let thresholdMet = false;
       switch (state.office) {
         case "President":
@@ -90,7 +84,9 @@ You begin with 50 Candidate Coins (cc), 0 signatures, and 0% voter approval.`,
     },
   },
 
+  // ------------------------------
   // Module 2B – Federal Filing Compliance
+  // ------------------------------
   {
     id: "2",
     title: "Federal Filing Compliance",
@@ -113,8 +109,10 @@ You begin with 50 Candidate Coins (cc), 0 signatures, and 0% voter approval.`,
       }
     },
   },
-];
 
+  // ------------------------------
+  // Module 3 – First Moves (Strategy & Spending)
+  // ------------------------------
   {
     id: "3",
     title: "First Moves – Strategy & Spending",
@@ -157,6 +155,7 @@ You begin with 50 Candidate Coins (cc), 0 signatures, and 0% voter approval.`,
       }
     },
   },
+];
 
   {
     id: "4",

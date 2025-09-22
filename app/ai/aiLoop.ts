@@ -1,49 +1,90 @@
-// app/ai/aiLoop.ts
-import { ModuleState, CandidateState, Module } from "./types";
+// ./app/ai/aiLoop.ts
+import { libertarianSimulator } from "./libertarianSimulator";
+import { CandidateState, ModuleState, Module, Task } from "./types";
+
 // ------------------------------
 // Initialize candidate state
-// ------------------------------
-const initialState: ModuleState = {
-  office: "House",       // placeholder; will be set by Module 0
+export const candidateState: CandidateState = {
+  office: "House",       // placeholder; can be set dynamically in Module 0
   cc: 50,
   signatures: 0,
   approval: 0,
-  threshold: undefined,
+  threshold: {
+    cc: 31,
+    approval: 2.5,
+    sigs: 7,
+  },
 };
 
-let state: ModuleState = { ...initialState };
-let currentIndex = 0;
+// ------------------------------
+// Function to initialize a module state
+const initModuleState = (module: Module): ModuleState => ({
+  moduleId: module.id,
+  completedTasks: 0,
+  totalTasks: module.tasks.length,
+  ccChange: 0,
+  signaturesChange: 0,
+  approvalChange: 0,
+  finished: false,
+});
 
 // ------------------------------
-// Simulated user inputs for Modules 0–4
-// ------------------------------
-const userInputs: string[] = [
-  "house",                       // Module 0 – choose office
-  "both",                        // Module 1B – pay fee + collect signatures
-  "treasurer bank 15-day",       // Module 2B – federal filing
-  "advertising",                 // Module 3 – first move
-  "Opportunity and Liberty!"     // Module 4 – campaign slogan/mission
-];
+// Run the simulator through all modules linearly
+export const runSimulator = async () => {
+  for (let i = 0; i < libertarianSimulator.length; i++) {
+    const module = libertarianSimulator[i];
+    const moduleState = initModuleState(module);
 
-// ------------------------------
-// Run Modules sequentially
-// ------------------------------
-while (currentIndex < 5) {
-  const currentModule = libertarianSimulator[currentIndex];
-  console.log(`\n--- Module ${currentModule.id}: ${currentModule.title} ---`);
-  console.log(currentModule.narrator);
+    console.log(`\n=== Module ${module.id}: ${module.title} ===`);
+    console.log(module.description);
 
-  const input = userInputs[currentIndex];
-  console.log(`\nUser Input: ${input}`);
+    // Loop through tasks automatically
+    for (const task of module.tasks) {
+      await handleTask(task, moduleState);
+      moduleState.completedTasks++;
+    }
 
-  // Run module logic
-  if (currentModule.logic) {
-    const result = currentModule.logic(input, state);
-    console.log(`\nResult: ${result}`);
-    console.log(`CC: ${state.cc}, Signatures: ${state.signatures}, Approval: ${state.approval.toFixed(1)}%`);
+    moduleState.finished = true;
+
+    // Update candidate state based on module changes
+    candidateState.cc += moduleState.ccChange || 0;
+    candidateState.signatures += moduleState.signaturesChange || 0;
+    candidateState.approval += moduleState.approvalChange || 0;
+
+    console.log(
+      `Module ${module.id} completed. CC: ${candidateState.cc}, Signatures: ${candidateState.signatures}, Approval: ${candidateState.approval.toFixed(
+        2
+      )}%`
+    );
   }
 
-  currentIndex++;
-}
+  console.log("\n=== Simulation Complete ===");
+  console.log(candidateState);
+};
 
-console.log("\nSimulation complete for Modules 0–4!");
+// ------------------------------
+// Simulated task handler
+const handleTask = async (task: Task, moduleState: ModuleState) => {
+  // Here you would integrate your AI prompts / UI
+  console.log(`Task: [${task.type}] ${task.prompt}`);
+
+  // Simulate user completing task (replace with real AI handling)
+  await new Promise((resolve) => setTimeout(resolve, 500)); // simulate delay
+
+  // Example: apply simple rewards
+  switch (task.type) {
+    case "read":
+      moduleState.approvalChange = (moduleState.approvalChange || 0) + 0.1;
+      break;
+    case "write":
+      moduleState.signaturesChange = (moduleState.signaturesChange || 0) + 5;
+      moduleState.ccChange = (moduleState.ccChange || 0) + 1;
+      break;
+    case "speak":
+      moduleState.approvalChange = (moduleState.approvalChange || 0) + 0.5;
+      break;
+    case "upload":
+      moduleState.ccChange = (moduleState.ccChange || 0) + 2;
+      break;
+  }
+};

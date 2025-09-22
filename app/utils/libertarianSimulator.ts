@@ -1,16 +1,16 @@
 // ./app/utils/libertarianSimulator.ts
-import { Module, Task } from "../ai/types";
+import { Module } from "../ai/types";
 
 export const libertarianSimulator: Module[] = [
   {
     id: "0",
     title: "Orientation & Introduction",
     description:
-      "Candidates learn about Candidate Coins (CC), signatures, voter approval, and ballot eligibility. They choose whether to run for President, Senate, or House.",
+      "Welcome to the Federal Candidate Simulator. You’ll learn how Candidate Coins (CC), signatures, and voter approval work. Choose whether to run for President, Senate, or House.",
     tasks: [
       { type: "read", prompt: "Read the campaign manual and scoring system." },
       { type: "write", prompt: "Declare which office you are running for." },
-      { type: "speak", prompt: "Optionally speak your office choice." },
+      { type: "speak", prompt: "Optionally speak your choice of office." },
       { type: "upload", prompt: "Optionally upload a campaign-related image." },
     ],
   },
@@ -30,158 +30,180 @@ export const libertarianSimulator: Module[] = [
     id: "1B",
     title: "Party Filing",
     description:
-      "Party candidates secure nomination and file with the SOS. Quiz performance converts into signatures and CC bonuses.",
+      "Candidates file under a political party. This requires different thresholds and CC usage.",
     tasks: [
-      { type: "read", prompt: "Review party nomination and filing rules." },
-      { type: "write", prompt: "Complete the quiz on party filing compliance." },
+      { type: "read", prompt: "Study the rules for filing as a party candidate." },
+      { type: "write", prompt: "Answer questions about your party filing process." },
+      { type: "speak", prompt: "Optionally explain why you chose this route." },
+      { type: "upload", prompt: "Optionally upload your party documents." },
     ],
   },
   {
-    id: "2A",
-    title: "Independent FEC Filing Quizzes",
+    id: "2",
+    title: "Ballot Access Challenges",
     description:
-      "Candidates complete quizzes on FEC Forms 1 and 2. Correct answers earn signatures and CC; errors cost them.",
+      "Candidates face challenges from opponents or election officials. Learn how to defend your ballot access.",
     tasks: [
-      { type: "read", prompt: "Review federal filing rules for independent candidates." },
-      { type: "write", prompt: "Answer the FEC Form 1 & 2 quiz." },
-    ],
-  },
-  {
-    id: "2B",
-    title: "Party FEC Filing Quizzes",
-    description:
-      "Similar to 2A but for party candidates. Quizzes cover FEC Forms 1–3 and reporting deadlines.",
-    tasks: [
-      { type: "read", prompt: "Review federal filing rules for party candidates." },
-      { type: "write", prompt: "Answer the FEC Forms 1–3 quiz." },
+      { type: "read", prompt: "Review common legal challenges to ballot access." },
+      { type: "write", prompt: "Draft a short defense of your ballot access." },
+      { type: "speak", prompt: "Optionally explain your strategy aloud." },
+      { type: "upload", prompt: "Optionally upload related documents." },
     ],
   },
   {
     id: "3",
-    title: "First Moves (Strategy & Spending)",
+    title: "Compliance & FEC Reports",
     description:
-      "Candidates make early campaign decisions: advertising, travel, and press outreach. Each choice impacts CC, signatures, and voter approval.",
+      "Candidates must comply with campaign finance law, including filing FEC forms and disclosure reports.",
     tasks: [
-      { type: "write", prompt: "Choose how to allocate your early campaign funds." },
-      { type: "read", prompt: "See potential outcomes of early campaign choices." },
+      { type: "read", prompt: "Study the basics of FEC Form 1 (Statement of Organization)." },
+      { type: "write", prompt: "Simulate filling out a simplified campaign finance form." },
+      { type: "speak", prompt: "Optionally describe the importance of compliance." },
+      { type: "upload", prompt: "Optionally upload a sample report." },
     ],
   },
   {
     id: "4",
-    title: "Campaign Identity",
+    title: "Fundraising & Donor Outreach",
     description:
-      "Candidates draft slogans, mission statements, and announcement speeches. Strong messaging increases signatures and CC; poor messaging lowers approval.",
+      "Fundraising is essential. Candidates must engage donors, manage limits, and maintain compliance.",
     tasks: [
-      { type: "write", prompt: "Draft your slogan and mission statement." },
-      { type: "write", prompt: "Prepare your announcement speech." },
+      { type: "read", prompt: "Review rules about individual donation limits." },
+      { type: "write", prompt: "Draft a short donor outreach email." },
+      { type: "speak", prompt: "Optionally record a fundraising pitch." },
+      { type: "upload", prompt: "Optionally upload a sample fundraising flyer." },
     ],
   },
   {
     id: "5",
-    title: "Campaign Expansion (Visuals & Community)",
+    title: "Media & Press Engagement",
     description:
-      "Candidates design logos, yard signs, and T-shirts, collect petitions, respond to constituent concerns, and handle endorsements.",
+      "Learn how to engage with press, issue statements, and manage media crises.",
     tasks: [
-      { type: "write", prompt: "Respond to constituent Q&A scenarios." },
-      { type: "upload", prompt: "Upload your mock campaign visuals (logos, signs, T-shirts)." },
+      { type: "read", prompt: "Review media engagement best practices." },
+      { type: "write", prompt: "Draft a short press release." },
+      { type: "speak", prompt: "Optionally deliver a 30-second stump speech." },
+      { type: "upload", prompt: "Optionally upload a campaign poster image." },
     ],
   },
   {
     id: "6",
-    title: "September Compliance & Scenarios",
+    title: "Debates & Public Forums",
     description:
-      "Candidates file FEC Form 3, complete a compliance quiz, and respond to September campaign scenarios.",
+      "Prepare for debates and public speaking events. Learn how to deliver key messages under pressure.",
     tasks: [
-      { type: "read", prompt: "Review FEC Form 3 reporting requirements." },
-      { type: "write", prompt: "Complete the September compliance quiz." },
-      { type: "write", prompt: "Handle Constitution Day outreach and postcards." },
+      { type: "read", prompt: "Read debate preparation materials." },
+      { type: "write", prompt: "Write a short debate opening statement." },
+      { type: "speak", prompt: "Optionally deliver your debate response aloud." },
+      { type: "upload", prompt: "Optionally upload debate prep notes." },
     ],
   },
   {
     id: "7",
-    title: "Early October Ops (Safe)",
+    title: "Grassroots Organizing",
     description:
-      "Candidates manage their team, deliver a community safety speech, and respond to weekly news.",
+      "Build volunteer networks and community engagement strategies to grow your campaign.",
     tasks: [
-      { type: "write", prompt: "Assign tasks to your campaign team." },
-      { type: "speak", prompt: "Deliver your community safety speech." },
-      { type: "write", prompt: "Respond to weekly news scenario." },
+      { type: "read", prompt: "Learn how grassroots campaigns recruit volunteers." },
+      { type: "write", prompt: "Draft a volunteer recruitment message." },
+      { type: "speak", prompt: "Optionally role-play a pitch to a volunteer." },
+      { type: "upload", prompt: "Optionally upload volunteer flyers." },
     ],
   },
   {
     id: "8",
-    title: "Mid-October Ops (Safe)",
+    title: "Digital Campaigning",
     description:
-      "Candidates practice press conferences and constituent engagement on healthcare, Second Amendment, and fiscal ethics.",
+      "Use digital tools, social media, and online ads to boost your campaign.",
     tasks: [
-      { type: "speak", prompt: "Answer press conference questions." },
-      { type: "write", prompt: "Respond to constituent concerns." },
+      { type: "read", prompt: "Study the rules around digital political ads." },
+      { type: "write", prompt: "Create a short campaign social media post." },
+      { type: "speak", prompt: "Optionally record a social media video script." },
+      { type: "upload", prompt: "Optionally upload a sample ad image." },
     ],
   },
   {
     id: "9",
-    title: "Final Push (Safe)",
+    title: "Voter Outreach & Canvassing",
     description:
-      "Candidates appear on a podcast, manage campaign media, and draft a final narrative.",
+      "Learn the basics of voter outreach through phone banking, canvassing, and events.",
     tasks: [
-      { type: "speak", prompt: "Participate in the campaign podcast." },
-      { type: "write", prompt: "Draft your final campaign narrative." },
+      { type: "read", prompt: "Review effective voter outreach strategies." },
+      { type: "write", prompt: "Draft a script for a voter phone call." },
+      { type: "speak", prompt: "Optionally practice your voter pitch." },
+      { type: "upload", prompt: "Optionally upload outreach materials." },
     ],
   },
   {
     id: "10",
-    title: "Election Countdown (Safe)",
+    title: "Coalition Building",
     description:
-      "Candidates conduct town halls, engage in rapid Q&A, and finalize their endgame strategy.",
+      "Form alliances with interest groups, advocacy organizations, and local leaders.",
     tasks: [
-      { type: "speak", prompt: "Lead a town hall with live constituent questions." },
-      { type: "write", prompt: "Finalize your endgame strategy." },
+      { type: "read", prompt: "Study examples of political coalition-building." },
+      { type: "write", prompt: "Draft a proposal to a coalition partner." },
+      { type: "speak", prompt: "Optionally present your coalition pitch aloud." },
+      { type: "upload", prompt: "Optionally upload supporting documents." },
     ],
   },
   {
     id: "11",
-    title: "School Visit",
+    title: "Policy Development",
     description:
-      "Candidates visit a local school, delivering a short speech focused on education and community engagement.",
+      "Develop policy positions and campaign platforms that resonate with voters.",
     tasks: [
-      { type: "speak", prompt: "Deliver a speech to students and teachers." },
+      { type: "read", prompt: "Review how candidates develop policy platforms." },
+      { type: "write", prompt: "Draft your campaign’s policy statement." },
+      { type: "speak", prompt: "Optionally deliver a policy announcement speech." },
+      { type: "upload", prompt: "Optionally upload policy briefing notes." },
     ],
   },
   {
     id: "12",
-    title: "TV Interview",
+    title: "Get Out The Vote (GOTV)",
     description:
-      "Candidates answer live questions from media on platform and past decisions.",
+      "Learn how to maximize voter turnout during early voting and election day.",
     tasks: [
-      { type: "speak", prompt: "Respond to televised interview questions." },
+      { type: "read", prompt: "Study GOTV campaign techniques." },
+      { type: "write", prompt: "Draft a GOTV volunteer instruction sheet." },
+      { type: "speak", prompt: "Optionally record a GOTV motivational speech." },
+      { type: "upload", prompt: "Optionally upload GOTV flyers." },
     ],
   },
   {
     id: "13",
-    title: "Endorsements",
+    title: "Election Day Operations",
     description:
-      "Candidates weigh public endorsements from organizations or figures.",
+      "Coordinate poll watchers, volunteers, and legal observers for election day.",
     tasks: [
-      { type: "write", prompt: "Decide whether to accept or decline endorsements." },
+      { type: "read", prompt: "Learn about election day logistics." },
+      { type: "write", prompt: "Create an election day action plan." },
+      { type: "speak", prompt: "Optionally deliver final rally remarks." },
+      { type: "upload", prompt: "Optionally upload poll watcher instructions." },
     ],
   },
   {
     id: "14",
-    title: "Debate",
+    title: "Post-Election: Concede or Transition",
     description:
-      "Candidates participate in a final public debate, giving an opening statement and answering questions.",
+      "Candidates must know how to transition gracefully whether they win or lose.",
     tasks: [
-      { type: "speak", prompt: "Give your opening debate statement." },
-      { type: "speak", prompt: "Answer debate questions." },
+      { type: "read", prompt: "Review examples of concession and victory speeches." },
+      { type: "write", prompt: "Draft either a concession or victory speech." },
+      { type: "speak", prompt: "Optionally deliver your draft speech aloud." },
+      { type: "upload", prompt: "Optionally upload transition documents." },
     ],
   },
   {
     id: "15",
-    title: "Final Summary",
+    title: "Reflection & Feedback",
     description:
-      "AI generates a narrative summarizing the candidate’s performance, key decisions, and outcome.",
+      "Reflect on your campaign experience and provide feedback for improvement.",
     tasks: [
-      { type: "read", prompt: "Review your campaign summary and results." },
+      { type: "read", prompt: "Read a closing note from the simulator." },
+      { type: "write", prompt: "Write your reflections on the campaign." },
+      { type: "speak", prompt: "Optionally record your reflections aloud." },
+      { type: "upload", prompt: "Optionally upload campaign materials for review." },
     ],
   },
 ];

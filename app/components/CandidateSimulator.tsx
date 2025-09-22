@@ -2,7 +2,7 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { ModuleState } from "../ai/types";
-import { speak } from "../utils/audioUtils"; // Ensure this exists
+import { speak } from "../utils/audioUtils";
 
 interface CandidateSimulatorProps {
   modules: ModuleState[];
@@ -16,22 +16,45 @@ const CandidateSimulator: React.FC<CandidateSimulatorProps> = ({ modules }) => {
   const [listening, setListening] = useState(false);
   const [paused, setPaused] = useState(false);
 
+  // Campaign state
+  const [cc, setCC] = useState(50); // Starting CC
+  const [signatures, setSignatures] = useState(0);
+  const [approval, setApproval] = useState(0);
+
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const currentModule = modules[currentModuleIndex];
 
-  // Handle typed input submission
+  // Compute voter approval from signatures
+  const calculateApproval = (sigs: number) => sigs / 100;
+
   const handleSubmit = () => {
     if (!userInput.trim()) return;
 
     const newMsg = `User: ${userInput}`;
     setMessages([...messages, newMsg]);
-    setUserInput("");
 
-    // Auto-narration (AI response)
-    const aiResponse = currentModule.narration || "AI: Response placeholder.";
+    // For AI narration, use detailedSummary
+    const aiResponse = currentModule.detailedSummary || "AI: Response placeholder.";
     setMessages(prev => [...prev, aiResponse]);
+
+    // Scoring logic example (simplified)
+    let earnedCC = 0;
+    let earnedSignatures = 0;
+
+    // Basic keyword-based scoring placeholder
+    if (userInput.toLowerCase().includes("correct") || userInput.toLowerCase().includes("submit")) {
+      earnedSignatures = 50; // example reward
+      earnedCC = 1;
+    } else {
+      earnedSignatures = -10; // penalty
+      earnedCC = -1;
+    }
+
+    setSignatures(prev => prev + earnedSignatures);
+    setCC(prev => Math.max(prev + earnedCC, 0));
+    setApproval(prev => Math.min(Math.max(calculateApproval(signatures + earnedSignatures), 0), 100));
 
     if (userInput.toLowerCase().includes("continue")) {
       setPaused(false);
@@ -39,6 +62,8 @@ const CandidateSimulator: React.FC<CandidateSimulatorProps> = ({ modules }) => {
     } else {
       setPaused(true);
     }
+
+    setUserInput("");
   };
 
   const nextModule = () => {
@@ -48,7 +73,6 @@ const CandidateSimulator: React.FC<CandidateSimulatorProps> = ({ modules }) => {
     }
   };
 
-  // Handle image uploads
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -58,18 +82,15 @@ const CandidateSimulator: React.FC<CandidateSimulatorProps> = ({ modules }) => {
     reader.readAsDataURL(file);
   };
 
-  // Handle audio recording (placeholder)
   const handleAudioRecord = async () => {
     setListening(true);
     try {
-      // Placeholder: replace with Web Audio API or your recording library
       await speak("Recording simulated. Please say your input.");
     } finally {
       setListening(false);
     }
   };
 
-  // Auto-expand textarea
   useEffect(() => {
     if (textAreaRef.current) {
       textAreaRef.current.style.height = "auto";
@@ -87,6 +108,10 @@ const CandidateSimulator: React.FC<CandidateSimulatorProps> = ({ modules }) => {
         {messages.map((msg, idx) => (
           <div key={idx} className="mb-2">{msg}</div>
         ))}
+      </div>
+
+      <div className="mb-2">
+        <strong>CC:</strong> {cc} | <strong>Signatures:</strong> {signatures} | <strong>Approval:</strong> {approval.toFixed(1)}%
       </div>
 
       {uploadedImage && (

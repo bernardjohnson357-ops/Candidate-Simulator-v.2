@@ -19,7 +19,7 @@ const CandidateSimulator: React.FC = () => {
     threshold: undefined,
   };
 
-  useEffect(() => {
+ useEffect(() => {
   if (currentModule?.narrator) {
     speak(currentModule.narrator);
   }

@@ -1,5 +1,4 @@
 // app/ai/aiLoop.ts
-import { libertarianSimulator } from "./libertarianSimulator";
 import { ModuleState } from "./types";
 
 // ------------------------------

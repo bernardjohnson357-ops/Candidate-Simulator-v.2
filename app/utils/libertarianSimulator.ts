@@ -1,5 +1,5 @@
 // ./app/utils/libertarianSimulator.ts
-import { Module, TaskType } from "../ai/types";
+import { Module, Task } from "../ai/types";
 
 export const libertarianSimulator: Module[] = [
   {
@@ -10,6 +10,8 @@ export const libertarianSimulator: Module[] = [
     tasks: [
       { type: "read", prompt: "Read the campaign manual and scoring system." },
       { type: "write", prompt: "Declare which office you are running for." },
+      { type: "speak", prompt: "Optionally speak your office choice." },
+      { type: "upload", prompt: "Optionally upload a campaign-related image." },
     ],
   },
   {
@@ -20,6 +22,8 @@ export const libertarianSimulator: Module[] = [
     tasks: [
       { type: "read", prompt: "Review independent/write-in filing rules and deadlines." },
       { type: "write", prompt: "Complete the quiz on filing fees and petitions." },
+      { type: "speak", prompt: "Optionally explain your filing choice." },
+      { type: "upload", prompt: "Optionally upload filing documents." },
     ],
   },
   {

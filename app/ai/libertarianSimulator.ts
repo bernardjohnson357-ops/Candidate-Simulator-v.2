@@ -458,4 +458,5 @@ Every typed decision will affect these metrics.`,
         return 'Action unclear. Please type "door knock", "phone bank", or "advertising blitz".';
     }
   },
-},
+}, // 👈 closes Module 15 object
+]; // 👈 closes the libertarianSimulator array

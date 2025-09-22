@@ -1,7 +1,7 @@
 // File: app/components/CandidateSimulator.tsx
 "use client";
 import React, { useState, useEffect } from "react";
-import { libertarianSimulator, ModuleState } from "../ai/libertarianSimulator";
+import { ModuleState } from "../ai/types";
 import { speak } from "../utils/audioUtils";
 
 const CandidateSimulator: React.FC = () => {

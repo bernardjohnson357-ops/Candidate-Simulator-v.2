@@ -115,9 +115,6 @@ You begin with 50 Candidate Coins (cc), 0 signatures, and 0% voter approval.`,
   },
 ];
 
-  // ------------------------------
-  // Module 3 – First Moves (Strategy & Spending)
-  // ------------------------------
   {
     id: "3",
     title: "First Moves – Strategy & Spending",

@@ -180,7 +180,7 @@ You begin with 50 Candidate Coins (cc), 0 signatures, and 0% voter approval.`,
       return `Campaign identity set! +${approvalBoost.toFixed(1)}% approval, +${signaturesBoost} signatures.`;
     },
   },
-];
+],
 
 // ------------------------------
 // Module 5 – Fundraising & Donor Outreach

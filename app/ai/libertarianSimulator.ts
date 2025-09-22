@@ -378,7 +378,6 @@ Every typed decision will affect these metrics.`,
   },
 },
 
-  {
 // ------------------------------
 // Module 13 – Crisis Response
 // ------------------------------

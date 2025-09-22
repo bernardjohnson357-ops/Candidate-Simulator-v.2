@@ -1,7 +1,8 @@
 // ./app/ai/types.ts
 
 // ------------------------------
-// Task & Module definitions
+// Task types (how the candidate interacts)
+// ------------------------------
 export type TaskType = "read" | "write" | "speak" | "upload";
 
 export interface Task {
@@ -9,18 +10,23 @@ export interface Task {
   prompt: string;
 }
 
+// ------------------------------
+// Module definition
+// ------------------------------
 export interface Module {
-  id: string; // e.g., "0", "1A", "1B", etc.
+  id: string;            // e.g., "0", "1A"
   title: string;
   description: string;
   tasks: Task[];
+  // NOTE: no "logic" field — everything is task-driven
 }
 
 // ------------------------------
 // Candidate-wide state
+// ------------------------------
 export interface CandidateState {
   office: "President" | "Senate" | "House";
-  cc: number;
+  cc: number;            // Candidate Coins
   signatures: number;
   approval: number;
   threshold?: {
@@ -31,7 +37,8 @@ export interface CandidateState {
 }
 
 // ------------------------------
-// Module runtime state
+// Per-module state
+// ------------------------------
 export interface ModuleState {
   moduleId: string;
   completedTasks: number;

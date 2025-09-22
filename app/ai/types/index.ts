@@ -1,6 +1,5 @@
-// app/ai/types/index.ts
-
-export interface ModuleState {
+// ./app/ai/types/index.ts
+export interface CandidateState {
   office: "President" | "Senate" | "House";
   cc: number;
   signatures: number;
@@ -10,4 +9,13 @@ export interface ModuleState {
     approval: number;
     sigs: number;
   };
+}
+export interface ModuleState {
+  moduleId: string;
+  completedTasks: number;
+  totalTasks: number;
+  ccChange?: number;
+  signaturesChange?: number;
+  approvalChange?: number;
+  finished?: boolean;
 }

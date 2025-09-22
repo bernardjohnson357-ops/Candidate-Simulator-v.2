@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { speak } from "../ai/audioUtils"; // 👈 import helper
 
-import React, { useState } from "react";
+
 import { libertarianSimulator } from "../ai/libertarianSimulator";
 import { ModuleState } from "../ai/types";
 

@@ -239,20 +239,36 @@ You begin with 50 Candidate Coins (cc), 0 signatures, and 0% voter approval.`,
       }
     },
   },
-];
 
-  {
-    id: "7",
-    title: "Early October Operations",
-    narrator: `High visibility time: manage staff, give a safety speech, and respond to news.`,
-    prompt: `How do you allocate staff and craft your community safety speech?`,
-    logic: (input: string, state: ModuleState) => {
-      state.approval += 1;
-      state.signatures += 50;
-      return "Strong early October strategy. +1% approval, +50 signatures.";
-    },
+// ------------------------------
+// Module 7 – Local Media Outreach
+// ------------------------------
+{
+  id: "7",
+  title: "Local Media Outreach",
+  narrator: `Engage with local media to raise awareness about your campaign.`,
+  prompt: `Choose one: "interview", "press release", or "community event".`,
+  logic: (input: string, state: ModuleState) => {
+    const choice = input.toLowerCase().trim();
+
+    switch (choice) {
+      case "interview":
+        state.approval += 0.7;
+        return "You did a local interview. +0.7% approval.";
+      case "press release":
+        state.signatures += 50;
+        return "You issued a press release. +50 signatures.";
+      case "community event":
+        state.cc -= 5;
+        state.approval += 0.5;
+        state.signatures += 30;
+        return "You held a community event. –5 CC, +0.5% approval, +30 signatures.";
+      default:
+        return 'Action unclear. Please type "interview", "press release", or "community event".';
+    }
   },
-
+},
+  
   {
     id: "8",
     title: "Mid-October Operations",

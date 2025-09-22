@@ -1,152 +1,133 @@
 // File: app/components/CandidateSimulator.tsx
 "use client";
 import React, { useState, useEffect } from "react";
-import { ModuleState } from "../ai/types";
-import { speak } from "../utils/audioUtils";
+import { libertarianSimulator } from "../utils/libertarianSimulator";
+import { ModuleState, CandidateState, Task } from "../ai/types";
 
 const CandidateSimulator: React.FC = () => {
-  const [input, setInput] = useState("");
-  const [output, setOutput] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [state, setState] = useState<ModuleState>({
+
+  // Candidate-wide state
+  const [candidate, setCandidate] = useState<CandidateState>({
     office: "House", // default until user picks
     cc: 50,
     signatures: 0,
     approval: 0,
-    threshold: { cc: 0, approval: 0, sigs: 0 },
+    threshold: {
+      cc: 31,
+      approval: 2.5,
+      sigs: 7,
+    },
+  });
+
+  // Module-specific state
+  const [moduleState, setModuleState] = useState<ModuleState>({
+    moduleId: libertarianSimulator[0].id,
+    completedTasks: 0,
+    totalTasks: libertarianSimulator[0].tasks.length,
+    ccChange: 0,
+    signaturesChange: 0,
+    approvalChange: 0,
+    finished: false,
   });
 
   const currentModule = libertarianSimulator[currentIndex];
 
-  // Narrator speaks whenever module changes
+  // ------------------------------
+  // Auto-run tasks whenever the module changes
   useEffect(() => {
-    if (currentModule?.narrator) {
-      speak(currentModule.narrator);
-    }
-  }, [currentModule]);
-
-  // Handle text submission
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim()) return;
-
-    let newState = { ...state };
-    const text = currentModule.logic
-      ? currentModule.logic(input, newState)
-      : "No logic found for this module.";
-
-    setState(newState);
-    setOutput(text);
-    setInput("");
-    setCurrentIndex((prev) => Math.min(prev + 1, libertarianSimulator.length - 1));
-
-    // Speak narrator for the next module
-    setTimeout(() => {
-      if (libertarianSimulator[currentIndex + 1]?.narrator) {
-        speak(libertarianSimulator[currentIndex + 1].narrator);
-      }
-    }, 500);
-  };
-
-  // Handle image uploads (unlocked at Module 5)
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      let newState = { ...state };
-      const result = currentModule?.logic?.("upload", newState) || "";
-      setState(newState);
-      setOutput(result + ` (File: ${file.name})`);
-    }
-  };
-
-  // Handle audio input (unlocked at Module 7)
-  const handleStartListening = () => {
-    if (typeof window !== "undefined") {
-      const SpeechRecognition =
-        (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        alert("Speech Recognition not supported in this browser.");
-        return;
+    const runModuleTasks = async () => {
+      for (const task of currentModule.tasks) {
+        await handleTask(task);
       }
 
-      const recognition = new SpeechRecognition();
-      recognition.lang = "en-US";
-      recognition.start();
+      // Mark module finished
+      setModuleState((prev) => ({ ...prev, finished: true }));
 
-      recognition.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        setInput(transcript);
+      // Update candidate state with module changes
+      setCandidate((prev) => ({
+        ...prev,
+        cc: prev.cc + (moduleState.ccChange || 0),
+        signatures: prev.signatures + (moduleState.signaturesChange || 0),
+        approval: prev.approval + (moduleState.approvalChange || 0),
+      }));
+
+      console.log(
+        `Module ${currentModule.id} completed. CC: ${candidate.cc}, Signatures: ${candidate.signatures}, Approval: ${candidate.approval.toFixed(
+          2
+        )}%`
+      );
+
+      // Advance to next module if available
+      if (currentIndex + 1 < libertarianSimulator.length) {
+        const nextIndex = currentIndex + 1;
+        setCurrentIndex(nextIndex);
+        setModuleState({
+          moduleId: libertarianSimulator[nextIndex].id,
+          completedTasks: 0,
+          totalTasks: libertarianSimulator[nextIndex].tasks.length,
+          ccChange: 0,
+          signaturesChange: 0,
+          approvalChange: 0,
+          finished: false,
+        });
+      }
+    };
+
+    runModuleTasks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentIndex]);
+
+  // ------------------------------
+  // Simulated task handler
+  const handleTask = async (task: Task) => {
+    console.log(`Task: [${task.type}] ${task.prompt}`);
+
+    // Simulate delay for reading / writing / speaking
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    // Apply example rewards (replace with AI/narration logic)
+    setModuleState((prev) => {
+      let newCC = prev.ccChange || 0;
+      let newSigs = prev.signaturesChange || 0;
+      let newApp = prev.approvalChange || 0;
+
+      switch (task.type) {
+        case "read":
+          newApp += 0.1;
+          break;
+        case "write":
+          newSigs += 5;
+          newCC += 1;
+          break;
+        case "speak":
+          newApp += 0.5;
+          break;
+        case "upload":
+          newCC += 2;
+          break;
+      }
+
+      return {
+        ...prev,
+        ccChange: newCC,
+        signaturesChange: newSigs,
+        approvalChange: newApp,
+        completedTasks: prev.completedTasks + 1,
       };
-    }
+    });
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4 bg-white shadow rounded">
-      <h1 className="text-xl font-bold mb-4">{currentModule.title}</h1>
-      <p className="mb-2">{currentModule.narrator}</p>
-      <p className="italic mb-4">{currentModule.prompt}</p>
-
-      {/* Output area */}
-      {output && (
-        <div className="mb-4 p-2 bg-gray-100 border rounded">
-          <strong>Simulator:</strong> {output}
-        </div>
-      )}
-
-      {/* Input form */}
-      <form onSubmit={handleSubmit} className="mb-4 flex gap-2">
-        <input
-          type="text"
-          className="flex-1 border p-2 rounded"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Type your response..."
-        />
-
-        {/* Mic button (active at Module 7) */}
-        <button
-          type="button"
-          onClick={handleStartListening}
-          disabled={currentIndex < 7}
-          className={`px-3 py-2 rounded ${
-            currentIndex < 7 ? "bg-gray-300" : "bg-red-500 text-white"
-          }`}
-        >
-          🎤
-        </button>
-
-        {/* Image upload button (active at Module 5) */}
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-          disabled={currentIndex < 5}
-          className="hidden"
-          id="image-upload"
-        />
-        <label
-          htmlFor="image-upload"
-          className={`px-3 py-2 rounded cursor-pointer ${
-            currentIndex < 5 ? "bg-gray-300" : "bg-blue-500 text-white"
-          }`}
-        >
-          🖼
-        </label>
-
-        <button
-          type="submit"
-          className="px-4 py-2 bg-green-500 text-white rounded"
-        >
-          Send
-        </button>
-      </form>
-
-      {/* Debug game state */}
-      <div className="mt-4 p-2 bg-gray-50 border rounded text-sm">
-        <p>CC: {state.cc}</p>
-        <p>Signatures: {state.signatures}</p>
-        <p>Approval: {state.approval}%</p>
-      </div>
+    <div style={{ padding: 20 }}>
+      <h2>
+        Module {currentModule.id}: {currentModule.title}
+      </h2>
+      <p>{currentModule.description}</p>
+      <p>
+        Candidate CC: {candidate.cc}, Signatures: {candidate.signatures},{" "}
+        Approval: {candidate.approval.toFixed(2)}%
+      </p>
     </div>
   );
 };

@@ -323,67 +323,140 @@ Every typed decision will affect these metrics.`,
       }
     },
   },
-],
   
-  {
-    id: "11",
-    title: "School Visit",
-    narrator: `Connect with students, teachers, and parents.`,
-    prompt: `Write a short speech focused on education and civic engagement.`,
-    logic: (input: string, state: ModuleState) => {
-      state.approval += 0.5;
-      return "School visit built goodwill. +0.5% approval.";
-    },
+  // ------------------------------
+// Module 11 – Debate Prep
+// ------------------------------
+{
+  id: "11",
+  title: "Debate Prep",
+  narrator: `Debates are high-stakes events. How you prepare will influence your performance and voter approval.`,
+  prompt: `Choose one: "policy focus", "rehearsal", or "ignore prep".`,
+  logic: (input: string, state: ModuleState) => {
+    const choice = input.toLowerCase().trim();
+    switch (choice) {
+      case "policy focus":
+        state.approval += 1.0;
+        return "You studied policies in detail. +1.0% approval.";
+      case "rehearsal":
+        state.approval += 0.7;
+        state.signatures += 50;
+        return "You rehearsed with your team. +0.7% approval, +50 signatures.";
+      case "ignore prep":
+        state.approval -= 0.5;
+        return "You skipped debate prep. –0.5% approval.";
+      default:
+        return 'Action unclear. Please type "policy focus", "rehearsal", or "ignore prep".';
+    }
   },
+},
+
+  // ------------------------------
+// Module 12 – Debate Performance
+// ------------------------------
+{
+  id: "12",
+  title: "Debate Performance",
+  narrator: `The debate has arrived. Your choices affect how voters and the media perceive you.`,
+  prompt: `Choose one: "attack opponents", "stay positive", or "focus on issues".`,
+  logic: (input: string, state: ModuleState) => {
+    const choice = input.toLowerCase().trim();
+    switch (choice) {
+      case "attack opponents":
+        state.approval -= 0.2;
+        state.signatures += 100;
+        return "You attacked your opponents. –0.2% approval, +100 signatures.";
+      case "stay positive":
+        state.approval += 0.8;
+        return "You stayed positive throughout. +0.8% approval.";
+      case "focus on issues":
+        state.approval += 1.2;
+        return "You focused on policy issues. +1.2% approval.";
+      default:
+        return 'Action unclear. Please type "attack opponents", "stay positive", or "focus on issues".';
+    }
+  },
+},
 
   {
-    id: "12",
-    title: "TV Interview",
-    narrator: `Answer live media questions about your campaign.`,
-    prompt: `Respond concisely about your priorities and decisions.`,
-    logic: (input: string, state: ModuleState) => {
-      state.approval += 1;
-      return "Strong interview boosted credibility. +1% approval.";
-    },
-  },
-
-  {
-    id: "13",
-    title: "Endorsements",
-    narrator: `Decide which endorsements to accept or decline.`,
-    prompt: `Do you accept endorsements from local groups, or stay independent?`,
-    logic: (input: string, state: ModuleState) => {
-      if (input.includes("accept")) {
-        state.cc += 5;
+// ------------------------------
+// Module 13 – Crisis Response
+// ------------------------------
+{
+  id: "13",
+  title: "Crisis Response",
+  narrator: `A local controversy impacts your campaign. How you respond matters.`,
+  prompt: `Choose one: "issue statement", "stay silent", or "apologize".`,
+  logic: (input: string, state: ModuleState) => {
+    const choice = input.toLowerCase().trim();
+    switch (choice) {
+      case "issue statement":
         state.approval += 0.5;
-        return "Endorsement improved resources. +5 cc, +0.5% approval.";
-      }
-      if (input.includes("decline")) {
-        state.approval += 0.2;
-        return "Staying independent impressed voters. +0.2% approval.";
-      }
-      return "Unclear stance on endorsements.";
-    },
+        return "You addressed the crisis with a statement. +0.5% approval.";
+      case "stay silent":
+        state.approval -= 1.0;
+        return "You stayed silent. –1.0% approval.";
+      case "apologize":
+        state.approval += 0.3;
+        state.signatures += 50;
+        return "You apologized and moved forward. +0.3% approval, +50 signatures.";
+      default:
+        return 'Action unclear. Please type "issue statement", "stay silent", or "apologize".';
+    }
   },
+},
 
-  {
-    id: "14",
-    title: "Debate",
-    narrator: `Final debate: opening statement and 2 questions.`,
-    prompt: `Write your opening statement and responses.`,
-    logic: (input: string, state: ModuleState) => {
-      state.approval += 1.5;
-      return "Debate performance swayed undecided voters. +1.5% approval.";
-    },
+  // ------------------------------
+// Module 14 – Endorsements
+// ------------------------------
+{
+  id: "14",
+  title: "Endorsements",
+  narrator: `Endorsements can bring credibility and resources to your campaign.`,
+  prompt: `Choose one: "seek party leaders", "grassroots orgs", or "celebrities".`,
+  logic: (input: string, state: ModuleState) => {
+    const choice = input.toLowerCase().trim();
+    switch (choice) {
+      case "seek party leaders":
+        state.approval += 0.8;
+        return "You gained endorsements from party leaders. +0.8% approval.";
+      case "grassroots orgs":
+        state.signatures += 150;
+        return "You were endorsed by grassroots organizations. +150 signatures.";
+      case "celebrities":
+        state.approval += 0.5;
+        state.cc += 5;
+        return "You secured celebrity endorsements. +0.5% approval, +5 CC.";
+      default:
+        return 'Action unclear. Please type "seek party leaders", "grassroots orgs", or "celebrities".';
+    }
   },
+},
 
-  {
-    id: "15",
-    title: "Final Summary",
-    narrator: `Election results are in.`,
-    prompt: `Reflect on your campaign. What did you learn?`,
-    logic: (_: string, state: ModuleState) => {
-      return `Simulation complete! Final results:\nCC: ${state.cc}\nSignatures: ${state.signatures}\nApproval: ${state.approval}%\nThank you for running as a Libertarian candidate.`;
-    },
+  // ------------------------------
+// Module 15 – Final Push
+// ------------------------------
+{
+  id: "15",
+  title: "Final Push",
+  narrator: `The election is near. It’s your final opportunity to mobilize voters.`,
+  prompt: `Choose one: "door knock", "phone bank", or "advertising blitz".`,
+  logic: (input: string, state: ModuleState) => {
+    const choice = input.toLowerCase().trim();
+    switch (choice) {
+      case "door knock":
+        state.signatures += 200;
+        return "You organized door knocking teams. +200 signatures.";
+      case "phone bank":
+        state.signatures += 150;
+        state.approval += 0.5;
+        return "You ran a phone banking campaign. +150 signatures, +0.5% approval.";
+      case "advertising blitz":
+        state.cc -= 10;
+        state.approval += 1.0;
+        return "You launched an advertising blitz. –10 CC, +1.0% approval.";
+      default:
+        return 'Action unclear. Please type "door knock", "phone bank", or "advertising blitz".';
+    }
   },
-];
+},

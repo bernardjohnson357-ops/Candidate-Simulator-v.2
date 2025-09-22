@@ -19,10 +19,11 @@ const CandidateSimulator: React.FC = () => {
     threshold: undefined,
   };
 
-  const [state, setState] = useState<ModuleState>({ ...initialState });
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [moduleText, setModuleText] = useState<string>("");
-
+  useEffect(() => {
+  if (currentModule?.narrator) {
+    speak(currentModule.narrator);
+  }
+}, [currentModule]);
   // ------------------------------
   // Handle user input for current module
   // ------------------------------

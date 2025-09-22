@@ -1,11 +1,11 @@
 // ./app/ai/aiLoop.ts
-import { libertarianSimulator } from "./app/utils/libertarianSimulator";
+import { libertarianSimulator } from "../utils/libertarianSimulator";
 import { CandidateState, ModuleState, Module, Task } from "./types";
 
 // ------------------------------
-// Initialize candidate state
+// Candidate-wide state
 export const candidateState: CandidateState = {
-  office: "House",       // placeholder; can be set dynamically in Module 0
+  office: "House", // placeholder; will be set by Module 0
   cc: 50,
   signatures: 0,
   approval: 0,
@@ -17,7 +17,7 @@ export const candidateState: CandidateState = {
 };
 
 // ------------------------------
-// Function to initialize a module state
+// Initialize module state
 const initModuleState = (module: Module): ModuleState => ({
   moduleId: module.id,
   completedTasks: 0,
@@ -29,7 +29,7 @@ const initModuleState = (module: Module): ModuleState => ({
 });
 
 // ------------------------------
-// Run the simulator through all modules linearly
+// Run simulator through all modules linearly
 export const runSimulator = async () => {
   for (let i = 0; i < libertarianSimulator.length; i++) {
     const module = libertarianSimulator[i];
@@ -46,7 +46,7 @@ export const runSimulator = async () => {
 
     moduleState.finished = true;
 
-    // Update candidate state based on module changes
+    // Update candidate state with module changes
     candidateState.cc += moduleState.ccChange || 0;
     candidateState.signatures += moduleState.signaturesChange || 0;
     candidateState.approval += moduleState.approvalChange || 0;
@@ -63,15 +63,14 @@ export const runSimulator = async () => {
 };
 
 // ------------------------------
-// Simulated task handler
+// Handle each task
 const handleTask = async (task: Task, moduleState: ModuleState) => {
-  // Here you would integrate your AI prompts / UI
   console.log(`Task: [${task.type}] ${task.prompt}`);
 
-  // Simulate user completing task (replace with real AI handling)
-  await new Promise((resolve) => setTimeout(resolve, 500)); // simulate delay
+  // Simulate AI/user interaction delay
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
-  // Example: apply simple rewards
+  // Example reward logic (replace with real AI evaluation)
   switch (task.type) {
     case "read":
       moduleState.approvalChange = (moduleState.approvalChange || 0) + 0.1;

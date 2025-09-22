@@ -239,60 +239,6 @@ You begin with 50 Candidate Coins (cc), 0 signatures, and 0% voter approval.`,
       }
     },
   },
-
-// ------------------------------
-// Module 7 – Local Media Outreach with Audio
-// ------------------------------
-{
-  id: "7",
-  title: "Local Media Outreach",
-  narrator: `Engage with local media to raise awareness about your campaign.`,
-  prompt: `Choose one: "interview", "press release", or "community event".`,
-  logic: (input: string, state: ModuleState) => {
-    const choice = input.toLowerCase().trim();
-
-    // --------------------------
-    // Browser-safe audio output
-    // --------------------------
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      let audioMessage = "";
-      switch (choice) {
-        case "interview":
-          audioMessage = "You are giving an interview on local radio.";
-          break;
-        case "press release":
-          audioMessage = "You have released a press statement to local news.";
-          break;
-        case "community event":
-          audioMessage = "You are hosting a community event for voters.";
-          break;
-        default:
-          audioMessage = "No action detected for audio output.";
-      }
-      const utterance = new SpeechSynthesisUtterance(audioMessage);
-      window.speechSynthesis.speak(utterance);
-    }
-
-    // --------------------------
-    // Update ModuleState based on choice
-    // --------------------------
-    switch (choice) {
-      case "interview":
-        state.approval += 0.7;
-        return "You did a local interview. +0.7% approval.";
-      case "press release":
-        state.signatures += 50;
-        return "You issued a press release. +50 signatures.";
-      case "community event":
-        state.cc -= 5;
-        state.approval += 0.5;
-        state.signatures += 30;
-        return "You held a community event. –5 CC, +0.5% approval, +30 signatures.";
-      default:
-        return 'Action unclear. Please type "interview", "press release", or "community event".';
-    }
-  },
-},
   
   {
     id: "8",

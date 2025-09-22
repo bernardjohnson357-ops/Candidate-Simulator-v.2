@@ -1,7 +1,7 @@
 // File: app/page.tsx
 "use client";
 import React, { useState } from "react";
-import { libertarianSimulator } from "./ai/libertarianSimulator";
+import { libertarianSimulator } from "./utils/libertarianSimulator";
 import { ModuleState } from "./ai/moduleLogic"; // original ModuleState from Module 0–2 stable setup
 
 export default function SimulatorPage() {

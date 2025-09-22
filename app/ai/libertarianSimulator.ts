@@ -385,8 +385,8 @@ Every typed decision will affect these metrics.`,
 {
   id: "13",
   title: "Crisis Response",
-  narrator: `A local controversy impacts your campaign. How you respond matters.`,
-  prompt: `Choose one: "issue statement", "stay silent", or "apologize".`,
+  narrator: A local controversy impacts your campaign. How you respond matters.,
+  prompt: Choose one: "issue statement", "stay silent", or "apologize".,
   logic: (input: string, state: ModuleState) => {
     const choice = input.toLowerCase().trim();
     switch (choice) {

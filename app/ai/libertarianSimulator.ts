@@ -182,48 +182,64 @@ You begin with 50 Candidate Coins (cc), 0 signatures, and 0% voter approval.`,
   },
 ];
 
-  {
-    id: "5",
-    title: "Expansion & Community Engagement",
-    narrator: `Grow visibility with visuals and outreach.`,
-    prompt: `Describe your campaign logos, signs, shirts, and community events.`,
-    logic: (input: string, state: ModuleState) => {
-      if (input.includes("logo") || input.includes("sign")) {
-        state.cc -= 5;
-        state.signatures += 100;
-        return "Visuals boosted recognition. –5 cc, +100 signatures.";
-      }
-      if (input.includes("town") || input.includes("community")) {
-        state.approval += 1;
-        state.signatures += 50;
-        return "Community outreach paid off. +1% approval, +50 signatures.";
-      }
-      return "Outreach unclear, limited effect.";
-    },
-  },
+// ------------------------------
+// Module 5 – Fundraising & Donor Outreach
+// ------------------------------
+{
+  id: "5",
+  title: "Fundraising & Donor Outreach",
+  narrator: `It's time to raise funds for your campaign. Effective fundraising increases your CC and helps with campaign activities.`,
+  prompt: `Choose one: "host event", "online campaign", or "personal donors".`,
+  logic: (input: string, state: ModuleState) => {
+    const choice = input.toLowerCase().trim();
 
-  {
-    id: "6",
-    title: "September Compliance & Scenarios",
-    narrator: `September means FEC Form 3 and campaign events.`,
-    prompt: `Do you prioritize debate, postcards, or Constitution Day?`,
-    logic: (input: string, state: ModuleState) => {
-      if (input.includes("debate")) {
-        state.approval += 1.5;
-        return "Debate impressed voters. +1.5% approval.";
-      }
-      if (input.includes("postcard")) {
-        state.cc -= 3;
-        state.signatures += 75;
-        return "Postcards earned goodwill. –3 cc, +75 signatures.";
-      }
-      if (input.includes("constitution")) {
-        state.approval += 1;
-        return "Constitution Day raised approval. +1% approval.";
-      }
-      return "Skipping key events cost you –1% approval.";
-    },
+    switch (choice) {
+      case "host event":
+        state.cc += 15;
+        state.approval += 0.5;
+        return "You hosted a fundraising event. +15 CC, +0.5% approval.";
+      case "online campaign":
+        state.cc += 10;
+        state.signatures += 100;
+        return "You ran an online fundraising campaign. +10 CC, +100 signatures.";
+      case "personal donors":
+        state.cc += 8;
+        state.approval += 0.2;
+        return "You contacted personal donors. +8 CC, +0.2% approval.";
+      default:
+        return 'Action unclear. Please type "host event", "online campaign", or "personal donors".';
+    }
   },
+},
+
+// ------------------------------
+// Module 6 – Campaign Messaging
+// ------------------------------
+{
+  id: "6",
+  title: "Campaign Messaging",
+  narrator: `Now you need to craft your campaign messaging. Clear and consistent messaging can boost voter approval.`,
+  prompt: `Choose one focus: "liberty", "fiscal responsibility", or "limited government".`,
+  logic: (input: string, state: ModuleState) => {
+    const choice = input.toLowerCase().trim();
+
+    switch (choice) {
+      case "liberty":
+        state.approval += 1.0;
+        return "You focused your message on liberty. +1.0% approval.";
+      case "fiscal responsibility":
+        state.approval += 0.8;
+        state.cc += 2;
+        return "You emphasized fiscal responsibility. +0.8% approval, +2 CC.";
+      case "limited government":
+        state.approval += 0.5;
+        state.signatures += 50;
+        return "You highlighted limited government. +0.5% approval, +50 signatures.";
+      default:
+        return 'Action unclear. Please type "liberty", "fiscal responsibility", or "limited government".';
+    }
+  },
+},
 
   {
     id: "7",

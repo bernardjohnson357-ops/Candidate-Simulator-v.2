@@ -1,5 +1,9 @@
 // app/ai/libertarianSimulator.ts
-import { ModuleState } from "./moduleLogic";
+// ❌ remove local interface ModuleState
+// interface ModuleState { ... }
+
+// ✅ import from types
+import { ModuleState } from "./types";
 
 export const libertarianSimulator = [
   // ------------------------------

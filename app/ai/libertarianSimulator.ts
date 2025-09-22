@@ -133,33 +133,42 @@ Every typed decision will affect these metrics.`,
   },
 
   // ------------------------------
-  // Module 5 – Fundraising & Donor Outreach
-  // ------------------------------
-  {
-    id: "5",
-    title: "Fundraising & Donor Outreach",
-    narrator: `It's time to raise funds for your campaign. Effective fundraising increases your CC and helps with campaign activities.`,
-    prompt: `Choose one: "host event", "online campaign", or "personal donors".`,
-    logic: (input: string, state: ModuleState) => {
-      const choice = input.toLowerCase().trim();
-      switch (choice) {
-        case "host event":
-          state.cc += 15;
-          state.approval += 0.5;
-          return "You hosted a fundraising event. +15 CC, +0.5% approval.";
-        case "online campaign":
-          state.cc += 10;
-          state.signatures += 100;
-          return "You ran an online fundraising campaign. +10 CC, +100 signatures.";
-        case "personal donors":
-          state.cc += 8;
-          state.approval += 0.2;
-          return "You contacted personal donors. +8 CC, +0.2% approval.";
-        default:
-          return 'Action unclear. Please type "host event", "online campaign", or "personal donors".';
-      }
-    },
+// Module 5 – Fundraising & Donor Outreach (with upload option)
+// ------------------------------
+{
+  id: "5",
+  title: "Fundraising & Donor Outreach",
+  narrator: `It's time to raise funds for your campaign. Effective fundraising increases your CC and helps with campaign activities. 
+You may also upload campaign materials for review, such as a flyer or donor letter.`,
+  prompt: `Choose one: "host event", "online campaign", "personal donors", or upload a campaign file.`,
+  logic: (input: string, state: ModuleState) => {
+    const choice = input.toLowerCase().trim();
+
+    // Handle uploads (user attaches file)
+    if (choice.includes("upload")) {
+      state.approval += 0.3;
+      return "Your campaign material was uploaded and reviewed. +0.3% approval.";
+    }
+
+    // Standard fundraising options
+    switch (choice) {
+      case "host event":
+        state.cc += 15;
+        state.approval += 0.5;
+        return "You hosted a fundraising event. +15 CC, +0.5% approval.";
+      case "online campaign":
+        state.cc += 10;
+        state.signatures += 100;
+        return "You ran an online fundraising campaign. +10 CC, +100 signatures.";
+      case "personal donors":
+        state.cc += 8;
+        state.approval += 0.2;
+        return "You contacted personal donors. +8 CC, +0.2% approval.";
+      default:
+        return 'Action unclear. Please type "host event", "online campaign", "personal donors", or upload a file.';
+    }
   },
+},
 
   // ------------------------------
   // Module 6 – Campaign Messaging

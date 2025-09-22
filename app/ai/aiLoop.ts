@@ -1,6 +1,5 @@
 // app/ai/aiLoop.ts
-import { ModuleState } from "./types";
-
+import { ModuleState, CandidateState, Module } from "./types";
 // ------------------------------
 // Initialize candidate state
 // ------------------------------

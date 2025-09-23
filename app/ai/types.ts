@@ -5,9 +5,18 @@
 // ------------------------------
 export type TaskType = "read" | "write" | "speak" | "upload";
 
+// ------------------------------
+// Individual Task definition
+// ------------------------------
 export interface Task {
-  type: TaskType;
-  prompt: string;
+  id: string;                // unique task ID
+  type: TaskType;            // kind of task
+  prompt: string;            // what the candidate sees
+  expectedAnswer?: string;   // for evaluation (optional)
+  ccReward?: number;         // CC gained if correct
+  ccPenalty?: number;        // CC lost if incorrect
+  signaturesReward?: number; // signatures gained if correct
+  signaturesPenalty?: number;// signatures lost if incorrect
 }
 
 // ------------------------------
@@ -15,10 +24,11 @@ export interface Task {
 // ------------------------------
 export interface Module {
   id: string;            // e.g., "0", "1A"
-  title: string;
-  description: string;
-  tasks: Task[];
-  // NOTE: no "logic" field — everything is task-driven
+  title: string;         // module title
+  briefSummary?: string; // optional short summary
+  detailedSummary?: string; // AI narration / detailed guidance
+  description?: string;  // fallback description
+  tasks: Task[];         // all tasks in this module
 }
 
 // ------------------------------
@@ -27,8 +37,8 @@ export interface Module {
 export interface CandidateState {
   office: "President" | "Senate" | "House";
   cc: number;            // Candidate Coins
-  signatures: number;
-  approval: number;
+  signatures: number;    // petition support
+  approval: number;      // percentage approval
   threshold?: {
     cc: number;
     approval: number;

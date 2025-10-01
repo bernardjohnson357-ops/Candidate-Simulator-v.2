@@ -1,20 +1,10 @@
 ### Real-World Reference Roadmap
 
-**Module 1A – Independent / Write-In Filing**  
-- [TX SOS – Independent Candidate Guide 2024](https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml)  
-- [TX SOS – Write-In Candidate Guide 2024](https://www.sos.state.tx.us/elections/candidates/guide/2024/writein2024.shtml)  
-- [FEC Party Guide (PDF)](https://www.fec.gov/resources/cms-content/documents/policy-guidance/partygui.pdf)  
-
-**Module 2A – FEC Filing Fee Quizzes (Independent)**  
-- [TX SOS – Independent Candidate Guide 2024](https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml)  
-- [TX SOS – Write-In Candidate Guide 2024](https://www.sos.state.tx.us/elections/candidates/guide/2024/writein2024.shtml)  
-- [FEC Party Guide (PDF)](https://www.fec.gov/resources/cms-content/documents/policy-guidance/partygui.pdf)  
-
-**Module 1B – Party Filing**  
+**Module 1 – Party Filing**  
 - [TX SOS – Libertarian/Green Nomination Guide 2024](https://www.sos.state.tx.us/elections/candidates/guide/2024/lib-green-nom2024.shtml)  
 - [FEC Party Guide (PDF)](https://www.fec.gov/resources/cms-content/documents/policy-guidance/partygui.pdf)  
 
-**Module 2B – FEC Filing Fee Quizzes (Party)**  
+**Module 2 – FEC Filing Fee Quizzes (Party)**  
 - [TX SOS – Independent Candidate Guide 2024](https://www.sos.state.tx.us/elections/candidates/guide/2024/ind2024.shtml)  
 - [TX SOS – Write-In Candidate Guide 2024](https://www.sos.state.tx.us/elections/candidates/guide/2024/writein2024.shtml)  
 - [FEC Party Guide (PDF)](https://www.fec.gov/resources/cms-content/documents/policy-guidance/partygui.pdf)  
@@ -30,13 +20,8 @@
 
 ### Simulator Reference Roadmap
 
-**Module 1A – Independent Filing (Test Mode)**  
-- [Simulator: Independent / Write-In Filing](https://www.bernardjohnson4congress.com/independent_write_in_filing_test_mode)  
 
-**Module 2A – FEC Filing Fee Quizzes (Independent Test Mode)**  
-- [Simulator: Independent FEC Quiz](https://www.bernardjohnson4congress.com/candidate_simulator_fec_filing_fee_quizzes_-_test_mode)  
-
-**Module 2B – FEC Filing Fee Quizzes (Party Test Mode)**  
+**Module 2 – FEC Filing Fee Quizzes (Party Test Mode)**  
 - [Simulator: Party FEC Quiz](https://www.bernardjohnson4congress.com/candidate_simulator_fec_filing_fee_quizzes_-_test_mode)  
 
 **Module 3 – First Moves (Test Mode)**  

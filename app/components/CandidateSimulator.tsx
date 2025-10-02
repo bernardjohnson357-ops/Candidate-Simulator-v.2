@@ -2,8 +2,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { modules } from "@/config/modules"; // your module list
-import { Module } from "@/app/ai/types";
+import { modules } from "../../config/modules"; // fixed path ✅
+import { Module } from "../ai/types";
 
 const CandidateSimulator: React.FC = () => {
   // Campaign state
@@ -20,7 +20,8 @@ const CandidateSimulator: React.FC = () => {
     setSignatures((prev) => prev + deltaSignatures);
 
     // voter approval: 100 signatures = 1%
-    setApproval(((signatures + deltaSignatures) / 100).toFixed(1));
+    const newSignatures = signatures + deltaSignatures;
+    setApproval(Number((newSignatures / 100).toFixed(1)));
   };
 
   return (
@@ -59,7 +60,6 @@ const CandidateSimulator: React.FC = () => {
           <div>
             <h1 className="text-2xl font-bold mb-4">{activeModule.title}</h1>
             <div className="prose max-w-none">
-              {/* You can replace this with rich rendering of tasks later */}
               <p>{activeModule.content}</p>
             </div>
 

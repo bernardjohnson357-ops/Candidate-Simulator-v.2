@@ -1,5 +1,5 @@
 // ./app/ai/aiLoop.ts
-import { modules } from "../config/modules";
+import { modules as libertarianSimulator } from "../../config/modules";
 import { CandidateState, ModuleState, Module, Task } from "./types";
 
 // ------------------------------
@@ -21,7 +21,7 @@ export const candidateState: CandidateState = {
 const initModuleState = (module: Module): ModuleState => ({
   moduleId: module.id,
   completedTasks: 0,
-  totalTasks: module.tasks.length,
+  totalTasks: module.tasks?.length || 0,
   ccChange: 0,
   signaturesChange: 0,
   approvalChange: 0,
@@ -36,12 +36,14 @@ export const runSimulator = async () => {
     const moduleState = initModuleState(module);
 
     console.log(`\n=== Module ${module.id}: ${module.title} ===`);
-    console.log(module.description);
+    console.log(module.content || module.description);
 
     // Loop through tasks automatically
-    for (const task of module.tasks) {
-      await handleTask(task, moduleState);
-      moduleState.completedTasks++;
+    if (module.tasks) {
+      for (const task of module.tasks) {
+        await handleTask(task, moduleState);
+        moduleState.completedTasks++;
+      }
     }
 
     moduleState.finished = true;

@@ -1,5 +1,6 @@
 // ./config/modules.ts
 export interface Task {
+  id: string;
   type: "quiz" | "choice" | "write" | "upload" | "speak";
   prompt: string;
   options?: string[];
@@ -10,7 +11,7 @@ export interface Module {
   id: string;
   title: string;
   content: string;
-  tasks: Task[]; // required
+  tasks: Task[];
 }
 
 export const modules: Module[] = [
@@ -22,6 +23,7 @@ This simulator will take you through filing, fundraising, compliance, and campai
 You start with 50 Candidate Coins (CC), 0 signatures, and 0% voter approval.`,
     tasks: [
       {
+        id: "0-1",
         type: "choice",
         prompt: "Which office will you run for?",
         options: ["🏛 President", "🏛 U.S. Senate", "🏛 U.S. House"],
@@ -35,6 +37,7 @@ You start with 50 Candidate Coins (CC), 0 signatures, and 0% voter approval.`,
 Pay the filing fee or gather signatures. Mistakes here can cost you CC.`,
     tasks: [
       {
+        id: "1-1",
         type: "quiz",
         prompt: "When must Party Candidates file their application with the Texas SOS?",
         options: [
@@ -56,6 +59,7 @@ Form 2 = Statement of Organization.
 You must file within 15 days after raising/spending $5,000.`,
     tasks: [
       {
+        id: "2-1",
         type: "quiz",
         prompt: "Which form registers your campaign committee?",
         options: ["Form 1", "Form 2", "Form 3"],
@@ -71,6 +75,7 @@ You can focus on fundraising, volunteers, or media/ads.
 Also buy your campaign essentials with CC.`,
     tasks: [
       {
+        id: "3-1",
         type: "choice",
         prompt: "Pick your first strategy:",
         options: ["📈 Fundraising", "🧑‍🤝‍🧑 Volunteers", "📺 Media & Advertising"],

@@ -1,16 +1,27 @@
-export type TaskType = "read" | "write" | "speak" | "upload";
+// app/ai/types.ts
 
 export interface Task {
   id: string;
-  type: TaskType;
+  type: "read" | "write" | "speak" | "upload";
   prompt: string;
 }
 
 export interface Module {
   id: string;
   title: string;
-  description: string;
-  tasks: Task[];
+  description?: string;
+  content?: string;   // ✅ add this
+  tasks?: Task[];
+}
+
+export interface ModuleState {
+  moduleId: string;
+  completedTasks: number;
+  totalTasks: number;
+  ccChange: number;
+  signaturesChange: number;
+  approvalChange: number;
+  finished: boolean;
 }
 
 export interface CandidateState {
@@ -23,14 +34,4 @@ export interface CandidateState {
     approval: number;
     sigs: number;
   };
-}
-
-export interface ModuleState {
-  moduleId: string;
-  completedTasks: number;
-  totalTasks: number;
-  ccChange: number;
-  signaturesChange: number;
-  approvalChange: number;
-  finished: boolean;
 }

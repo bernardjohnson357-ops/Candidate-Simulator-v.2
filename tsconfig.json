@@ -14,7 +14,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "baseUrl": ".",
-   "paths": {
+"paths": {
   "@/components/*": ["app/components/*"],
   "@/hooks/*": ["app/hooks/*"],
   "@/styles/*": ["styles/*"],
@@ -23,7 +23,8 @@
   "@/context/*": ["app/context/*"],
   "@/app/*": ["app/*"],
   "@quizzes/*": ["quizzes/*"],
-  "@/lib/*": ["lib/*"]
+  "@/lib/*": ["lib/*"],
+  "@/config/*": ["config/*"]
 }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

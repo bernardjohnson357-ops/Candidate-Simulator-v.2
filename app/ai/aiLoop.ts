@@ -1,5 +1,5 @@
 // ./app/ai/aiLoop.ts
-import { modules as libertarianSimulator } from "../../config/modules";
+import { modules } from "../config/modules";
 import { CandidateState, ModuleState, Module, Task } from "./types";
 
 // ------------------------------
@@ -21,7 +21,7 @@ export const candidateState: CandidateState = {
 const initModuleState = (module: Module): ModuleState => ({
   moduleId: module.id,
   completedTasks: 0,
-  totalTasks: module.tasks?.length || 0,
+  totalTasks: module.tasks.length,
   ccChange: 0,
   signaturesChange: 0,
   approvalChange: 0,
@@ -29,10 +29,69 @@ const initModuleState = (module: Module): ModuleState => ({
 });
 
 // ------------------------------
+// Generate dynamic quizzes from module content
+const generateQuizzesFromContent = (module: Module): Task[] => {
+  if (!module.content) return [];
+
+  // Example: split content into sections and generate one "quiz" per section
+  const sections = module.content.split(/\n{2,}/); // double line break = new section
+
+  return sections.map((section, idx) => ({
+    id: `${module.id}-quiz-${idx}`,
+    type: "quiz",
+    prompt: `Based on the following reading, answer: ${section.slice(
+      0,
+      100
+    )}...`, // preview first 100 chars
+    options: ["Option A", "Option B", "Option C", "Option D"], // placeholder
+    correctAnswer: "Option A", // placeholder
+  }));
+};
+
+// ------------------------------
+// Handle each task
+const handleTask = async (task: Task, moduleState: ModuleState) => {
+  console.log(`Task: [${task.type}] ${task.prompt}`);
+
+  // Simulate AI/user interaction delay
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  // Example reward logic (replace with real AI evaluation)
+  switch (task.type) {
+    case "read":
+      moduleState.approvalChange = (moduleState.approvalChange || 0) + 0.1;
+      break;
+    case "write":
+      moduleState.signaturesChange = (moduleState.signaturesChange || 0) + 5;
+      moduleState.ccChange = (moduleState.ccChange || 0) + 1;
+      break;
+    case "speak":
+      moduleState.approvalChange = (moduleState.approvalChange || 0) + 0.5;
+      break;
+    case "upload":
+      moduleState.ccChange = (moduleState.ccChange || 0) + 2;
+      break;
+    case "quiz":
+      moduleState.signaturesChange =
+        (moduleState.signaturesChange || 0) + 20; // simulate quiz scoring
+      moduleState.ccChange = (moduleState.ccChange || 0) + 1;
+      break;
+  }
+};
+
+// ------------------------------
 // Run simulator through all modules linearly
 export const runSimulator = async () => {
-  for (let i = 0; i < libertarianSimulator.length; i++) {
-    const module = libertarianSimulator[i];
+  for (let i = 0; i < modules.length; i++) {
+    const module = modules[i];
+
+    // Dynamically generate quiz tasks if content exists
+    if (module.content) {
+      module.tasks = module.tasks || [];
+      const dynamicQuizzes = generateQuizzesFromContent(module);
+      module.tasks.push(...dynamicQuizzes);
+    }
+
     const moduleState = initModuleState(module);
 
     console.log(`\n=== Module ${module.id}: ${module.title} ===`);
@@ -62,30 +121,4 @@ export const runSimulator = async () => {
 
   console.log("\n=== Simulation Complete ===");
   console.log(candidateState);
-};
-
-// ------------------------------
-// Handle each task
-const handleTask = async (task: Task, moduleState: ModuleState) => {
-  console.log(`Task: [${task.type}] ${task.prompt}`);
-
-  // Simulate AI/user interaction delay
-  await new Promise((resolve) => setTimeout(resolve, 500));
-
-  // Example reward logic (replace with real AI evaluation)
-  switch (task.type) {
-    case "read":
-      moduleState.approvalChange = (moduleState.approvalChange || 0) + 0.1;
-      break;
-    case "write":
-      moduleState.signaturesChange = (moduleState.signaturesChange || 0) + 5;
-      moduleState.ccChange = (moduleState.ccChange || 0) + 1;
-      break;
-    case "speak":
-      moduleState.approvalChange = (moduleState.approvalChange || 0) + 0.5;
-      break;
-    case "upload":
-      moduleState.ccChange = (moduleState.ccChange || 0) + 2;
-      break;
-  }
 };

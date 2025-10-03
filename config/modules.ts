@@ -1,4 +1,4 @@
-🗳 Module 0 – Orientation & Introduction
+Module 0 – Orientation & Introduction
 
 Narrator [calm, professional]:
  “Welcome to the Federal Candidate Simulator — AI Edition.

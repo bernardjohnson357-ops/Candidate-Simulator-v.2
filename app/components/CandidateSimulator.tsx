@@ -2,8 +2,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { modules } from "../../config/modules"; // fixed path ✅
-import { Module } from "../ai/types";
+import { modules, Module } from "../../config/modules";
 
 const CandidateSimulator: React.FC = () => {
   // Campaign state

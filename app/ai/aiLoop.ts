@@ -9,10 +9,12 @@ export const candidateState: CandidateState = {
   threshold: { cc: 31, approval: 2.5, sigs: 7 },
 };
 
+// ------------------------------
+// Initialize module state
 const initModuleState = (module: Module): ModuleState => ({
   moduleId: module.id,
   completedTasks: 0,
-  totalTasks: module.tasks.length,
+  totalTasks: module.tasks ? module.tasks.length : 0, // ✅ safe check
   ccChange: 0,
   signaturesChange: 0,
   approvalChange: 0,

@@ -5,9 +5,9 @@
 // ------------------------------
 export type CandidateState = {
   office: "President" | "Senate" | "House";
-  cc: number;           // Candidate Coins
-  signatures: number;   // Voter signatures
-  approval: number;     // Voter approval %
+  cc: number; // Candidate Coins
+  signatures: number; // Voter signatures
+  approval: number; // Voter approval %
   threshold: {
     cc: number;
     approval: number;
@@ -29,7 +29,7 @@ export type ModuleState = {
 };
 
 // ------------------------------
-// Quiz question structure
+// Quiz Question Structure
 // ------------------------------
 export interface QuizQuestion {
   question: string;
@@ -38,7 +38,7 @@ export interface QuizQuestion {
 }
 
 // ------------------------------
-// Task types
+// Task Types
 // ------------------------------
 export type Task =
   | {
@@ -54,11 +54,40 @@ export type Task =
     };
 
 // ------------------------------
-// Module
+// Scenario and Structure Types
 // ------------------------------
-export type Module = {
-  id: string;
+export type Scenario = {
   title: string;
   description: string;
-  tasks: Task[]; // always defined now
+};
+
+export type Phase = {
+  title: string;
+  description: string;
+};
+
+// ------------------------------
+// Module Type (Expanded for Rich JSON)
+// ------------------------------
+export type Module = {
+  id: string | number;
+  title: string;
+  narrator?: string;
+  description?: string;
+  purpose?: string;
+  readingSummary?: string[];
+  tasks: Task[];
+  scenarios?: Scenario[];
+  structure?: {
+    phases: Phase[];
+  };
+  metrics?: {
+    cc?: number;
+    signatures?: number;
+    approval?: number;
+  };
+  narration?: Record<string, string>;
+  sources?: string[];
+  outcome?: string;
+  nextModule?: string;
 };

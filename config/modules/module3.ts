@@ -35,7 +35,7 @@ export const module3: Module = {
   tasks: [
     {
       id: "3-strategy-choice",
-      type: "writing",
+      type: "write",
       prompt: `
 **Narrator [serious]:**
 "You must choose one of the following strategic paths and write your implementation plan."

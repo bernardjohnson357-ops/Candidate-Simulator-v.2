@@ -1,9 +1,9 @@
 {
   "id": 0,
   "title": "Module 0 – Orientation & Introduction",
-  "narrator": "Welcome to the Federal Candidate Simulator — AI Edition. This simulator will take you through the entire election cycle, one step at a time. You’ll experience the real requirements of filing, fundraising, and voter engagement.",
-  "purpose": "Introduce the simulator and explain the campaign basics, including Candidate Coins, signatures, and voter approval mechanics.",
-  "readingSummary": "Federal campaigns require understanding office requirements, compliance basics, and resource management. Candidates start with 50 Candidate Coins (CC), 0 signatures, and 0% voter approval.",
+  "narrator": "Welcome to the Federal Candidate Simulator — AI Edition. This simulator will take you through the entire election cycle, one step at a time. You’ll experience the real requirements of filing, fundraising, and messaging.",
+  "purpose": "Introduce the simulator and explain the campaign basics, including Candidate Coins, signatures, and voter approval.",
+  "readingSummary": "Federal campaigns require understanding office requirements, filing deadlines, fundraising strategies, and voter engagement techniques.",
   "tasks": [
     {
       "type": "read",
@@ -20,6 +20,6 @@
       "description": "Based on your chosen office, initial campaign conditions and requirements will adjust."
     }
   ],
-  "outcome": "Initial Candidate Coins, signatures, and voter approval are set based on office choice. This module sets the foundation for all following modules.",
+  "outcome": "Initial Candidate Coins, signatures, and voter approval are set based on office choice.",
   "nextModule": 1
 }

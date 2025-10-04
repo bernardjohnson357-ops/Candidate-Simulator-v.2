@@ -2,15 +2,16 @@
 import { Module, ModuleState, CandidateState, QuizQuestion } from "./types";
 
 // Candidate base state
-export const initCandidateState = (): CandidateState => ({
-  cc: 50,
-  signatures: 0,
-  approval: 0,
-  office: "House", // default placeholder until user chooses
-  threshold: {
-    cc: 0,
-    approval: 0,
-  },
+// ./app/ai/aiLoop.ts
+
+export const initModuleState = (module: Module): ModuleState => ({
+  moduleId: String(module.id), // ✅ force to string
+  completedTasks: 0,
+  totalTasks: module.tasks.length,
+  ccChange: 0,
+  signaturesChange: 0,
+  approvalChange: 0,
+  finished: false,
 });
 
 // Initialize module progress state

@@ -17,10 +17,11 @@ export const initCandidateState = (): CandidateState => ({
 export const initModuleState = (module: Module): ModuleState => ({
   moduleId: module.id,
   completedTasks: 0,
-  totalTasks: module.tasks.length, // ✅ always defined now
+  totalTasks: module.tasks.length,
   ccChange: 0,
   signaturesChange: 0,
   approvalChange: 0,
+  finished: false, // ✅ required by ModuleState
 });
 
 // ------------------------------

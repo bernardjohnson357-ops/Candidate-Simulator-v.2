@@ -1,23 +1,19 @@
 // ./app/ai/aiLoop.ts
 import { modules } from "@/config/modules";
-import { CandidateState, ModuleState, Module, Task } from "./types";
+// ./app/ai/aiLoop.ts
 
-// Candidate base state
+import { CandidateState } from "./types";
+
 export const initCandidateState = (): CandidateState => ({
+  office: "House", // default office; you can change later based on user input
   cc: 50,
   signatures: 0,
   approval: 0,
-});
-
-// Module state initializer
-export const initModuleState = (module: Module): ModuleState => ({
-  moduleId: module.id,
-  completedTasks: 0,
-  totalTasks: module.tasks.length,
-  ccChange: 0,
-  signaturesChange: 0,
-  approvalChange: 0,
-  finished: false,
+  threshold: {
+    cc: 31,        // minimum CC for House
+    approval: 2.5, // minimum approval %
+    sigs: 7        // optional signature threshold (if applicable)
+  },
 });
 
 // Run one module

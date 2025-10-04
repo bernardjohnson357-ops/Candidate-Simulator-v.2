@@ -7,7 +7,10 @@ export const initCandidateState = (): CandidateState => ({
   signatures: 0,
   approval: 0,
   office: "House", // default placeholder until user chooses
-  threshold: 0,
+  threshold: {
+    cc: 0,
+    approval: 0,
+  },
 });
 
 // Initialize module progress state

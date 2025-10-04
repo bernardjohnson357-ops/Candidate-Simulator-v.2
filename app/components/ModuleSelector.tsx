@@ -4,46 +4,45 @@
 import React, { useState } from "react";
 import { modules } from "../../config/modules";
 import { runModule, initCandidateState } from "@/app/ai/aiLoop";
+import { CandidateState } from "@/app/ai/types";
+import ModuleDisplay from "./ModuleDisplay";
 
 const ModuleSelector: React.FC = () => {
   const [selected, setSelected] = useState<typeof modules[0] | null>(null);
-  const [candidateState, setCandidateState] = useState(initCandidateState);
+  const [candidateState, setCandidateState] = useState<CandidateState | null>(null);
+  const [officeInput, setOfficeInput] = useState("");
 
-  const handleRun = async (mod: typeof modules[0]) => {
-    setSelected(mod);
-    const newState = { ...candidateState };
-    await runModule(mod, newState);
-    setCandidateState(newState);
+  const handleStart = () => {
+    const office = officeInput as "President" | "Senate" | "House";
+
+    // Initialize candidate state based on user input
+    const initState = initCandidateState(office);
+    setCandidateState(initState);
+
+    // Optionally auto-select Module 0 after office input
+    const module0 = modules.find((m) => m.id === "0");
+    if (module0) setSelected(module0);
   };
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-6">Federal Candidate Simulator</h1>
-
-      <div className="flex gap-4 mb-6">
-        {modules.map((mod) => (
-          <button
-            key={mod.id}
-            className="px-4 py-2 bg-blue-500 text-white rounded"
-            onClick={() => handleRun(mod)}
-          >
-            {mod.title}
-          </button>
-        ))}
-      </div>
-
-      {selected && (
+    <div className="p-4">
+      {!candidateState && (
         <div>
-          <h2 className="text-2xl font-bold mb-4">{selected.title}</h2>
-          <div className="prose whitespace-pre-wrap">{selected.description}</div>
-
-          <div className="mt-4 p-4 border rounded">
-            <h3 className="font-semibold">Candidate State:</h3>
-            <p>CC: {candidateState.cc}</p>
-            <p>Signatures: {candidateState.signatures}</p>
-            <p>Approval: {candidateState.approval.toFixed(2)}%</p>
-          </div>
+          <label>Enter your office (President, Senate, House): </label>
+          <input
+            type="text"
+            value={officeInput}
+            onChange={(e) => setOfficeInput(e.target.value)}
+            className="border px-2 py-1 rounded"
+          />
+          <button onClick={handleStart} className="ml-2 px-3 py-1 bg-blue-500 text-white rounded">
+            Start
+          </button>
         </div>
+      )}
+
+      {candidateState && selected && (
+        <ModuleDisplay module={selected} candidateState={candidateState} setCandidateState={setCandidateState} />
       )}
     </div>
   );

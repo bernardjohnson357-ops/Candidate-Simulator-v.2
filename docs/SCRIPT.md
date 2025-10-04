@@ -1597,10 +1597,6 @@ Reference: [Candidate Simulator Master Roadmap – Module 14](https://www.bernar
 
 ---
 
-Here’s a polished version of **Module 15 – Final Summary**, tightened for clarity and flow while keeping everything you already built in place:
-
----
-
 **\# Module 15 – Final Summary (Post-Debate)**  
  Narrator \[calm, professional\]: “The campaign has reached its conclusion. This final module compiles your actions, decisions, and outcomes, providing a comprehensive reflection on your journey. By reviewing your performance, you’ll see how strategy and choices shaped your results.”
 

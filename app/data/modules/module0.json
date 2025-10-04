@@ -60,6 +60,15 @@
     "intro": "Welcome to the Federal Candidate Simulator — AI Edition. You begin with 50 CC, 0 signatures, and 0% voter approval.",
     "prompt": "Type which office you want to run for: President, Senate, or House."
   },
+  "outcome": {
+    "summary": "You understand how Candidate Coins, signatures, and voter approval interact. You are ready to begin real filing tasks.",
+    "results": {
+      "coinsEarned": 0,
+      "signaturesEarned": 0,
+      "approvalChange": 0
+    }
+  },
+  "nextModule": "module-1",
   "sources": [
     "FEC Candidate Guide (2024 Edition)",
     "State Filing Guides"

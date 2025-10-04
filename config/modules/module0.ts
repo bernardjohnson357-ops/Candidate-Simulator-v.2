@@ -1,24 +1,31 @@
 // ./config/modules/module0.ts
+// config/modules/module0.ts
 import { Module } from "@/app/ai/types";
 
 export const module0: Module = {
   id: "0",
   title: "Orientation & Introduction",
   description: `
-Welcome to the Federal Candidate Simulator — AI Edition.
-This simulator will take you through the election cycle, step by step.
-You’ll experience filing, fundraising, compliance, and campaigning — safely in a simulation.
-`,
+# 🗳 Module 0 – Orientation & Introduction
+**Narrator [calm, professional]:** "Welcome to the Federal Candidate Simulator — AI Edition..."
+  `,
   tasks: [
     {
       id: "0-quiz-1",
       type: "quiz",
       prompt: "Quiz: What does 1 Candidate Coin (CC) represent?",
-    },
-    {
-      id: "0-choice-1",
-      type: "write",
-      prompt: "Type which office you want to run for: President, Senate, or House.",
+      questions: [
+        {
+          question: "What does 1 CC equal in simulated campaign funds?",
+          options: [
+            "A) $10",
+            "B) $100 ✅",
+            "C) $1,000",
+            "D) $10,000"
+          ],
+          correct: 1, // index of the right answer (0-based)
+        },
+      ],
     },
   ],
 };

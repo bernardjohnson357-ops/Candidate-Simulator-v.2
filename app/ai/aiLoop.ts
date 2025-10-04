@@ -1,5 +1,5 @@
 // ./app/ai/aiLoop.ts
-import { modules } from "../config/modules";
+import { modules } from "../../config/modules";
 import { CandidateState, ModuleState, Module, Task } from "./types";
 
 // ------------------------------

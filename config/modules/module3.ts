@@ -1,4 +1,4 @@
-import { Module } from "../../app/ai/types";// adjust path if needed
+import { Module } from "@/app/ai/types";// adjust path if needed
 
 export const module3: Module = {
   id: "module-3",

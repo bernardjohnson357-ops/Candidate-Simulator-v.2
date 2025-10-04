@@ -32,3 +32,22 @@ export interface CandidateState {
     approval: number;
   };
 }
+
+export type QuizQuestion = {
+  question: string;
+  options: string[];
+  correctAnswer: number; // index of correct option
+};
+
+export type Task =
+  | {
+      id: string;
+      type: "read" | "write" | "upload" | "speak";
+      prompt: string;
+    }
+  | {
+      id: string;
+      type: "quiz";
+      prompt: string;
+      questions: QuizQuestion[];
+    };

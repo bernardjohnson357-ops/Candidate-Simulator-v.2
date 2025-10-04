@@ -1,76 +1,25 @@
 {
   "id": 0,
-  "title": "Orientation & Introduction",
-  "narrator": "calm, professional",
-  "purpose": "Introduce users to the Candidate Simulator, its scaffolded learning structure, and the scoring system using Candidate Coins, signatures, and voter approval.",
-  "readingSummary": [
-    "This module explains how the simulator works — including how to read, write, and speak in sequence, earn Candidate Coins (CC), collect signatures, and track voter approval.",
-    "It also introduces the concept of penalties and the importance of clarity over politics."
-  ],
+  "title": "Module 0 – Orientation",
+  "narrator": "Welcome to the Candidate Simulator...",
+  "purpose": "Learn federal campaign basics",
+  "readingSummary": ["Step 1: ...", "Step 2: ..."],
   "tasks": [
-    {
-      "type": "read",
-      "prompt": "Review how the simulator uses reading, writing, and speaking tasks to build campaign discipline."
-    },
-    {
-      "type": "write",
-      "prompt": "In one or two sentences, describe what you think makes a campaign message effective."
-    },
-    {
-      "type": "speak",
-      "prompt": "Say aloud how you would introduce yourself as a candidate in under 30 seconds."
-    }
+    { "id": "task1", "type": "read", "prompt": "Read the introduction" }
   ],
-  "scenarios": [
-    {
-      "title": "Office Selection",
-      "description": "Select your office: President, Senate, or House. Your choice determines filing costs and approval threshold."
-    }
-  ],
-  "structure": {
-    "phases": [
-      {
-        "title": "Scaffolded Learning",
-        "description": "Read → Write → Speak. Each stage helps build campaign discipline and communication skill."
-      },
-      {
-        "title": "Candidate Coins (CC)",
-        "description": "1 CC = $100 simulated funds. Earn CC by completing quizzes and tasks. Spend CC on coaching or campaign resources."
-      },
-      {
-        "title": "Scoring & Penalties",
-        "description": "Quizzes earn signatures and CC. Wrong answers deduct CC or signatures. Retakes double penalties, simulating real-world FEC administrative costs."
-      },
-      {
-        "title": "Simulator Purpose",
-        "description": "Combines real FEC processes with simulation mechanics so you can safely learn campaign operations before real filings."
-      }
-    ]
-  },
+  "scenarios": [],
+  "structure": { "phases": [] },
   "metrics": {
     "startingCoins": 50,
     "signatureConversion": "100 signatures = 1% approval",
     "eligibility": {
-      "President": { "feeCC": 75, "approval": "2.5%" },
-      "Senate": { "feeCC": 50, "approval": "2.5%" },
-      "House": { "feeCC": 31, "approval": "2.5%" }
+      "President": { "cc": 75, "approval": 2.5 },
+      "Senate": { "cc": 50, "approval": 2.5 },
+      "House": { "cc": 31, "approval": 2.5 }
     }
   },
-  "narration": {
-    "intro": "Welcome to the Federal Candidate Simulator — AI Edition. You begin with 50 CC, 0 signatures, and 0% voter approval.",
-    "prompt": "Type which office you want to run for: President, Senate, or House."
-  },
-  "outcome": {
-    "summary": "You understand how Candidate Coins, signatures, and voter approval interact. You are ready to begin real filing tasks.",
-    "results": {
-      "coinsEarned": 0,
-      "signaturesEarned": 0,
-      "approvalChange": 0
-    }
-  },
-  "nextModule": "module-1",
-  "sources": [
-    "FEC Candidate Guide (2024 Edition)",
-    "State Filing Guides"
-  ]
+  "narration": {},
+  "sources": [],
+  "outcome": {},
+  "nextModule": {}
 }

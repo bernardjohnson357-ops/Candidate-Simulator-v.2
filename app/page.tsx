@@ -3,22 +3,14 @@
 
 import React, { useState } from "react";
 import ModuleDisplay from "../components/ModuleDisplay";
-import modulesData from "../data/modules.json"; // wherever your modules JSON is
+import module0Data from "../data/modules/module0.json";
 
-const SimulatorPage: React.FC = () => {
-  const [currentModuleIndex, setCurrentModuleIndex] = useState(0);
-
-  const handleTaskComplete = (taskIndex: number, response: string) => {
-    console.log(`Task ${taskIndex} completed with response: ${response}`);
-    // update CC, voter approval, etc.
-  };
+export default function HomePage() {
+  const [module] = useState(module0Data);
 
   return (
-    <ModuleDisplay
-      module={modulesData[currentModuleIndex]}
-      onTaskComplete={handleTaskComplete}
-    />
+    <div>
+      <ModuleDisplay module={module} />
+    </div>
   );
-};
-
-export default SimulatorPage;
+}

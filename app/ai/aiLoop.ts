@@ -2,18 +2,14 @@
 import { modules } from "@/config/modules";
 import { CandidateState, ModuleState, Module, Task } from "./types";
 
-// ------------------------------
-// Initialize candidate state
-// ------------------------------
+// Candidate base state
 export const initCandidateState = (): CandidateState => ({
   cc: 50,
   signatures: 0,
   approval: 0,
 });
 
-// ------------------------------
-// Initialize module state
-// ------------------------------
+// Module state initializer
 export const initModuleState = (module: Module): ModuleState => ({
   moduleId: module.id,
   completedTasks: 0,
@@ -21,41 +17,55 @@ export const initModuleState = (module: Module): ModuleState => ({
   ccChange: 0,
   signaturesChange: 0,
   approvalChange: 0,
-  finished: false, // ✅ required by ModuleState
+  finished: false,
 });
 
-// ------------------------------
-// Handle a single task
-// ------------------------------
-export const handleTask = async (task: Task, moduleState: ModuleState) => {
-  console.log(`\nTask (${task.type}): ${task.prompt}`);
+// Run one module
+export const runModule = async (module: Module, candidateState: CandidateState) => {
+  const moduleState = initModuleState(module);
 
-  // Placeholder: later you’ll implement quizzes, speech, etc
-  // For now we just simulate completion
-  console.log("✅ Task completed");
-};
+  console.log(`\n=== Module ${module.id}: ${module.title} ===`);
+  console.log(module.description);
 
-// ------------------------------
-// Run the simulator
-// ------------------------------
-export const runSimulator = async () => {
-  const candidateState = initCandidateState();
-
-  for (const module of modules) {
-    const moduleState = initModuleState(module);
-
-    console.log(`\n=== Module ${module.id}: ${module.title} ===`);
-    console.log(module.content);
-
-    // ✅ tasks are always required now
-    for (const task of module.tasks) {
-      await handleTask(task, moduleState);
-      moduleState.completedTasks++;
-    }
-
-    console.log(`\nFinished ${module.title}`);
-    console.log(`Progress: ${moduleState.completedTasks}/${moduleState.totalTasks}`);
+  for (const task of module.tasks) {
+    await handleTask(task, moduleState);
+    moduleState.completedTasks++;
   }
 
-  console.log("\n🎉 Simulation finished!");
+  moduleState.finished = true;
+
+  // update candidate state
+  candidateState.cc += moduleState.ccChange;
+  candidateState.signatures += moduleState.signaturesChange;
+  candidateState.approval += moduleState.approvalChange;
+
+  console.log(
+    `Module ${module.id} completed. CC: ${candidateState.cc}, Signatures: ${candidateState.signatures}, Approval: ${candidateState.approval.toFixed(2)}%`
+  );
+};
+
+// Handle tasks
+const handleTask = async (task: Task, moduleState: ModuleState) => {
+  console.log(`Task: [${task.type}] ${task.prompt}`);
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  switch (task.type) {
+    case "read":
+      moduleState.approvalChange += 0.1;
+      break;
+    case "write":
+      moduleState.signaturesChange += 5;
+      moduleState.ccChange += 1;
+      break;
+    case "speak":
+      moduleState.approvalChange += 0.5;
+      break;
+    case "upload":
+      moduleState.ccChange += 2;
+      break;
+    case "quiz":
+      moduleState.signaturesChange += 10;
+      moduleState.approvalChange += 0.3;
+      break;
+  }
 };

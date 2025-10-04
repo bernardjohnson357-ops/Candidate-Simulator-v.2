@@ -23,14 +23,14 @@ export interface ModuleState {
   finished: boolean;
 }
 
+// ./app/ai/types.ts
 export interface CandidateState {
-  office: string;
   cc: number;
   signatures: number;
   approval: number;
-  threshold: {
-    cc: number;
-    approval: number;
-    sigs: number;
-  };
+  office?: string; // optional until the user declares
+  threshold?: { 
+    cc: number; 
+    approval: number; 
+  }; // optional until office is chosen
 }

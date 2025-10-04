@@ -13,5 +13,6 @@ import { module11 } from "./module11";
 import { module12 } from "./module12";
 import { module13 } from "./module13";
 import { module14 } from "./module14";
+import { module115 } from "./module15";
 import { Module } from "@/app/ai/types";
-export const modules: Module[] = [module0, module1, module2, module3, module4, module5, module6, module7, module8, module9, module10, module11, module12, module13, module14];
+export const modules: Module[] = [module0, module1, module2, module3, module4, module5, module6, module7, module8, module9, module10, module11, module12, module13, module14, module15];

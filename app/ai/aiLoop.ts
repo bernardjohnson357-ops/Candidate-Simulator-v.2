@@ -14,17 +14,6 @@ export const initModuleState = (module: Module): ModuleState => ({
   finished: false,
 });
 
-// Initialize module progress state
-export const initModuleState = (module: Module): ModuleState => ({
-  moduleId: module.id,
-  completedTasks: 0,
-  totalTasks: module.tasks.length,
-  ccChange: 0,
-  signaturesChange: 0,
-  approvalChange: 0,
-  finished: false,
-});
-
 /**
  * Run a module and calculate outcomes
  */

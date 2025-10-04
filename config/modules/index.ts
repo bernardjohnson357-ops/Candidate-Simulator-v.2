@@ -8,6 +8,6 @@ import { module6 } from "./module6";
 import { module7 } from "./module7";
 import { module8 } from "./module8";
 import { module9 } from "./module9";
+import { module10 } from "./module10";
 import { Module } from "@/app/ai/types";
-export const modules: Module[] = [module0, module1, module2, module3, module4, module5,
-                                 module6, module7, module8, module9];
+export const modules: Module[] = [module0, module1, module2, module3, module4, module5, module6, module7, module8, module9, module10];

@@ -2,16 +2,15 @@
 
 export interface Task {
   id: string;
-  type: "read" | "write" | "speak" | "upload";
+  type: "read" | "write" | "upload" | "speak";
   prompt: string;
 }
 
 export interface Module {
   id: string;
   title: string;
-  description?: string;
-  content?: string;   // ✅ add this
-  tasks?: Task[];
+  content: string;
+  tasks: Task[];  // 👈 make tasks always required
 }
 
 export interface ModuleState {

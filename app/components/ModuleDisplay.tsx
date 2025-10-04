@@ -1,54 +1,63 @@
-import React, { useState, useEffect } from "react"; import { Module, Task } from "../ai/types";
+"use client";
 
-interface ModuleDisplayProps { module: Module; onTaskComplete?: (taskId: string) => void; }
+import React from "react";
 
-export const ModuleDisplay: React.FC<ModuleDisplayProps> = ({ module, onTaskComplete }) => { const [speaking, setSpeaking] = useState(false); const [completedTasks, setCompletedTasks] = useState<string[]>([]); const [responses, setResponses] = useState<{ [key: string]: string }>({});
+interface Task {
+  type: string;
+  prompt: string;
+}
 
-// Narrator audio const speak = (text: string) => { if (!window.speechSynthesis) return; const utterance = new SpeechSynthesisUtterance(text); utterance.rate = 1; utterance.pitch = 1; utterance.onstart = () => setSpeaking(true); utterance.onend = () => setSpeaking(false); speechSynthesis.speak(utterance); };
+interface Scenario {
+  name: string;
+  description: string;
+}
 
-const stop = () => { speechSynthesis.cancel(); setSpeaking(false); };
+interface Module {
+  id: number;
+  title: string;
+  narrator: string;
+  purpose: string;
+  readingSummary: string;
+  tasks: Task[];
+  scenarios: Scenario[];
+  outcome: string;
+  nextModule: number;
+}
 
-// Auto-play narrator on module load useEffect(() => { speak(module.description); }, [module]);
+interface ModuleDisplayProps {
+  module: Module;
+}
 
-const handleResponseChange = (taskId: string, value: string) => { setResponses({ ...responses, [taskId]: value }); };
+const ModuleDisplay: React.FC<ModuleDisplayProps> = ({ module }) => {
+  return (
+    <div className="module-container">
+      <h1>{module.title}</h1>
+      <p><strong>Narrator:</strong> {module.narrator}</p>
+      <p><strong>Purpose:</strong> {module.purpose}</p>
+      <p><strong>Reading Summary:</strong> {module.readingSummary}</p>
 
-const handleTaskComplete = (taskId: string) => { setCompletedTasks([...completedTasks, taskId]); if (onTaskComplete) onTaskComplete(taskId); };
+      <h2>Tasks:</h2>
+      <ul>
+        {module.tasks.map((task, index) => (
+          <li key={index}>
+            <strong>{task.type}:</strong> {task.prompt}
+          </li>
+        ))}
+      </ul>
 
-return ( <div className="module-container p-4"> <h2 className="text-2xl font-bold mb-2">{module.title}</h2> <div className="mb-4"> <button onClick={() => speak(module.description)} className="mr-2 px-3 py-1 bg-blue-500 text-white rounded" > 🔊 Play Narrator </button> {speaking && ( <button
-onClick={stop}
-className="px-3 py-1 bg-red-500 text-white rounded"
-> ⏹ Stop </button> )} </div>
+      <h2>Scenarios:</h2>
+      <ul>
+        {module.scenarios.map((scenario, index) => (
+          <li key={index}>
+            <strong>{scenario.name}:</strong> {scenario.description}
+          </li>
+        ))}
+      </ul>
 
-<div className="tasks space-y-4">
-    {module.tasks.map((task: Task) => (
-      <div
-        key={task.id}
-        className={`task border p-3 rounded ${completedTasks.includes(task.id) ? 'bg-green-100' : 'bg-white'}`}
-      >
-        <h3 className="font-semibold">Task {task.id}</h3>
-        <p className="mb-2">{task.prompt}</p>
+      <p><strong>Outcome:</strong> {module.outcome}</p>
+      <p><strong>Next Module:</strong> {module.nextModule}</p>
+    </div>
+  );
+};
 
-        {task.type === "write" && (
-          <textarea
-            value={responses[task.id] || ''}
-            onChange={(e) => handleResponseChange(task.id, e.target.value)}
-            placeholder="Type your response here..."
-            className="w-full p-2 border rounded mb-2"
-            rows={4}
-          />
-        )}
-
-        <button
-          onClick={() => handleTaskComplete(task.id)}
-          disabled={completedTasks.includes(task.id)}
-          className="px-3 py-1 bg-green-500 text-white rounded"
-        >
-          ✅ Mark Complete
-        </button>
-      </div>
-    ))}
-  </div>
-</div>
-
-); };
-
+export default ModuleDisplay;

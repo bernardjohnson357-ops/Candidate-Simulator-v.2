@@ -31,11 +31,11 @@ export type ModuleState = {
 // ------------------------------
 // Quiz question structure
 // ------------------------------
-export type QuizQuestion = {
+export interface QuizQuestion {
   question: string;
   options: string[];
-  correctAnswer: number; // index of correct option
-};
+  correct: number; // index of the correct answer in options
+}
 
 // ------------------------------
 // Task types

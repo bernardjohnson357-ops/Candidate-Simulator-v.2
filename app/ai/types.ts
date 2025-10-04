@@ -1,16 +1,15 @@
-// app/ai/types.ts
-
+// ./app/ai/types.ts
 export interface Task {
   id: string;
-  type: "read" | "write" | "upload" | "speak";
+  type: "read" | "write" | "speak" | "upload" | "quiz";
   prompt: string;
 }
 
 export interface Module {
   id: string;
   title: string;
-  content: string;
-  tasks: Task[];  // 👈 make tasks always required
+  description: string;  // narration or orientation text
+  tasks: Task[];
 }
 
 export interface ModuleState {
@@ -23,14 +22,13 @@ export interface ModuleState {
   finished: boolean;
 }
 
-// ./app/ai/types.ts
 export interface CandidateState {
   cc: number;
   signatures: number;
   approval: number;
-  office?: string; // optional until the user declares
-  threshold?: { 
-    cc: number; 
-    approval: number; 
-  }; // optional until office is chosen
+  office?: string;
+  threshold?: {
+    cc: number;
+    approval: number;
+  };
 }

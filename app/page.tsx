@@ -1,4 +1,6 @@
 // app/page.tsx
+"use client";
+
 import React, { useState } from "react";
 import ModuleDisplay from "../components/ModuleDisplay";
 import modulesData from "../data/modules.json"; // wherever your modules JSON is

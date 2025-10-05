@@ -1,1 +1,34 @@
-
+{
+  "id": "14",
+  "title": "November 2: Debate Night",
+  "description": "Test the candidate’s ability to perform under maximum campaign pressure in a high-stakes public debate.",
+  "tasks": [
+    {
+      "id": "14-1",
+      "type": "roleplay",
+      "prompt": "Deliver an opening statement (typed or spoken). Participate in the AI-moderated debate and respond to all 20–25 policy questions, adapting to fact-checks and audience reactions."
+    }
+  ],
+  "narrator": "This debate is the centerpiece of your campaign. Maintain composure, credibility, and persuasive clarity while answering rapid-fire policy questions. Audience reactions and AI fact-checks will provide feedback.",
+  "readingSummary": [
+    "Candidates face 20–25 policy questions on economy, foreign policy, social issues, and local concerns.",
+    "AI moderator and opponent simulate high-pressure questioning, fact-checks, and audience responses."
+  ],
+  "tasksDetails": [
+    {
+      "id": "14-1",
+      "type": "roleplay",
+      "prompt": "Deliver an opening statement and answer all debate questions, adjusting responses to feedback and audience reactions."
+    }
+  ],
+  "sources": [
+    "General Election November 2 – Debate Night Scenario"
+  ],
+  "outcome": {
+    "description": "Debate performance heavily influences final voter approval, CC, and campaign momentum. Demonstrates composure, consistency, and credibility under maximum scrutiny."
+  },
+  "nextModule": {
+    "id": "15",
+    "title": "Election Week: Final Results"
+  }
+}

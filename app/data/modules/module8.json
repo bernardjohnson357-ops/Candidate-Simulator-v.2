@@ -1,1 +1,44 @@
-
+{
+  "id": "8",
+  "title": "October 8–14: Mid-October Ops",
+  "description": "Practice press conferences and constituent engagement under mid-October campaign pressure. Candidates refine message clarity, voter trust, and public communication skills.",
+  "tasks": [
+    {
+      "id": "8-1",
+      "type": "write",
+      "prompt": "Press Conference: Craft a concise opening statement addressing healthcare, Second Amendment rights, and government spending. Respond to reporter questions clearly."
+    },
+    {
+      "id": "8-2",
+      "type": "write",
+      "prompt": "Constituent Concerns: Respond to voter questions about gender identity, taxation fairness, and local resources. Ensure clarity, sensitivity, and alignment with Libertarian principles."
+    }
+  ],
+  "narrator": "As Election Day approaches, you must deliver clear, consistent messaging and strategic responses to reporters and constituents.",
+  "readingSummary": [
+    "Mid-October focuses on public engagement, press interaction, and addressing constituent concerns.",
+    "Clarity, tone, and factual accuracy directly impact voter approval and campaign credibility."
+  ],
+  "tasksDetails": [
+    {
+      "id": "8-1",
+      "type": "write",
+      "prompt": "Write your opening statement for a press conference, addressing key issues and questions from reporters."
+    },
+    {
+      "id": "8-2",
+      "type": "write",
+      "prompt": "Respond thoughtfully to constituent concerns, ensuring alignment with campaign principles and voter expectations."
+    }
+  ],
+  "sources": [
+    "General Election October 8–14 – Simulator Test Mode"
+  ],
+  "outcome": {
+    "description": "Updated CC and voter approval based on press conference performance and constituent responses. Demonstrated ability to maintain clarity, credibility, and voter trust under pressure."
+  },
+  "nextModule": {
+    "id": "9",
+    "title": "October 15–21: GOTV & Final Messaging"
+  }
+}

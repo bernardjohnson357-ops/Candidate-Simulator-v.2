@@ -1,1 +1,76 @@
-
+{
+  "id": "7",
+  "title": "October 1–7: Early October Ops",
+  "description": "Execute early October campaign operations while practicing communication, strategic team management, and voter engagement.",
+  "tasks": [
+    {
+      "id": "7-1",
+      "type": "quiz",
+      "prompt": "Team Management: Choose where to direct staff focus.",
+      "questions": [
+        {
+          "question": "Which staff focus will you prioritize?",
+          "options": [
+            "Door-to-door outreach → boosts signatures but costs time",
+            "Fundraising calls → increases CC but risks less visibility",
+            "Media prep → improves public image but requires CC investment"
+          ],
+          "correct": 0
+        }
+      ]
+    },
+    {
+      "id": "7-2",
+      "type": "write",
+      "prompt": "Candidate Speech: Deliver a short, solutions-focused speech on community safety and family reassurance (1–2 paragraphs)."
+    },
+    {
+      "id": "7-3",
+      "type": "write",
+      "prompt": "Weekly News Response: Respond to the provided current-events scenario to maintain or increase voter trust."
+    }
+  ],
+  "narrator": "The campaign enters high visibility mode. You must focus on team management, community safety speeches, and responses to weekly news.",
+  "readingSummary": [
+    "Early October requires balancing staff priorities with persuasive public messaging.",
+    "Candidate responses to weekly news and community concerns directly affect voter approval and campaign momentum."
+  ],
+  "tasksDetails": [
+    {
+      "id": "7-1",
+      "type": "quiz",
+      "prompt": "Select your staff management strategy to optimize campaign outcomes.",
+      "questions": [
+        {
+          "question": "Choose the primary focus for your staff this week:",
+          "options": [
+            "Door-to-door outreach",
+            "Fundraising calls",
+            "Media prep"
+          ],
+          "correct": 0
+        }
+      ]
+    },
+    {
+      "id": "7-2",
+      "type": "write",
+      "prompt": "Write or dictate a community safety speech addressing safety, trust, and healthcare access. AI will evaluate clarity, empathy, and persuasiveness."
+    },
+    {
+      "id": "7-3",
+      "type": "write",
+      "prompt": "Respond to the weekly news scenario provided by the AI to simulate real-time campaign decision-making."
+    }
+  ],
+  "sources": [
+    "General Election October 1–7 – Simulator Test Mode"
+  ],
+  "outcome": {
+    "description": "Updated CC, voter approval, and campaign momentum. Demonstrated ability to lead staff, reassure voters, and adapt to evolving news."
+  },
+  "nextModule": {
+    "id": "8",
+    "title": "October 8–14: GOTV & Media Blitz"
+  }
+}

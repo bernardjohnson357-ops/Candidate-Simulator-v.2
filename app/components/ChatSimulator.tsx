@@ -15,35 +15,37 @@ const ChatSimulator: React.FC = () => {
   const [office, setOffice] = useState<"President" | "Senate" | "House" | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // 🗳️ Initial greeting
   useEffect(() => {
     setMessages([
       "🎙️ Welcome to the Federal Candidate Simulator — AI Edition.",
       "You’ll experience filing, compliance, messaging, and campaigning one step at a time.",
-      "To begin, type the office you want to run for: President, Senate, or House."
+      "To begin, type the office you want to run for: President, Senate, or House.",
     ]);
   }, []);
 
+  // 🎯 Handles user input & simulation flow
   const handleUserInput = async () => {
     if (!input.trim()) return;
     const userMsg = `🗣️ You: ${input}`;
     setMessages((prev) => [...prev, userMsg]);
     setIsLoading(true);
 
-    // Step 1: Choose Office
+    // Step 1 – Office selection
     if (!office) {
-      const officeChoice = input.trim().toLowerCase();
-      let selectedOffice: "President" | "Senate" | "House" | null = null;
-      let introMsg = "";
+      const choice = input.trim().toLowerCase();
+      let selected: "President" | "Senate" | "House" | null = null;
+      let intro = "";
 
-      if (officeChoice === "president") {
-        selectedOffice = "President";
-        introMsg = "🏛️ You’ve chosen to run for President. This path requires 75 CC and 2.5% approval.";
-      } else if (officeChoice === "senate") {
-        selectedOffice = "Senate";
-        introMsg = "🏛️ You’ve chosen to run for Senate. You’ll need 50 CC and 2.5% approval.";
-      } else if (officeChoice === "house") {
-        selectedOffice = "House";
-        introMsg = "🏛️ You’ve chosen to run for House. You’ll need 31 CC and 2.5% approval.";
+      if (choice === "president") {
+        selected = "President";
+        intro = "🏛️ You’ve chosen to run for President. This path requires 75 CC and 2.5% approval.";
+      } else if (choice === "senate") {
+        selected = "Senate";
+        intro = "🏛️ You’ve chosen to run for Senate. You’ll need 50 CC and 2.5% approval.";
+      } else if (choice === "house") {
+        selected = "House";
+        intro = "🏛️ You’ve chosen to run for House. You’ll need 31 CC and 2.5% approval.";
       } else {
         setMessages((prev) => [...prev, "❌ Please choose: President, Senate, or House."]);
         setIsLoading(false);
@@ -51,46 +53,42 @@ const ChatSimulator: React.FC = () => {
         return;
       }
 
-      setOffice(selectedOffice);
-      const initial = initCandidateState(selectedOffice);
-      setCandidateState(initial);
+      setOffice(selected);
+      const init = initCandidateState(selected);
+      setCandidateState(init);
 
+      // Load Module 1
+      const mod = modules.find((m) => m.id === "1") || null;
+
+      setCurrentModule(mod);
       setMessages((prev) => [
         ...prev,
-        introMsg,
-        "🎯 Starting Module 1 – Filing Phase..."
+        intro,
+        "🎯 Starting Module 1 – Filing Phase...",
       ]);
 
-      const mod = modules.find((m) => m.id === "1");
-      setCurrentModule(mod || null);
       setIsLoading(false);
       setInput("");
       return;
     }
 
-    // Step 2: Module progression
-    {currentModule && candidateState && (
-  <div className="mt-4">
-    <ModuleDisplay
-      module={currentModule}
-      candidateState={candidateState} // guaranteed non-null
-      setCandidateState={setCandidateState} // types now match
-    />
-  </div>
-)}
+    // Step 2 – Module progression
+    if (currentModule && candidateState) {
+      const { moduleState, candidateState: updated } = runModule(currentModule, candidateState);
 
-      setCandidateState(updatedCandidate);
+      setCandidateState(updated);
+      setMessages((prev) => [
+        ...prev,
+        `📊 Module complete! +${moduleState.signaturesChange} signatures, ${moduleState.ccChange} CC, ${moduleState.approvalChange}% approval.`,
+      ]);
 
-      // Go to next module if defined in JSON
-      if (currentModule.nextModule) {
-        const nextModule = modules.find((m) => m.id === currentModule.nextModule?.id);
-        if (nextModule) {
-          setMessages((prev) => [...prev, `➡️ Moving to ${nextModule.title}...`]);
-          setCurrentModule(nextModule);
-        } else {
-          setMessages((prev) => [...prev, "🏁 Simulation complete. Great job, candidate!"]);
-          setCurrentModule(null);
-        }
+      // Next module (string id increment)
+      const nextId = (parseInt(currentModule.id) + 1).toString();
+      const nextModule = modules.find((m) => m.id === nextId);
+
+      if (nextModule) {
+        setMessages((prev) => [...prev, `➡️ Moving to ${nextModule.title}...`]);
+        setCurrentModule(nextModule);
       } else {
         setMessages((prev) => [...prev, "🏁 Simulation complete. Great job, candidate!"]);
         setCurrentModule(null);
@@ -101,9 +99,11 @@ const ChatSimulator: React.FC = () => {
     setIsLoading(false);
   };
 
+  // 🧱 UI layout
   return (
     <div className="p-4 max-w-3xl mx-auto bg-white/90 rounded-2xl shadow-md border border-gray-200">
       <h2 className="text-2xl font-bold mb-4 text-center">🗳️ Federal Candidate Simulator</h2>
+
       <div className="h-[400px] overflow-y-auto p-3 border rounded-md bg-gray-50 mb-4">
         {messages.map((msg, i) => (
           <div key={i} className="mb-2 whitespace-pre-wrap">{msg}</div>
@@ -133,7 +133,7 @@ const ChatSimulator: React.FC = () => {
           <ModuleDisplay
             module={currentModule}
             candidateState={candidateState}
-            setCandidateState={setCandidateState}
+            setCandidateState={setCandidateState as React.Dispatch<React.SetStateAction<CandidateState>>}
           />
         </div>
       )}

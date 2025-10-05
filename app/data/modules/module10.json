@@ -1,1 +1,55 @@
-
+{
+  "id": "10",
+  "title": "October 23–29: Election Countdown",
+  "description": "Prepare for Election Day by practicing high-pressure constituent interaction, rapid-fire responses, and final strategic decision-making.",
+  "tasks": [
+    {
+      "id": "10-1",
+      "type": "write",
+      "prompt": "Town Hall: Respond to constituent questions on healthcare, fiscal responsibility, and ethical governance. Type or dictate your answers; AI evaluates clarity and engagement."
+    },
+    {
+      "id": "10-2",
+      "type": "write",
+      "prompt": "Rapid Q&A: Answer 3–5 short prompts quickly, demonstrating consistency and staying on message under pressure."
+    },
+    {
+      "id": "10-3",
+      "type": "decision",
+      "prompt": "Endgame Strategy: Allocate remaining CC between ads, ground game, or debate preparation. Each choice affects final campaign metrics."
+    }
+  ],
+  "narrator": "Final week before Election Day! Conduct town halls, rapid Q&A, and choose your endgame strategy wisely.",
+  "readingSummary": [
+    "October 23–29 tests stamina, clarity, and strategic decision-making just before Election Day.",
+    "Candidates must balance rapid responses, messaging consistency, and final resource allocation."
+  ],
+  "tasksDetails": [
+    {
+      "id": "10-1",
+      "type": "write",
+      "prompt": "Host a timed town hall and answer constituent questions. Focus on clear, persuasive, and policy-aligned responses."
+    },
+    {
+      "id": "10-2",
+      "type": "write",
+      "prompt": "Complete rapid Q&A prompts. Demonstrate quick thinking, consistency, and message discipline."
+    },
+    {
+      "id": "10-3",
+      "type": "decision",
+      "prompt": "Finalize your campaign endgame strategy by allocating CC to ads, ground game, or debate prep. Explain your choices."
+    }
+  ],
+  "sources": [
+    "General Election October 23–29 – Simulator Test Mode",
+    "Town Hall Questions / Interaction Page"
+  ],
+  "outcome": {
+    "description": "AI evaluates the quality and speed of responses. Voter approval and CC totals are updated and locked for final results. Demonstrates performance under live pressure."
+  },
+  "nextModule": {
+    "id": "11",
+    "title": "Election Week: Final Results"
+  }
+}

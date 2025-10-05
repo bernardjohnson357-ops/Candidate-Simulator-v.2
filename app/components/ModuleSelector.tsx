@@ -3,46 +3,61 @@
 
 import React, { useState } from "react";
 import { modules } from "@/config/modules";
-import { runModule, initCandidateState } from "@/app/ai/aiLoop";
-import { CandidateState } from "@/app/ai/types";
-import ModuleDisplay from "./ModuleDisplay";
+import { CandidateState, Module } from "@/app/ai/types";
+import ModuleDisplay from "@/app/components/ModuleDisplay";
 
-const ModuleSelector: React.FC = () => {
-  const [selected, setSelected] = useState<typeof modules[0] | null>(null);
-  const [candidateState, setCandidateState] = useState<CandidateState | null>(null);
-  const [officeInput, setOfficeInput] = useState("");
+interface ModuleSelectorProps {
+  candidateState: CandidateState | null;
+  setCandidateState: React.Dispatch<React.SetStateAction<CandidateState | null>>;
+}
 
-  const handleStart = () => {
-    const office = officeInput as "President" | "Senate" | "House";
+const ModuleSelector: React.FC<ModuleSelectorProps> = ({
+  candidateState,
+  setCandidateState,
+}) => {
+  const [selected, setSelected] = useState<Module | null>(null);
 
-    // Initialize candidate state based on user input
-    const initState = initCandidateState(office);
-    setCandidateState(initState);
-
-    // Optionally auto-select Module 0 after office input
-    const module0 = modules.find((m) => m.id === "0");
-    if (module0) setSelected(module0);
+  const handleSelectModule = (id: string) => {
+    const module = modules.find((m) => m.id === id);
+    if (module) {
+      setSelected(module);
+    }
   };
 
+  // 🧩 Start at Module 0 automatically (if desired)
+  React.useEffect(() => {
+    const module0 = modules.find((m) => m.id === "0");
+    if (module0) setSelected(module0);
+  }, []);
+
   return (
-    <div className="p-4">
-      {!candidateState && (
-        <div>
-          <label>Enter your office (President, Senate, House): </label>
-          <input
-            type="text"
-            value={officeInput}
-            onChange={(e) => setOfficeInput(e.target.value)}
-            className="border px-2 py-1 rounded"
-          />
-          <button onClick={handleStart} className="ml-2 px-3 py-1 bg-blue-500 text-white rounded">
-            Start
+    <div className="p-4 bg-white/90 border rounded-lg shadow-md">
+      <h2 className="text-xl font-semibold mb-3">📘 Module Selector</h2>
+
+      <div className="flex flex-wrap gap-2 mb-4">
+        {modules.map((m) => (
+          <button
+            key={m.id}
+            onClick={() => handleSelectModule(m.id)}
+            className={`px-3 py-2 rounded-md border transition ${
+              selected?.id === m.id
+                ? "bg-blue-600 text-white border-blue-700"
+                : "bg-gray-100 hover:bg-gray-200"
+            }`}
+          >
+            {m.title}
           </button>
-        </div>
-      )}
+        ))}
+      </div>
 
       {candidateState && selected && (
-        <ModuleDisplay module={selected} candidateState={candidateState} setCandidateState={setCandidateState} />
+        <ModuleDisplay
+          module={selected}
+          candidateState={candidateState}
+          setCandidateState={
+            setCandidateState as React.Dispatch<React.SetStateAction<CandidateState>>
+          }
+        />
       )}
     </div>
   );

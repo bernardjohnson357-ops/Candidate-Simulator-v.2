@@ -1,98 +1,95 @@
 {
   "id": "1",
-  "title": "Module 1 – Filing Phase",
-  "narrator": "As a Libertarian candidate, you must first secure your party’s nomination and then file with the Secretary of State. You may pay the filing fee with Candidate Coins, or — in the real world — you could instead collect signatures to appear on the ballot.",
-  "purpose": "Teach filing requirements for party candidates at both the state and federal levels.",
-  "readingSummary": [
-    "Party Nomination: Libertarians hold conventions; Democrats and Republicans hold primaries. Candidates must secure nomination before filing.",
-    "State Filing: Nominees file with the Secretary of State (SOS), either paying a fee (using CC in the simulator) or collecting signatures. Deadlines often fall in December before the election year. Signature rules mirror independents — voters cannot have participated in another party’s primary.",
-    "Federal Filing: After state paperwork, federal compliance begins. Candidates must file FEC Form 1 (Statement of Organization) and Form 2 (Statement of Candidacy).",
-    "Record-Keeping: Accurate filings are crucial. Mistakes reduce CC and credibility; mastery earns signatures and boosts approval."
-  ],
+  "title": "Filing Phase",
+  "description": "Learn filing requirements for party candidates at state and federal levels. Quiz performance converts into signatures and Candidate Coins (CC).",
   "tasks": [
     {
-      "id": "m1-read1",
+      "id": "1-1",
       "type": "read",
-      "prompt": "Review the Texas SOS Party Candidate Guide summary provided by the simulator."
+      "prompt": "Read the Texas SOS Party Candidate Guide summary to understand nomination and filing rules."
     },
     {
-      "id": "m1-quiz1",
+      "id": "1-2",
       "type": "quiz",
-      "prompt": "Quiz: Test your knowledge of Texas SOS filing requirements and federal FEC Forms 1 and 2.",
+      "prompt": "Complete a quiz on state filing requirements (Texas SOS) and basic federal filings (FEC Forms 1 & 2).",
       "questions": [
         {
-          "question": "What forms must be filed with the FEC to become an official federal candidate?",
+          "question": "When must Party Candidates file their application of candidacy with the Texas SOS?",
           "options": [
-            "Form 1 (Statement of Organization) and Form 2 (Statement of Candidacy)",
-            "Form 3 (Quarterly Finance Report)",
-            "Form 4 (Public Notice)",
-            "Form 7 (Audit Certification)"
+            "December of the year before the election",
+            "January of election year",
+            "By early May of election year",
+            "By mid-August of election year"
           ],
           "correct": 0
         },
         {
-          "question": "When do filing deadlines typically occur for state candidates?",
+          "question": "Who nominates Party Candidates in Texas?",
           "options": [
-            "January of the election year",
-            "December before the election year",
-            "Summer before the election year",
-            "After the national conventions"
+            "The Secretary of State",
+            "The Federal Election Commission",
+            "Their political party",
+            "Any registered voter in their district"
+          ],
+          "correct": 2
+        },
+        {
+          "question": "If you choose petition signatures, who can sign?",
+          "options": [
+            "Any registered voter",
+            "Only party members",
+            "Voters who did not vote in another party’s primary",
+            "Anyone 18 or older, even if not registered"
+          ],
+          "correct": 2
+        },
+        {
+          "question": "Can you combine filing fees with petition signatures?",
+          "options": [
+            "Yes, both can be combined",
+            "No, you must choose one or the other",
+            "Only if you have fewer than 1,000 signatures",
+            "Only with approval from your party chair"
           ],
           "correct": 1
         },
         {
-          "question": "What happens if you file inaccurate or incomplete paperwork?",
+          "question": "What must accompany petition sheets for them to be valid?",
           "options": [
-            "Nothing, minor errors are ignored",
-            "You lose CC and voter credibility",
-            "You automatically get disqualified",
-            "You gain extra signatures"
+            "An FEC Form 1",
+            "A notarized affidavit",
+            "A party endorsement letter",
+            "A voter ID photocopy"
           ],
           "correct": 1
         }
       ]
     },
     {
-      "id": "m1-write1",
+      "id": "1-3",
       "type": "write",
-      "prompt": "Describe how you plan to secure your nomination and meet filing requirements. Based on your plan, the narrator will describe the impact on your Candidate Coins, signatures, and voter approval."
-    }
-  ],
-  "scenarios": [
+      "prompt": "Describe how you plan to secure your nomination and meet filing requirements. Your response will impact CC, signatures, and voter approval."
+    },
     {
-      "title": "Party Nomination and Filing",
-      "description": "Candidates must navigate nomination, state filing, and federal compliance steps correctly to maintain momentum and avoid losing Candidate Coins."
+      "id": "1-4",
+      "type": "speak",
+      "prompt": "Summarize your filing strategy verbally using voice input."
     }
   ],
-  "structure": {
-    "phases": [
-      { "title": "Nomination Phase", "description": "Secure your party’s nomination before filing." },
-      { "title": "State Filing Phase", "description": "File with the Secretary of State (SOS) by fee or signatures." },
-      { "title": "Federal Filing Phase", "description": "Submit FEC Form 1 and Form 2 for compliance." }
-    ]
-  },
-  "metrics": {
-    "startingCoins": 50,
-    "signatureConversion": "Each correct quiz answer = +20 signatures",
-    "eligibility": {
-      "President": { "cc": 75, "approval": 2.5 },
-      "Senate": { "cc": 50, "approval": 2.5 },
-      "House": { "cc": 31, "approval": 2.5 }
-    }
-  },
-  "narration": {
-    "intro": "As a party candidate, nomination alone is not enough. You must also file with the Secretary of State. Like independents, you can pay a filing fee (using simulator CC) or pursue signatures. Then, you’ll move into federal compliance with the FEC.",
-    "neutral": "Next, I’ll provide a reading summary of the Texas SOS Party Candidate Guide. Afterwards, you’ll take a short quiz. Your score will convert into signatures."
-  },
+  "narrator": "As a Libertarian candidate, you must first secure your party’s nomination and then file with the Secretary of State. You may pay the filing fee with Candidate Coins, or — in the real world — collect signatures to appear on the ballot.",
+  "readingSummary": [
+    "Party Nomination: Libertarians hold conventions; Democrats and Republicans hold primaries. Candidates must secure nomination before filing.",
+    "State Filing: Nominees file with the Secretary of State (SOS), either paying a fee (using CC in the simulator) or collecting signatures. Deadlines often fall in December before the election year.",
+    "Federal Filing: After state paperwork, federal compliance begins. Candidates must file FEC Form 1 (Statement of Organization) and Form 2 (Statement of Candidacy).",
+    "Record-Keeping: Accurate filings are crucial. Mistakes reduce CC and credibility; mastery earns signatures and boosts approval."
+  ],
+  "objectives": [
+    "Learn filing deadlines and nomination rules.",
+    "Understand trade-offs between paying filing fees and gathering signatures."
+  ],
+  "chatFlow": "Describe how you plan to secure your nomination and meet filing requirements. Based on your plan, I’ll narrate the impact on your CC, signatures, and voter approval.",
   "sources": [
-    "Texas Secretary of State – Party Candidate Filing Guide",
-    "Federal Election Commission – Forms 1 and 2 instructions"
-  ],
-  "outcome": {
-    "description": "Strong performance in this module increases credibility, CC, and signatures, advancing the player toward the next module."
-  },
-  "nextModule": {
-    "id": 2,
-    "title": "Fundraising & Compliance"
-  }
+    "Texas Secretary of State Party Candidate Guide",
+    "FEC Candidate Guide (2024 edition)"
+  ]
 }

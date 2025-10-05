@@ -23,8 +23,7 @@ import module13 from "@/app/data/modules/module13.json";
 import module14 from "@/app/data/modules/module14.json";
 import module15 from "@/app/data/modules/module15.json";
 
-
-/ Cast as Module[]
+// Cast as Module[]
 const allModules: Module[] = [
   module0 as Module,
   module1 as Module,

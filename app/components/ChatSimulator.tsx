@@ -62,7 +62,7 @@ const ChatSimulator: React.FC = () => {
         "🎯 Starting Module 1 – Filing Phase..."
       ]);
 
-      const mod = modules.find((m) => m.id === 1);
+      const mod = modules.find((m) => m.id === "1");
       setCurrentModule(mod || null);
       setIsLoading(false);
       setInput("");

@@ -8,9 +8,41 @@ import { Module, CandidateState } from "@/app/ai/types";
 // Import all JSON modules
 import module0 from "@/app/data/modules/module0.json";
 import module1 from "@/app/data/modules/module1.json";
+import module2 from "@/app/data/modules/module2.json";
+import module3 from "@/app/data/modules/module3.json";
+import module4 from "@/app/data/modules/module4.json";
+import module5 from "@/app/data/modules/module5.json";
+import module6 from "@/app/data/modules/module6.json";
+import module7 from "@/app/data/modules/module7.json";
+import module8 from "@/app/data/modules/module8.json";
+import module9 from "@/app/data/modules/module9.json";
+import module10 from "@/app/data/modules/module10.json";
+import module11 from "@/app/data/modules/module11.json";
+import module12 from "@/app/data/modules/module12.json";
+import module13 from "@/app/data/modules/module13.json";
+import module14 from "@/app/data/modules/module14.json";
+import module15 from "@/app/data/modules/module15.json";
 
-// Cast to Module[]
-const allModules: Module[] = [module0 as Module, module1 as Module];
+
+/ Cast as Module[]
+const allModules: Module[] = [
+  module0 as Module,
+  module1 as Module,
+  module2 as Module,
+  module3 as Module,
+  module4 as Module,
+  module5 as Module,
+  module6 as Module,
+  module7 as Module,
+  module8 as Module,
+  module9 as Module,
+  module10 as Module,
+  module11 as Module,
+  module12 as Module,
+  module13 as Module,
+  module14 as Module,
+  module15 as Module
+];
 
 export default function HomePage() {
   const [currentIndex, setCurrentIndex] = useState(0);

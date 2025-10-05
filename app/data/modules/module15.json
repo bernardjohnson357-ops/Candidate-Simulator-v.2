@@ -1,1 +1,28 @@
-
+{
+  "id": "15",
+  "title": "Final Summary (Post-Debate)",
+  "description": "Provide closure to the simulator by reflecting on strategies, key decisions, and final campaign outcomes.",
+  "tasks": [
+    {
+      "id": "15-1",
+      "type": "reflection",
+      "prompt": "Reflect on your campaign journey. Review AI-generated stats and narrative summary. Consider lessons for future strategy and constituent engagement."
+    }
+  ],
+  "narrator": "This module wraps up your campaign. The AI compiles final stats, highlights strengths and weaknesses, and delivers a personalized narrative tying your actions to electoral results.",
+  "readingSummary": [
+    "Final stats include Candidate Coins (CC), signatures, voter approval, and major spending decisions.",
+    "Path taken (Independent or party), endorsements, petitions, debates, and strategic turning points are summarized.",
+    "Strengths and weaknesses are highlighted, emphasizing clear messaging, debate performance, and moral or strategic decisions."
+  ],
+  "outcome": {
+    "description": "Consolidated campaign results with final CC, voter approval, and key decisions. AI provides narrative closure showing how simulation choices affect electoral outcomes.",
+    "victoryThresholds": {
+      "victory": "Above 50% voter approval (elected to office)",
+      "competitive": "35–49% voter approval (credible showing short of victory)",
+      "spoiler": "20–34% voter approval (influenced race but not competitive)",
+      "symbolic": "Below 20% voter approval (low support, message-focused)"
+    }
+  },
+  "nextModule": null
+}

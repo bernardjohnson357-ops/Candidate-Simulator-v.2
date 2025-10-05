@@ -1,1 +1,93 @@
-
+{
+  "id": "5",
+  "title": "July & August: Campaign Expansion",
+  "description": "Expand the campaign’s visibility and influence through visuals, outreach, and strategic decision-making.",
+  "tasks": [
+    {
+      "id": "5-1",
+      "type": "upload",
+      "prompt": "Upload images or describe campaign visuals such as logos, yard signs, bumper stickers, or T-shirts."
+    },
+    {
+      "id": "5-2",
+      "type": "quiz",
+      "prompt": "Endorsement Dilemma: Texas Mothers for Does offer an endorsement. Do you accept or decline?",
+      "questions": [
+        {
+          "question": "Do you accept the endorsement?",
+          "options": ["Yes, accept", "No, decline"],
+          "correct": 0
+        }
+      ]
+    },
+    {
+      "id": "5-3",
+      "type": "quiz",
+      "prompt": "Petition Decision: End War in Gaza. Do you sign the petition?",
+      "questions": [
+        {
+          "question": "Do you sign the petition?",
+          "options": ["Yes, sign", "No, decline"],
+          "correct": 0
+        }
+      ]
+    },
+    {
+      "id": "5-4",
+      "type": "write",
+      "prompt": "Legislative Response: Opponent passed controversial legislation. Write a persuasive response for your campaign."
+    }
+  ],
+  "narrator": "Now you expand your campaign through visuals and grassroots engagement. Describe logos, yard signs, T-shirts, or digital outreach.",
+  "readingSummary": [
+    "Campaign expansion involves balancing grassroots energy with visibility.",
+    "Activities include creative design, strategic decision-making, and scenario-based exercises.",
+    "Choices impact Candidate Coins (CC), voter approval, and campaign credibility."
+  ],
+  "tasksDetails": [
+    {
+      "id": "5-1",
+      "type": "upload",
+      "prompt": "Upload or describe campaign visuals for branding purposes."
+    },
+    {
+      "id": "5-2",
+      "type": "quiz",
+      "prompt": "Decide whether to accept or decline the endorsement, considering credibility and voter impact.",
+      "questions": [
+        {
+          "question": "Do you accept the endorsement?",
+          "options": ["Yes, accept", "No, decline"],
+          "correct": 0
+        }
+      ]
+    },
+    {
+      "id": "5-3",
+      "type": "quiz",
+      "prompt": "Decide whether to sign or decline the petition based on campaign values.",
+      "questions": [
+        {
+          "question": "Do you sign the petition?",
+          "options": ["Yes, sign", "No, decline"],
+          "correct": 0
+        }
+      ]
+    },
+    {
+      "id": "5-4",
+      "type": "write",
+      "prompt": "Write a persuasive response to the opponent's legislation, focusing on clear messaging and voter alignment."
+    }
+  ],
+  "sources": [
+    "General Election July & August – Simulator Test Mode"
+  ],
+  "outcome": {
+    "description": "Receive AI feedback on materials and responses. Adjust CC and voter approval based on quality and decision-making. Demonstrate campaign expansion skills."
+  },
+  "nextModule": {
+    "id": "6",
+    "title": "September: Strategic Outreach & Debates"
+  }
+}

@@ -1,61 +1,83 @@
 "use client";
 
 import React from "react";
-
-interface Task {
-  type: string;
-  prompt: string;
-}
-
-interface Scenario {
-  name: string;
-  description: string;
-}
-
-interface Module {
-  id: number;
-  title: string;
-  narrator: string;
-  purpose: string;
-  readingSummary: string;
-  tasks: Task[];
-  scenarios: Scenario[];
-  outcome: string;
-  nextModule: number;
-}
+import { Module, CandidateState } from "@/app/ai/types";
 
 interface ModuleDisplayProps {
   module: Module;
+  candidateState?: CandidateState;
+  setCandidateState?: React.Dispatch<React.SetStateAction<CandidateState>>;
 }
 
-const ModuleDisplay: React.FC<ModuleDisplayProps> = ({ module }) => {
+const ModuleDisplay: React.FC<ModuleDisplayProps> = ({
+  module,
+  candidateState,
+  setCandidateState,
+}) => {
   return (
     <div className="module-container">
       <h1>{module.title}</h1>
-      <p><strong>Narrator:</strong> {module.narrator}</p>
-      <p><strong>Purpose:</strong> {module.purpose}</p>
-      <p><strong>Reading Summary:</strong> {module.readingSummary}</p>
 
-      <h2>Tasks:</h2>
-      <ul>
-        {module.tasks.map((task, index) => (
-          <li key={index}>
-            <strong>{task.type}:</strong> {task.prompt}
-          </li>
-        ))}
-      </ul>
+      {module.narrator && (
+        <p>
+          <strong>Narrator:</strong> {module.narrator}
+        </p>
+      )}
 
-      <h2>Scenarios:</h2>
-      <ul>
-        {module.scenarios.map((scenario, index) => (
-          <li key={index}>
-            <strong>{scenario.name}:</strong> {scenario.description}
-          </li>
-        ))}
-      </ul>
+      {module.purpose && (
+        <p>
+          <strong>Purpose:</strong> {module.purpose}
+        </p>
+      )}
 
-      <p><strong>Outcome:</strong> {module.outcome}</p>
-      <p><strong>Next Module:</strong> {module.nextModule}</p>
+      {module.readingSummary && module.readingSummary.length > 0 && (
+        <div>
+          <strong>Reading Summary:</strong>
+          <ul>
+            {module.readingSummary.map((item, index) => (
+              <li key={index}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {module.tasks && module.tasks.length > 0 && (
+        <div>
+          <h2>Tasks:</h2>
+          <ul>
+            {module.tasks.map((task) => (
+              <li key={task.id}>
+                <strong>{task.type}:</strong> {task.prompt}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {module.scenarios && module.scenarios.length > 0 && (
+        <div>
+          <h2>Scenarios:</h2>
+          <ul>
+            {module.scenarios.map((scenario, index) => (
+              <li key={index}>
+                <strong>{scenario.title}:</strong> {scenario.description}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {module.outcome && (
+        <p>
+          <strong>Outcome:</strong> {module.outcome.description}
+        </p>
+      )}
+
+      {module.nextModule && (
+        <p>
+          <strong>Next Module:</strong> {module.nextModule.title}
+        </p>
+      )}
     </div>
   );
 };

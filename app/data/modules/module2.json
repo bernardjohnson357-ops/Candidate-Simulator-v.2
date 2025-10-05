@@ -1,1 +1,83 @@
-
+{
+  "id": "2",
+  "title": "FEC Filing Quizzes (Party)",
+  "description": "Practice federal filing requirements for party candidates, focusing on FEC Forms 1 and 2.",
+  "tasks": [
+    {
+      "id": "2-1",
+      "type": "quiz",
+      "prompt": "Quiz: FEC Form 1 – Statement of Candidacy",
+      "questions": [
+        {
+          "question": "What triggers the need to file FEC Form 1?",
+          "options": [
+            "Raising or spending over $1,000",
+            "Raising or spending over $5,000",
+            "Winning the party nomination",
+            "Filing with the Secretary of State"
+          ],
+          "correct": 1
+        },
+        {
+          "question": "Form 1 officially declares a candidate's intent to run. True or False?",
+          "options": ["True", "False"],
+          "correct": 0
+        }
+      ]
+    },
+    {
+      "id": "2-2",
+      "type": "quiz",
+      "prompt": "Quiz: FEC Form 2 – Statement of Organization",
+      "questions": [
+        {
+          "question": "Form 2 registers what for your campaign?",
+          "options": [
+            "Your party nomination",
+            "Your campaign committee",
+            "Your fundraising totals",
+            "Your voter approval rating"
+          ],
+          "correct": 1
+        },
+        {
+          "question": "Quarterly reports (Form 3) must be filed after submitting Forms 1 and 2. True or False?",
+          "options": ["True", "False"],
+          "correct": 0
+        }
+      ]
+    }
+  ],
+  "narrator": "Once you raise or spend over $5,000, federal law requires you to file Form 1 (Statement of Candidacy) and Form 2 (Statement of Organization). This ensures transparency in campaign finances.",
+  "readingSummary": [
+    "Crossing $5,000 in fundraising or spending triggers federal filing obligations.",
+    "Form 1 formally declares a candidate.",
+    "Form 2 registers the campaign committee.",
+    "Quarterly reports (Form 3) disclose contributions and expenditures.",
+    "Correct quiz answers earn Candidate Coins (CC) and signatures.",
+    "Incorrect answers simulate fines or credibility loss."
+  ],
+  "tasksDetails": [
+    {
+      "id": "2-1",
+      "type": "quiz",
+      "prompt": "Complete the quiz on Form 1: Statement of Candidacy"
+    },
+    {
+      "id": "2-2",
+      "type": "quiz",
+      "prompt": "Complete the quiz on Form 2: Statement of Organization"
+    }
+  ],
+  "sources": [
+    "FEC Candidate Guide (2024 edition)",
+    "Federal Filing Guidelines for Party Candidates"
+  ],
+  "outcome": {
+    "description": "Earn Candidate Coins (CC) and signatures. Completing Module 2 unlocks the General Election branch."
+  },
+  "nextModule": {
+    "id": "3",
+    "title": "General Election Branch"
+  }
+}

@@ -1,1 +1,55 @@
-
+{
+  "id": "9",
+  "title": "October 15–22: Final Push",
+  "description": "Simulate final campaign momentum by practicing live media appearances, refining messaging under time pressure, and making strategic media decisions.",
+  "tasks": [
+    {
+      "id": "9-1",
+      "type": "write",
+      "prompt": "Podcast Appearance: Prepare an introduction and brief campaign statement. Explain your priorities and why voters should support you. Responses will be evaluated for clarity, empathy, and persuasiveness."
+    },
+    {
+      "id": "9-2",
+      "type": "write",
+      "prompt": "Media Engagement: Decide how to allocate CC for ad buys, social media campaigns, or press releases. Explain your choices and strategy."
+    },
+    {
+      "id": "9-3",
+      "type": "write",
+      "prompt": "Final Narrative: Draft a short closing pitch summarizing why voters should support you. Ensure clarity, conviction, and alignment with campaign messaging."
+    }
+  ],
+  "narrator": "This is your last chance to sway undecided voters. Participate in podcasts, media campaigns, and strategic messaging exercises.",
+  "readingSummary": [
+    "October 15–22 emphasizes live media engagement, final messaging, and strategic allocation of campaign resources.",
+    "Strong communication and clarity can significantly impact voter approval and Candidate Coins (CC)."
+  ],
+  "tasksDetails": [
+    {
+      "id": "9-1",
+      "type": "write",
+      "prompt": "Prepare your introduction and brief statement for a podcast. Focus on priorities and voter persuasion."
+    },
+    {
+      "id": "9-2",
+      "type": "write",
+      "prompt": "Make media spending decisions and explain your rationale. Options include ad buys, social media campaigns, or press releases."
+    },
+    {
+      "id": "9-3",
+      "type": "write",
+      "prompt": "Draft a concise closing pitch. Strong responses improve signatures and approval; weak responses reduce momentum."
+    }
+  ],
+  "sources": [
+    "General Election October 15–22 A – Simulator Test Mode",
+    "Podcast Questions / Interaction Page"
+  ],
+  "outcome": {
+    "description": "Updated CC and voter approval based on media, podcast, and final narrative performance. Demonstrated ability to communicate effectively under time pressure. Improved campaign momentum and credibility for the final week."
+  },
+  "nextModule": {
+    "id": "10",
+    "title": "Election Week: GOTV & Results"
+  }
+}

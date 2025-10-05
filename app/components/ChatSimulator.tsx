@@ -99,7 +99,7 @@ const ChatSimulator: React.FC = () => {
     setIsLoading(false);
   };
 
-  // 🧱 UI layout
+ // 🧱 UI layout
   return (
     <div className="p-4 max-w-3xl mx-auto bg-white/90 rounded-2xl shadow-md border border-gray-200">
       <h2 className="text-2xl font-bold mb-4 text-center">🗳️ Federal Candidate Simulator</h2>
@@ -128,8 +128,7 @@ const ChatSimulator: React.FC = () => {
         </button>
       </div>
 
-</div>
-
+      {/* ✅ This stays inside the same main container */}
       {currentModule && candidateState && (
         <div className="mt-4">
           <ModuleDisplay
@@ -139,7 +138,7 @@ const ChatSimulator: React.FC = () => {
           />
         </div>
       )}
-    </div> {/* closes main container div */}
+    </div>
   );
 };
 

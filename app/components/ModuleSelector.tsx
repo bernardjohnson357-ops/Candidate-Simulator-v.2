@@ -1,7 +1,7 @@
 // ./app/components/ModuleSelector.tsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { modules } from "@/config/modules";
 import { CandidateState, Module } from "@/app/ai/types";
 import ModuleDisplay from "@/app/components/ModuleDisplay";
@@ -24,8 +24,8 @@ const ModuleSelector: React.FC<ModuleSelectorProps> = ({
     }
   };
 
-  // 🧩 Start at Module 0 automatically (if desired)
-  React.useEffect(() => {
+  // 🧩 Automatically start at Module 0
+  useEffect(() => {
     const module0 = modules.find((m) => m.id === "0");
     if (module0) setSelected(module0);
   }, []);
@@ -50,13 +50,12 @@ const ModuleSelector: React.FC<ModuleSelectorProps> = ({
         ))}
       </div>
 
+      {/* Render module only when both are ready */}
       {candidateState && selected && (
         <ModuleDisplay
           module={selected}
           candidateState={candidateState}
-          setCandidateState={
-            setCandidateState as React.Dispatch<React.SetStateAction<CandidateState>>
-          }
+          setCandidateState={setCandidateState}
         />
       )}
     </div>

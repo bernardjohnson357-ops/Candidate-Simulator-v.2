@@ -70,24 +70,22 @@ export type Phase = {
 // Module Type (Expanded for Rich JSON)
 // ------------------------------
 export type Module = {
-  id: string | number;
+  id: string; // ✅ always a string
   title: string;
-  narrator?: string;
   description?: string;
+  narrator?: string;
   purpose?: string;
   readingSummary?: string[];
   tasks: Task[];
-  scenarios?: Scenario[];
-  structure?: {
-    phases: Phase[];
-  };
+  scenarios?: { title: string; description: string }[];
+  structure?: { phases: { title: string; description: string }[] };
   metrics?: {
-    cc?: number;
-    signatures?: number;
-    approval?: number;
+    startingCoins: number;
+    signatureConversion: string;
+    eligibility: Record<string, { cc: number; approval: number }>;
   };
   narration?: Record<string, string>;
   sources?: string[];
-  outcome?: string;
-  nextModule?: string;
+  outcome?: { description: string };
+  nextModule?: { id: string; title: string };
 };

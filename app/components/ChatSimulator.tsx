@@ -128,16 +128,18 @@ const ChatSimulator: React.FC = () => {
         </button>
       </div>
 
-{currentModule && candidateState && (
+</div>
+
+      {currentModule && candidateState && (
         <div className="mt-4">
           <ModuleDisplay
             module={currentModule}
             candidateState={candidateState}
-            setCandidateState={setCandidateState} // no cast
+            setCandidateState={setCandidateState}
           />
         </div>
       )}
-    </div>  {/* closes main container div */}
+    </div> {/* closes main container div */}
   );
 };
 

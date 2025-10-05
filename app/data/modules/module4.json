@@ -1,1 +1,66 @@
-
+{
+  "id": "4",
+  "title": "June: Campaign Identity",
+  "description": "Define the campaign’s mission, branding, and public presence through writing, messaging, and compliance practice.",
+  "tasks": [
+    {
+      "id": "4-1",
+      "type": "write",
+      "prompt": "Write a newspaper-style article announcing your candidacy."
+    },
+    {
+      "id": "4-2",
+      "type": "write",
+      "prompt": "Create campaign slogans, a mission statement/credo, and outline four key issues with explanations."
+    },
+    {
+      "id": "4-3",
+      "type": "write",
+      "prompt": "Recruit a friend to join the simulator and describe how they will contribute to your campaign team."
+    },
+    {
+      "id": "4-4",
+      "type": "write",
+      "prompt": "Gather and record a real candidate’s FEC information (name, FEC ID, receipts, expenditures, cash on hand, source link)."
+    }
+  ],
+  "narrator": "Your message and identity are critical. Libertarian candidates must clearly communicate principles such as personal liberty, fiscal responsibility, and limited government.",
+  "readingSummary": [
+    "Building a recognizable identity is essential for voter trust and campaign viability.",
+    "Message discipline, branding, and operational awareness are key to gaining approval and credibility.",
+    "Activities include campaign announcement, defining slogans/mission, team-building, and opposition research."
+  ],
+  "tasksDetails": [
+    {
+      "id": "4-1",
+      "type": "write",
+      "prompt": "Write a clear, detailed newspaper-style article announcing your candidacy."
+    },
+    {
+      "id": "4-2",
+      "type": "write",
+      "prompt": "Draft campaign slogans, mission statement, and outline four key issues."
+    },
+    {
+      "id": "4-3",
+      "type": "write",
+      "prompt": "Simulate recruiting a team member and describe their role."
+    },
+    {
+      "id": "4-4",
+      "type": "write",
+      "prompt": "Record real candidate FEC information to practice compliance tracking."
+    }
+  ],
+  "sources": [
+    "Libertarian Party Messaging Guidelines",
+    "FEC Candidate Committee Data"
+  ],
+  "outcome": {
+    "description": "Earn CC and voter approval, establish campaign identity, and gain practice in operational compliance."
+  },
+  "nextModule": {
+    "id": "5",
+    "title": "July: Volunteer Engagement & Outreach"
+  }
+}

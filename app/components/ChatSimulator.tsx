@@ -69,13 +69,15 @@ const ChatSimulator: React.FC = () => {
     }
 
     // Step 2: Module progression
-    if (currentModule && candidateState) {
-      const { moduleState, candidateState: updatedCandidate } = runModule(currentModule, candidateState);
-
-      setMessages((prev) => [
-        ...prev,
-        `📊 Module complete! +${moduleState.signaturesChange} signatures, ${moduleState.ccChange} CC change, ${moduleState.approvalChange}% approval change.`
-      ]);
+    {currentModule && candidateState && (
+  <div className="mt-4">
+    <ModuleDisplay
+      module={currentModule}
+      candidateState={candidateState} // guaranteed non-null
+      setCandidateState={setCandidateState} // types now match
+    />
+  </div>
+)}
 
       setCandidateState(updatedCandidate);
 

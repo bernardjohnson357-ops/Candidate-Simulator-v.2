@@ -5,53 +5,66 @@ import { Module, CandidateState } from "@/app/ai/types";
 
 interface ModuleDisplayProps {
   module: Module;
-  candidateState: CandidateState; // Non-nullable
-  setCandidateState: React.Dispatch<React.SetStateAction<CandidateState>>;
+  candidateState?: CandidateState;
+  setCandidateState?: React.Dispatch<React.SetStateAction<CandidateState | null>>;
 }
 
-const ModuleDisplay: React.FC<ModuleDisplayProps> = ({
-  module,
-  candidateState,
-  setCandidateState,
-}) => {
+const ModuleDisplay: React.FC<ModuleDisplayProps> = ({ module }) => {
   return (
-    <div className="module-container">
-      <h1>{module.title}</h1>
-      {module.narrator && <p><strong>Narrator:</strong> {module.narrator}</p>}
-      {module.purpose && <p><strong>Purpose:</strong> {module.purpose}</p>}
-      {module.readingSummary && (
-        <p><strong>Reading Summary:</strong> {module.readingSummary.join(" ")}</p>
-      )}
+    <div className="p-4 bg-white rounded-2xl shadow-md border border-gray-200">
+      <h1 className="text-2xl font-bold mb-2">{module.title}</h1>
+      {module.narrator && <p className="mb-4 text-gray-700 italic">{module.narrator}</p>}
+      {module.purpose && <p className="mb-4"><strong>Purpose:</strong> {module.purpose}</p>}
 
-      {module.tasks.length > 0 && (
-        <>
-          <h2>Tasks:</h2>
-          <ul>
-            {module.tasks.map((task, idx) => (
-              <li key={idx}>
-                <strong>{task.type}:</strong> {task.prompt}
-              </li>
+      {module.readingSummary && module.readingSummary.length > 0 && (
+        <div className="mb-4">
+          <h2 className="font-semibold mb-2">📖 Reading Summary</h2>
+          <ul className="list-disc pl-6">
+            {module.readingSummary.map((line, i) => (
+              <li key={i}>{line}</li>
             ))}
           </ul>
-        </>
+        </div>
       )}
 
-      {module.scenarios && module.scenarios.length > 0 && (
-        <>
-          <h2>Scenarios:</h2>
-          <ul>
-            {module.scenarios.map((scenario, idx) => (
-              <li key={idx}>
-                <strong>{scenario.title}:</strong> {scenario.description}
-              </li>
+      <div className="mb-4">
+        <h2 className="font-semibold mb-2">📝 Tasks</h2>
+        <ul className="list-disc pl-6 space-y-2">
+          {module.tasks.map((task) => (
+            <li key={task.id}>
+              <strong>{task.type.toUpperCase()}:</strong> {task.prompt}
+              {"questions" in task && task.questions?.length > 0 && (
+                <ul className="list-decimal pl-6 mt-1">
+                  {task.questions.map((q, i) => (
+                    <li key={i}>
+                      <p>{q.question}</p>
+                      <ul className="list-none pl-4">
+                        {q.options.map((opt, j) => (
+                          <li key={j}>
+                            <span className="text-sm text-gray-700">
+                              {String.fromCharCode(65 + j)}. {opt}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {module.sources && (
+        <div>
+          <h2 className="font-semibold mb-2">📚 Sources</h2>
+          <ul className="list-disc pl-6">
+            {module.sources.map((src, i) => (
+              <li key={i}>{src}</li>
             ))}
           </ul>
-        </>
-      )}
-
-      {module.outcome && <p><strong>Outcome:</strong> {module.outcome.description}</p>}
-      {module.nextModule && (
-        <p><strong>Next Module:</strong> {module.nextModule.title}</p>
+        </div>
       )}
     </div>
   );

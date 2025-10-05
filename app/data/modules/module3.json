@@ -1,1 +1,48 @@
-
+{
+  "id": "3",
+  "title": "May: First Moves",
+  "description": "Practice early campaign decisions and demonstrate strategic thinking in budgeting, outreach, and planning.",
+  "tasks": [
+    {
+      "id": "3-1",
+      "type": "write",
+      "prompt": "Choose one strategic path (Fundraising, Volunteers, or Media/Advertising) and write a detailed implementation plan."
+    },
+    {
+      "id": "3-2",
+      "type": "write",
+      "prompt": "Spend Candidate Coins (CC) from the Candidate Coin Store to simulate startup infrastructure or advertising costs."
+    }
+  ],
+  "narrator": "It’s early summer — time to make your first strategic campaign decisions. You must decide how to allocate your limited CC between advertising, travel, and press outreach.",
+  "readingSummary": [
+    "Early summer sets the tone for the campaign. Balance limited CC with building visibility and infrastructure.",
+    "Fundraising strategy involves setting goals, methods, and tracking progress.",
+    "Volunteer base requires recruitment, engagement, and retention planning.",
+    "Media & Advertising Plan requires a cost-benefit analysis for social media, digital ads, local press, and TV.",
+    "Candidate Coin Store represents campaign infrastructure and advertising costs."
+  ],
+  "tasksDetails": [
+    {
+      "id": "3-1",
+      "type": "write",
+      "prompt": "Write your strategic plan for the first month of campaigning."
+    },
+    {
+      "id": "3-2",
+      "type": "write",
+      "prompt": "Simulate spending CC from the Candidate Coin Store on startup infrastructure or advertising."
+    }
+  ],
+  "sources": [
+    "General Election First Moves – Test Mode",
+    "FEC Getting Started Manual for Candidates"
+  ],
+  "outcome": {
+    "description": "Updated CC balance, adjusted voter approval and signatures, and established initial campaign infrastructure."
+  },
+  "nextModule": {
+    "id": "4",
+    "title": "June: Outreach & Volunteer Expansion"
+  }
+}

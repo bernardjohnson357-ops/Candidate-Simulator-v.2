@@ -25,6 +25,7 @@
   "@quizzes/*": ["quizzes/*"],
   "@/lib/*": ["lib/*"],
   "@/config/*": ["config/*"]
+  "@/*": ["./*"]
 }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

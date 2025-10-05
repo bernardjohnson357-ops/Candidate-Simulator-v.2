@@ -1,1 +1,34 @@
-
+{
+  "id": "13",
+  "title": "November 1: Pro-Israel Group Meeting",
+  "description": "Test the candidate’s ability to navigate high-stakes endorsement offers that involve political and ethical trade-offs.",
+  "tasks": [
+    {
+      "id": "13-1",
+      "type": "roleplay",
+      "prompt": "A Pro-Israel group offers conditional support. Participate in a voiced AI dialogue and decide whether to accept or decline the endorsement. If prompted, explain your reasoning."
+    }
+  ],
+  "narrator": "A Pro-Israel group approaches with a conditional endorsement. Carefully weigh campaign advantages against moral and voter trust implications before responding.",
+  "readingSummary": [
+    "Endorsements can bring legitimacy, funding, and momentum but may have controversial conditions.",
+    "Candidates must balance short-term political gain with long-term credibility and ethical consistency."
+  ],
+  "tasksDetails": [
+    {
+      "id": "13-1",
+      "type": "roleplay",
+      "prompt": "Participate in a dialogue with the group and choose to accept or decline their endorsement. Explain your reasoning if asked."
+    }
+  ],
+  "sources": [
+    "General Election November 1 – Pro-Israel Endorsement Scenario"
+  ],
+  "outcome": {
+    "description": "CC, voter approval, and credibility adjust based on the candidate's decision. Performance demonstrates the ability to weigh short-term gains against long-term ethical and political consequences."
+  },
+  "nextModule": {
+    "id": "14",
+    "title": "Election Week: Final Results"
+  }
+}

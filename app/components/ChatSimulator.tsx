@@ -1,3 +1,4 @@
+// ./app/components/ChatSimulator.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -27,8 +28,6 @@ const ChatSimulator: React.FC = () => {
     const userMsg = `🗣️ You: ${input}`;
     setMessages((prev) => [...prev, userMsg]);
     setIsLoading(true);
-
-    let updatedState = candidateState;
 
     // Step 1: Choose Office
     if (!office) {
@@ -70,18 +69,26 @@ const ChatSimulator: React.FC = () => {
     }
 
     // Step 2: Module progression
-    if (currentModule && candidateState && office) {
-      const { moduleState, candidateState: updatedState } = runModule(currentModule, candidateState);
-setMessages((prev) => [
-  ...prev,
-  `📊 Module complete! +${moduleState.signaturesChange} signatures, ${moduleState.ccChange} CC change, ${moduleState.approvalChange}% approval change.`
-]);
-setCandidateState(updatedState);
-      // Go to next module if available
-      const nextModule = modules.find((m) => m.id === currentModule.id + 1);
-      if (nextModule) {
-        setMessages((prev) => [...prev, `➡️ Moving to ${nextModule.title}...`]);
-        setCurrentModule(nextModule);
+    if (currentModule && candidateState) {
+      const { moduleState, candidateState: updatedCandidate } = runModule(currentModule, candidateState);
+
+      setMessages((prev) => [
+        ...prev,
+        `📊 Module complete! +${moduleState.signaturesChange} signatures, ${moduleState.ccChange} CC change, ${moduleState.approvalChange}% approval change.`
+      ]);
+
+      setCandidateState(updatedCandidate);
+
+      // Go to next module if defined in JSON
+      if (currentModule.nextModule) {
+        const nextModule = modules.find((m) => m.id === currentModule.nextModule?.id);
+        if (nextModule) {
+          setMessages((prev) => [...prev, `➡️ Moving to ${nextModule.title}...`]);
+          setCurrentModule(nextModule);
+        } else {
+          setMessages((prev) => [...prev, "🏁 Simulation complete. Great job, candidate!"]);
+          setCurrentModule(null);
+        }
       } else {
         setMessages((prev) => [...prev, "🏁 Simulation complete. Great job, candidate!"]);
         setCurrentModule(null);
@@ -97,9 +104,7 @@ setCandidateState(updatedState);
       <h2 className="text-2xl font-bold mb-4 text-center">🗳️ Federal Candidate Simulator</h2>
       <div className="h-[400px] overflow-y-auto p-3 border rounded-md bg-gray-50 mb-4">
         {messages.map((msg, i) => (
-          <div key={i} className="mb-2 whitespace-pre-wrap">
-            {msg}
-          </div>
+          <div key={i} className="mb-2 whitespace-pre-wrap">{msg}</div>
         ))}
         {isLoading && <div className="text-gray-500 italic">AI is thinking...</div>}
       </div>

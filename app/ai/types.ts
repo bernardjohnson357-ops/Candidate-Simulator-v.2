@@ -87,5 +87,5 @@ export type Module = {
   narration?: Record<string, string>;
   sources?: string[];
   outcome?: { description: string };
-  nextModule?: { id: string; title: string };
+  nextModule?: { id: string; title: string } | null; // ✅ allow null for last module
 };

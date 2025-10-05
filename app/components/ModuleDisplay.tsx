@@ -43,45 +43,46 @@ const ModuleDisplay: React.FC<ModuleDisplayProps> = ({
         </div>
       )}
 
-      {module.tasks && module.tasks.length > 0 && (
-        <div className="mt-2">
-          <strong>Tasks:</strong>
-          <ul className="list-decimal ml-5">
-            {module.tasks.map((task: Task, idx) => (
-              <li key={idx}>
-                <strong>{task.type}:</strong> {task.prompt}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+     {module.tasks && module.tasks.length > 0 && (
+  <div className="mt-2">
+    <strong>Tasks:</strong>
+    <ul className="list-decimal ml-5">
+      {module.tasks.map((task: Task, idx) => (
+        <li key={idx}>
+          <strong>{task.type}:</strong> {task.prompt}
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
 
-      {module.scenarios && module.scenarios.length > 0 && (
-        <div className="mt-2">
-          <strong>Scenarios:</strong>
-          <ul className="list-disc ml-5">
-            {module.scenarios.map((scenario, idx) => (
-              <li key={idx}>
-                <strong>{scenario.title || scenario.name}:</strong>{" "}
-                {scenario.description}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+{module.scenarios && module.scenarios.length > 0 && (
+  <div className="mt-2">
+    <strong>Scenarios:</strong>
+    <ul className="list-disc ml-5">
+      {module.scenarios.map((scenario, idx) => (
+        <li key={idx}>
+          <strong>{scenario.title}:</strong> {scenario.description}
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
 
-      {module.outcome && (
-        <p className="mt-2">
-          <strong>Outcome:</strong> {module.outcome.description || module.outcome}
-        </p>
-      )}
+{module.outcome && (
+  <p className="mt-2">
+    <strong>Outcome:</strong>{" "}
+    {typeof module.outcome === "string"
+      ? module.outcome
+      : module.outcome.description}
+  </p>
+)}
 
-      {module.nextModule && (
-        <p className="mt-2">
-          <strong>Next Module:</strong> {module.nextModule.title}
-        </p>
-      )}
-
+{module.nextModule && (
+  <p className="mt-2">
+    <strong>Next Module:</strong> {module.nextModule.title}
+  </p>
+)}
       <div className="mt-2">
         <p>
           <strong>Candidate State:</strong> {candidateState.office} | CC:{" "}

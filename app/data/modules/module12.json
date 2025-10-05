@@ -1,1 +1,64 @@
-
+{
+  "id": "12",
+  "title": "October 31: Television Interview",
+  "description": "Simulate a live televised interview to test composure, adaptability, and message discipline under high-pressure media questioning.",
+  "tasks": [
+    {
+      "id": "12-1",
+      "type": "roleplay",
+      "prompt": "Softball Opening: Answer warm-up questions on local color, school visit highlights, or human-interest topics. Demonstrate composure and likability."
+    },
+    {
+      "id": "12-2",
+      "type": "roleplay",
+      "prompt": "Policy Questions: Respond concisely to queries on community safety, education policy, fiscal responsibility, and foreign affairs. Provide evidence-based answers with clear principles."
+    },
+    {
+      "id": "12-3",
+      "type": "roleplay",
+      "prompt": "Press / Gotcha Phase: Handle tougher follow-up questions that press for contradictions, opponent specifics, or recent controversies. Use bridging and accountability techniques."
+    },
+    {
+      "id": "12-4",
+      "type": "roleplay",
+      "prompt": "Closing Challenge: Deliver a decisive, principled closing statement that reinforces key messages and voter recall."
+    }
+  ],
+  "narrator": "You’re live on air. Begin with a calm opening, stay concise during policy questions, withstand the pressure of the gotcha phase, and close with a memorable, principled statement.",
+  "readingSummary": [
+    "Televised interviews test composure, clarity, and message discipline.",
+    "Candidates progress through four phases: Softball opening, Policy questions, Gotcha phase, and Closing challenge."
+  ],
+  "tasksDetails": [
+    {
+      "id": "12-1",
+      "type": "roleplay",
+      "prompt": "Warm-up questions; answer concisely, demonstrate composure and likability."
+    },
+    {
+      "id": "12-2",
+      "type": "roleplay",
+      "prompt": "Respond to direct policy questions with clarity, evidence, and concise framing."
+    },
+    {
+      "id": "12-3",
+      "type": "roleplay",
+      "prompt": "Handle rapid, challenging follow-ups; practice bridging and accountability."
+    },
+    {
+      "id": "12-4",
+      "type": "roleplay",
+      "prompt": "Deliver a principled closing statement emphasizing key messages."
+    }
+  ],
+  "sources": [
+    "General Election October 31 – Television Interview Scenario"
+  ],
+  "outcome": {
+    "description": "AI scores responses, adjusting voter approval, Candidate Coins (CC), and campaign momentum. Immediate feedback provided on clarity, factual framing, and persuasive strength. Sample answers saved for review or debate prep."
+  },
+  "nextModule": {
+    "id": "13",
+    "title": "Election Week: Final Results"
+  }
+}

@@ -3,18 +3,19 @@
 
 import React, { useState } from "react";
 import ModuleDisplay from "@/app/components/ModuleDisplay";
-import { Module } from "@/app/ai/types";
+import { Module, CandidateState } from "@/app/ai/types";
 
 // Import all JSON modules
 import module0 from "@/app/data/modules/module0.json";
 import module1 from "@/app/data/modules/module1.json";
-// Add more as needed: import module2 from "@/app/data/modules/module2.json";
 
 // Cast to Module[]
 const allModules: Module[] = [module0 as Module, module1 as Module];
 
 export default function HomePage() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [candidateState, setCandidateState] = useState<CandidateState | null>(null);
+
   const currentModule = allModules[currentIndex];
 
   const handleNext = () => {
@@ -80,7 +81,11 @@ export default function HomePage() {
       </div>
 
       {/* Display selected module */}
-      <ModuleDisplay module={currentModule} />
+      <ModuleDisplay
+        module={currentModule}
+        candidateState={candidateState}
+        setCandidateState={setCandidateState}
+      />
     </main>
   );
 }

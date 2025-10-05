@@ -1,1 +1,126 @@
-
+{
+  "id": "6",
+  "title": "September: FEC Compliance & Scenarios",
+  "description": "Practice federal campaign compliance while managing late-campaign challenges.",
+  "tasks": [
+    {
+      "id": "6-1",
+      "type": "quiz",
+      "prompt": "FEC Filing Quiz: Complete a simulated Form 3 quarterly report.",
+      "questions": [
+        {
+          "question": "Which form is required for quarterly reporting of contributions and expenditures?",
+          "options": ["Form 1", "Form 2", "Form 3"],
+          "correct": 2
+        }
+      ]
+    },
+    {
+      "id": "6-2",
+      "type": "write",
+      "prompt": "Community Canvassing: A retired voter says, 'I retired with $1.5M. I’m worried it won’t last. What would you do for people like me?' Respond as a candidate."
+    },
+    {
+      "id": "6-3",
+      "type": "write",
+      "prompt": "Constitution Day Challenge: Protesters at Armadillo University confront you about your prior Gaza petition decision. Write a response balancing principle and messaging."
+    },
+    {
+      "id": "6-4",
+      "type": "quiz",
+      "prompt": "Postcard Offer: Choose how to allocate resources for postcards and ads.",
+      "questions": [
+        {
+          "question": "Which postcard/ad option do you choose?",
+          "options": [
+            "100 CC → postcards + mid-Oct–Election ads",
+            "75 CC → postcards + late Oct ads only",
+            "0 CC → decline investment"
+          ],
+          "correct": 0
+        }
+      ]
+    },
+    {
+      "id": "6-5",
+      "type": "quiz",
+      "prompt": "Debate Challenge: Decide how to handle an October debate invitation.",
+      "questions": [
+        {
+          "question": "Choose your debate strategy",
+          "options": ["Accept debate", "Decline debate", "Hire a debate coach (50 CC add-on)"],
+          "correct": 0
+        }
+      ]
+    }
+  ],
+  "narrator": "By September, quarterly FEC reporting (Form 3) is due. You will also face campaign scenarios such as Constitution Day outreach, postcard mailers, and debate invitations.",
+  "readingSummary": [
+    "Quarterly FEC reporting ensures compliance with campaign finance law.",
+    "September scenarios simulate late-campaign pressures and strategic decision-making.",
+    "Choices affect Candidate Coins (CC), voter approval, and campaign credibility."
+  ],
+  "tasksDetails": [
+    {
+      "id": "6-1",
+      "type": "quiz",
+      "prompt": "Complete the simulated Form 3 quarterly filing to reinforce compliance knowledge.",
+      "questions": [
+        {
+          "question": "Which form is required for quarterly reporting?",
+          "options": ["Form 1", "Form 2", "Form 3"],
+          "correct": 2
+        }
+      ]
+    },
+    {
+      "id": "6-2",
+      "type": "write",
+      "prompt": "Respond to the retired voter's concern demonstrating engagement and policy clarity."
+    },
+    {
+      "id": "6-3",
+      "type": "write",
+      "prompt": "Respond to Constitution Day protesters with a balance of principle and strategic messaging."
+    },
+    {
+      "id": "6-4",
+      "type": "quiz",
+      "prompt": "Select a postcard/ad investment option based on CC and campaign visibility.",
+      "questions": [
+        {
+          "question": "Choose your postcard/ad strategy",
+          "options": [
+            "100 CC → postcards + mid-Oct–Election ads",
+            "75 CC → postcards + late Oct ads only",
+            "0 CC → decline investment"
+          ],
+          "correct": 0
+        }
+      ]
+    },
+    {
+      "id": "6-5",
+      "type": "quiz",
+      "prompt": "Select your strategy for the October debate.",
+      "questions": [
+        {
+          "question": "Choose your debate approach",
+          "options": ["Accept debate", "Decline debate", "Hire a debate coach (50 CC add-on)"],
+          "correct": 0
+        }
+      ]
+    }
+  ],
+  "sources": [
+    "General Election September – Simulator Test Mode",
+    "FEC Form 3 Manual"
+  ],
+  "outcome": {
+    "description": "Updated CC and voter approval based on quiz and scenario decisions. Demonstrated ability to manage compliance and respond to late-campaign challenges."
+  },
+  "nextModule": {
+    "id": "7",
+    "title": "October: Debates & GOTV"
+  }
+}

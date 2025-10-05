@@ -1,1 +1,64 @@
-
+{
+  "id": "11",
+  "title": "October 30: School Visit",
+  "description": "Practice connecting with students, parents, and educators in a neutral, nonpartisan setting. Balance empathy, authority, and clarity while reinforcing community values.",
+  "tasks": [
+    {
+      "id": "11-1",
+      "type": "write",
+      "prompt": "Deliver a 1–2 paragraph speech to the school audience, demonstrating empathy, clarity, and message discipline."
+    },
+    {
+      "id": "11-2",
+      "type": "roleplay",
+      "prompt": "Parent Dialogue: Engage with Linda, a concerned parent, and respond to safety and education policy questions respectfully and reassuringly."
+    },
+    {
+      "id": "11-3",
+      "type": "roleplay",
+      "prompt": "Principal’s Office Ensemble: Mediate a discussion with Dr. Howard, Mrs. Arnold, and Karen, balancing multiple perspectives while offering a clear stance on school safety policies."
+    },
+    {
+      "id": "11-4",
+      "type": "roleplay",
+      "prompt": "Classroom Visit: Respond to playful, curious students (ages 8–11) about school safety and local concerns in an age-appropriate manner."
+    }
+  ],
+  "narrator": "School visits test your ability to connect across generations — parents, teachers, and students. Clear, respectful communication builds trust and approval.",
+  "readingSummary": [
+    "Candidates interact with parents, administrators, and students in a neutral, safe school setting.",
+    "Success depends on empathy, authority, clarity, and consistent messaging."
+  ],
+  "tasksDetails": [
+    {
+      "id": "11-1",
+      "type": "write",
+      "prompt": "Deliver a concise, inclusive speech addressing education and community safety."
+    },
+    {
+      "id": "11-2",
+      "type": "roleplay",
+      "prompt": "Engage with the parent character, Linda, providing reassurance and policy clarity."
+    },
+    {
+      "id": "11-3",
+      "type": "roleplay",
+      "prompt": "Mediate the discussion in the principal’s office ensemble, balancing multiple adult perspectives."
+    },
+    {
+      "id": "11-4",
+      "type": "roleplay",
+      "prompt": "Address student questions about safety in an age-appropriate and engaging way."
+    }
+  ],
+  "sources": [
+    "General Election October 30 – School Visit Scenario"
+  ],
+  "outcome": {
+    "description": "AI evaluates tone, clarity, and empathy. Voter approval adjusts based on parent, administrator, and student interactions. Demonstrates multi-stakeholder communication skills."
+  },
+  "nextModule": {
+    "id": "12",
+    "title": "Election Week: Final Results"
+  }
+}

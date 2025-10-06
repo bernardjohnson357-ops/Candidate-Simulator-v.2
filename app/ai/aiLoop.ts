@@ -2,19 +2,21 @@
 import { Module, ModuleState, CandidateState, QuizQuestion } from "./types";
 
 // ✅ Initialize candidate state with thresholds
-// ./app/ai/types.ts
-export interface CandidateState {
-  office: "President" | "Senate" | "House";
-  cc: number;
-  signatures: number;
-  approval: number;
-  currentModuleId: string; // tracks current module
-  threshold: {
-    cc: number;
-    approval: number;
-    sigs: number;
-  }; // add this to match your aiLoop
-}
+export const initCandidateState = (
+  office: "President" | "Senate" | "House"
+): CandidateState => {
+  let threshold = { cc: 0, approval: 0, sigs: 0 };
+  switch (office) {
+    case "President":
+      threshold = { cc: 75, approval: 2.5, sigs: 0 };
+      break;
+    case "Senate":
+      threshold = { cc: 50, approval: 2.5, sigs: 0 };
+      break;
+    case "House":
+      threshold = { cc: 31, approval: 2.5, sigs: 0 };
+      break;
+  }
 
   return {
     office,
@@ -61,11 +63,10 @@ export const runModule = (
           });
         }
         break;
-
       case "read":
       case "write":
       case "speak":
-        // Placeholder for future logic
+        // Placeholder: extend with actual logic if needed
         break;
     }
   });

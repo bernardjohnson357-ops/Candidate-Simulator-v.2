@@ -1,64 +1,59 @@
 {
   "id": "12",
-  "title": "October 31: Television Interview",
-  "description": "Simulate a live televised interview to test composure, adaptability, and message discipline under high-pressure media questioning.",
+  "title": "Television Interview",
+  "description": "Simulate a live broadcast interview testing candidate composure, messaging consistency, and adaptability under pressure. Television exposure can significantly influence voter perception.",
+  "narrator": "calm",
+  "purpose": "Practice communicating clearly and persuasively on live television, managing policy and 'gotcha' questions while maintaining campaign identity and credibility.",
+  "readingSummary": [
+    "Televised interviews require:",
+    "1. Structured responses → Keep answers open, concise, and aligned with campaign identity.",
+    "2. Adapting to phases → Transition smoothly from soft to policy to challenging questions.",
+    "3. Composure under pressure → Avoid overreacting, stay authentic, and maintain credibility.",
+    "Interview Phases Example:",
+    "- Softball Opening → Light discussion (weather, school visit recaps).",
+    "- Policy Questions → Community safety, local priorities, and national policy issues.",
+    "- 'Gotcha' Phase → Moderator presses on opponent positions or controversial topics.",
+    "- Closing Challenge → Reiterate your positions consistently and confidently."
+  ],
   "tasks": [
     {
       "id": "12-1",
-      "type": "roleplay",
-      "prompt": "Softball Opening: Answer warm-up questions on local color, school visit highlights, or human-interest topics. Demonstrate composure and likability."
-    },
-    {
-      "id": "12-2",
-      "type": "roleplay",
-      "prompt": "Policy Questions: Respond concisely to queries on community safety, education policy, fiscal responsibility, and foreign affairs. Provide evidence-based answers with clear principles."
-    },
-    {
-      "id": "12-3",
-      "type": "roleplay",
-      "prompt": "Press / Gotcha Phase: Handle tougher follow-up questions that press for contradictions, opponent specifics, or recent controversies. Use bridging and accountability techniques."
-    },
-    {
-      "id": "12-4",
-      "type": "roleplay",
-      "prompt": "Closing Challenge: Deliver a decisive, principled closing statement that reinforces key messages and voter recall."
+      "type": "multi_phase_interview",
+      "prompt": "Participate in an AI-simulated live television interview. Respond to all phases clearly and authentically.",
+      "phases": [
+        {
+          "phase": "Softball / Introduction",
+          "description": "Begin with light, conversational topics like weather or your recent school visit.",
+          "evaluation": "Assesses warmth, approachability, and natural delivery."
+        },
+        {
+          "phase": "Policy-Focused Questions",
+          "description": "Address community safety, local priorities, and key national policy concerns.",
+          "evaluation": "Assesses policy knowledge, clarity, and alignment with campaign identity."
+        },
+        {
+          "phase": "Gotcha Phase",
+          "description": "Moderator asks difficult or provocative questions based on opponent positions or controversies.",
+          "evaluation": "Assesses composure, adaptability, and ability to stay on message under pressure."
+        },
+        {
+          "phase": "Closing Challenge",
+          "description": "Reaffirm your campaign’s identity and message consistency with confidence and clarity.",
+          "evaluation": "Assesses persuasiveness, consistency, and leadership presence."
+        }
+      ],
+      "evaluation": "AI evaluates clarity, persuasiveness, composure, authenticity, and voter approval impact."
     }
-  ],
-  "narrator": "You’re live on air. Begin with a calm opening, stay concise during policy questions, withstand the pressure of the gotcha phase, and close with a memorable, principled statement.",
-  "readingSummary": [
-    "Televised interviews test composure, clarity, and message discipline.",
-    "Candidates progress through four phases: Softball opening, Policy questions, Gotcha phase, and Closing challenge."
-  ],
-  "tasksDetails": [
-    {
-      "id": "12-1",
-      "type": "roleplay",
-      "prompt": "Warm-up questions; answer concisely, demonstrate composure and likability."
-    },
-    {
-      "id": "12-2",
-      "type": "roleplay",
-      "prompt": "Respond to direct policy questions with clarity, evidence, and concise framing."
-    },
-    {
-      "id": "12-3",
-      "type": "roleplay",
-      "prompt": "Handle rapid, challenging follow-ups; practice bridging and accountability."
-    },
-    {
-      "id": "12-4",
-      "type": "roleplay",
-      "prompt": "Deliver a principled closing statement emphasizing key messages."
-    }
-  ],
-  "sources": [
-    "General Election October 31 – Television Interview Scenario"
   ],
   "outcome": {
-    "description": "AI scores responses, adjusting voter approval, Candidate Coins (CC), and campaign momentum. Immediate feedback provided on clarity, factual framing, and persuasive strength. Sample answers saved for review or debate prep."
+    "description": "Multi-phase interview performance evaluated → Voter approval updated. Candidate demonstrates messaging consistency, composure, and credibility under live broadcast conditions. CC may be awarded for clear, persuasive, and authentic responses."
   },
   "nextModule": {
     "id": "13",
-    "title": "Election Week: Final Results"
-  }
+    "title": "Pro-Israel Group Meeting",
+    "description": "Test moral and strategic decision-making in endorsement negotiations with advocacy organizations."
+  },
+  "references": [
+    "https://www.bernardjohnson4congress.com/general_election_cycle_october_31_test_mode"
+  ]
 }

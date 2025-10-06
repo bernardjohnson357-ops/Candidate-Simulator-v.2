@@ -1,6 +1,7 @@
 {
   "id": "1",
   "title": "Party Filing",
+  "active": true,
   "description": "Simulate filing as a Party Candidate with the Texas Secretary of State (SOS) and gathering signatures or paying fees.",
   "narrator": "neutral",
   "readingSummary": [

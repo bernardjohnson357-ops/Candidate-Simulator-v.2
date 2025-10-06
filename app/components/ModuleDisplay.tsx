@@ -1,17 +1,31 @@
+// ./app/components/ModuleDisplay.tsx
 "use client";
 
 import React from "react";
-import { Module } from "../ai/types";
+import { CandidateState, Module } from "@/app/ai/types";
 
-interface Props {
+interface ModuleDisplayProps {
   module: Module;
+  candidateState: CandidateState;
+  setCandidateState: React.Dispatch<React.SetStateAction<CandidateState | null>>;
 }
 
-const ModuleDisplay: React.FC<Props> = ({ module }) => {
+const ModuleDisplay: React.FC<ModuleDisplayProps> = ({ module, candidateState, setCandidateState }) => {
   return (
-    <div className="p-4 border rounded-lg bg-gray-50 shadow-sm">
-      <h2 className="text-xl font-bold">{module.title}</h2>
-      <p className="mt-1 text-gray-700">{module.description}</p>
+    <div className="border p-4 rounded-md bg-gray-100">
+      <h3 className="text-xl font-semibold">{module.title}</h3>
+      {module.description && <p className="mt-2">{module.description}</p>}
+
+      {module.readingSummary && module.readingSummary.length > 0 && (
+        <div className="mt-2">
+          <strong>Reading Summary:</strong>
+          <ul className="list-disc ml-5">
+            {module.readingSummary.map((line, idx) => (
+              <li key={idx}>{line}</li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {module.purpose && (
         <p className="mt-2">
@@ -19,42 +33,12 @@ const ModuleDisplay: React.FC<Props> = ({ module }) => {
         </p>
       )}
 
-      {module.narrator && (
-        <p className="mt-2">
-          <strong>Narrator:</strong> {module.narrator}
-        </p>
-      )}
-
-      {module.readingSummary && module.readingSummary.length > 0 && (
-        <div className="mt-2">
-          <strong>Reading Summary:</strong>
-          <ul className="list-disc ml-5">
-            {module.readingSummary.map((point, idx) => (
-              <li key={idx}>{point}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {module.sources && module.sources.length > 0 && (
-        <div className="mt-2">
-          <strong>Sources:</strong>
-          <ul className="list-disc ml-5">
-            {module.sources.map((src, idx) => (
-              <li key={idx}>{src}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
       {module.scenarios && module.scenarios.length > 0 && (
         <div className="mt-2">
           <strong>Scenarios:</strong>
           <ul className="list-disc ml-5">
             {module.scenarios.map((scenario, idx) => (
-              <li key={idx}>
-                <strong>{scenario.title}:</strong> {scenario.description}
-              </li>
+              <li key={idx}>{scenario}</li>
             ))}
           </ul>
         </div>
@@ -63,15 +47,13 @@ const ModuleDisplay: React.FC<Props> = ({ module }) => {
       {module.outcome && (
         <p className="mt-2">
           <strong>Outcome:</strong>{" "}
-          {Array.isArray(module.outcome)
-            ? module.outcome.join(" ")
-            : module.outcome}
+          {typeof module.outcome === "string" ? module.outcome : JSON.stringify(module.outcome)}
         </p>
       )}
 
-      {module.nextModuleId && (
+      {module.nextModule && (
         <p className="mt-2">
-          <strong>Next Module ID:</strong> {module.nextModuleId}
+          <strong>Next Module:</strong> {module.nextModule.title}
         </p>
       )}
     </div>

@@ -1,55 +1,68 @@
 {
   "id": "9",
-  "title": "October 15–22: Final Push",
-  "description": "Simulate final campaign momentum by practicing live media appearances, refining messaging under time pressure, and making strategic media decisions.",
+  "title": "Final Push: Live Media & Messaging",
+  "description": "Prepare for the final stretch with live media appearances, rapid-response messaging, and reinforcing voter support under time pressure.",
+  "narrator": "calm",
+  "readingSummary": [
+    "Final push skills require:",
+    "1. Analyzing current news and campaign developments → Identify threats and opportunities.",
+    "2. Crafting concise, impactful statements → Ensure every word supports your campaign identity.",
+    "3. Delivering real-time responses → Typed or speech-to-text input must be clear and persuasive.",
+    "Weekly Campaign Briefing Example:",
+    "- Opposition Research → Opponent introduces new legislation; small protests occur.",
+    "- Constituent Sentiment → Voters are paying close attention to messaging and responsiveness.",
+    "- Media Updates → Podcasts, local TV, and social platforms amplify statements quickly."
+  ],
+  "weeklyNews": {
+    "World News": [
+      "Sanctions & Trade: European and Canadian leaders have imposed sanctions on all countries supporting Israel. The U.S. faces trade restrictions due to its alliance with Israel.",
+      "Middle East Escalation: Iran launched an attack on Saudi Arabia, triggering missile exchanges causing over 100 fatalities. Saudi Arabia calls for U.S. intervention.",
+      "Natural Disasters: An earthquake in Indonesia prompted tsunami warnings, minor flooding occurred."
+    ],
+    "National News": [
+      "Open-Carry Legislation: New legislation allows open-carry for all federal lawmakers in D.C. after a recent shooting.",
+      "Trade Tensions: President proposes a 25% tariff on Canadian goods.",
+      "Transgender Advocacy & Safety: A Texas politician publicly came out as transgender after a soccer league stabbing, calling for an end to violence and advocating open-carry legislation.",
+      "Gun Sales Surge: Rising firearm purchases as Americans feel less safe."
+    ],
+    "Texas Updates": [
+      "Shifting Polls: Support for third-party and independent candidates rises.",
+      "School Safety Incident: A former student was apprehended at homecoming with a rifle; cited past bullying as motive.",
+      "Protests & Public Sentiment: Demonstrations against new legislation are spreading; poverty-stricken residents express distrust of incumbent politicians on social media.",
+      "Flood Relief Recognition: Texans affected by flooding praise their representative for securing federal aid."
+    ]
+  },
   "tasks": [
     {
       "id": "9-1",
       "type": "write",
-      "prompt": "Podcast Appearance: Prepare an introduction and brief campaign statement. Explain your priorities and why voters should support you. Responses will be evaluated for clarity, empathy, and persuasiveness."
+      "prompt": "Podcast Interaction: Prepare an introduction and brief campaign statement for a one-hour live podcast, then respond to 15 questions covering national, global, and local issues. Typed or speech-to-text.",
+      "evaluation": "AI assesses clarity, persuasion, alignment with campaign identity, and voter approval impact under live conditions."
     },
     {
       "id": "9-2",
       "type": "write",
-      "prompt": "Media Engagement: Decide how to allocate CC for ad buys, social media campaigns, or press releases. Explain your choices and strategy."
+      "prompt": "Rapid Messaging Response: Write a 2–3 paragraph statement addressing unexpected news events, opponent missteps, or constituent concerns, maintaining alignment with your campaign identity.",
+      "evaluation": "Voter approval and campaign credibility updated based on messaging effectiveness."
     },
     {
       "id": "9-3",
       "type": "write",
-      "prompt": "Final Narrative: Draft a short closing pitch summarizing why voters should support you. Ensure clarity, conviction, and alignment with campaign messaging."
+      "prompt": "Constituent Engagement: Respond to last-minute constituent questions via social media or email with concise, persuasive answers.",
+      "evaluation": "AI evaluates clarity, alignment with campaign identity, and voter trust impact."
     }
   ],
-  "narrator": "This is your last chance to sway undecided voters. Participate in podcasts, media campaigns, and strategic messaging exercises.",
-  "readingSummary": [
-    "October 15–22 emphasizes live media engagement, final messaging, and strategic allocation of campaign resources.",
-    "Strong communication and clarity can significantly impact voter approval and Candidate Coins (CC)."
-  ],
-  "tasksDetails": [
-    {
-      "id": "9-1",
-      "type": "write",
-      "prompt": "Prepare your introduction and brief statement for a podcast. Focus on priorities and voter persuasion."
-    },
-    {
-      "id": "9-2",
-      "type": "write",
-      "prompt": "Make media spending decisions and explain your rationale. Options include ad buys, social media campaigns, or press releases."
-    },
-    {
-      "id": "9-3",
-      "type": "write",
-      "prompt": "Draft a concise closing pitch. Strong responses improve signatures and approval; weak responses reduce momentum."
-    }
-  ],
-  "sources": [
-    "General Election October 15–22 A – Simulator Test Mode",
-    "Podcast Questions / Interaction Page"
-  ],
+  "purpose": "Prepare candidates for live media interactions, rapid-response messaging, and reinforcing voter support during the critical final campaign stretch.",
   "outcome": {
-    "description": "Updated CC and voter approval based on media, podcast, and final narrative performance. Demonstrated ability to communicate effectively under time pressure. Improved campaign momentum and credibility for the final week."
+    "description": "Live media performance evaluated → Voter approval updated. Rapid-response messaging tracked → CC and campaign credibility adjusted. Candidate demonstrates ability to perform under time pressure, maintain messaging consistency, and influence voter support."
   },
   "nextModule": {
     "id": "10",
-    "title": "Election Week: GOTV & Results"
-  }
+    "title": "Election Countdown (October 23–29)",
+    "description": "Focus on final interactions, high-pressure town halls, and strategic last-minute decisions leading into Election Day."
+  },
+  "references": [
+    "https://www.bernardjohnson4congress.com/general_election_october_15-22_a_test_mode",
+    "https://www.bernardjohnson4congress.com/general_election_october_15-22_b_test_mode"
+  ]
 }

@@ -81,36 +81,48 @@ const ChatSimulator: React.FC = () => {
       return;
     }
 
-    // Step 2 – Module progression
-    if (currentModule && candidateState) {
-      const { moduleState, candidateState: updated } = runModule(currentModule, candidateState);
+   // Step 2 – Module progression
+if (currentModule && candidateState) {
+  // Save old state for diff calculation
+  const prevCC = candidateState.cc;
+  const prevSigs = candidateState.signatures;
+  const prevApproval = candidateState.approval;
 
-      setCandidateState({
-        ...updated,
-        currentModuleId: ((parseInt(currentModule.id) + 1).toString()), // always a string
-      });
+  // Run module, returns updated CandidateState directly
+  const updated = runModule(currentModule, candidateState);
 
-      setMessages((prev) => [
-        ...prev,
-        `📊 Module complete! +${moduleState.signaturesChange} signatures, ${moduleState.ccChange} CC, ${moduleState.approvalChange}% approval.`,
-      ]);
+  // Calculate changes for message display
+  const ccChange = updated.cc - prevCC;
+  const signaturesChange = updated.signatures - prevSigs;
+  const approvalChange = updated.approval - prevApproval;
 
-      // Load next module dynamically
-      const nextId = (parseInt(currentModule.id) + 1).toString();
-      const nextModule = await loadModule(nextId);
+  // Update candidate state
+  setCandidateState({
+    ...updated,
+    currentModuleId: ((parseInt(currentModule.id) + 1).toString()), // always a string
+  });
 
-      if (nextModule) {
-        setMessages((prev) => [...prev, `➡️ Moving to ${nextModule.title}...`]);
-        setCurrentModule(nextModule);
-      } else {
-        setMessages((prev) => [...prev, "🏁 Simulation complete. Great job, candidate!"]);
-        setCurrentModule(null);
-      }
-    }
+  // Display module results
+  setMessages((prev) => [
+    ...prev,
+    `📊 Module complete! +${signaturesChange} signatures, ${ccChange} CC, ${approvalChange}% approval.`,
+  ]);
 
-    setInput("");
-    setIsLoading(false);
-  };
+  // Load next module dynamically
+  const nextId = (parseInt(currentModule.id) + 1).toString();
+  const nextModule = await loadModule(nextId);
+
+  if (nextModule) {
+    setMessages((prev) => [...prev, `➡️ Moving to ${nextModule.title}...`]);
+    setCurrentModule(nextModule);
+  } else {
+    setMessages((prev) => [...prev, "🏁 Simulation complete. Great job, candidate!"]);
+    setCurrentModule(null);
+  }
+
+  setInput("");
+  setIsLoading(false);
+}
 
   return (
     <div className="p-4 max-w-3xl mx-auto bg-white/90 rounded-2xl shadow-md border border-gray-200">

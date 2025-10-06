@@ -34,15 +34,17 @@ const ModuleDisplay: React.FC<ModuleDisplayProps> = ({ module, candidateState, s
       )}
 
       {module.scenarios && module.scenarios.length > 0 && (
-        <div className="mt-2">
-          <strong>Scenarios:</strong>
-          <ul className="list-disc ml-5">
-            {module.scenarios.map((scenario, idx) => (
-              <li key={idx}>{scenario}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+  <div className="mt-2">
+    <strong>Scenarios:</strong>
+    <ul className="list-disc ml-5">
+      {module.scenarios.map((scenario, idx) => (
+        <li key={idx}>
+          <strong>{scenario.title}:</strong> {scenario.description}
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
 
       {module.outcome && (
         <p className="mt-2">

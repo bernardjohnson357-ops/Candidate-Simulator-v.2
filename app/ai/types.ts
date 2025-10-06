@@ -33,7 +33,8 @@ export interface Module {
   readingSummary?: string[];
   sources?: string[];
   tasks: Task[];
-  purpose?: string; // ✅ Add this line
+  purpose?: string;
+  scenarios?: string[]; // ✅ Add this
 }
 
 export interface ModuleState {

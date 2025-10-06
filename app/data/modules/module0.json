@@ -1,40 +1,29 @@
 {
   "id": "0",
   "title": "Orientation & Introduction",
-  "description": "Welcome to the Federal Candidate Simulator — AI Edition. This simulator will take you through the entire election cycle, one step at a time, showing filing, fundraising, compliance, and campaigning — all safely in a simulation.",
+  "description": "Introduction to the Federal Candidate Simulator and how it works.",
   "narrator": "calm, professional",
   "readingSummary": [
-    "Here are the ground rules. Think of them as your campaign manual.",
-    "Candidate Coins (CC): 1 CC = $100 simulated. You start with 50 CC. Earn CC by passing quizzes or completing tasks. Spend CC on campaign needs like filing fees, ads, or communication coaching.",
-    "Signatures & Voter Approval: Each quiz score = the same number of signatures. 100 signatures = 1% voter approval. Example: scoring 80% on a quiz = 80 signatures = 0.8% approval.",
-    "Ballot Access: You must qualify for the ballot by paying CC (filing fee) and gathering enough signatures (through quizzes and tasks).",
-    "Eligibility thresholds: President → 75 CC + 2.5% approval, Senate → 50 CC + 2.5% approval, House → 31 CC + 2.5% approval.",
-    "Task Types: Read, Write, Upload, Speak. Some decisions appear as chat buttons.",
-    "Feedback & Progress: After each task, CC, signatures, and approval are updated. All choices and scores carry forward."
+    "Welcome to the Federal Candidate Simulator — AI Edition. This simulator will take you through the entire election cycle, one step at a time. You’ll experience the real requirements of filing, fundraising, compliance, and campaigning — all safely in a simulation."
   ],
   "tasks": [
     {
-      "id": "0-quiz-1",
-      "type": "quiz",
-      "prompt": "Orientation Quiz: Test your understanding of Candidate Coins, signatures, and ballot access.",
-      "questions": [
-        {
-          "question": "What does 1 Candidate Coin (CC) equal in simulated campaign funds?",
-          "options": [
-            "A) $10",
-            "B) $100",
-            "C) $1,000",
-            "D) $10,000"
-          ],
-          "correct": 1
-        }
-      ]
+      "id": "0-1",
+      "type": "read",
+      "prompt": "Here are the ground rules. Think of them as your campaign manual:\n\n1. Candidate Coins (CC):\n   - 1 CC = $100 simulated.\n   - You start with 50 CC.\n   - Earn CC by passing quizzes or completing tasks.\n   - Spend CC on campaign needs like filing fees, ads, or communication coaching.\n\n2. Signatures & Voter Approval:\n   - Each quiz score = the same number of signatures.\n   - 100 signatures = 1% voter approval.\n   - Example: scoring 80% on a quiz = 80 signatures = 0.8% approval.\n\n3. Ballot Access:\n   - You must qualify for the ballot by paying CC and gathering enough signatures.\n\n4. Eligibility thresholds:\n   - President → 75 CC + 2.5% approval\n   - Senate → 50 CC + 2.5% approval\n   - House → 31 CC + 2.5% approval\n\n5. Task Types:\n   - Read: Summaries of laws, filing guides, or news.\n   - Write: Announcements, strategy documents, responses.\n   - Upload: Images (Module 5 – signs, T-shirts, bumper stickers).\n   - Speak: Speeches, press conferences, debates (Modules 7+).\n   - Some decisions appear as chat buttons.\n\n6. Feedback & Progress:\n   - After each task, CC, signatures, and approval are updated.\n   - All choices and scores carry forward."
+    },
+    {
+      "id": "0-2",
+      "type": "read",
+      "prompt": "Your first step: choose which office you are running for. This will determine the difficulty ahead.\n\nOptions:\n- President (75 CC + 2.5% approval)\n- U.S. Senate (50 CC + 2.5% approval)\n- U.S. House (31 CC + 2.5% approval)\n\nAfter choosing, you'll start with 50 CC and 0% approval. Before campaigning, you must file properly."
     }
   ],
-  "sources": [
-    "Simulator Orientation Materials"
-  ],
-  "outcome": {
-    "description": "You’ve completed the orientation. You now understand CC, signatures, voter approval, and ballot access. You are ready to choose an office and begin Module 1."
+  "purpose": "Introduce users to the simulator mechanics, CC, signatures, approval, and office selection.",
+  "scenarios": [],
+  "outcome": "User chooses an office and understands the rules for CC, signatures, approval, and tasks.",
+  "nextModule": {
+    "id": "1",
+    "title": "Party Filing",
+    "description": "The first official step: filing as a party candidate."
   }
 }

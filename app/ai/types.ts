@@ -15,7 +15,7 @@ export interface CandidateState {
 export interface QuizQuestion {
   question: string;
   options: string[];
-  correct: number;
+  answer: string;
 }
 
 export interface Task {
@@ -40,15 +40,6 @@ export interface Module {
   tasks: Task[];
   purpose?: string;
   scenarios?: Scenario[];
-  outcome?: string | string[]; // ✅ Add this
-}
-
-export interface ModuleState {
-  moduleId: string;
-  completedTasks: number;
-  totalTasks: number;
-  ccChange: number;
-  signaturesChange: number;
-  approvalChange: number;
-  finished: boolean;
+  outcome?: string | string[];
+  nextModuleId?: string; // ✅ safer link instead of an embedded module
 }

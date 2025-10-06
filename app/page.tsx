@@ -2,25 +2,34 @@
 "use client";
 
 import React, { useState } from "react";
+import module0 from "@/app/data/modules/module0.json";
+import module1 from "@/app/data/modules/module1.json";
+// ... import all modules up to module15
+import module15 from "@/app/data/modules/module15.json";
 import ReactMarkdown from "react-markdown";
-import { Module, Task } from "@/app/ai/types";
-import { allModules } from "@/app/config/modules";
+
+import { Module, CandidateState } from "@/app/ai/types";
+
+// put all modules in an array
+const allModules: Module[] = [
+  module0,
+  module1,
+  // ... up to
+  module15,
+];
 
 export default function HomePage() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [candidateState, setCandidateState] = useState<CandidateState | null>(null);
 
   const currentModule = allModules[currentIndex];
 
   const handleNext = () => {
-    if (currentIndex < allModules.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    }
+    if (currentIndex < allModules.length - 1) setCurrentIndex(currentIndex + 1);
   };
 
   const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    }
+    if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
   };
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -29,70 +38,68 @@ export default function HomePage() {
   };
 
   return (
-    <div style={{ padding: "2rem", maxWidth: "900px", margin: "auto" }}>
-      <h1>Federal Candidate Simulator</h1>
+    <div className="p-4 max-w-4xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">{currentModule.title}</h1>
 
-      {/* Module selector */}
-      <select value={currentModule.id} onChange={handleSelectChange}>
-        {allModules.map((mod) => (
-          <option key={mod.id} value={mod.id}>
-            {mod.title}
+      {/* Module selection dropdown */}
+      <select
+        value={currentModule.id}
+        onChange={handleSelectChange}
+        className="border p-2 mb-4 w-full"
+      >
+        {allModules.map((m) => (
+          <option key={m.id} value={m.id}>
+            {m.title}
           </option>
         ))}
       </select>
 
-      {/* Prev / Next buttons */}
-      <div style={{ margin: "1rem 0" }}>
-        <button onClick={handlePrev} disabled={currentIndex === 0}>
+      {/* Module description/content */}
+      {currentModule.description && (
+        <div className="mb-4 prose max-w-none">
+          <ReactMarkdown>{currentModule.description}</ReactMarkdown>
+        </div>
+      )}
+
+      {/* Tasks */}
+      <div className="mb-4">
+        {currentModule.tasks.map((task) => (
+          <div key={task.id} className="border p-3 mb-2 rounded">
+            <p className="font-semibold">Task: {task.prompt}</p>
+            {task.questions && (
+              <ul className="list-disc ml-6">
+                {task.questions.map((q, i) => (
+                  <li key={i}>
+                    {q.question}
+                    <ul className="list-disc ml-6">
+                      {q.options.map((opt, j) => (
+                        <li key={j}>{opt}</li>
+                      ))}
+                    </ul>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Navigation buttons */}
+      <div className="flex justify-between">
+        <button
+          onClick={handlePrev}
+          disabled={currentIndex === 0}
+          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+        >
           Previous
         </button>
         <button
           onClick={handleNext}
           disabled={currentIndex === allModules.length - 1}
-          style={{ marginLeft: "1rem" }}
+          className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
         >
           Next
         </button>
-      </div>
-
-      {/* Module content */}
-      <div style={{ marginTop: "2rem" }}>
-        <h2>{currentModule.title}</h2>
-
-        {/* Markdown description */}
-        {currentModule.description && (
-          <ReactMarkdown>{currentModule.description}</ReactMarkdown>
-        )}
-
-        {/* Tasks */}
-        {currentModule.tasks && currentModule.tasks.length > 0 && (
-          <div>
-            <h3>Tasks</h3>
-            <ul>
-              {currentModule.tasks.map((task: Task) => (
-                <li key={task.id} style={{ marginBottom: "1rem" }}>
-                  <strong>{task.type.toUpperCase()}:</strong> {task.prompt}
-
-                  {/* Quiz questions */}
-                  {task.questions && task.questions.length > 0 && (
-                    <ul style={{ marginTop: "0.5rem" }}>
-                      {task.questions.map((q, idx) => (
-                        <li key={idx}>
-                          {q.question}
-                          <ul>
-                            {q.options.map((opt, oIdx) => (
-                              <li key={oIdx}>{opt}</li>
-                            ))}
-                          </ul>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -1,4 +1,22 @@
 // ./app/ai/types.ts
+export interface Scenario {
+  title: string;
+  description: string;
+}
+
+export interface Module {
+  id: string;
+  title: string;
+  description: string;
+  narrator?: string;
+  readingSummary?: string[];
+  sources?: string[];
+  tasks: Task[];
+  purpose?: string;
+  scenarios?: Scenario[]; // now an array of Scenario objects
+  outcome?: string | object;
+  nextModule?: Module;
+}
 
 export interface QuizQuestion {
   id: string;

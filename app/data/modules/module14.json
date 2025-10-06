@@ -1,34 +1,51 @@
 {
   "id": "14",
-  "title": "November 2: Debate Night",
-  "description": "Test the candidate’s ability to perform under maximum campaign pressure in a high-stakes public debate.",
+  "title": "Debate Night",
+  "description": "Simulate a high-stakes, live debate with moderators, opponents, and a live audience. Every response shapes voter perception and Election Week outcomes.",
+  "narrator": "calm",
+  "purpose": "Practice handling a wide range of policy and values-based questions, maintaining composure under pressure, and communicating with clarity, persuasiveness, and consistency.",
+  "readingSummary": [
+    "Debate success depends on:",
+    "1. Preparedness → Understanding key issues and prior positions.",
+    "2. Adaptability → Responding to unexpected questions and moderator challenges.",
+    "3. Consistency → Aligning answers with campaign identity and earlier statements.",
+    "4. Audience Awareness → Reading reactions and adjusting tone accordingly."
+  ],
+  "debateStructure": {
+    "components": [
+      "Moderator Questions → Economy, foreign policy, social issues, local concerns.",
+      "Opponent Challenges → Real-time rebuttals and fact-checking.",
+      "Live Audience → AI-simulated applause or jeers reflecting audience response.",
+      "Fact-Check Phase → Moderator verifies answers against prior statements."
+    ]
+  },
   "tasks": [
     {
       "id": "14-1",
-      "type": "roleplay",
-      "prompt": "Deliver an opening statement (typed or spoken). Participate in the AI-moderated debate and respond to all 20–25 policy questions, adapting to fact-checks and audience reactions."
+      "type": "multi_question_debate",
+      "prompt": "Participate in the AI-simulated debate by responding to 20–25 questions (typed or speech-to-text). These include policy questions, ethical dilemmas, and real-time rebuttals.",
+      "evaluation": "AI evaluates clarity, persuasiveness, composure, consistency, and voter approval impact."
     }
   ],
-  "narrator": "This debate is the centerpiece of your campaign. Maintain composure, credibility, and persuasive clarity while answering rapid-fire policy questions. Audience reactions and AI fact-checks will provide feedback.",
-  "readingSummary": [
-    "Candidates face 20–25 policy questions on economy, foreign policy, social issues, and local concerns.",
-    "AI moderator and opponent simulate high-pressure questioning, fact-checks, and audience responses."
-  ],
-  "tasksDetails": [
+  "potentialOutcomes": [
     {
-      "id": "14-1",
-      "type": "roleplay",
-      "prompt": "Deliver an opening statement and answer all debate questions, adjusting responses to feedback and audience reactions."
+      "performance": "Strong Debate",
+      "effects": "+5–10% voter approval, +500–1000 CC, increased media coverage, momentum boost."
+    },
+    {
+      "performance": "Weak Debate",
+      "effects": "Voter confidence drops 3–7%, CC stagnates, opponent gains narrative advantage."
     }
-  ],
-  "sources": [
-    "General Election November 2 – Debate Night Scenario"
   ],
   "outcome": {
-    "description": "Debate performance heavily influences final voter approval, CC, and campaign momentum. Demonstrates composure, consistency, and credibility under maximum scrutiny."
+    "description": "Debate performance affects voter approval, credibility, and campaign momentum. Candidate demonstrates ability to manage high-pressure interactions while staying aligned with campaign identity. CC and signatures adjust based on debate effectiveness."
   },
   "nextModule": {
     "id": "15",
-    "title": "Election Week: Final Results"
-  }
+    "title": "Final Summary",
+    "description": "Compiles final campaign results and delivers narrative outcomes based on the entire simulator journey."
+  },
+  "references": [
+    "https://www.bernardjohnson4congress.com/general_election_cycle_november_2_test_mode"
+  ]
 }

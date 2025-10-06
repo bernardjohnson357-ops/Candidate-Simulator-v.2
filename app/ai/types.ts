@@ -1,9 +1,10 @@
 // ./app/ai/types.ts
 
 export interface QuizQuestion {
+  id: string;
   question: string;
   options: string[];
-  answer: string;
+  correct?: string;
 }
 
 export interface Task {
@@ -11,11 +12,6 @@ export interface Task {
   type: "read" | "write" | "speak" | "quiz";
   prompt: string;
   questions?: QuizQuestion[];
-}
-
-export interface Scenario {
-  title: string;
-  description: string;
 }
 
 export interface Module {
@@ -27,12 +23,10 @@ export interface Module {
   sources?: string[];
   tasks: Task[];
   purpose?: string;
-  scenarios?: Scenario[];
-  outcome?: string | string[];
-  nextModuleId?: string;
+  scenarios?: { title: string; description: string }[];
+  outcome?: string | { description: string };
 }
 
-// ✅ The main player/candidate state (used in aiLoop and ChatSimulator)
 export interface CandidateState {
   office: "President" | "Senate" | "House";
   cc: number;
@@ -45,5 +39,3 @@ export interface CandidateState {
     sigs: number;
   };
 }
-
-// ❌ ModuleState is removed — no longer needed

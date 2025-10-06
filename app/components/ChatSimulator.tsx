@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { runModule, initCandidateState } from "@/app/ai/aiLoop";
 import { CandidateState, Module } from "@/app/ai/types";
 import ModuleDisplay from "@/app/components/ModuleDisplay";
@@ -13,13 +13,6 @@ const ChatSimulator: React.FC = () => {
   const [office, setOffice] = useState<"President" | "Senate" | "House" | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  // Auto-scroll to bottom when messages update
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
   useEffect(() => {
     setMessages([
       "🎙️ Welcome to the Federal Candidate Simulator — AI Edition.",
@@ -31,8 +24,7 @@ const ChatSimulator: React.FC = () => {
     try {
       const mod = await import(`../data/modules/module${id}.json`);
       return mod.default as Module;
-    } catch (err) {
-      console.error("Failed to load module", id, err);
+    } catch {
       return null;
     }
   };
@@ -63,13 +55,12 @@ const ChatSimulator: React.FC = () => {
       const initState = initCandidateState(selected);
       setCandidateState(initState);
 
-      const mod = await loadModule("1");
+      const mod = await loadModule("0"); // Module 0 for quiz
       setCurrentModule(mod);
-
       setMessages((prev) => [
         ...prev,
         `🏛️ You’ve chosen to run for ${selected}.`,
-        mod ? `🎯 Starting ${mod.title}...` : "⚠️ Could not load Module 1.",
+        mod ? `🎯 Starting ${mod.title}...` : "⚠️ Could not load Module 0.",
       ]);
 
       setInput("");
@@ -79,32 +70,27 @@ const ChatSimulator: React.FC = () => {
 
     // Module progression
     if (currentModule && candidateState) {
-      try {
-        const updatedState = runModule(currentModule, candidateState);
+      const updated = runModule(currentModule, candidateState);
 
-        const nextModuleId = (parseInt(currentModule.id) + 1).toString();
-        setCandidateState({
-          ...updatedState,
-          currentModuleId: nextModuleId,
-        });
+      setCandidateState({
+        ...updated,
+        currentModuleId: (parseInt(currentModule.id.replace("module_", "")) + 1).toString(),
+      });
 
-        setMessages((prev) => [
-          ...prev,
-          `📊 Module complete! Updated CC: ${updatedState.cc}, Signatures: ${updatedState.signatures}, Approval: ${updatedState.approval}%`,
-        ]);
+      setMessages((prev) => [
+        ...prev,
+        `📊 Module complete! Updated CC: ${updated.cc}, Signatures: ${updated.signatures}, Approval: ${updated.approval}%`,
+      ]);
 
-        const nextModule = await loadModule(nextModuleId);
+      const nextId = (parseInt(currentModule.id.replace("module_", "")) + 1).toString();
+      const nextModule = await loadModule(nextId);
 
-        if (nextModule) {
-          setMessages((prev) => [...prev, `➡️ Moving to ${nextModule.title}...`]);
-          setCurrentModule(nextModule);
-        } else {
-          setMessages((prev) => [...prev, "🏁 Simulation complete!"]);
-          setCurrentModule(null);
-        }
-      } catch (err) {
-        console.error("Error running module:", err);
-        setMessages((prev) => [...prev, "⚠️ Error running module."]);
+      if (nextModule) {
+        setMessages((prev) => [...prev, `➡️ Moving to ${nextModule.title}...`]);
+        setCurrentModule(nextModule);
+      } else {
+        setMessages((prev) => [...prev, "🏁 Simulation complete!"]);
+        setCurrentModule(null);
       }
 
       setInput("");
@@ -121,7 +107,6 @@ const ChatSimulator: React.FC = () => {
           <div key={i} className="mb-2 whitespace-pre-wrap">{msg}</div>
         ))}
         {isLoading && <div className="text-gray-500 italic">AI is thinking...</div>}
-        <div ref={messagesEndRef} />
       </div>
 
       <div className="flex space-x-2">

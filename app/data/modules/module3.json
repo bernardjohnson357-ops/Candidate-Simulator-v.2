@@ -1,48 +1,56 @@
 {
   "id": "3",
   "title": "May: First Moves",
-  "description": "Practice early campaign decisions and demonstrate strategic thinking in budgeting, outreach, and planning.",
+  "description": "Establish your campaign’s foundation by choosing an early strategic path and making your first major Candidate Coin investments.",
+  "narrator": "calm",
+  "readingSummary": [
+    "Congratulations — you’ve completed your filing requirements. You are now officially a candidate in the eyes of both the State of Texas and the Federal Election Commission.",
+    "In the first month after filing, real candidates make their earliest investments. This is when voters, donors, and the media decide if you’re serious.",
+    "You must choose one strategic path for your campaign:",
+    "1. Fundraising Strategy → Build a plan to raise money.",
+    "2. Volunteer Base → Recruit and organize people to support you.",
+    "3. Media & Advertising → Announce yourself through press, social media, or ads.",
+    "At this stage, every candidate must also make basic campaign purchases to prove legitimacy — like a website, email system, and campaign tools.",
+    "That’s where the Candidate Coin Store comes in."
+  ],
   "tasks": [
     {
       "id": "3-1",
-      "type": "write",
-      "prompt": "Choose one strategic path (Fundraising, Volunteers, or Media/Advertising) and write a detailed implementation plan."
+      "type": "read",
+      "prompt": "Here are your available campaign resources. Spend Candidate Coins (CC) wisely to establish your infrastructure."
     },
     {
       "id": "3-2",
-      "type": "write",
-      "prompt": "Spend Candidate Coins (CC) from the Candidate Coin Store to simulate startup infrastructure or advertising costs."
-    }
-  ],
-  "narrator": "It’s early summer — time to make your first strategic campaign decisions. You must decide how to allocate your limited CC between advertising, travel, and press outreach.",
-  "readingSummary": [
-    "Early summer sets the tone for the campaign. Balance limited CC with building visibility and infrastructure.",
-    "Fundraising strategy involves setting goals, methods, and tracking progress.",
-    "Volunteer base requires recruitment, engagement, and retention planning.",
-    "Media & Advertising Plan requires a cost-benefit analysis for social media, digital ads, local press, and TV.",
-    "Candidate Coin Store represents campaign infrastructure and advertising costs."
-  ],
-  "tasksDetails": [
-    {
-      "id": "3-1",
-      "type": "write",
-      "prompt": "Write your strategic plan for the first month of campaigning."
+      "type": "read",
+      "prompt": "Candidate Coin Store:\n- Website / Domain / Email → 7 CC\n- Explorer Pack (1 month tools) → 5 CC\n- Navigator Pack (2 months tools) → 8 CC\n- Settler Pack (3 months tools) → 12 CC\n- Colonist Pack (4 months tools) → 18 CC\n- Revolutionist Pack (5 months tools) → 24 CC\n- Founder Pack (6 months tools) → 30 CC\n- Digital Ads (per month) → 2–12 CC"
     },
     {
-      "id": "3-2",
+      "id": "3-3",
       "type": "write",
-      "prompt": "Simulate spending CC from the Candidate Coin Store on startup infrastructure or advertising."
+      "prompt": "Choose ONE strategic path and write your implementation plan:\n- 📈 Fundraising Strategy\n- 🧑‍🤝‍🧑 Volunteer Base\n- 📺 Media & Advertising\n\nIf Fundraising Strategy: include your fundraising goal, methods, and success measures.\nIf Volunteer Base: describe where volunteers come from, how you’ll engage them, and their campaign roles.\nIf Media & Advertising: specify your chosen platforms, ad spending, and why your plan is cost-effective."
     }
   ],
-  "sources": [
-    "General Election First Moves – Test Mode",
-    "FEC Getting Started Manual for Candidates"
+  "purpose": "Teach users how to make early campaign investments, select a strategic direction, and manage Candidate Coin spending.",
+  "scenarios": [
+    {
+      "title": "Fundraising Strategy",
+      "description": "Write a plan describing how you’ll raise funds, the methods used (events, calls, online), and your measurement of success."
+    },
+    {
+      "title": "Volunteer Base",
+      "description": "Explain how you’ll recruit, organize, and retain volunteers while defining their campaign roles."
+    },
+    {
+      "title": "Media & Advertising",
+      "description": "Describe your promotional strategy across media platforms, spending choices, and rationale for cost-effectiveness."
+    }
   ],
   "outcome": {
-    "description": "Updated CC balance, adjusted voter approval and signatures, and established initial campaign infrastructure."
+    "description": "The user selects and completes a strategic plan, spending Candidate Coins on campaign tools and receiving bonus signatures for detailed, well-structured submissions."
   },
   "nextModule": {
     "id": "4",
-    "title": "June: Outreach & Volunteer Expansion"
+    "title": "Campaign Identity",
+    "description": "Define your slogan, mission, and issue priorities while expanding campaign presence."
   }
 }

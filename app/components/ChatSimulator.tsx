@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from "react";
 import { runModule, initCandidateState } from "@/app/ai/aiLoop";
-import { modules } from "@/config/modules";
+import modulesData from "@/config/modules.json";
 import { CandidateState, Module } from "@/app/ai/types";
 import ModuleDisplay from "@/app/components/ModuleDisplay";
 
@@ -58,8 +58,7 @@ const ChatSimulator: React.FC = () => {
       setCandidateState(init);
 
       // Load Module 1
-      const mod = modules.find((m) => m.id === "1") || null;
-
+      const mod = modulesData.find((m) => m.id === "1") || null;
       setCurrentModule(mod);
       setMessages((prev) => [
         ...prev,

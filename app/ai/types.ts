@@ -13,8 +13,8 @@ export interface Module {
   sources?: string[];
   tasks: Task[];
   purpose?: string;
-  scenarios?: Scenario[]; // now an array of Scenario objects
-  outcome?: string | object;
+  scenarios?: { title: string; description: string }[];
+  outcome?: string | { description: string }; // only declare once
   nextModule?: Module;
 }
 

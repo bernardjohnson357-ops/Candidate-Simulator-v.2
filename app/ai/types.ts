@@ -28,11 +28,12 @@ export interface Task {
 export interface Module {
   id: string;
   title: string;
-  description?: string;
-  tasks: Task[];
-  narrator: string;
+  description: string;
+  narrator?: string;
   readingSummary?: string[];
   sources?: string[];
+  tasks: Task[];
+  purpose?: string; // ✅ Add this line
 }
 
 export interface ModuleState {

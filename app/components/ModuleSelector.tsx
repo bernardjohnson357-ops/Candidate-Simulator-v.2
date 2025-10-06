@@ -1,31 +1,60 @@
 // ./app/components/ModuleSelector.tsx
 "use client";
 
-import React from "react";
-import { Module, CandidateState } from "@/app/ai/types";
+import React, { useState, useEffect } from "react";
+import { CandidateState, Module } from "@/app/ai/types";
 
 interface ModuleSelectorProps {
   candidateState: CandidateState | null;
   setCandidateState: React.Dispatch<React.SetStateAction<CandidateState | null>>;
-  allModules: Module[];
+  setCurrentModule: React.Dispatch<React.SetStateAction<Module | null>>;
 }
+
+// 🔹 Dynamic module loader
+const loadModule = async (id: string): Promise<Module | null> => {
+  try {
+    const module = await import(`../data/modules/module${id}.json`);
+    return module.default as Module;
+  } catch (err) {
+    console.error("Failed to load module", id, err);
+    return null;
+  }
+};
 
 const ModuleSelector: React.FC<ModuleSelectorProps> = ({
   candidateState,
   setCandidateState,
-  allModules,
+  setCurrentModule,
 }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedModule = allModules.find((m) => m.id === e.target.value);
-    if (selectedModule && candidateState) {
-      // You can add logic here if selecting a module affects candidateState
-      setCandidateState({ ...candidateState });
+  const [availableModules, setAvailableModules] = useState<Module[]>([]);
+
+  useEffect(() => {
+    // Dynamically import all modules 0–15
+    const loadAllModules = async () => {
+      const modules: Module[] = [];
+      for (let i = 0; i <= 15; i++) {
+        const mod = await loadModule(i.toString());
+        if (mod) modules.push(mod);
+      }
+      setAvailableModules(modules);
+    };
+    loadAllModules();
+  }, []);
+
+  const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const moduleId = e.target.value;
+    if (!candidateState) return;
+
+    const mod = await loadModule(moduleId);
+    if (mod) {
+      setCurrentModule(mod);
+      setCandidateState({ ...candidateState, currentModuleId: moduleId });
     }
   };
 
   return (
-    <div className="p-4 max-w-3xl mx-auto bg-white/90 rounded-2xl shadow-md border border-gray-200 mb-4">
-      <h2 className="text-xl font-bold mb-2">Select a Module</h2>
+    <div className="mb-4">
+      <label className="block mb-2 font-medium">Select Module:</label>
       <select
         className="w-full border rounded-md p-2"
         onChange={handleChange}
@@ -34,9 +63,9 @@ const ModuleSelector: React.FC<ModuleSelectorProps> = ({
         <option value="" disabled>
           -- Choose a Module --
         </option>
-        {allModules.map((module) => (
-          <option key={module.id} value={module.id}>
-            {module.title}
+        {availableModules.map((mod) => (
+          <option key={mod.id} value={mod.id}>
+            {mod.title}
           </option>
         ))}
       </select>

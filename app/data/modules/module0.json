@@ -1,6 +1,7 @@
 {
   "id": "0",
   "title": "Orientation & Introduction",
+  "active": true,
   "description": "Introduction to the Federal Candidate Simulator and how it works.",
   "narrator": "calm, professional",
   "readingSummary": [

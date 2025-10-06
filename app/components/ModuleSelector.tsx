@@ -39,7 +39,6 @@ const ModuleSelector: React.FC<ModuleSelectorProps> = ({
     };
 
     setCurrentModule(nextModule);
-
     setCandidateState((prev) => ({
       ...prev,
       currentModuleId: nextModule.id,
@@ -47,13 +46,11 @@ const ModuleSelector: React.FC<ModuleSelectorProps> = ({
     }));
   }
 
-  // Handle quiz submission
   const handleAnswer = (answer: string) => {
     if (answered) return;
     setAnswered(true);
 
     if (answer.trim().toUpperCase() === "A") {
-      // Reward correct answer
       setCandidateState((prev) => ({
         ...prev,
         candidateCoins: (prev.candidateCoins || 0) + 5,

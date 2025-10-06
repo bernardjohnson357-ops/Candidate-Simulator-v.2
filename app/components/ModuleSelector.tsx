@@ -2,7 +2,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { modules } from "@/app/config/modules";
 import { CandidateState, Module } from "@/app/ai/types";
 import { allModules } from "@/app/config/modules";
 interface ModuleSelectorProps {

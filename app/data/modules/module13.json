@@ -1,34 +1,50 @@
 {
   "id": "13",
-  "title": "November 1: Pro-Israel Group Meeting",
-  "description": "Test the candidate’s ability to navigate high-stakes endorsement offers that involve political and ethical trade-offs.",
+  "title": "Pro-Israel Group Meeting",
+  "description": "Simulate a high-stakes endorsement negotiation that tests political strategy, moral judgment, and public perception. Candidates must decide whether short-term gains are worth long-term risks.",
+  "narrator": "calm",
+  "purpose": "Practice weighing political advantage versus ethical considerations, communicating reasoning clearly, and assessing the impact on voter approval and campaign credibility.",
+  "readingSummary": [
+    "Endorsements can provide significant leverage but often come with conditions. Candidates must weigh:",
+    "1. Political Gains → Exposure, voter reach, campaign resources.",
+    "2. Ethical Implications → Alignment with personal and campaign values.",
+    "3. Public Perception → Risk of backlash versus credibility boost."
+  ],
+  "scenarioContext": {
+    "description": "A Pro-Israel group, previously supporting your opponent, now offers endorsement with strict conditions:",
+    "conditions": [
+      "Candidate must adopt an anti-transgender stance.",
+      "Candidate must reject a two-state solution for Israel."
+    ],
+    "impactNote": "Accepting or declining will directly influence both Candidate Coins (CC) and voter approval."
+  },
   "tasks": [
     {
       "id": "13-1",
-      "type": "roleplay",
-      "prompt": "A Pro-Israel group offers conditional support. Participate in a voiced AI dialogue and decide whether to accept or decline the endorsement. If prompted, explain your reasoning."
+      "type": "endorsement_decision",
+      "prompt": "Decide whether to accept or decline the endorsement. Provide a clear, concise explanation of your decision (typed or speech-to-text).",
+      "evaluation": "AI evaluates reasoning for alignment with campaign identity and values, strategic foresight, and clarity of persuasion."
     }
   ],
-  "narrator": "A Pro-Israel group approaches with a conditional endorsement. Carefully weigh campaign advantages against moral and voter trust implications before responding.",
-  "readingSummary": [
-    "Endorsements can bring legitimacy, funding, and momentum but may have controversial conditions.",
-    "Candidates must balance short-term political gain with long-term credibility and ethical consistency."
-  ],
-  "tasksDetails": [
+  "potentialOutcomes": [
     {
-      "id": "13-1",
-      "type": "roleplay",
-      "prompt": "Participate in a dialogue with the group and choose to accept or decline their endorsement. Explain your reasoning if asked."
+      "decision": "Accept",
+      "effects": "+1000 CC, major exposure and ad boost, but high protest and backlash risk."
+    },
+    {
+      "decision": "Decline",
+      "effects": "Maintain moral credibility, voter approval stability, mixed reviews from media."
     }
-  ],
-  "sources": [
-    "General Election November 1 – Pro-Israel Endorsement Scenario"
   ],
   "outcome": {
-    "description": "CC, voter approval, and credibility adjust based on the candidate's decision. Performance demonstrates the ability to weigh short-term gains against long-term ethical and political consequences."
+    "description": "Decision outcome updates CC, voter approval, and campaign credibility. Candidate demonstrates ability to balance political gain against ethical and public considerations."
   },
   "nextModule": {
     "id": "14",
-    "title": "Election Week: Final Results"
-  }
+    "title": "Debate Night",
+    "description": "Simulate a high-stakes, live debate scenario with real-time audience and moderator interactions."
+  },
+  "references": [
+    "https://www.bernardjohnson4congress.com/general_election_cycle_november_1_test_mode"
+  ]
 }

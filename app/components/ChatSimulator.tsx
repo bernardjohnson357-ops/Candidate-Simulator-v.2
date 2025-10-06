@@ -13,49 +13,38 @@ const ChatSimulator: React.FC = () => {
   const [office, setOffice] = useState<"President" | "Senate" | "House" | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // 🗳️ Initial greeting
   useEffect(() => {
     setMessages([
       "🎙️ Welcome to the Federal Candidate Simulator — AI Edition.",
-      "You’ll experience filing, compliance, messaging, and campaigning one step at a time.",
-      "To begin, type the office you want to run for: President, Senate, or House.",
+      "Type the office you want to run for: President, Senate, or House.",
     ]);
   }, []);
 
-  // 🔹 Dynamic module loader
   const loadModule = async (id: string): Promise<Module | null> => {
     try {
-      const module = await import(`../data/modules/module${id}.json`);
-      return module.default as Module;
-    } catch (err) {
-      console.error("Failed to load module", id, err);
+      const mod = await import(`../data/modules/module${id}.json`);
+      return mod.default as Module;
+    } catch {
       return null;
     }
   };
 
-  // 🎯 Handles user input & simulation flow
   const handleUserInput = async () => {
     if (!input.trim()) return;
-    const userMsg = `🗣️ You: ${input}`;
-    setMessages((prev) => [...prev, userMsg]);
+
+    setMessages((prev) => [...prev, `🗣️ You: ${input}`]);
     setIsLoading(true);
 
-    // Step 1 – Office selection
+    // Office selection
     if (!office) {
       const choice = input.trim().toLowerCase();
       let selected: "President" | "Senate" | "House" | null = null;
-      let intro = "";
 
-      if (choice === "president") {
-        selected = "President";
-        intro = "🏛️ You’ve chosen to run for President. This path requires 75 CC and 2.5% approval.";
-      } else if (choice === "senate") {
-        selected = "Senate";
-        intro = "🏛️ You’ve chosen to run for Senate. You’ll need 50 CC and 2.5% approval.";
-      } else if (choice === "house") {
-        selected = "House";
-        intro = "🏛️ You’ve chosen to run for House. You’ll need 31 CC and 2.5% approval.";
-      } else {
+      if (choice === "president") selected = "President";
+      else if (choice === "senate") selected = "Senate";
+      else if (choice === "house") selected = "House";
+
+      if (!selected) {
         setMessages((prev) => [...prev, "❌ Please choose: President, Senate, or House."]);
         setIsLoading(false);
         setInput("");
@@ -63,65 +52,51 @@ const ChatSimulator: React.FC = () => {
       }
 
       setOffice(selected);
-      const init = initCandidateState(selected);
-      setCandidateState(init);
+      const initState = initCandidateState(selected);
+      setCandidateState(initState);
 
-      // Load Module 1 dynamically
       const mod = await loadModule("1");
       setCurrentModule(mod);
       setMessages((prev) => [
         ...prev,
-        intro,
+        `🏛️ You’ve chosen to run for ${selected}.`,
         mod ? `🎯 Starting ${mod.title}...` : "⚠️ Could not load Module 1.",
       ]);
 
-      setIsLoading(false);
       setInput("");
+      setIsLoading(false);
       return;
     }
 
-   // Step 2 – Module progression
-if (currentModule && candidateState) {
-  // Save old state for diff calculation
-  const prevCC = candidateState.cc;
-  const prevSigs = candidateState.signatures;
-  const prevApproval = candidateState.approval;
+    // Module progression
+    if (currentModule && candidateState) {
+      const updated = runModule(currentModule, candidateState);
 
-  // Run module, returns updated CandidateState directly
-  const updated = runModule(currentModule, candidateState);
+      setCandidateState({
+        ...updated,
+        currentModuleId: (parseInt(currentModule.id) + 1).toString(),
+      });
 
-  // Calculate changes for message display
-  const ccChange = updated.cc - prevCC;
-  const signaturesChange = updated.signatures - prevSigs;
-  const approvalChange = updated.approval - prevApproval;
+      setMessages((prev) => [
+        ...prev,
+        `📊 Module complete! Updated CC: ${updated.cc}, Signatures: ${updated.signatures}, Approval: ${updated.approval}%`,
+      ]);
 
-  // Update candidate state
-  setCandidateState({
-    ...updated,
-    currentModuleId: ((parseInt(currentModule.id) + 1).toString()), // always a string
-  });
+      const nextId = (parseInt(currentModule.id) + 1).toString();
+      const nextModule = await loadModule(nextId);
 
-  // Display module results
-  setMessages((prev) => [
-    ...prev,
-    `📊 Module complete! +${signaturesChange} signatures, ${ccChange} CC, ${approvalChange}% approval.`,
-  ]);
+      if (nextModule) {
+        setMessages((prev) => [...prev, `➡️ Moving to ${nextModule.title}...`]);
+        setCurrentModule(nextModule);
+      } else {
+        setMessages((prev) => [...prev, "🏁 Simulation complete!"]);
+        setCurrentModule(null);
+      }
 
-  // Load next module dynamically
-  const nextId = (parseInt(currentModule.id) + 1).toString();
-  const nextModule = await loadModule(nextId);
-
-  if (nextModule) {
-    setMessages((prev) => [...prev, `➡️ Moving to ${nextModule.title}...`]);
-    setCurrentModule(nextModule);
-  } else {
-    setMessages((prev) => [...prev, "🏁 Simulation complete. Great job, candidate!"]);
-    setCurrentModule(null);
-  }
-
-  setInput("");
-  setIsLoading(false);
-}
+      setInput("");
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="p-4 max-w-3xl mx-auto bg-white/90 rounded-2xl shadow-md border border-gray-200">
@@ -152,13 +127,11 @@ if (currentModule && candidateState) {
       </div>
 
       {currentModule && candidateState && (
-        <div className="mt-4">
-          <ModuleDisplay
-            module={currentModule}
-            candidateState={candidateState}
-            setCandidateState={setCandidateState}
-          />
-        </div>
+        <ModuleDisplay
+          module={currentModule}
+          candidateState={candidateState}
+          setCandidateState={setCandidateState}
+        />
       )}
     </div>
   );

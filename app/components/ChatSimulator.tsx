@@ -33,40 +33,36 @@ const loadModule = async (id: string): Promise<Module | null> => {
   }
 };
 
-/**
- * ✅ Ensures candidate state is valid and initialized
- */
+// ✅ Safe initialization for candidate state
 const safeInitState = (office: "President" | "Senate" | "House"): CandidateState => {
   const base = initCandidateState(office);
+
   return {
-    cc: 0,
-    signatures: 0,
-    approval: 0,
-    currentModuleId: "0",
+    ...base, // base always first
+    cc: base.cc ?? 0,
+    signatures: base.signatures ?? 0,
+    approval: base.approval ?? 0,
+    currentModuleId: base.currentModuleId ?? "0",
     office,
-    ...base,
   };
 };
 
-/**
- * ✅ Safely applies state updates after a module runs
- */
-const safeRunModule = (module: Module, state: CandidateState): CandidateState => {
-  try {
-    const updated = runModule(module, state);
-    if (!updated || typeof updated !== "object") throw new Error("runModule returned invalid state");
-    return {
-      ...state,
-      ...updated,
-      cc: updated.cc ?? state.cc,
-      signatures: updated.signatures ?? state.signatures,
-      approval: updated.approval ?? state.approval,
-    };
-  } catch (err) {
-    console.error("❌ Error running module:", err);
-    alert("⚠️ Something went wrong while processing this module. Continuing with last valid state.");
-    return state;
-  }
+// ✅ Safe runner for module updates
+const safeRunModule = (
+  state: CandidateState,
+  module: Module
+): CandidateState => {
+  const base = { ...state };
+
+  return {
+    ...base,
+    lastAction: module.title,
+    currentModuleId: module.id,
+    cc: base.cc ?? 0,
+    signatures: base.signatures ?? 0,
+    approval: base.approval ?? 0,
+    threshold: base.threshold ?? { cc: 0, approval: 0, sigs: 0 },
+  };
 };
 
 const ChatSimulator: React.FC = () => {

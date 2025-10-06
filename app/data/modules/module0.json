@@ -1,52 +1,31 @@
 {
   "id": "0",
   "title": "Orientation & Introduction",
-  "description": "Welcome to the Candidate Simulator — AI Edition. Learn about Candidate Coins, signatures, voter approval, and how the simulator scaffolds reading, writing, and speaking exercises.",
+  "description": "# 🗳 Module 0 – Orientation & Introduction\n\n**Narrator [calm, professional]:** \"Welcome to the Federal Candidate Simulator — AI Edition. This simulator will take you through the entire election cycle, one step at a time. You’ll experience the real requirements of filing, fundraising, compliance, and campaigning — all safely in a simulation.\"\n\n## How the Simulator Works\n\n**Narrator [neutral]:** \"Here are the ground rules. Think of them as your campaign manual.\"\n\n1. Candidate Coins (CC)\n   - 1 CC = $100 simulated\n   - You start with 50 CC\n   - Earn CC by passing quizzes or completing tasks\n   - Spend CC on campaign needs like filing fees, ads, or communication coaching\n2. Signatures & Voter Approval\n   - Each quiz score = the same number of signatures\n   - 100 signatures = 1% voter approval\n   - Example: scoring 80% on a quiz = 80 signatures = 0.8% approval\n3. Ballot Access\n   - You must qualify for the ballot by paying CC (filing fee) AND gathering enough signatures\n4. Eligibility thresholds:\n   - President → 75 CC + 2.5% approval\n   - Senate → 50 CC + 2.5% approval\n   - House → 31 CC + 2.5% approval\n5. Task Types\n   - Read: Summaries of laws, filing guides, or news\n   - Write: Announcements, strategy documents, responses\n   - Upload: Images (Module 5 – signs, T-shirts, bumper stickers)\n   - Speak: Speeches, press conferences, debates (Modules 7+)\n6. Feedback & Progress\n   - After each task, CC, signatures, and approval are updated\n   - Choices carry forward just like a real campaign\n\n## Your First Step\n\n**Narrator [encouraging]:** \"Now it’s time to make your first campaign decision: which office are you running for? This choice determines how tough the road ahead will be.\"\n\n- 🏛 President (75 CC + 2.5% approval)\n- 🏛 U.S. Senate (50 CC + 2.5% approval)\n- 🏛 U.S. House (31 CC + 2.5% approval)\n\n### Transition After Office Choice\n\n**Narrator [explanatory]:** \"You’ve declared for the [chosen office]. Here’s what that means:\n- You’ll need [XX CC + 2.5% approval] for this path.\nYou’re starting with 50 CC and 0% approval. Every quiz and scenario will build your support.\nBefore campaigning, you must file properly. This is where every real candidate begins.\"",
   "tasks": [
     {
-      "id": "0-1",
-      "type": "read",
-      "prompt": "Read the Orientation material to understand the simulator rules, Candidate Coins, signatures, and voter approval."
-    },
-    {
-      "id": "0-2",
-      "type": "write",
-      "prompt": "Type which office you want to run for: President, Senate, or House. Consider the thresholds for ballot access (President: 75 CC + 2.5%, Senate: 50 CC + 2.5%, House: 31 CC + 2.5%)."
-    },
-    {
-      "id": "0-3",
-      "type": "speak",
-      "prompt": "Use voice input to confirm your office choice and summarize the simulator rules in your own words."
+      "id": "0-quiz-1",
+      "type": "quiz",
+      "prompt": "Quiz: What does 1 Candidate Coin (CC) represent?",
+      "questions": [
+        {
+          "question": "What does 1 CC equal in simulated campaign funds?",
+          "options": [
+            "A) $10",
+            "B) $100",
+            "C) $1,000",
+            "D) $10,000"
+          ],
+          "correct": 1
+        }
+      ]
     }
   ],
-  "narrator": "Welcome to the Libertarian Federal Candidate Simulator. You begin with 50 Candidate Coins (CC), 0 signatures, and 0% voter approval. Every decision you make will affect these metrics, which represent your campaign resources, grassroots support, and voter trust.",
+  "narrator": "Orientation & Introduction narrator text.",
   "readingSummary": [
-    "Candidate Coins (CC) are your simulated campaign funds. 1 CC = $100 simulated.",
-    "Earn CC by passing quizzes and completing assignments.",
-    "Spend CC on campaign resources or communication coaching: Upload + Review (10 CC), Revision Suggestions (15 CC), Delivery Hints (20 CC).",
-    "Scoring: Quizzes → Signatures, 100 signatures = 1% voter approval, bonus CC for high quiz scores.",
-    "Penalties: wrong multiple-choice = –1 CC, wrong open-ended = –50 signatures, retake mistakes double penalties.",
-    "Key rule: Reading tasks → read, Writing tasks → type, Speaking tasks → use voice input."
+    "Understand Candidate Coins (CC), signatures, voter approval, and ballot access.",
+    "Learn the basic task types and feedback system.",
+    "Choose the office you will run for to start the simulation."
   ],
-  "tasksDetails": [
-    {
-      "id": "0-1",
-      "type": "read",
-      "prompt": "Read Orientation and Candidate Coins rules."
-    },
-    {
-      "id": "0-2",
-      "type": "write",
-      "prompt": "Enter the office you plan to run for."
-    },
-    {
-      "id": "0-3",
-      "type": "speak",
-      "prompt": "Confirm your choice and summarize the simulator rules verbally."
-    }
-  ],
-  "sources": [
-    "FEC Candidate Guide (2024 edition)",
-    "State Filing Guides"
-  ]
+  "sources": ["Simulator internal documentation", "Campaign manual reference"]
 }

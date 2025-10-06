@@ -1,6 +1,7 @@
 {
   "id": "14",
   "title": "Debate Night",
+  "active": true,
   "description": "Simulate a high-stakes, live debate with moderators, opponents, and a live audience. Every response shapes voter perception and Election Week outcomes.",
   "narrator": "calm",
   "purpose": "Practice handling a wide range of policy and values-based questions, maintaining composure under pressure, and communicating with clarity, persuasiveness, and consistency.",

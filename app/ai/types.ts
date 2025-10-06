@@ -25,6 +25,11 @@ export interface Task {
   questions?: QuizQuestion[];
 }
 
+export interface Scenario {
+  title: string;
+  description: string;
+}
+
 export interface Module {
   id: string;
   title: string;
@@ -34,7 +39,7 @@ export interface Module {
   sources?: string[];
   tasks: Task[];
   purpose?: string;
-  scenarios?: string[]; // ✅ Add this
+  scenarios?: Scenario[]; // ✅ Add — separate from tasks
 }
 
 export interface ModuleState {

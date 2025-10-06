@@ -65,7 +65,7 @@ const ChatSimulator: React.FC = () => {
 
       setOffice(selected);
       const init = initCandidateState(selected);
-      setCandidateState({ ...init, currentModuleId: "1" });
+      setCandidateState(init);
 
       // Load Module 1 dynamically
       const mod = await loadModule("1");
@@ -85,29 +85,33 @@ const ChatSimulator: React.FC = () => {
     if (currentModule && candidateState) {
       const { moduleState, candidateState: updated } = runModule(currentModule, candidateState);
 
-      // Update candidate state
-      const nextId = (parseInt(currentModule.id) + 1).toString();
-      const nextModule = await loadModule(nextId);
-
       setCandidateState({
         ...updated,
-        currentModuleId: nextModule?.id ?? undefined,
+        currentModuleId: ((parseInt(currentModule.id) + 1).toString()), // always a string
       });
 
       setMessages((prev) => [
         ...prev,
         `📊 Module complete! +${moduleState.signaturesChange} signatures, ${moduleState.ccChange} CC, ${moduleState.approvalChange}% approval.`,
-        nextModule ? `➡️ Moving to ${nextModule.title}...` : "🏁 Simulation complete. Great job, candidate!",
       ]);
 
-      setCurrentModule(nextModule || null);
+      // Load next module dynamically
+      const nextId = (parseInt(currentModule.id) + 1).toString();
+      const nextModule = await loadModule(nextId);
+
+      if (nextModule) {
+        setMessages((prev) => [...prev, `➡️ Moving to ${nextModule.title}...`]);
+        setCurrentModule(nextModule);
+      } else {
+        setMessages((prev) => [...prev, "🏁 Simulation complete. Great job, candidate!"]);
+        setCurrentModule(null);
+      }
     }
 
     setInput("");
     setIsLoading(false);
   };
 
-  // 🧱 UI layout
   return (
     <div className="p-4 max-w-3xl mx-auto bg-white/90 rounded-2xl shadow-md border border-gray-200">
       <h2 className="text-2xl font-bold mb-4 text-center">🗳️ Federal Candidate Simulator</h2>

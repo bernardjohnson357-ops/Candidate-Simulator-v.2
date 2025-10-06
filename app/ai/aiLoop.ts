@@ -1,5 +1,5 @@
 // ./app/ai/aiLoop.ts
-import { Module, ModuleState, CandidateState, QuizQuestion } from "./types";
+import { Module, CandidateState, QuizQuestion } from "./types";
 
 // ✅ Initialize candidate state
 export const initCandidateState = (office: "President" | "Senate" | "House"): CandidateState => {

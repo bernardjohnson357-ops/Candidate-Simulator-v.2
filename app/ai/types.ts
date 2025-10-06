@@ -1,21 +1,8 @@
 // ./app/ai/types.ts
+
 export interface Scenario {
   title: string;
   description: string;
-}
-
-export interface Module {
-  id: string;
-  title: string;
-  description: string;
-  narrator?: string;
-  readingSummary?: string[];
-  sources?: string[];
-  tasks: Task[];
-  purpose?: string;
-  scenarios?: { title: string; description: string }[];
-  outcome?: string | { description: string }; // only declare once
-  nextModule?: Module;
 }
 
 export interface QuizQuestion {
@@ -30,6 +17,9 @@ export interface Task {
   type: "read" | "write" | "speak" | "quiz";
   prompt: string;
   questions?: QuizQuestion[];
+
+  // Optional feedback mapping (A, B, C, D, etc.)
+  feedback?: Record<string, string>;
 }
 
 export interface Module {
@@ -41,8 +31,8 @@ export interface Module {
   sources?: string[];
   tasks: Task[];
   purpose?: string;
-  scenarios?: { title: string; description: string }[];
-  outcome?: string | { description: string }; // unified type
+  scenarios?: Scenario[];
+  outcome?: string | { description: string };
   nextModule?: Module;
 }
 
@@ -57,4 +47,8 @@ export interface CandidateState {
     approval: number;
     sigs: number;
   };
+
+  // Optional helper properties used at runtime
+  lastAction?: string;
+  candidateCoins?: number;
 }

@@ -1,55 +1,71 @@
 {
   "id": "10",
-  "title": "October 23–29: Election Countdown",
-  "description": "Prepare for Election Day by practicing high-pressure constituent interaction, rapid-fire responses, and final strategic decision-making.",
+  "title": "Election Countdown: Final Interactions",
+  "description": "Prepare for the final stretch with high-pressure constituent engagement, town halls, and last-minute strategic decisions.",
+  "narrator": "calm",
+  "readingSummary": [
+    "Key skills for the final week include:",
+    "1. Rapid assessment of weekly news → Spot threats and opportunities quickly.",
+    "2. Engaging live with constituents → Use typed or speech-to-text input effectively.",
+    "3. Resource allocation for final push → Decide which campaign actions maximize impact.",
+    "Weekly Campaign Briefing Example:",
+    "- Opposition Research → Opponent under investigation; past controversies emerging.",
+    "- Constituent Sentiment → Undecided voters monitoring final communications.",
+    "- Media Updates → Rapid news cycles, social media amplification of candidate statements."
+  ],
+  "weeklyNews": {
+    "World News": [
+      "Trade Retaliation: European nations join Canada in issuing 35% tariffs on U.S. goods. Mexico offers to mediate tensions.",
+      "Middle East Conflict: Saudi Arabia and Iran continue missile exchanges; death toll nearing 500, mostly in Iran. Chinese warheads remain on standby.",
+      "Seismic Activity: Recent Chile earthquake raises concerns about tsunamis along the Ring of Fire."
+    ],
+    "National News": [
+      "Political Endorsements: President expected to announce key political endorsements early next week.",
+      "Gun Safety Tragedy: Accidental death of a toddler due to an unsecured firearm intensifies gun law debates.",
+      "Flood Fund Scrutiny: D.C. politician from Texas under investigation for handling of federal flood relief funds.",
+      "Second Amendment Debate: Gun safety and Second Amendment issues dominate national discussions."
+    ],
+    "Texas Updates": [
+      "Voter Sentiment: Undecided voters increasingly lean toward third-party and independent candidates.",
+      "School Safety: Wild hogs disrupted a junior varsity football game; discussions on firearms at school events.",
+      "Protests & Public Order: Statewide protests largely calmed, residual tension remains.",
+      "Social Politics: Following a transgender politician's announcement, some social conservatives shift support to alternative candidates."
+    ]
+  },
   "tasks": [
     {
       "id": "10-1",
       "type": "write",
-      "prompt": "Town Hall: Respond to constituent questions on healthcare, fiscal responsibility, and ethical governance. Type or dictate your answers; AI evaluates clarity and engagement."
+      "prompt": "Town Hall Interactions: Respond to constituent questions using typed or speech-to-text input. Show empathy, clarity, and leadership.",
+      "constituentQuestions": [
+        {"name": "Ms. Gutierrez", "location": "El Paso", "question": "With all the talk about tariffs and trade wars, I’m worried my prescription costs will rise. What will you do to protect seniors from higher healthcare prices?"},
+        {"name": "Mr. Wilson", "location": "Austin", "question": "As a small business owner, the new tariffs have me concerned about shortages and costs. How will you help Texas businesses stay competitive?"},
+        {"name": "Mrs. Lee", "location": "Dallas", "question": "After the tragic accident involving a toddler and an unsecured gun, what steps will you take to make gun safety a priority for families?"},
+        {"name": "Jamal", "location": "Midville High", "question": "With wild hogs running through our stadium and talk of bringing guns into schools, what will you do to keep students safe without making things more dangerous?"},
+        {"name": "Ms. Robinson", "location": "Houston", "question": "After the floods, there’s controversy about federal aid. How would you ensure relief funds reach the people who need them most—without political games?"},
+        {"name": "Rev. Daniels", "location": "Tyler", "question": "Given recent changes in our state’s politics, what are your views on protecting religious freedoms while balancing other rights?"},
+        {"name": "Ms. Kim", "location": "San Antonio", "question": "With more people considering third-party candidates, what makes you different from the usual politicians? Why should I trust you?"}
+      ],
+      "evaluation": "AI evaluates clarity, persuasiveness, handling of constituent concerns, and voter approval impact."
     },
     {
       "id": "10-2",
       "type": "write",
-      "prompt": "Rapid Q&A: Answer 3–5 short prompts quickly, demonstrating consistency and staying on message under pressure."
-    },
-    {
-      "id": "10-3",
-      "type": "decision",
-      "prompt": "Endgame Strategy: Allocate remaining CC between ads, ground game, or debate preparation. Each choice affects final campaign metrics."
+      "prompt": "Final Strategic Decisions: Allocate remaining Candidate Coins (CC) for last-minute ads, volunteer pushes, and outreach events. Adjust messaging based on town hall feedback.",
+      "evaluation": "CC, voter approval, and campaign impact updated based on strategic allocation."
     }
   ],
-  "narrator": "Final week before Election Day! Conduct town halls, rapid Q&A, and choose your endgame strategy wisely.",
-  "readingSummary": [
-    "October 23–29 tests stamina, clarity, and strategic decision-making just before Election Day.",
-    "Candidates must balance rapid responses, messaging consistency, and final resource allocation."
-  ],
-  "tasksDetails": [
-    {
-      "id": "10-1",
-      "type": "write",
-      "prompt": "Host a timed town hall and answer constituent questions. Focus on clear, persuasive, and policy-aligned responses."
-    },
-    {
-      "id": "10-2",
-      "type": "write",
-      "prompt": "Complete rapid Q&A prompts. Demonstrate quick thinking, consistency, and message discipline."
-    },
-    {
-      "id": "10-3",
-      "type": "decision",
-      "prompt": "Finalize your campaign endgame strategy by allocating CC to ads, ground game, or debate prep. Explain your choices."
-    }
-  ],
-  "sources": [
-    "General Election October 23–29 – Simulator Test Mode",
-    "Town Hall Questions / Interaction Page"
-  ],
+  "purpose": "Prepare candidates for high-pressure interactions, final-week strategy, and tactical decision-making leading up to Election Day.",
   "outcome": {
-    "description": "AI evaluates the quality and speed of responses. Voter approval and CC totals are updated and locked for final results. Demonstrates performance under live pressure."
+    "description": "Town hall interactions evaluated → Voter approval updated. Final push strategic decisions tracked → CC and campaign effectiveness updated. Candidate demonstrates readiness, clear messaging, and tactical decision-making under high-pressure conditions."
   },
   "nextModule": {
     "id": "11",
-    "title": "Election Week: Final Results"
-  }
+    "title": "School Visit – Election Week Simulations",
+    "description": "Begin official Election Week with multi-stakeholder interactions, real-time dialogue, and final campaign engagements."
+  },
+  "references": [
+    "https://www.bernardjohnson4congress.com/general_election_cycle_october_23_29_test_mode",
+    "https://www.bernardjohnson4congress.com/general_election_cycle_october_23_29_b_test_mode"
+  ]
 }

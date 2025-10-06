@@ -1,93 +1,74 @@
 {
   "id": "5",
-  "title": "July & August: Campaign Expansion",
-  "description": "Expand the campaign’s visibility and influence through visuals, outreach, and strategic decision-making.",
+  "title": "July & August: Campaign Imagery",
+  "description": "Develop the visual identity of your campaign through logos, signs, T-shirts, and other materials. Align visuals with your slogan and mission from Module 4.",
+  "narrator": "calm",
+  "readingSummary": [
+    "Campaign imagery communicates professionalism, values, and energy.",
+    "Consider three key principles:",
+    "1. Consistency → Fonts, colors, slogans, and images should reinforce your campaign identity.",
+    "2. Clarity → Signs and materials must be easily readable and memorable.",
+    "3. Authenticity → Images should feel genuine and aligned with your values.",
+    "Examples of campaign materials: Logo, yard signs, T-shirts/buttons, digital graphics."
+  ],
   "tasks": [
     {
       "id": "5-1",
       "type": "upload",
-      "prompt": "Upload images or describe campaign visuals such as logos, yard signs, bumper stickers, or T-shirts."
+      "prompt": "Upload your primary campaign logo or describe it in typed format."
     },
     {
       "id": "5-2",
-      "type": "quiz",
-      "prompt": "Endorsement Dilemma: Texas Mothers for Does offer an endorsement. Do you accept or decline?",
-      "questions": [
-        {
-          "question": "Do you accept the endorsement?",
-          "options": ["Yes, accept", "No, decline"],
-          "correct": 0
-        }
-      ]
-    },
-    {
-      "id": "5-3",
-      "type": "quiz",
-      "prompt": "Petition Decision: End War in Gaza. Do you sign the petition?",
-      "questions": [
-        {
-          "question": "Do you sign the petition?",
-          "options": ["Yes, sign", "No, decline"],
-          "correct": 0
-        }
-      ]
-    },
-    {
-      "id": "5-4",
-      "type": "write",
-      "prompt": "Legislative Response: Opponent passed controversial legislation. Write a persuasive response for your campaign."
-    }
-  ],
-  "narrator": "Now you expand your campaign through visuals and grassroots engagement. Describe logos, yard signs, T-shirts, or digital outreach.",
-  "readingSummary": [
-    "Campaign expansion involves balancing grassroots energy with visibility.",
-    "Activities include creative design, strategic decision-making, and scenario-based exercises.",
-    "Choices impact Candidate Coins (CC), voter approval, and campaign credibility."
-  ],
-  "tasksDetails": [
-    {
-      "id": "5-1",
       "type": "upload",
-      "prompt": "Upload or describe campaign visuals for branding purposes."
-    },
-    {
-      "id": "5-2",
-      "type": "quiz",
-      "prompt": "Decide whether to accept or decline the endorsement, considering credibility and voter impact.",
-      "questions": [
-        {
-          "question": "Do you accept the endorsement?",
-          "options": ["Yes, accept", "No, decline"],
-          "correct": 0
-        }
-      ]
+      "prompt": "Upload a yard sign or poster design or describe it."
     },
     {
       "id": "5-3",
-      "type": "quiz",
-      "prompt": "Decide whether to sign or decline the petition based on campaign values.",
-      "questions": [
-        {
-          "question": "Do you sign the petition?",
-          "options": ["Yes, sign", "No, decline"],
-          "correct": 0
-        }
-      ]
+      "type": "upload",
+      "prompt": "Upload a T-shirt or button design or describe it."
     },
     {
       "id": "5-4",
+      "type": "upload",
+      "prompt": "Optional bonus: Upload additional creative materials (stickers, social media graphics, etc.)"
+    },
+    {
+      "id": "5-5",
       "type": "write",
-      "prompt": "Write a persuasive response to the opponent's legislation, focusing on clear messaging and voter alignment."
+      "prompt": "Scenario – Endorsement Dilemma: Decide whether to accept or decline an endorsement from 'Texas Mothers for Does' and explain your reasoning (1–2 paragraphs)."
+    },
+    {
+      "id": "5-6",
+      "type": "write",
+      "prompt": "Scenario – Petition Decision: Decide whether to sign the petition 'End War in Gaza' and explain your reasoning (1 paragraph)."
+    },
+    {
+      "id": "5-7",
+      "type": "write",
+      "prompt": "Scenario – Legislative Response: Respond to controversial legislation with a 3–5 paragraph statement, reflecting your campaign identity and messaging."
     }
   ],
-  "sources": [
-    "General Election July & August – Simulator Test Mode"
+  "purpose": "Develop the visual identity of your campaign and demonstrate strategic decision-making through scenarios that test alignment with campaign values.",
+  "scenarios": [
+    {
+      "title": "Endorsement Dilemma",
+      "description": "Decide whether to accept or decline an endorsement from a small advocacy group and explain your reasoning. AI evaluates strategic thinking and alignment with campaign identity."
+    },
+    {
+      "title": "Petition Decision",
+      "description": "Decide whether to sign a petition ('End War in Gaza') and explain reasoning. AI evaluates clarity, consistency with values, and public messaging impact."
+    },
+    {
+      "title": "Legislative Response",
+      "description": "Craft a public response to controversial legislation, 3–5 paragraphs, reflecting campaign identity and persuasive clarity. AI evaluates alignment with mission."
+    }
   ],
   "outcome": {
-    "description": "Receive AI feedback on materials and responses. Adjust CC and voter approval based on quality and decision-making. Demonstrate campaign expansion skills."
+    "description": "Campaign visuals uploaded or explained and evaluated. CC updated based on design quality and scenario responses. Voter approval adjusted based on endorsement, petition, and legislative response."
   },
   "nextModule": {
     "id": "6",
-    "title": "September: Strategic Outreach & Debates"
+    "title": "September Compliance",
+    "description": "Simulate FEC quarterly filing and continue strategic decision-making under compliance constraints."
   }
 }

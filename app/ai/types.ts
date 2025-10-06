@@ -3,17 +3,13 @@
 // ------------------------------
 // Candidate State
 // ------------------------------
-export type CandidateState = {
-  office: "President" | "Senate" | "House";
-  cc: number; // Candidate Coins
-  signatures: number; // Voter signatures
-  approval: number; // Voter approval %
-  threshold: {
-    cc: number;
-    approval: number;
-    sigs?: number;
-  };
-};
+export interface CandidateState {
+  cc: number;
+  signatures: number;
+  approval: number;
+  office: "President" | "Senate" | "House" | null;
+  currentModuleId?: string; // track current module
+}
 
 // ------------------------------
 // Module State

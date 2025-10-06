@@ -1,29 +1,40 @@
 {
   "id": "0",
   "title": "Orientation & Introduction",
-  "description": "Welcome to the Federal Candidate Simulator — AI Edition. This simulator will take you through the entire election cycle, one step at a time. You’ll experience the real requirements of filing, fundraising, compliance, and campaigning — all safely in a simulation.",
+  "description": "Welcome to the Federal Candidate Simulator — AI Edition. This simulator will take you through the entire election cycle, one step at a time, showing filing, fundraising, compliance, and campaigning — all safely in a simulation.",
   "narrator": "calm, professional",
   "readingSummary": [
-    "Candidate Coins (CC) are worth $100 simulated each. You start with 50 CC.",
-    "Signatures & voter approval: each quiz score equals the same number of signatures. 100 signatures = 1% approval.",
-    "Ballot access: pay CC (filing fee) AND gather enough signatures.",
-    "Eligibility thresholds: President 75 CC + 2.5% approval; Senate 50 CC + 2.5%; House 31 CC + 2.5%",
-    "Task types: Read, Write, Upload, Speak",
-    "After each task, CC, signatures, and approval are updated. All choices carry forward."
+    "Here are the ground rules. Think of them as your campaign manual.",
+    "Candidate Coins (CC): 1 CC = $100 simulated. You start with 50 CC. Earn CC by passing quizzes or completing tasks. Spend CC on campaign needs like filing fees, ads, or communication coaching.",
+    "Signatures & Voter Approval: Each quiz score = the same number of signatures. 100 signatures = 1% voter approval. Example: scoring 80% on a quiz = 80 signatures = 0.8% approval.",
+    "Ballot Access: You must qualify for the ballot by paying CC (filing fee) and gathering enough signatures (through quizzes and tasks).",
+    "Eligibility thresholds: President → 75 CC + 2.5% approval, Senate → 50 CC + 2.5% approval, House → 31 CC + 2.5% approval.",
+    "Task Types: Read, Write, Upload, Speak. Some decisions appear as chat buttons.",
+    "Feedback & Progress: After each task, CC, signatures, and approval are updated. All choices and scores carry forward."
   ],
   "tasks": [
     {
       "id": "0-quiz-1",
       "type": "quiz",
-      "prompt": "Quiz: What does 1 Candidate Coin (CC) represent?",
+      "prompt": "Orientation Quiz: Test your understanding of Candidate Coins, signatures, and ballot access.",
       "questions": [
         {
-          "question": "What does 1 CC equal in simulated campaign funds?",
-          "options": ["$10", "$100", "$1,000", "$10,000"],
+          "question": "What does 1 Candidate Coin (CC) equal in simulated campaign funds?",
+          "options": [
+            "A) $10",
+            "B) $100",
+            "C) $1,000",
+            "D) $10,000"
+          ],
           "correct": 1
         }
       ]
     }
   ],
-  "sources": ["Simulator Manual v1.0"]
+  "sources": [
+    "Simulator Orientation Materials"
+  ],
+  "outcome": {
+    "description": "You’ve completed the orientation. You now understand CC, signatures, voter approval, and ballot access. You are ready to choose an office and begin Module 1."
+  }
 }

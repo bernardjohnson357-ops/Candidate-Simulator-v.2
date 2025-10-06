@@ -68,15 +68,11 @@ const ModuleSelector: React.FC<ModuleSelectorProps> = ({
 
       // Load Module 1 automatically
       try {
-        const mod1 = await import("../data/modules/module1.json");
-        setCurrentModule(mod1.default as Module);
-      } catch {
-        alert("⚠️ Module 1 not found. Please check your /data/modules folder.");
-      }
-    } else {
-      alert("❌ Incorrect. Candidate Coins represent campaign energy and credibility.");
-    }
-  };
+  const mod1 = await import("../data/modules/module1.json");
+  setCurrentModule(mod1.default as unknown as Module);
+} catch {
+  alert("⚠️ Module 1 not found. Please check your /data/modules folder.");
+}
 
   return (
     <div className="p-4 border rounded-lg bg-gray-50 shadow-md">

@@ -58,7 +58,7 @@ const ChatSimulator: React.FC = () => {
       setCandidateState(init);
 
       // Load Module 1
-      const mod = modulesData.find((m) => m.id === "1") || null;
+      const mod = modules.find((m) => m.id === "1") || null;
       setCurrentModule(mod);
       setMessages((prev) => [
         ...prev,

@@ -3,7 +3,6 @@
 
 import React, { useState, useEffect } from "react";
 import { runModule, initCandidateState } from "@/app/ai/aiLoop";
-import { modules } from "@/app/config/modules";
 import { CandidateState, Module } from "@/app/ai/types";
 import ModuleDisplay from "@/app/components/ModuleDisplay";
 
@@ -23,6 +22,17 @@ const ChatSimulator: React.FC = () => {
       "To begin, type the office you want to run for: President, Senate, or House.",
     ]);
   }, []);
+
+  // 🔹 Dynamic module loader
+  const loadModule = async (id: string): Promise<Module | null> => {
+    try {
+      const module = await import(`../data/modules/module${id}.json`);
+      return module.default;
+    } catch (err) {
+      console.error("Failed to load module", id, err);
+      return null;
+    }
+  };
 
   // 🎯 Handles user input & simulation flow
   const handleUserInput = async () => {
@@ -57,13 +67,13 @@ const ChatSimulator: React.FC = () => {
       const init = initCandidateState(selected);
       setCandidateState(init);
 
-      // Load Module 1
-      const mod = modules.find((m) => m.id === "1") || null;
+      // Load Module 1 dynamically
+      const mod = await loadModule("1");
       setCurrentModule(mod);
       setMessages((prev) => [
         ...prev,
         intro,
-        "🎯 Starting Module 1 – Filing Phase...",
+        mod ? `🎯 Starting ${mod.title}...` : "⚠️ Could not load Module 1.",
       ]);
 
       setIsLoading(false);
@@ -81,9 +91,9 @@ const ChatSimulator: React.FC = () => {
         `📊 Module complete! +${moduleState.signaturesChange} signatures, ${moduleState.ccChange} CC, ${moduleState.approvalChange}% approval.`,
       ]);
 
-      // Next module (string id increment)
+      // Next module
       const nextId = (parseInt(currentModule.id) + 1).toString();
-      const nextModule = modules.find((m) => m.id === nextId);
+      const nextModule = await loadModule(nextId);
 
       if (nextModule) {
         setMessages((prev) => [...prev, `➡️ Moving to ${nextModule.title}...`]);
@@ -98,7 +108,7 @@ const ChatSimulator: React.FC = () => {
     setIsLoading(false);
   };
 
- // 🧱 UI layout
+  // 🧱 UI layout
   return (
     <div className="p-4 max-w-3xl mx-auto bg-white/90 rounded-2xl shadow-md border border-gray-200">
       <h2 className="text-2xl font-bold mb-4 text-center">🗳️ Federal Candidate Simulator</h2>
@@ -127,7 +137,6 @@ const ChatSimulator: React.FC = () => {
         </button>
       </div>
 
-      {/* ✅ This stays inside the same main container */}
       {currentModule && candidateState && (
         <div className="mt-4">
           <ModuleDisplay

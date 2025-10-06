@@ -15,24 +15,22 @@ const ModuleSelector = ({
   setCandidateState,
   setCurrentModule,
 }: ModuleSelectorProps): void => {
-  // Logic for selecting and activating modules goes here
-  // Example: auto-activate the next module based on current state
-  if (!candidateState.currentModule) {
-    const nextModule = { id: "module_1", title: "Orientation" }; // example
+  // If no current module is set, activate the first one
+  if (!candidateState.currentModuleId) {
+    const nextModule: Module = {
+      id: "module_1",
+      title: "Orientation & Introduction",
+      description: "Welcome to the Federal Candidate Simulator.",
+    };
     setCurrentModule(nextModule);
+
+    // Update candidate state to reflect the change
+    setCandidateState((prev) => ({
+      ...prev,
+      currentModuleId: nextModule.id,
+      lastAction: "Module auto-selected",
+    }));
   }
-
-  // Optional: update candidate state if needed
-  setCandidateState((prev) => ({
-    ...prev,
-    lastAction: "Module auto-selected",
-  }));
-};
-
-export default ModuleSelector;
-      </select>
-    </div>
-  );
 };
 
 export default ModuleSelector;

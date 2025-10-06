@@ -27,7 +27,7 @@ const ChatSimulator: React.FC = () => {
   const loadModule = async (id: string): Promise<Module | null> => {
     try {
       const module = await import(`../data/modules/module${id}.json`);
-      return module.default;
+      return module.default as Module;
     } catch (err) {
       console.error("Failed to load module", id, err);
       return null;
@@ -65,7 +65,7 @@ const ChatSimulator: React.FC = () => {
 
       setOffice(selected);
       const init = initCandidateState(selected);
-      setCandidateState(init);
+      setCandidateState({ ...init, currentModuleId: "1" });
 
       // Load Module 1 dynamically
       const mod = await loadModule("1");
@@ -85,23 +85,22 @@ const ChatSimulator: React.FC = () => {
     if (currentModule && candidateState) {
       const { moduleState, candidateState: updated } = runModule(currentModule, candidateState);
 
-      setCandidateState(updated);
-      setMessages((prev) => [
-        ...prev,
-        `📊 Module complete! +${moduleState.signaturesChange} signatures, ${moduleState.ccChange} CC, ${moduleState.approvalChange}% approval.`,
-      ]);
-
-      // Next module
+      // Update candidate state
       const nextId = (parseInt(currentModule.id) + 1).toString();
       const nextModule = await loadModule(nextId);
 
-      if (nextModule) {
-        setMessages((prev) => [...prev, `➡️ Moving to ${nextModule.title}...`]);
-        setCurrentModule(nextModule);
-      } else {
-        setMessages((prev) => [...prev, "🏁 Simulation complete. Great job, candidate!"]);
-        setCurrentModule(null);
-      }
+      setCandidateState({
+        ...updated,
+        currentModuleId: nextModule?.id ?? undefined,
+      });
+
+      setMessages((prev) => [
+        ...prev,
+        `📊 Module complete! +${moduleState.signaturesChange} signatures, ${moduleState.ccChange} CC, ${moduleState.approvalChange}% approval.`,
+        nextModule ? `➡️ Moving to ${nextModule.title}...` : "🏁 Simulation complete. Great job, candidate!",
+      ]);
+
+      setCurrentModule(nextModule || null);
     }
 
     setInput("");

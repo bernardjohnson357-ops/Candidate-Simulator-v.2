@@ -4,7 +4,7 @@
 import React, { useState } from "react";
 import { allModules } from "@/app/data/allModules";
 import { Module } from "@/app/ai/types";
-import ChatSimulator from "@/app/components/ChatSimulator";
+import ChatSimulator from "@/components/ChatSimulator";
 
 export default function HomePage() {
   const [currentModuleIndex, setCurrentModuleIndex] = useState(0);

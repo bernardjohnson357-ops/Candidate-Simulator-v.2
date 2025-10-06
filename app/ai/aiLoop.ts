@@ -1,51 +1,53 @@
 // ./app/ai/aiLoop.ts
-import { Module, CandidateState, QuizQuestion } from "./types";
+import { CandidateState, Module, Task, QuizQuestion } from "./types";
 
-// Initialize candidate state
+/**
+ * Initialize a new candidate state for the selected office.
+ */
 export const initCandidateState = (office: "President" | "Senate" | "House"): CandidateState => {
-  let threshold = { cc: 0, approval: 0, sigs: 0 };
-
-  switch (office) {
-    case "President":
-      threshold = { cc: 75, approval: 2.5, sigs: 0 };
-      break;
-    case "Senate":
-      threshold = { cc: 50, approval: 2.5, sigs: 0 };
-      break;
-    case "House":
-      threshold = { cc: 31, approval: 2.5, sigs: 0 };
-      break;
-  }
-
   return {
     office,
-    cc: 50,
+    cc: 0,
     signatures: 0,
     approval: 0,
     currentModuleId: "0",
-    threshold,
   };
 };
 
-// Run a module and apply changes directly to CandidateState
-export const runModule = (module: Module, candidate: CandidateState): CandidateState => {
-  const updated = { ...candidate };
+/**
+ * Safely run a module, updating CandidateState based on tasks or other logic.
+ */
+export const safeRunModule = (candidateState: CandidateState, module: Module): CandidateState => {
+  let updatedState = { ...candidateState };
 
   module.tasks.forEach((task) => {
     switch (task.type) {
-      case "quiz":
-        task.questions?.forEach((q: QuizQuestion) => {
-          if (q.correct !== undefined) updated.signatures += 20;
-          else updated.cc -= 1;
-        });
-        break;
       case "read":
+        // Reading tasks may not change state
+        break;
       case "write":
+        // Example: small CC gain for writing exercises
+        updatedState.cc += 2;
+        break;
       case "speak":
-        break; // Extend later
+        // Example: small approval gain
+        updatedState.approval += 1;
+        break;
+      case "quiz":
+        // Simple placeholder: reward CC for quiz existence (actual answers handled in UI)
+        updatedState.cc += 5;
+        break;
+      default:
+        break;
     }
   });
 
-  updated.currentModuleId = (parseInt(module.id) + 1).toString();
-  return updated;
+  return updatedState;
+};
+
+/**
+ * Legacy runModule function kept for backward compatibility
+ */
+export const runModule = (module: Module, candidateState: CandidateState): CandidateState => {
+  return safeRunModule(candidateState, module);
 };

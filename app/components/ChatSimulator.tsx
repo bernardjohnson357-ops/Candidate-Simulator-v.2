@@ -5,6 +5,70 @@ import { runModule, initCandidateState } from "@/app/ai/aiLoop";
 import { CandidateState, Module } from "@/app/ai/types";
 import ModuleDisplay from "@/app/components/ModuleDisplay";
 
+/**
+ * ✅ Safely loads a module JSON file and validates its structure.
+ */
+const loadModule = async (id: string): Promise<Module | null> => {
+  try {
+    const mod = await import(`../data/modules/module${id}.json`);
+    const moduleData = mod.default as unknown;
+
+    if (
+      typeof moduleData !== "object" ||
+      !moduleData ||
+      !("id" in moduleData) ||
+      !("title" in moduleData) ||
+      !Array.isArray((moduleData as any).tasks)
+    ) {
+      console.warn(`⚠️ Invalid or incomplete structure in module${id}.json:`, moduleData);
+      alert(`⚠️ Module ${id} data is invalid. Please check your JSON structure.`);
+      return null;
+    }
+
+    return moduleData as Module;
+  } catch (err) {
+    console.error(`❌ Failed to load module${id}.json:`, err);
+    alert(`⚠️ Could not load Module ${id}.json. Check your /data/modules folder.`);
+    return null;
+  }
+};
+
+/**
+ * ✅ Ensures candidate state is valid and initialized
+ */
+const safeInitState = (office: "President" | "Senate" | "House"): CandidateState => {
+  const base = initCandidateState(office);
+  return {
+    cc: 0,
+    signatures: 0,
+    approval: 0,
+    currentModuleId: "0",
+    office,
+    ...base,
+  };
+};
+
+/**
+ * ✅ Safely applies state updates after a module runs
+ */
+const safeRunModule = (module: Module, state: CandidateState): CandidateState => {
+  try {
+    const updated = runModule(module, state);
+    if (!updated || typeof updated !== "object") throw new Error("runModule returned invalid state");
+    return {
+      ...state,
+      ...updated,
+      cc: updated.cc ?? state.cc,
+      signatures: updated.signatures ?? state.signatures,
+      approval: updated.approval ?? state.approval,
+    };
+  } catch (err) {
+    console.error("❌ Error running module:", err);
+    alert("⚠️ Something went wrong while processing this module. Continuing with last valid state.");
+    return state;
+  }
+};
+
 const ChatSimulator: React.FC = () => {
   const [candidateState, setCandidateState] = useState<CandidateState | null>(null);
   const [currentModule, setCurrentModule] = useState<Module | null>(null);
@@ -13,6 +77,7 @@ const ChatSimulator: React.FC = () => {
   const [office, setOffice] = useState<"President" | "Senate" | "House" | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // 🎙 Initial welcome messages
   useEffect(() => {
     setMessages([
       "🎙️ Welcome to the Federal Candidate Simulator — AI Edition.",
@@ -20,80 +85,83 @@ const ChatSimulator: React.FC = () => {
     ]);
   }, []);
 
-  const loadModule = async (id: string): Promise<Module | null> => {
-    try {
-      const mod = await import(`../data/modules/module${id}.json`);
-      return mod.default as Module;
-    } catch {
-      return null;
-    }
-  };
-
+  /**
+   * ✅ Handles user input safely (with office selection & module flow)
+   */
   const handleUserInput = async () => {
     if (!input.trim()) return;
 
     setMessages((prev) => [...prev, `🗣️ You: ${input}`]);
     setIsLoading(true);
 
-    // Office selection
-    if (!office) {
-      const choice = input.trim().toLowerCase();
-      let selected: "President" | "Senate" | "House" | null = null;
+    try {
+      // 🏛 Office selection
+      if (!office) {
+        const choice = input.trim().toLowerCase();
+        const selected =
+          choice === "president"
+            ? "President"
+            : choice === "senate"
+            ? "Senate"
+            : choice === "house"
+            ? "House"
+            : null;
 
-      if (choice === "president") selected = "President";
-      else if (choice === "senate") selected = "Senate";
-      else if (choice === "house") selected = "House";
+        if (!selected) {
+          setMessages((prev) => [...prev, "❌ Please choose: President, Senate, or House."]);
+          setInput("");
+          setIsLoading(false);
+          return;
+        }
 
-      if (!selected) {
-        setMessages((prev) => [...prev, "❌ Please choose: President, Senate, or House."]);
-        setIsLoading(false);
+        setOffice(selected);
+        const initState = safeInitState(selected);
+        setCandidateState(initState);
+
+        const mod = await loadModule("1");
+        if (mod) {
+          setCurrentModule(mod);
+          setMessages((prev) => [
+            ...prev,
+            `🏛️ You’ve chosen to run for ${selected}.`,
+            `🎯 Starting ${mod.title}...`,
+          ]);
+        } else {
+          setMessages((prev) => [
+            ...prev,
+            `⚠️ Could not load Module 1. Please check your data folder.`,
+          ]);
+        }
+
         setInput("");
+        setIsLoading(false);
         return;
       }
 
-      setOffice(selected);
-      const initState = initCandidateState(selected);
-      setCandidateState(initState);
+      // 📊 Module progression
+      if (currentModule && candidateState) {
+        const updatedState = safeRunModule(currentModule, candidateState);
+        const nextId = (parseInt(currentModule.id) + 1).toString();
+        const nextModule = await loadModule(nextId);
 
-      const mod = await loadModule("0"); // Module 0 for quiz
-      setCurrentModule(mod);
-      setMessages((prev) => [
-        ...prev,
-        `🏛️ You’ve chosen to run for ${selected}.`,
-        mod ? `🎯 Starting ${mod.title}...` : "⚠️ Could not load Module 0.",
-      ]);
+        setCandidateState({
+          ...updatedState,
+          currentModuleId: nextId,
+        });
 
-      setInput("");
-      setIsLoading(false);
-      return;
-    }
+        setMessages((prev) => [
+          ...prev,
+          `📊 Module ${currentModule.id} complete! CC: ${updatedState.cc}, Signatures: ${updatedState.signatures}, Approval: ${updatedState.approval}%`,
+          nextModule ? `➡️ Moving to ${nextModule.title}...` : "🏁 Simulation complete!",
+        ]);
 
-    // Module progression
-    if (currentModule && candidateState) {
-      const updated = runModule(currentModule, candidateState);
-
-      setCandidateState({
-        ...updated,
-        currentModuleId: (parseInt(currentModule.id.replace("module_", "")) + 1).toString(),
-      });
-
-      setMessages((prev) => [
-        ...prev,
-        `📊 Module complete! Updated CC: ${updated.cc}, Signatures: ${updated.signatures}, Approval: ${updated.approval}%`,
-      ]);
-
-      const nextId = (parseInt(currentModule.id.replace("module_", "")) + 1).toString();
-      const nextModule = await loadModule(nextId);
-
-      if (nextModule) {
-        setMessages((prev) => [...prev, `➡️ Moving to ${nextModule.title}...`]);
-        setCurrentModule(nextModule);
-      } else {
-        setMessages((prev) => [...prev, "🏁 Simulation complete!"]);
-        setCurrentModule(null);
+        setCurrentModule(nextModule || null);
+        setInput("");
+        setIsLoading(false);
       }
-
-      setInput("");
+    } catch (err) {
+      console.error("❌ Unexpected error in user input handler:", err);
+      alert("⚠️ An unexpected error occurred. Simulation will continue.");
       setIsLoading(false);
     }
   };
@@ -104,7 +172,9 @@ const ChatSimulator: React.FC = () => {
 
       <div className="h-[400px] overflow-y-auto p-3 border rounded-md bg-gray-50 mb-4">
         {messages.map((msg, i) => (
-          <div key={i} className="mb-2 whitespace-pre-wrap">{msg}</div>
+          <div key={i} className="mb-2 whitespace-pre-wrap">
+            {msg}
+          </div>
         ))}
         {isLoading && <div className="text-gray-500 italic">AI is thinking...</div>}
       </div>
@@ -121,6 +191,7 @@ const ChatSimulator: React.FC = () => {
         <button
           onClick={handleUserInput}
           className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+          disabled={isLoading}
         >
           Send
         </button>

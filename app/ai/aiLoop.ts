@@ -25,7 +25,6 @@ export interface CandidateState {
     threshold,
     currentModuleId: "0", // start at Module 0
   };
-};
 
 // ✅ Run a module and calculate outcomes
 export const runModule = (

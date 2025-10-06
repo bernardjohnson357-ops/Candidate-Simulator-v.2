@@ -1,7 +1,7 @@
 // ./app/components/ModuleSelector.tsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CandidateState, Module, Task } from "../ai/types";
 
 interface ModuleSelectorProps {
@@ -17,39 +17,43 @@ const ModuleSelector: React.FC<ModuleSelectorProps> = ({
 }) => {
   const [answered, setAnswered] = useState(false);
 
-  // Initialize Module 0 if none is active
-  if (!candidateState.currentModuleId) {
-    const candidateCoinQuiz: Task = {
-      id: "task_module0_cc_quiz",
-      type: "quiz",
-      prompt:
-        "What do Candidate Coins (CC) represent in this simulator?\n\nA) Campaign energy and credibility\nB) Real currency for campaign ads\nC) Signatures collected from voters\nD) Debate score multiplier",
-      feedback: {
-        A: "✅ Correct! Candidate Coins represent campaign energy and credibility.",
-        B: "❌ Not quite. CCs aren’t money — they represent your campaign’s energy, credibility, and influence points.",
-        C: "❌ Incorrect. Signatures are tracked separately.",
-        D: "❌ Nope. Debate scores don’t affect CC directly.",
-      },
-    };
+  // Initialize Module 0 on first render
+  useEffect(() => {
+    if (!candidateState.currentModuleId) {
+      const candidateCoinQuiz: Task = {
+        id: "task_module0_cc_quiz",
+        type: "quiz",
+        prompt:
+          "What do Candidate Coins (CC) represent in this simulator?\n\nA) Campaign energy and credibility\nB) Real currency for campaign ads\nC) Signatures collected from voters\nD) Debate score multiplier",
+        questions: [
+          {
+            id: "q1",
+            question: "Select the correct answer:",
+            options: ["A", "B", "C", "D"],
+            correct: "A",
+          },
+        ],
+      };
 
-    const nextModule: Module = {
-      id: "module_0",
-      title: "Orientation & Introduction",
-      description:
-        "Welcome to the Federal Candidate Simulator. Learn what Candidate Coins (CC) mean before you begin your campaign journey.",
-      tasks: [candidateCoinQuiz],
-    };
+      const module0: Module = {
+        id: "module_0",
+        title: "Orientation & Introduction",
+        description:
+          "Welcome to the Federal Candidate Simulator. Learn what Candidate Coins (CC) mean before you begin your campaign journey.",
+        tasks: [candidateCoinQuiz],
+      };
 
-    setCurrentModule(nextModule);
+      setCurrentModule(module0);
 
-    setCandidateState((prev) => ({
-      ...prev,
-      currentModuleId: nextModule.id,
-      lastAction: "Module 0 initialized with CC quiz",
-    }));
-  }
+      setCandidateState((prev) => ({
+        ...prev,
+        currentModuleId: module0.id,
+        lastAction: "Module 0 initialized with CC quiz",
+      }));
+    }
+  }, [candidateState.currentModuleId, setCandidateState, setCurrentModule]);
 
-  // Handle quiz submission
+  // Handle quiz answer
   const handleAnswer = async (answer: string) => {
     if (answered) return;
     setAnswered(true);
@@ -60,19 +64,27 @@ const ModuleSelector: React.FC<ModuleSelectorProps> = ({
       setCandidateState((prev) => ({
         ...prev,
         candidateCoins: (prev.candidateCoins || 0) + 5,
-        currentModuleId: "1",
-        lastAction: "Answered Module 0 quiz correctly (+5 CC, advancing to Module 1)",
+        lastAction: "Answered Module 0 quiz correctly (+5 CC)",
       }));
 
-      alert("✅ Correct! You earned +5 Candidate Coins and unlocked Module 1.");
+      alert("✅ Correct! You earned +5 Candidate Coins.");
 
       // Load Module 1 automatically
       try {
-  const mod1 = await import("../data/modules/module1.json");
-  setCurrentModule(mod1.default as unknown as Module);
-} catch {
-  alert("⚠️ Module 1 not found. Please check your /data/modules folder.");
-}
+        const mod1 = await import("../data/modules/module1.json");
+        setCurrentModule(mod1.default as unknown as Module);
+        setCandidateState((prev) => ({
+          ...prev,
+          currentModuleId: "module_1",
+          lastAction: "Module 1 loaded after Module 0 quiz",
+        }));
+      } catch {
+        alert("⚠️ Module 1 not found. Please check your /data/modules folder.");
+      }
+    } else {
+      alert("❌ Incorrect. Candidate Coins represent campaign energy and credibility.");
+    }
+  };
 
   return (
     <div className="p-4 border rounded-lg bg-gray-50 shadow-md">
@@ -82,9 +94,7 @@ const ModuleSelector: React.FC<ModuleSelectorProps> = ({
         Candidate Coins (CC).
       </p>
 
-      <p className="font-medium mb-2">
-        What do Candidate Coins (CC) represent in this simulator?
-      </p>
+      <p className="font-medium mb-2">What do Candidate Coins (CC) represent in this simulator?</p>
 
       <div className="space-y-2">
         {["A", "B", "C", "D"].map((opt) => (

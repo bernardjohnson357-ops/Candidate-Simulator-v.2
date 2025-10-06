@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { modules } from "@/config/modules";
+import { modules } from "@/app/config/modules";
 import { CandidateState, Module } from "@/app/ai/types";
 import ModuleDisplay from "@/app/components/ModuleDisplay";
 

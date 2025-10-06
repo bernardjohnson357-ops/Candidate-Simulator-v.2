@@ -6,7 +6,6 @@ import module0 from "@/app/data/modules/module0.json";
 import module1 from "@/app/data/modules/module1.json";
 // ... import all modules up to module15
 import module15 from "@/app/data/modules/module15.json";
-import ReactMarkdown from "react-markdown";
 
 import { Module, CandidateState } from "@/app/ai/types";
 

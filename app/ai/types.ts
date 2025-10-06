@@ -39,7 +39,8 @@ export interface Module {
   sources?: string[];
   tasks: Task[];
   purpose?: string;
-  scenarios?: Scenario[]; // ✅ Add — separate from tasks
+  scenarios?: Scenario[];
+  outcome?: string | string[]; // ✅ Add this
 }
 
 export interface ModuleState {

@@ -1,76 +1,64 @@
 {
   "id": "7",
-  "title": "October 1–7: Early October Ops",
-  "description": "Execute early October campaign operations while practicing communication, strategic team management, and voter engagement.",
+  "title": "Early October: Campaign Operations",
+  "description": "Execute early October campaign operations focusing on team management, messaging, and constituent engagement.",
+  "narrator": "calm",
+  "readingSummary": [
+    "Early October requires candidates to:",
+    "1. Assess weekly news and campaign context → Identify opportunities and risks.",
+    "2. Prioritize constituent concerns → Focus on clarity, empathy, and persuasiveness.",
+    "3. Deploy resources effectively → Decide which team members or campaign materials to use in various scenarios.",
+    "Weekly Campaign Briefing Example:",
+    "- Opposition Research → Incumbent leads by 15%, small-dollar donations rising.",
+    "- Constituent Sentiment → Community safety top concern after wild hog incident.",
+    "- Media Updates → Local TV and social channels reporting on candidate events."
+  ],
+  "weeklyNews": {
+    "World News": [
+      "Gaza Demographics: Population dropped from 2 million to 750,000 (Oct 2023–Oct 2026). Medical factors cited; debate continues over military involvement.",
+      "International Intelligence: U.S. satellites report possible Chinese facilitation of nuclear weapon shipments from North Korea to Iran via the Strait of Hummus."
+    ],
+    "National News": [
+      "Earthquake in Los Angeles: 6.2 magnitude; minimal damage, no injuries. Authorities warn of future risks.",
+      "Capitol Security: U.S. Capitol evacuated after a threat; investigation ongoing.",
+      "Milestone for Inclusive Athletics: First transgender sports league launches nationwide."
+    ],
+    "Around Texas": [
+      "Electoral Representation: Many Texans feel underrepresented due to gerrymandering and migration trends.",
+      "School Safety: Wild hogs injured children at an elementary school; one tested positive for rabies. Heated debates arise over firearm regulations on campus.",
+      "Retiree Relief: Affluent donors praise federal tax legislation easing healthcare costs.",
+      "Debate Rumors: Major debate anticipated between the incumbent and a third-party newcomer—polls indicate a close race.",
+      "Weather Watch: Early winter and increased precipitation expected.",
+      "Transgender Soccer League: Teams from Killeen, Abilene, Waco, Tyler, Nacogdoches, and Beaumont compete in the inaugural season."
+    ]
+  },
   "tasks": [
     {
       "id": "7-1",
-      "type": "quiz",
-      "prompt": "Team Management: Choose where to direct staff focus.",
-      "questions": [
-        {
-          "question": "Which staff focus will you prioritize?",
-          "options": [
-            "Door-to-door outreach → boosts signatures but costs time",
-            "Fundraising calls → increases CC but risks less visibility",
-            "Media prep → improves public image but requires CC investment"
-          ],
-          "correct": 0
-        }
-      ]
+      "type": "write",
+      "prompt": "Candidate Challenge – October 1–7: Prepare and deliver an inspiring speech to reassure families after recent events, address public safety concerns, and demonstrate leadership. Write 1–2 paragraphs.",
+      "evaluation": "AI assesses clarity, persuasiveness, alignment with campaign identity, and projected voter impact."
     },
     {
       "id": "7-2",
       "type": "write",
-      "prompt": "Candidate Speech: Deliver a short, solutions-focused speech on community safety and family reassurance (1–2 paragraphs)."
+      "prompt": "Scenario – Team Management: Allocate resources or team members to early October priorities (e.g., canvassing, volunteer coordination, social media).",
+      "evaluation": "AI evaluates effectiveness of allocation, strategic reasoning, and impact on campaign operations."
     },
     {
       "id": "7-3",
       "type": "write",
-      "prompt": "Weekly News Response: Respond to the provided current-events scenario to maintain or increase voter trust."
+      "prompt": "Scenario – Weekly News Response: Respond to recent events including a local controversy involving public safety, media coverage of the opponent’s minor misstep, and community feedback on your campaign imagery. Write 2–3 paragraphs.",
+      "evaluation": "Voter approval and engagement updated based on alignment, tone, and responsiveness."
     }
   ],
-  "narrator": "The campaign enters high visibility mode. You must focus on team management, community safety speeches, and responses to weekly news.",
-  "readingSummary": [
-    "Early October requires balancing staff priorities with persuasive public messaging.",
-    "Candidate responses to weekly news and community concerns directly affect voter approval and campaign momentum."
-  ],
-  "tasksDetails": [
-    {
-      "id": "7-1",
-      "type": "quiz",
-      "prompt": "Select your staff management strategy to optimize campaign outcomes.",
-      "questions": [
-        {
-          "question": "Choose the primary focus for your staff this week:",
-          "options": [
-            "Door-to-door outreach",
-            "Fundraising calls",
-            "Media prep"
-          ],
-          "correct": 0
-        }
-      ]
-    },
-    {
-      "id": "7-2",
-      "type": "write",
-      "prompt": "Write or dictate a community safety speech addressing safety, trust, and healthcare access. AI will evaluate clarity, empathy, and persuasiveness."
-    },
-    {
-      "id": "7-3",
-      "type": "write",
-      "prompt": "Respond to the weekly news scenario provided by the AI to simulate real-time campaign decision-making."
-    }
-  ],
-  "sources": [
-    "General Election October 1–7 – Simulator Test Mode"
-  ],
+  "purpose": "Execute early October campaign operations while practicing communication skills, strategic decision-making, and constituent engagement.",
   "outcome": {
-    "description": "Updated CC, voter approval, and campaign momentum. Demonstrated ability to lead staff, reassure voters, and adapt to evolving news."
+    "description": "Candidate speech and messaging assessed → Voter approval updated. Team allocation and operational decisions tracked → CC and resource effectiveness updated. Candidate demonstrates early October readiness: clear communication, strategic thinking, and campaign management under short timelines."
   },
   "nextModule": {
     "id": "8",
-    "title": "October 8–14: GOTV & Media Blitz"
+    "title": "Mid-October Operations",
+    "description": "Focus on press engagement, high-pressure messaging, and refining campaign responses leading into the final three weeks before Election Day."
   }
 }

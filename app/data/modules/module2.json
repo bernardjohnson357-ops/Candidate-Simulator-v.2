@@ -1,83 +1,176 @@
 {
   "id": "2",
-  "title": "FEC Filing Quizzes (Party)",
-  "description": "Practice federal filing requirements for party candidates, focusing on FEC Forms 1 and 2.",
+  "title": "Party FEC Filing Fee Quizzes",
+  "description": "Learn and test your understanding of FEC Forms 1 & 2, campaign finance reporting, and political organization compliance as a Party Candidate.",
+  "narrator": "calm",
+  "readingSummary": [
+    "As a Party Candidate, you must file two forms with the Federal Election Commission once you raise or spend over $5,000 in campaign funds:",
+    "1. FEC Form 1 – Statement of Candidacy: Officially declares you as a candidate and establishes your candidacy with the FEC.",
+    "2. FEC Form 2 – Statement of Organization: Registers your principal campaign committee and requires your treasurer’s information and bank account details.",
+    "Important Rules:",
+    "- Both forms must be filed within 15 days of crossing the $5,000 threshold.",
+    "- Once filed, you must begin quarterly reports (Form 3) to track contributions and expenditures.",
+    "- Mistakes or late filings can result in FEC fines and loss of credibility."
+  ],
   "tasks": [
     {
       "id": "2-1",
-      "type": "quiz",
-      "prompt": "Quiz: FEC Form 1 – Statement of Candidacy",
-      "questions": [
-        {
-          "question": "What triggers the need to file FEC Form 1?",
-          "options": [
-            "Raising or spending over $1,000",
-            "Raising or spending over $5,000",
-            "Winning the party nomination",
-            "Filing with the Secretary of State"
-          ],
-          "correct": 1
-        },
-        {
-          "question": "Form 1 officially declares a candidate's intent to run. True or False?",
-          "options": ["True", "False"],
-          "correct": 0
-        }
-      ]
+      "type": "read",
+      "prompt": "As a Party Candidate, your federal filing process begins with FEC compliance. You must file FEC Forms 1 and 2 within 15 days of raising or spending over $5,000. These filings declare your candidacy and register your campaign committee."
     },
     {
       "id": "2-2",
       "type": "quiz",
-      "prompt": "Quiz: FEC Form 2 – Statement of Organization",
+      "prompt": "Quiz 1 – Candidate Registration & Setup. Each correct answer = +20 signatures. Each wrong answer = -50 signatures. Score ≥ 80% = +1 CC bonus. Score = 100% = +2 CC bonus.",
       "questions": [
         {
-          "question": "Form 2 registers what for your campaign?",
+          "question": "Which form must a candidate for the U.S. House or Senate file to officially register with the FEC?",
           "options": [
-            "Your party nomination",
-            "Your campaign committee",
-            "Your fundraising totals",
-            "Your voter approval rating"
+            "Statement of Candidacy (FEC Form 2)",
+            "Statement of Organization (FEC Form 1)",
+            "Report of Receipts and Disbursements (FEC Form 3)"
+          ],
+          "correct": 0
+        },
+        {
+          "question": "What federal threshold triggers mandatory FEC registration?",
+          "options": [
+            "$1,000 in expenditures",
+            "$5,000 in contributions or expenditures",
+            "$10,000 in contributions"
           ],
           "correct": 1
         },
         {
-          "question": "Quarterly reports (Form 3) must be filed after submitting Forms 1 and 2. True or False?",
-          "options": ["True", "False"],
+          "question": "Who can serve as a campaign treasurer?",
+          "options": [
+            "Only the candidate",
+            "Any U.S. citizen",
+            "Any individual or legal entity, but not foreign nationals"
+          ],
+          "correct": 2
+        },
+        {
+          "question": "Why does a candidate need a separate campaign bank account?",
+          "options": [
+            "To separate personal and campaign funds",
+            "To avoid paying taxes",
+            "It’s not required"
+          ],
           "correct": 0
+        },
+        {
+          "question": "When must a House or Senate candidate file their Statement of Candidacy?",
+          "options": [
+            "Before raising any funds",
+            "Within 15 days after raising or spending more than $5,000",
+            "After Election Day"
+          ],
+          "correct": 1
+        }
+      ]
+    },
+    {
+      "id": "2-3",
+      "type": "quiz",
+      "prompt": "Quiz 2 – Receipts, Disbursements, and Reporting. Each correct answer = +20 signatures. Each wrong answer = -50 signatures. Score ≥ 80% = +1 CC bonus. Score = 100% = +2 CC bonus.",
+      "questions": [
+        {
+          "question": "Which of the following is a permissible source of campaign contributions?",
+          "options": [
+            "Foreign nationals",
+            "Political Action Committees (PACs)",
+            "Corporations without a PAC"
+          ],
+          "correct": 1
+        },
+        {
+          "question": "What must a campaign do with anonymous cash contributions over $50?",
+          "options": [
+            "Keep and report it",
+            "Donate the excess to charity",
+            "Return it to the donor"
+          ],
+          "correct": 2
+        },
+        {
+          "question": "Which FEC form is used for quarterly financial reporting?",
+          "options": [
+            "FEC Form 2",
+            "FEC Form 3",
+            "FEC Form 4"
+          ],
+          "correct": 1
+        },
+        {
+          "question": "What is required for all campaign loans?",
+          "options": [
+            "They must be reported and have written agreements",
+            "They can be informal",
+            "Only loans from banks are allowed"
+          ],
+          "correct": 0
+        },
+        {
+          "question": "When must a campaign file its termination report?",
+          "options": [
+            "At any time",
+            "After all debts are paid and cash on hand is zero",
+            "Never"
+          ],
+          "correct": 1
+        }
+      ]
+    },
+    {
+      "id": "2-4",
+      "type": "quiz",
+      "prompt": "Quiz 3 – Political Organizations & Participation. Each correct answer = +20 signatures. Each wrong answer = -50 signatures. Score ≥ 80% = +1 CC bonus. Score = 100% = +2 CC bonus.",
+      "questions": [
+        {
+          "question": "Can corporations and labor organizations contribute directly to federal campaigns?",
+          "options": ["Yes", "No", "Only if they disclose"],
+          "correct": 1
+        },
+        {
+          "question": "What is the main function of a PAC?",
+          "options": [
+            "Raise and spend money to elect or defeat candidates",
+            "Manage candidate finances",
+            "Investigate candidates"
+          ],
+          "correct": 0
+        },
+        {
+          "question": "Can corporations and unions establish PACs?",
+          "options": ["Yes", "No", "Only unions"],
+          "correct": 0
+        },
+        {
+          "question": "Are there limits to PAC contributions to federal candidates?",
+          "options": ["No", "Yes", "Only for super PACs"],
+          "correct": 1
+        },
+        {
+          "question": "What is required of PACs and labor organizations regarding FEC reporting?",
+          "options": [
+            "Nothing, they’re exempt",
+            "They must file regular disclosure reports",
+            "Only during elections"
+          ],
+          "correct": 1
         }
       ]
     }
   ],
-  "narrator": "Once you raise or spend over $5,000, federal law requires you to file Form 1 (Statement of Candidacy) and Form 2 (Statement of Organization). This ensures transparency in campaign finances.",
-  "readingSummary": [
-    "Crossing $5,000 in fundraising or spending triggers federal filing obligations.",
-    "Form 1 formally declares a candidate.",
-    "Form 2 registers the campaign committee.",
-    "Quarterly reports (Form 3) disclose contributions and expenditures.",
-    "Correct quiz answers earn Candidate Coins (CC) and signatures.",
-    "Incorrect answers simulate fines or credibility loss."
-  ],
-  "tasksDetails": [
-    {
-      "id": "2-1",
-      "type": "quiz",
-      "prompt": "Complete the quiz on Form 1: Statement of Candidacy"
-    },
-    {
-      "id": "2-2",
-      "type": "quiz",
-      "prompt": "Complete the quiz on Form 2: Statement of Organization"
-    }
-  ],
-  "sources": [
-    "FEC Candidate Guide (2024 edition)",
-    "Federal Filing Guidelines for Party Candidates"
-  ],
+  "purpose": "Teach users FEC compliance for party candidates, including Forms 1 and 2, contribution rules, and political organization reporting.",
+  "scenarios": [],
   "outcome": {
-    "description": "Earn Candidate Coins (CC) and signatures. Completing Module 2 unlocks the General Election branch."
+    "description": "The user completes all FEC quizzes, earning Candidate Coins and signatures. The campaign is now officially registered and recognized by the FEC."
   },
   "nextModule": {
     "id": "3",
-    "title": "General Election Branch"
+    "title": "Building Your Campaign Team",
+    "description": "Develop your campaign team structure, messaging strategy, and staff decisions for the general election phase."
   }
 }

@@ -1,28 +1,40 @@
 {
   "id": "15",
   "title": "Final Summary (Post-Debate)",
-  "description": "Provide closure to the simulator by reflecting on strategies, key decisions, and final campaign outcomes.",
+  "description": "The campaign concludes with a comprehensive reflection on your journey — summarizing strategy, decisions, and results. Review your final CC, signatures, voter approval, and campaign narrative outcome.",
+  "narrator": "calm",
+  "purpose": "Provide closure and reflection by reviewing campaign performance, assessing strategic decisions, and delivering a narrative summary of the campaign outcome.",
+  "readingSummary": [
+    "A final summary consolidates your campaign across all modules:",
+    "1. Candidate Stats → Final CC, signatures/voter approval, spending, and investments.",
+    "2. Path Taken → Independent or Party branch, key turning points, endorsements, and debates.",
+    "3. Strengths & Weaknesses → Communication clarity, ethical judgment, fundraising effectiveness, and consistency in messaging."
+  ],
+  "finalOutcomeCategories": [
+    { "category": "Victory", "criteria": "Above 50% voter approval", "description": "Elected to office" },
+    { "category": "Competitive Candidate", "criteria": "35–49% voter approval", "description": "Strong showing, viable future potential" },
+    { "category": "Spoiler Role", "criteria": "20–34% voter approval", "description": "Influenced the race, but not competitive" },
+    { "category": "Symbolic Voice", "criteria": "Below 20% voter approval", "description": "Message-focused campaign, minimal support" }
+  ],
   "tasks": [
     {
       "id": "15-1",
       "type": "reflection",
-      "prompt": "Reflect on your campaign journey. Review AI-generated stats and narrative summary. Consider lessons for future strategy and constituent engagement."
+      "prompt": "Reflect on your campaign journey. Write 2–3 paragraphs describing your key decisions, lessons learned, and how your choices influenced voter approval.",
+      "evaluation": "AI synthesizes results into a narrative outcome based on voter approval, decisions, and overall campaign performance."
     }
-  ],
-  "narrator": "This module wraps up your campaign. The AI compiles final stats, highlights strengths and weaknesses, and delivers a personalized narrative tying your actions to electoral results.",
-  "readingSummary": [
-    "Final stats include Candidate Coins (CC), signatures, voter approval, and major spending decisions.",
-    "Path taken (Independent or party), endorsements, petitions, debates, and strategic turning points are summarized.",
-    "Strengths and weaknesses are highlighted, emphasizing clear messaging, debate performance, and moral or strategic decisions."
   ],
   "outcome": {
-    "description": "Consolidated campaign results with final CC, voter approval, and key decisions. AI provides narrative closure showing how simulation choices affect electoral outcomes.",
-    "victoryThresholds": {
-      "victory": "Above 50% voter approval (elected to office)",
-      "competitive": "35–49% voter approval (credible showing short of victory)",
-      "spoiler": "20–34% voter approval (influenced race but not competitive)",
-      "symbolic": "Below 20% voter approval (low support, message-focused)"
-    }
+    "description": "Campaign statistics are compiled, narrative summary delivered, and overall performance assessed. Reinforces understanding of how strategy, compliance, messaging, and engagement drive electoral success."
   },
-  "nextModule": null
+  "closingNarration": [
+    "Narrator [calm, reflective, then warm]: “Your campaign has reached its end. Every choice you made—from petitions and fundraising, to debates and final strategy—shaped the outcome you see today.”",
+    "Narrator [softer tone]: “Whether you won the seat, influenced the race, or stood as a symbolic voice, your journey reflects the real challenges every candidate faces. Every endorsement weighed, every voter conversation, every moment of pressure under the lights mattered.”",
+    "Narrator [uplifting tone]: “As you leave this simulator, consider the deeper purpose: campaigns are about people, principles, and persistence. In the end, the measure of leadership is not only counted in votes, but in the strength of your message and the trust you earn.”",
+    "Narrator [closing]: “Thank you for participating in the Federal Candidate Simulator. Your campaign is complete… but your political journey has only just begun.”"
+  ],
+  "nextModule": null,
+  "references": [
+    "https://www.bernardjohnson4congress.com/general_election_cycle_final_summary_test_mode"
+  ]
 }

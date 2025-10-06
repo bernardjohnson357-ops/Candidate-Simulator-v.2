@@ -1,28 +1,29 @@
 // ./app/ai/aiLoop.ts
 import { Module, ModuleState, CandidateState, QuizQuestion } from "./types";
 
-// ✅ Initialize candidate state with thresholds
-// ./app/ai/types.ts
-export interface CandidateState {
-  office: "President" | "Senate" | "House";
-  cc: number;
-  signatures: number;
-  approval: number;
-  currentModuleId: string;  // track dynamic module
-  threshold: {
-    cc: number;
-    approval: number;
-    sigs: number;
-  };
-}
+// ✅ Initialize candidate state
+export const initCandidateState = (office: "President" | "Senate" | "House"): CandidateState => {
+  let threshold = { cc: 0, approval: 0, sigs: 0 };
+
+  switch (office) {
+    case "President":
+      threshold = { cc: 75, approval: 2.5, sigs: 0 };
+      break;
+    case "Senate":
+      threshold = { cc: 50, approval: 2.5, sigs: 0 };
+      break;
+    case "House":
+      threshold = { cc: 31, approval: 2.5, sigs: 0 };
+      break;
+  }
 
   return {
     office,
     cc: 50,
     signatures: 0,
     approval: 0,
+    currentModuleId: "0",
     threshold,
-    currentModuleId: "0", // start at Module 0
   };
 };
 
@@ -41,40 +42,25 @@ export const runModule = (
     finished: false,
   };
 
-  // Copy candidate state to update
   const updatedCandidate: CandidateState = { ...candidate };
 
-  // Loop through tasks and apply simple scoring logic
   module.tasks.forEach((task) => {
     moduleState.completedTasks++;
 
-    switch (task.type) {
-      case "quiz":
-        if (task.questions) {
-          task.questions.forEach((q: QuizQuestion) => {
-            // Example scoring: correct answers give signatures, wrong reduce CC
-            if (q.correct !== undefined) {
-              moduleState.signaturesChange += 20; // +20 signatures per question
-            } else {
-              moduleState.ccChange -= 1; // penalty for mistakes
-            }
-          });
+    if (task.type === "quiz" && task.questions) {
+      task.questions.forEach((q: QuizQuestion) => {
+        if (q.correct !== undefined) {
+          moduleState.signaturesChange += 20;
+        } else {
+          moduleState.ccChange -= 1;
         }
-        break;
-      case "read":
-      case "write":
-      case "speak":
-        // Placeholder: extend with actual logic if needed
-        break;
+      });
     }
   });
 
-  // Update candidate totals
   updatedCandidate.cc += moduleState.ccChange;
   updatedCandidate.signatures += moduleState.signaturesChange;
   updatedCandidate.approval += moduleState.approvalChange;
-
-  // Move candidate to next module
   updatedCandidate.currentModuleId = (parseInt(module.id) + 1).toString();
 
   moduleState.finished = true;

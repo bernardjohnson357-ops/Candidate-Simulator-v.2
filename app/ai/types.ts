@@ -42,7 +42,8 @@ export interface Module {
   tasks: Task[];
   purpose?: string;
   scenarios?: { title: string; description: string }[];
-  outcome?: string | { description: string };
+  outcome?: string | { description: string }; // unified type
+  nextModule?: Module;
 }
 
 export interface CandidateState {

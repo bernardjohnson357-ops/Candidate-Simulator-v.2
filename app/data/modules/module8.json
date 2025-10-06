@@ -1,44 +1,65 @@
 {
   "id": "8",
-  "title": "October 8–14: Mid-October Ops",
-  "description": "Practice press conferences and constituent engagement under mid-October campaign pressure. Candidates refine message clarity, voter trust, and public communication skills.",
+  "title": "Mid-October: Press & Messaging",
+  "description": "Practice mid-October campaign communications and press interactions, maintaining clarity, consistency, and voter trust under evolving news and constituent concerns.",
+  "narrator": "calm",
+  "readingSummary": [
+    "Key mid-October skills include:",
+    "1. Analyzing weekly news and campaign insights → Identify opportunities to strengthen voter approval.",
+    "2. Preparing for press and public statements → Ensure messaging aligns with your campaign identity and values.",
+    "3. Responding under pressure → Adapt quickly while maintaining clarity and credibility.",
+    "Weekly Campaign Briefing Example:",
+    "- Opposition Research → Incumbent surges after recent attack; small-dollar donations rising.",
+    "- Constituent Sentiment → Residents uncertain about rhetoric; mixed reactions to opponent’s statements.",
+    "- Media Updates → Local news and social channels reporting rapidly on campaign events."
+  ],
+  "weeklyNews": {
+    "World News": [
+      "Gaza Crisis: European leaders express deep concern over Gaza, debating possible military intervention to end what they describe as 'ethnic cleansing.'",
+      "Nuclear Developments: Intelligence confirms China is shipping nuclear weapons to Iran; satellite imagery shows launchers arriving, with missiles potentially operational within a week.",
+      "Global Boycott Calls: Canadian officials advocate a worldwide boycott of nations supporting Israel."
+    ],
+    "National News": [
+      "Capitol Shooting: A member of Congress was shot leaving their office; their condition is currently unknown. Authorities believe the attack was politically motivated.",
+      "Transgender Soccer League Violence: Texas’ inaugural transgender soccer league faced disruption when a player was stabbed by a fan; the athlete is recovering. The suspect cited 'social decline.'",
+      "U.S.-Israel Relations: U.S. leaders pledge support for Israel and warn of potential military response if Iran acts aggressively."
+    ],
+    "Texas Updates": [
+      "Voter Priorities: Polls indicate strong local support for Israel, with top concerns around gun rights, immigration reform, and school safety.",
+      "School Safety Debates: Following the wild hog incident, advocacy groups lobby for legislation allowing school staff to carry shotguns on campus.",
+      "Healthcare Law Reactions: Mixed feedback on the new healthcare legislation—praised for aiding middle-class and elderly residents but criticized for favoring 'elites.' Protests emerge in multiple cities.",
+      "Recovery & Support: Texans hope for a speedy recovery of the wounded politician in D.C.; doctors expect discharge soon but recommend rest.",
+      "Flooding & Relief Efforts: Major flooding impacts two counties; local authorities seek federal disaster relief.",
+      "Transgender Soccer League Resilience: League officials and supporting politicians issue statements emphasizing resilience, equal rights, school safety, and healthcare reform."
+    ]
+  },
   "tasks": [
     {
       "id": "8-1",
       "type": "write",
-      "prompt": "Press Conference: Craft a concise opening statement addressing healthcare, Second Amendment rights, and government spending. Respond to reporter questions clearly."
+      "prompt": "Press Conference Statement: Prepare an opening statement covering key issues from the weekly briefing, aligning with your campaign identity. Typed or speech-to-text; 1–2 paragraphs.",
+      "evaluation": "AI assesses clarity, persuasiveness, tone, and voter approval impact."
     },
     {
       "id": "8-2",
       "type": "write",
-      "prompt": "Constituent Concerns: Respond to voter questions about gender identity, taxation fairness, and local resources. Ensure clarity, sensitivity, and alignment with Libertarian principles."
-    }
-  ],
-  "narrator": "As Election Day approaches, you must deliver clear, consistent messaging and strategic responses to reporters and constituents.",
-  "readingSummary": [
-    "Mid-October focuses on public engagement, press interaction, and addressing constituent concerns.",
-    "Clarity, tone, and factual accuracy directly impact voter approval and campaign credibility."
-  ],
-  "tasksDetails": [
-    {
-      "id": "8-1",
-      "type": "write",
-      "prompt": "Write your opening statement for a press conference, addressing key issues and questions from reporters."
+      "prompt": "Messaging Adjustment: Respond to a local policy controversy, highlight your campaign’s achievements or positions, or counter opponent messaging. Write 2–3 paragraphs.",
+      "evaluation": "Voter approval and campaign credibility updated based on messaging effectiveness."
     },
     {
-      "id": "8-2",
+      "id": "8-3",
       "type": "write",
-      "prompt": "Respond thoughtfully to constituent concerns, ensuring alignment with campaign principles and voter expectations."
+      "prompt": "Constituency Engagement: Respond to constituent concerns or questions via email, social media, or in-person events. Write 2–3 paragraphs.",
+      "evaluation": "AI evaluates alignment with campaign identity, clarity, and persuasive communication."
     }
   ],
-  "sources": [
-    "General Election October 8–14 – Simulator Test Mode"
-  ],
+  "purpose": "Practice mid-October campaign communications and press interactions, reinforcing message consistency, authenticity, and voter engagement.",
   "outcome": {
-    "description": "Updated CC and voter approval based on press conference performance and constituent responses. Demonstrated ability to maintain clarity, credibility, and voter trust under pressure."
+    "description": "Press conference and messaging responses evaluated → Voter approval updated. Mid-October constituency engagement tracked → CC and resource effectiveness updated. Candidate demonstrates ability to maintain clarity and credibility under evolving, high-pressure conditions."
   },
   "nextModule": {
     "id": "9",
-    "title": "October 15–21: GOTV & Final Messaging"
+    "title": "Final Push (October 15–22)",
+    "description": "Focus on real-time media appearances, live messaging, and preparation for the final campaign week leading into Election Day."
   }
 }

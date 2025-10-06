@@ -1,72 +1,35 @@
 // ./app/components/ModuleSelector.tsx
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { CandidateState, Module } from "@/app/ai/types";
+import React from "react";
+import { CandidateState, Module } from "../ai/types";
 
 interface ModuleSelectorProps {
-  candidateState: CandidateState | null;
-  setCandidateState: React.Dispatch<React.SetStateAction<CandidateState | null>>;
+  candidateState: CandidateState;
+  setCandidateState: React.Dispatch<React.SetStateAction<CandidateState>>;
   setCurrentModule: React.Dispatch<React.SetStateAction<Module | null>>;
 }
 
-// 🔹 Dynamic module loader
-const loadModule = async (id: string): Promise<Module | null> => {
-  try {
-    const module = await import(`../data/modules/module${id}.json`);
-    return module.default as Module;
-  } catch (err) {
-    console.error("Failed to load module", id, err);
-    return null;
-  }
-};
-
-const ModuleSelector: React.FC<ModuleSelectorProps> = ({
+const ModuleSelector = ({
   candidateState,
   setCandidateState,
   setCurrentModule,
-}) => {
-  const [availableModules, setAvailableModules] = useState<Module[]>([]);
+}: ModuleSelectorProps): void => {
+  // Logic for selecting and activating modules goes here
+  // Example: auto-activate the next module based on current state
+  if (!candidateState.currentModule) {
+    const nextModule = { id: "module_1", title: "Orientation" }; // example
+    setCurrentModule(nextModule);
+  }
 
-  useEffect(() => {
-    // Dynamically import all modules 0–15
-    const activeModules = allModules.filter((mod) => mod.active);
-      for (let i = 0; i <= 15; i++) {
-        const mod = await loadModule(i.toString());
-        if (mod) modules.push(mod);
-      }
-      setAvailableModules(modules);
-    };
-    loadAllModules();
-  }, []);
+  // Optional: update candidate state if needed
+  setCandidateState((prev) => ({
+    ...prev,
+    lastAction: "Module auto-selected",
+  }));
+};
 
-  const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const moduleId = e.target.value;
-    if (!candidateState) return;
-
-    const mod = await loadModule(moduleId);
-    if (mod) {
-      setCurrentModule(mod);
-      setCandidateState({ ...candidateState, currentModuleId: moduleId });
-    }
-  };
-
-  return (
-    <div className="mb-4">
-      <label className="block mb-2 font-medium">Select Module:</label>
-      <select
-        className="w-full border rounded-md p-2"
-        onChange={handleChange}
-        value={candidateState?.currentModuleId || ""}
-      >
-        <option value="" disabled>
-          -- Choose a Module --
-        </option>
-        {availableModules.map((mod) => (
-          <option key={mod.id} value={mod.id}>
-            {mod.title}
-          </option>
-        ))}
+export default ModuleSelector;
       </select>
     </div>
   );

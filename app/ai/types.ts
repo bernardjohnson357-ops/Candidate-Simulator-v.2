@@ -35,10 +35,15 @@ export interface Module {
 // ✅ The main player/candidate state (used in aiLoop and ChatSimulator)
 export interface CandidateState {
   office: "President" | "Senate" | "House";
-  cc: number; // Candidate Coins
+  cc: number;
   signatures: number;
   approval: number;
   currentModuleId: string;
+  threshold?: {
+    cc: number;
+    approval: number;
+    sigs: number;
+  };
 }
 
 // ❌ ModuleState is removed — no longer needed

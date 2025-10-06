@@ -1,26 +1,14 @@
-import fs from "fs";
-import path from "path";
 import { Module } from "@/app/ai/types";
 
-export const loadModules = (): Module[] => {
-  try {
-    const dataDir = path.join(process.cwd(), "app/data/modules");
-    const files = fs.readdirSync(dataDir);
+// Import JSON modules
+import module0Json from "@/app/data/modules/module0.json";
+import module1Json from "@/app/data/modules/module1.json";
 
-    const modules = files
-      .filter((file) => file.endsWith(".json"))
-      .map((file) => {
-        const filePath = path.join(dataDir, file);
-        const raw = fs.readFileSync(filePath, "utf-8");
-        return JSON.parse(raw) as Module;
-      });
+// Add more imports for module2.json … module15.json as needed
 
-    // sort numerically by id just in case
-    return modules.sort((a, b) => parseInt(a.id) - parseInt(b.id));
-  } catch (err) {
-    console.error("Error loading modules:", err);
-    return [];
-  }
-};
-
-export const modules = loadModules();
+// Typecast JSON as Module
+export const allModules: Module[] = [
+  module0Json as unknown as Module,
+  module1Json as unknown as Module,
+  // add module2Json ... module15Json here
+];

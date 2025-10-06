@@ -72,9 +72,9 @@ const ModuleDisplay: React.FC<ModuleDisplayProps> = ({
 {module.outcome && (
   <p className="mt-2">
     <strong>Outcome:</strong>{" "}
-    {typeof module.outcome === "string"
-      ? module.outcome
-      : module.outcome.description}
+    {Array.isArray(module.outcome)
+      ? module.outcome.join(" ")
+      : module.outcome}
   </p>
 )}
 

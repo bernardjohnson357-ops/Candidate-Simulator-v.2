@@ -17,26 +17,26 @@ const ModuleSelector: React.FC<ModuleSelectorProps> = ({
 }) => {
   const [answered, setAnswered] = useState(false);
 
-  // Initialize Module 0 if not already active
+  // Initialize Module 0 if none is active
   if (!candidateState.currentModuleId) {
     const candidateCoinQuiz: Task = {
       id: "task_module0_cc_quiz",
       type: "quiz",
       prompt:
         "What do Candidate Coins (CC) represent in this simulator?\n\nA) Campaign energy and credibility\nB) Real currency for campaign ads\nC) Signatures collected from voters\nD) Debate score multiplier",
-      options: ["A", "B", "C", "D"], // optional, if your type supports
       feedback: {
         A: "✅ Correct! Candidate Coins represent campaign energy and credibility.",
         B: "❌ Not quite. CCs aren’t money — they represent your campaign’s energy, credibility, and influence points.",
-        C: "❌ Not quite. CCs aren’t signatures.",
-        D: "❌ Not quite. CCs aren’t debate score multipliers.",
+        C: "❌ Incorrect. Signatures are tracked separately.",
+        D: "❌ Nope. Debate scores don’t affect CC directly.",
       },
     };
 
     const nextModule: Module = {
       id: "module_0",
       title: "Orientation & Introduction",
-      description: "Welcome to the Federal Candidate Simulator. Learn what Candidate Coins mean.",
+      description:
+        "Welcome to the Federal Candidate Simulator. Learn what Candidate Coins (CC) mean before you begin your campaign journey.",
       tasks: [candidateCoinQuiz],
     };
 
@@ -50,26 +50,32 @@ const ModuleSelector: React.FC<ModuleSelectorProps> = ({
   }
 
   // Handle quiz submission
-  const handleAnswer = (answer: string) => {
+  const handleAnswer = async (answer: string) => {
     if (answered) return;
     setAnswered(true);
 
     const upper = answer.trim().toUpperCase();
-    const currentTask = candidateState.currentModuleId === "module_0" ? candidateCoinQuiz : null;
-
-    if (!currentTask) return;
-
-    const feedbackMessage = currentTask.feedback[upper] || "Invalid option.";
 
     if (upper === "A") {
       setCandidateState((prev) => ({
         ...prev,
         candidateCoins: (prev.candidateCoins || 0) + 5,
-        lastAction: "Answered Module 0 quiz correctly (+5 CC)",
+        currentModuleId: "1",
+        lastAction: "Answered Module 0 quiz correctly (+5 CC, advancing to Module 1)",
       }));
-    }
 
-    alert(feedbackMessage);
+      alert("✅ Correct! You earned +5 Candidate Coins and unlocked Module 1.");
+
+      // Load Module 1 automatically
+      try {
+        const mod1 = await import("../data/modules/module1.json");
+        setCurrentModule(mod1.default as Module);
+      } catch {
+        alert("⚠️ Module 1 not found. Please check your /data/modules folder.");
+      }
+    } else {
+      alert("❌ Incorrect. Candidate Coins represent campaign energy and credibility.");
+    }
   };
 
   return (

@@ -4,11 +4,11 @@
 // Candidate State
 // ------------------------------
 export interface CandidateState {
+  office: "President" | "Senate" | "House";
   cc: number;
   signatures: number;
   approval: number;
-  office: "President" | "Senate" | "House" | null;
-  currentModuleId?: string; // track current module
+  currentModuleId?: string; // tracks the current module
 }
 
 // ------------------------------

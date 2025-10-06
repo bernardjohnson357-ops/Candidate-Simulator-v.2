@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from "react";
 import { runModule, initCandidateState } from "@/app/ai/aiLoop";
-import modulesData from "@/config/modules.json";
+import { modules } from "@/app/config/modules";
 import { CandidateState, Module } from "@/app/ai/types";
 import ModuleDisplay from "@/app/components/ModuleDisplay";
 

@@ -21,7 +21,7 @@ import module13Json from "@/app/data/modules/module13.json";
 import module14Json from "@/app/data/modules/module14.json";
 import module15Json from "@/app/data/modules/module15.json";
 
-export const allModules: Module[] = [
+export const Modules: Module[] = [
   module0Json as unknown as Module,
   module1Json as unknown as Module,
   module2Json as unknown as Module,

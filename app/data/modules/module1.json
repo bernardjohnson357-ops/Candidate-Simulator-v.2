@@ -1,95 +1,74 @@
 {
   "id": "1",
-  "title": "Filing Phase",
-  "description": "Learn filing requirements for party candidates at state and federal levels. Quiz performance converts into signatures and Candidate Coins (CC).",
+  "title": "Party Filing",
+  "description": "As a party candidate, you must be nominated through your party and also file with the Secretary of State (SOS). Pay the filing fee or gather petition signatures, then move to federal compliance through the FEC.",
+  "narrator": "serious",
+  "readingSummary": [
+    "To appear on the ballot as a Party Candidate in Texas, you must be nominated by your party or through a primary, file an Application of Candidacy with the Texas SOS, and either pay the filing fee or submit petition signatures. Deadlines: December of the year before the election. Petition sheets must have a sworn affidavit. Signatures must be from voters who did not vote in another party's primary."
+  ],
   "tasks": [
     {
-      "id": "1-1",
-      "type": "read",
-      "prompt": "Read the Texas SOS Party Candidate Guide summary to understand nomination and filing rules."
-    },
-    {
-      "id": "1-2",
+      "id": "1-quiz-1",
       "type": "quiz",
-      "prompt": "Complete a quiz on state filing requirements (Texas SOS) and basic federal filings (FEC Forms 1 & 2).",
+      "prompt": "Party Candidate Filing Quiz: Test your knowledge about filing procedures with the Texas SOS and party nomination.",
       "questions": [
         {
           "question": "When must Party Candidates file their application of candidacy with the Texas SOS?",
           "options": [
-            "December of the year before the election",
-            "January of election year",
-            "By early May of election year",
-            "By mid-August of election year"
+            "A) December of the year before the election",
+            "B) January of election year",
+            "C) By early May of election year",
+            "D) By mid-August of election year"
           ],
           "correct": 0
         },
         {
           "question": "Who nominates Party Candidates in Texas?",
           "options": [
-            "The Secretary of State",
-            "The Federal Election Commission",
-            "Their political party",
-            "Any registered voter in their district"
+            "A) The Secretary of State",
+            "B) The Federal Election Commission",
+            "C) Their political party",
+            "D) Any registered voter in their district"
           ],
           "correct": 2
         },
         {
           "question": "If you choose petition signatures, who can sign?",
           "options": [
-            "Any registered voter",
-            "Only party members",
-            "Voters who did not vote in another party’s primary",
-            "Anyone 18 or older, even if not registered"
+            "A) Any registered voter",
+            "B) Only party members",
+            "C) Voters who did not vote in another party's primary",
+            "D) Anyone 18 or older, even if not registered"
           ],
           "correct": 2
         },
         {
           "question": "Can you combine filing fees with petition signatures?",
           "options": [
-            "Yes, both can be combined",
-            "No, you must choose one or the other",
-            "Only if you have fewer than 1,000 signatures",
-            "Only with approval from your party chair"
+            "A) Yes, both can be combined",
+            "B) No, you must choose one or the other",
+            "C) Only if you have fewer than 1,000 signatures",
+            "D) Only with approval from your party chair"
           ],
           "correct": 1
         },
         {
           "question": "What must accompany petition sheets for them to be valid?",
           "options": [
-            "An FEC Form 1",
-            "A notarized affidavit",
-            "A party endorsement letter",
-            "A voter ID photocopy"
+            "A) An FEC Form 1",
+            "B) A notarized affidavit",
+            "C) A party endorsement letter",
+            "D) A voter ID photocopy"
           ],
           "correct": 1
         }
       ]
-    },
-    {
-      "id": "1-3",
-      "type": "write",
-      "prompt": "Describe how you plan to secure your nomination and meet filing requirements. Your response will impact CC, signatures, and voter approval."
-    },
-    {
-      "id": "1-4",
-      "type": "speak",
-      "prompt": "Summarize your filing strategy verbally using voice input."
     }
   ],
-  "narrator": "As a Libertarian candidate, you must first secure your party’s nomination and then file with the Secretary of State. You may pay the filing fee with Candidate Coins, or — in the real world — collect signatures to appear on the ballot.",
-  "readingSummary": [
-    "Party Nomination: Libertarians hold conventions; Democrats and Republicans hold primaries. Candidates must secure nomination before filing.",
-    "State Filing: Nominees file with the Secretary of State (SOS), either paying a fee (using CC in the simulator) or collecting signatures. Deadlines often fall in December before the election year.",
-    "Federal Filing: After state paperwork, federal compliance begins. Candidates must file FEC Form 1 (Statement of Organization) and Form 2 (Statement of Candidacy).",
-    "Record-Keeping: Accurate filings are crucial. Mistakes reduce CC and credibility; mastery earns signatures and boosts approval."
-  ],
-  "objectives": [
-    "Learn filing deadlines and nomination rules.",
-    "Understand trade-offs between paying filing fees and gathering signatures."
-  ],
-  "chatFlow": "Describe how you plan to secure your nomination and meet filing requirements. Based on your plan, I’ll narrate the impact on your CC, signatures, and voter approval.",
   "sources": [
-    "Texas Secretary of State Party Candidate Guide",
-    "FEC Candidate Guide (2024 edition)"
-  ]
+    "Texas Secretary of State Party Candidate Guide"
+  ],
+  "outcome": {
+    "description": "Your state-level filing is complete. Example outcome: 100 signatures earned, 2 CC bonus, 1% voter approval."
+  }
 }

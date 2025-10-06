@@ -1,16 +1,4 @@
 // ./app/ai/types.ts
-export interface CandidateState {
-  office: "President" | "Senate" | "House";
-  cc: number;
-  signatures: number;
-  approval: number;
-  currentModuleId: string; // track module dynamically
-  threshold: {
-    cc: number;
-    approval: number;
-    sigs: number;
-  };
-}
 
 export interface QuizQuestion {
   question: string;
@@ -41,5 +29,16 @@ export interface Module {
   purpose?: string;
   scenarios?: Scenario[];
   outcome?: string | string[];
-  nextModuleId?: string; // ✅ safer link instead of an embedded module
+  nextModuleId?: string;
 }
+
+// ✅ The main player/candidate state (used in aiLoop and ChatSimulator)
+export interface CandidateState {
+  office: "President" | "Senate" | "House";
+  cc: number; // Candidate Coins
+  signatures: number;
+  approval: number;
+  currentModuleId: string;
+}
+
+// ❌ ModuleState is removed — no longer needed

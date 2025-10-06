@@ -1,9 +1,12 @@
 // ./app/ai/aiLoop.ts
 import { Module, ModuleState, CandidateState, QuizQuestion } from "./types";
 
-// ✅ Candidate base state
-export const initCandidateState = (office: "President" | "Senate" | "House"): CandidateState => {
+// ✅ Initialize candidate state with thresholds
+export const initCandidateState = (
+  office: "President" | "Senate" | "House"
+): CandidateState => {
   let threshold = { cc: 0, approval: 0, sigs: 0 };
+
   switch (office) {
     case "President":
       threshold = { cc: 75, approval: 2.5, sigs: 0 };
@@ -22,6 +25,7 @@ export const initCandidateState = (office: "President" | "Senate" | "House"): Ca
     signatures: 0,
     approval: 0,
     threshold,
+    currentModuleId: "0", // start at Module 0
   };
 };
 
@@ -30,8 +34,8 @@ export const runModule = (
   module: Module,
   candidate: CandidateState
 ): { moduleState: ModuleState; candidateState: CandidateState } => {
-  let moduleState: ModuleState = {
-    moduleId: String(module.id),
+  const moduleState: ModuleState = {
+    moduleId: module.id,
     completedTasks: 0,
     totalTasks: module.tasks.length,
     ccChange: 0,
@@ -40,29 +44,41 @@ export const runModule = (
     finished: false,
   };
 
-  let updatedCandidate = { ...candidate };
+  // Copy candidate state to update
+  const updatedCandidate: CandidateState = { ...candidate };
 
+  // Loop through tasks and apply simple scoring logic
   module.tasks.forEach((task) => {
     moduleState.completedTasks++;
 
-    if (task.type === "quiz" && task.questions) {
-      task.questions.forEach((q: QuizQuestion) => {
-        if (q.correct !== undefined) {
-          moduleState.signaturesChange += 20;
-        } else {
-          moduleState.ccChange -= 1;
+    switch (task.type) {
+      case "quiz":
+        if (task.questions) {
+          task.questions.forEach((q: QuizQuestion) => {
+            // Example scoring: correct answers give signatures, wrong reduce CC
+            if (q.correct !== undefined) {
+              moduleState.signaturesChange += 20; // +20 signatures per question
+            } else {
+              moduleState.ccChange -= 1; // penalty for mistakes
+            }
+          });
         }
-      });
+        break;
+      case "read":
+      case "write":
+      case "speak":
+        // Placeholder: extend with actual logic if needed
+        break;
     }
-
-    if (task.type === "read") {}
-    if (task.type === "write") {}
-    if (task.type === "speak") {}
   });
 
+  // Update candidate totals
   updatedCandidate.cc += moduleState.ccChange;
   updatedCandidate.signatures += moduleState.signaturesChange;
   updatedCandidate.approval += moduleState.approvalChange;
+
+  // Move candidate to next module
+  updatedCandidate.currentModuleId = (parseInt(module.id) + 1).toString();
 
   moduleState.finished = true;
 

@@ -1,6 +1,7 @@
 {
   "id": "11",
   "title": "School Visit",
+  "active": true,
   "description": "Simulate a school visit to practice multi-audience engagement, policy explanation, and real-time dialogue with parents, staff, and students.",
   "narrator": "calm",
   "readingSummary": [

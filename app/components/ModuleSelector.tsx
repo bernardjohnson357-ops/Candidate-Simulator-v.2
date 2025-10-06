@@ -4,8 +4,7 @@
 import React, { useState, useEffect } from "react";
 import { modules } from "@/app/config/modules";
 import { CandidateState, Module } from "@/app/ai/types";
-import ModuleDisplay from "@/app/components/ModuleDisplay";
-
+import { allModules } from "@/app/config/modules";
 interface ModuleSelectorProps {
   candidateState: CandidateState | null;
   setCandidateState: React.Dispatch<React.SetStateAction<CandidateState | null>>;

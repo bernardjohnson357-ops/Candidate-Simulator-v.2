@@ -1,55 +1,45 @@
 // ./app/components/ModuleSelector.tsx
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { CandidateState, Module } from "@/app/ai/types";
-import { allModules } from "@/app/config/modules";
+import React from "react";
+import { Module, CandidateState } from "@/app/ai/types";
+
 interface ModuleSelectorProps {
   candidateState: CandidateState | null;
   setCandidateState: React.Dispatch<React.SetStateAction<CandidateState | null>>;
+  allModules: Module[];
 }
 
 const ModuleSelector: React.FC<ModuleSelectorProps> = ({
   candidateState,
   setCandidateState,
+  allModules,
 }) => {
-  const [selected, setSelected] = useState<Module | null>(null);
-
-  const handleSelectModule = (id: string) => {
-    const currentModule = allModules.find((m) => m.id === someId);
-
-  // 🧩 Automatically start at Module 0
-  useEffect(() => {
-   const currentModule = allModules.find((m) => m.id === someId);
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedModule = allModules.find((m) => m.id === e.target.value);
+    if (selectedModule && candidateState) {
+      // You can add logic here if selecting a module affects candidateState
+      setCandidateState({ ...candidateState });
+    }
+  };
 
   return (
-    <div className="p-4 bg-white/90 border rounded-lg shadow-md">
-      <h2 className="text-xl font-semibold mb-3">📘 Module Selector</h2>
-
-      <div className="flex flex-wrap gap-2 mb-4">
-        {modules.map((m) => (
-          <button
-            key={m.id}
-            onClick={() => handleSelectModule(m.id)}
-            className={`px-3 py-2 rounded-md border transition ${
-              selected?.id === m.id
-                ? "bg-blue-600 text-white border-blue-700"
-                : "bg-gray-100 hover:bg-gray-200"
-            }`}
-          >
-            {m.title}
-          </button>
+    <div className="p-4 max-w-3xl mx-auto bg-white/90 rounded-2xl shadow-md border border-gray-200 mb-4">
+      <h2 className="text-xl font-bold mb-2">Select a Module</h2>
+      <select
+        className="w-full border rounded-md p-2"
+        onChange={handleChange}
+        value={candidateState?.currentModuleId || ""}
+      >
+        <option value="" disabled>
+          -- Choose a Module --
+        </option>
+        {allModules.map((module) => (
+          <option key={module.id} value={module.id}>
+            {module.title}
+          </option>
         ))}
-      </div>
-
-      {/* Render module only when both are ready */}
-      {candidateState && selected && (
-        <ModuleDisplay
-          module={selected}
-          candidateState={candidateState}
-          setCandidateState={setCandidateState}
-        />
-      )}
+      </select>
     </div>
   );
 };

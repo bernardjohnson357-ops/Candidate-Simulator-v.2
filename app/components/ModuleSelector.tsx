@@ -18,17 +18,11 @@ const ModuleSelector: React.FC<ModuleSelectorProps> = ({
   const [selected, setSelected] = useState<Module | null>(null);
 
   const handleSelectModule = (id: string) => {
-    const module = modules.find((m) => m.id === id);
-    if (module) {
-      setSelected(module);
-    }
-  };
+    const currentModule = allModules.find((m) => m.id === someId);
 
   // 🧩 Automatically start at Module 0
   useEffect(() => {
-    const module0 = modules.find((m) => m.id === "0");
-    if (module0) setSelected(module0);
-  }, []);
+   const currentModule = allModules.find((m) => m.id === someId);
 
   return (
     <div className="p-4 bg-white/90 border rounded-lg shadow-md">

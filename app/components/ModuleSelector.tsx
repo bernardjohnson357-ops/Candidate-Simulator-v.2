@@ -30,8 +30,7 @@ const ModuleSelector: React.FC<ModuleSelectorProps> = ({
 
   useEffect(() => {
     // Dynamically import all modules 0–15
-    const loadAllModules = async () => {
-      const modules: Module[] = [];
+    const activeModules = allModules.filter((mod) => mod.active);
       for (let i = 0; i <= 15; i++) {
         const mod = await loadModule(i.toString());
         if (mod) modules.push(mod);

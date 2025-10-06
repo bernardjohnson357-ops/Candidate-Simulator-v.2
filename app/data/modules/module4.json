@@ -1,66 +1,54 @@
 {
   "id": "4",
   "title": "June: Campaign Identity",
-  "description": "Define the campaign’s mission, branding, and public presence through writing, messaging, and compliance practice.",
+  "description": "Define your campaign identity through a slogan, mission statement, and announcement speech to guide your campaign messaging.",
+  "narrator": "calm",
+  "readingSummary": [
+    "Your campaign has begun to take shape. You’ve made your first investments, but now you must define who you are as a candidate.",
+    "Voters, donors, and the media are asking: 'Why are you running, and why should anyone support you?'",
+    "Campaign identity is built on three pillars:",
+    "1. Slogan → Short, memorable, and values-driven. Examples: 'A Future We Can Believe In.' or 'Country First.'",
+    "2. Mission Statement → One paragraph explaining why you’re running, who you represent, what problem you’ll solve, and why now.",
+    "3. Announcement Speech → A brief message to launch your candidacy publicly, including your slogan, top issues, and an authentic, motivating tone."
+  ],
   "tasks": [
     {
       "id": "4-1",
       "type": "write",
-      "prompt": "Write a newspaper-style article announcing your candidacy."
+      "prompt": "Write your campaign slogan (1 sentence)."
     },
     {
       "id": "4-2",
       "type": "write",
-      "prompt": "Create campaign slogans, a mission statement/credo, and outline four key issues with explanations."
+      "prompt": "Write your mission statement (1 paragraph), including who you represent, what problem you'll solve, and why now."
     },
     {
       "id": "4-3",
       "type": "write",
-      "prompt": "Recruit a friend to join the simulator and describe how they will contribute to your campaign team."
-    },
-    {
-      "id": "4-4",
-      "type": "write",
-      "prompt": "Gather and record a real candidate’s FEC information (name, FEC ID, receipts, expenditures, cash on hand, source link)."
+      "prompt": "Draft your announcement speech (3–5 paragraphs). Include your slogan and highlight your top issues. Ensure it feels authentic and motivating."
     }
   ],
-  "narrator": "Your message and identity are critical. Libertarian candidates must clearly communicate principles such as personal liberty, fiscal responsibility, and limited government.",
-  "readingSummary": [
-    "Building a recognizable identity is essential for voter trust and campaign viability.",
-    "Message discipline, branding, and operational awareness are key to gaining approval and credibility.",
-    "Activities include campaign announcement, defining slogans/mission, team-building, and opposition research."
-  ],
-  "tasksDetails": [
+  "purpose": "Create a clear campaign identity: slogan, mission, and announcement speech, which will guide all subsequent campaign actions.",
+  "scenarios": [
     {
-      "id": "4-1",
-      "type": "write",
-      "prompt": "Write a clear, detailed newspaper-style article announcing your candidacy."
+      "title": "Slogan",
+      "description": "Develop a short, memorable, and values-driven campaign slogan."
     },
     {
-      "id": "4-2",
-      "type": "write",
-      "prompt": "Draft campaign slogans, mission statement, and outline four key issues."
+      "title": "Mission Statement",
+      "description": "Write a focused paragraph explaining your candidacy, who you represent, and the problems you aim to solve."
     },
     {
-      "id": "4-3",
-      "type": "write",
-      "prompt": "Simulate recruiting a team member and describe their role."
-    },
-    {
-      "id": "4-4",
-      "type": "write",
-      "prompt": "Record real candidate FEC information to practice compliance tracking."
+      "title": "Announcement Speech",
+      "description": "Draft a 3–5 paragraph speech that includes your slogan, key issues, and motivates supporters."
     }
-  ],
-  "sources": [
-    "Libertarian Party Messaging Guidelines",
-    "FEC Candidate Committee Data"
   ],
   "outcome": {
-    "description": "Earn CC and voter approval, establish campaign identity, and gain practice in operational compliance."
+    "description": "AI evaluates user submissions: slogan (+10 signatures), mission statement (+20 signatures), announcement speech (+50 signatures). Total +80 signatures. Updated campaign status includes CC, signatures, and voter approval."
   },
   "nextModule": {
     "id": "5",
-    "title": "July: Volunteer Engagement & Outreach"
+    "title": "Campaign Imagery",
+    "description": "Design your campaign’s visual identity, including logos, signs, and shirts. Users will also upload images into the simulator for the first time."
   }
 }

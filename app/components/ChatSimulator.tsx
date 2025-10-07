@@ -41,37 +41,47 @@ const ChatSimulator: React.FC<ChatSimulatorProps> = ({ modules }) => {
 
   // --- Handle logic per task type ---
   const processResponse = (userInput: string) => {
-    if (!currentTask) return;
+  if (!currentTask) return;
 
-    switch (currentTask.type) {
-      case "quiz": {
-        const q = currentTask.questions?.[0];
-        if (q) {
-          const correctAnswer = q.correct[0].toUpperCase(); // "A" from "A) ..."
-          const userAnswer = userInput[0].toUpperCase();
-          if (userAnswer === correctAnswer) {
-            setMessages((prev) => [...prev, "✅ Correct! Candidate Coins (CC) = campaign energy and credibility."]);
-          } else {
-            setMessages((prev) => [
-              ...prev,
-              `❌ Incorrect. The correct answer was: ${q.correct}`,
-            ]);
-          }
+  switch (currentTask.type) {
+    case "quiz": {
+      const q = currentTask.questions?.[0];
+      if (q && q.correct) {
+        const correctAnswer = q.correct[0]?.toUpperCase() || "";
+        const userAnswer = userInput[0]?.toUpperCase() || "";
+
+        if (userAnswer === correctAnswer) {
+          setMessages((prev) => [
+            ...prev,
+            "✅ Correct! Candidate Coins (CC) = campaign energy and credibility."
+          ]);
+        } else {
+          setMessages((prev) => [
+            ...prev,
+            `❌ Incorrect. The correct answer was: ${q.correct}`
+          ]);
         }
-        goToNextTask();
-        break;
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          "⚠️ Quiz data incomplete — skipping this question."
+        ]);
       }
 
-      case "read": {
-        goToNextTask();
-        break;
-      }
-
-      default:
-        goToNextTask();
-        break;
+      goToNextTask();
+      break;
     }
-  };
+
+    case "read": {
+      goToNextTask();
+      break;
+    }
+
+    default:
+      goToNextTask();
+      break;
+  }
+};
 
   // --- Move to next task or module ---
   const goToNextTask = () => {

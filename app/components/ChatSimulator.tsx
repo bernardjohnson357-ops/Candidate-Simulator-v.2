@@ -108,7 +108,7 @@ const ChatSimulator: React.FC<ChatSimulatorProps> = ({ modules }) => {
           q?.question,
           ...(q?.options || []),
         ];
-        setMessages((prev) => [...prev, ...quizLines]);
+        setMessages((prev) => [...prev, ...quizLines.filter((line): line is string => typeof line === "string")]);
         break;
       }
       case "read": {

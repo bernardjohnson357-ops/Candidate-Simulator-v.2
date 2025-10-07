@@ -3,7 +3,7 @@ export interface QuizQuestion {
   id: string;
   question: string;
   options: string[];
-  correct: string[]; // ✅ FIXED: was string | number before
+  correct: string | string[]; // 👈 allow either
 }
 
 export type TaskType = "read" | "quiz" | "decision" | "write" | "upload" | "speak";

@@ -60,24 +60,21 @@ if (!office) {
   const initState = initCandidateState(selected);
   setCandidateState(initState);
 
-  // Load Module 0 from JSON
-  try {
-    const mod0Import = await import("../data/modules/module0.json");
-    const mod0 = mod0Import.default as Module;
+  // Load Module 0 dynamically from JSON
+const mod0Import = await import("../data/modules/module0.json");
+const module0 = mod0Import.default as Module;
 
-    setCurrentModule(mod0);
-    setCandidateState((prev) =>
-      prev ? { ...prev, currentModuleId: mod0.id } : null
-    );
+setCurrentModule(module0);
+setCandidateState((prev) =>
+  prev ? { ...prev, currentModuleId: module0.id } : prev
+);
 
-    setMessages((prev) => [
-      ...prev,
-      `🏛️ You’ve chosen to run for ${selected}.`,
-      `🎯 Starting ${mod0.title}...`,
-    ]);
-  } catch {
-    alert("⚠️ Module 0 not found. Please check your /data/modules folder.");
-  }
+setMessages((prev) => [
+  ...prev,
+  `🏛️ You’ve chosen to run for ${selected}.`,
+  `🎯 Starting ${module0.title}...`,
+  ...module0.readingSummary
+]);
 
   setInput("");
   setIsLoading(false);

@@ -6,11 +6,12 @@ export interface QuizQuestion {
   correct: string[]; // ✅ FIXED: was string | number before
 }
 
+export type TaskType = "read" | "quiz" | "decision" | "write" | "upload" | "speak";
+
 export interface Task {
   id: string;
-  type: "read" | "quiz" | "decision" | "write" | "upload" | "speak";
+  type: TaskType;
   prompt: string;
-  responsePlaceholder?: string;
   questions?: QuizQuestion[];
 }
 

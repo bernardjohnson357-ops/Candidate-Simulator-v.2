@@ -32,32 +32,68 @@ const ChatSimulator: React.FC = () => {
     }
   };
 
-  // --- Display next task or move to next module ---
-  const showNextTaskOrModule = async (module: Module) => {
-    const tasks = module.tasks || [];
-    const nextIndex = currentTaskIndex + 1;
+// --- Display next task or move to next module ---
+const showNextTaskOrModule = async (module: Module) => {
+  const tasks = module.tasks || [];
+  const nextIndex = currentTaskIndex + 1;
 
-    if (nextIndex < tasks.length) {
-      const nextTask = tasks[nextIndex];
+  if (nextIndex < tasks.length) {
+    const nextTask = tasks[nextIndex];
+    setCurrentTaskIndex(nextIndex);
+
+    // --- Handle different task types ---
+    if (nextTask.type === "quiz") {
+      const quizText = [
+        `🧩 ${nextTask.prompt}`,
+        ...(nextTask.options?.map(
+          (opt, i) => `${String.fromCharCode(65 + i)}. ${opt}`
+        ) || [])
+      ];
+      setMessages((prev) => [...prev, ...quizText]);
+    } else if (nextTask.type === "read") {
       setMessages((prev) => [...prev, `📘 ${nextTask.prompt}`]);
-      setCurrentTaskIndex(nextIndex);
+    } else if (nextTask.type === "write") {
+      setMessages((prev) => [
+        ...prev,
+        `🖊️ ${nextTask.prompt}`,
+        nextTask.responsePlaceholder
+          ? `(Hint: ${nextTask.responsePlaceholder})`
+          : ""
+      ]);
     } else {
-      // Module finished
-      setMessages((prev) => [...prev, `✅ ${module.title} complete!`]);
-      const nextModule = await loadModule(module.nextModule?.id || "");
-      if (nextModule) {
-        setCurrentModule(nextModule);
-        setCurrentTaskIndex(0);
-        setMessages((prev) => [...prev, `➡️ Starting ${nextModule.title}...`]);
-        if (nextModule.tasks?.length) {
-          setMessages((prev) => [...prev, nextModule.tasks[0].prompt]);
-        }
-      } else {
-        setMessages((prev) => [...prev, "🏁 Simulation complete!"]);
-        setCurrentModule(null);
-      }
+      // Default case
+      setMessages((prev) => [...prev, `📘 ${nextTask.prompt}`]);
     }
-  };
+  } else {
+    // --- Module finished ---
+    setMessages((prev) => [...prev, `✅ ${module.title} complete!`]);
+
+    const nextModule = await loadModule(module.nextModule?.id || "");
+    if (nextModule) {
+      setCurrentModule(nextModule);
+      setCurrentTaskIndex(0);
+      setMessages((prev) => [...prev, `➡️ Starting ${nextModule.title}...`]);
+
+      if (nextModule.tasks?.length) {
+        const firstTask = nextModule.tasks[0];
+        if (firstTask.type === "quiz") {
+          const quizText = [
+            `🧩 ${firstTask.prompt}`,
+            ...(firstTask.options?.map(
+              (opt, i) => `${String.fromCharCode(65 + i)}. ${opt}`
+            ) || [])
+          ];
+          setMessages((prev) => [...prev, ...quizText]);
+        } else {
+          setMessages((prev) => [...prev, `📘 ${firstTask.prompt}`]);
+        }
+      }
+    } else {
+      setMessages((prev) => [...prev, "🏁 Simulation complete!"]);
+      setCurrentModule(null);
+    }
+  }
+};
 
   // --- Main input handler ---
   const handleUserInput = async () => {

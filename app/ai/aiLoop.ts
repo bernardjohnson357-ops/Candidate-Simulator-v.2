@@ -21,24 +21,28 @@ export const safeRunModule = (candidateState: CandidateState, module: Module): C
 
   module.tasks.forEach((task) => {
     switch (task.type) {
-      case "read":
-        // Reading tasks may not change state
-        break;
-      case "write":
-        // Example: small CC gain for writing exercises
-        updatedState.cc += 2;
-        break;
-      case "speak":
-        // Example: small approval gain
-        updatedState.approval += 1;
-        break;
-      case "quiz":
-        // Simple placeholder: reward CC for quiz existence (actual answers handled in UI)
-        updatedState.cc += 5;
-        break;
-      default:
-        break;
-    }
+  case "read":
+  case "speak":
+    // Read aloud in both cases
+    speak(task.prompt); // your TTS function
+    break;
+
+  case "quiz":
+    // normal quiz logic
+    break;
+
+  case "write":
+    updatedState.cc += 2;
+    break;
+
+  case "decision":
+    // handle decisions
+    break;
+
+  case "upload":
+    // handle uploads
+    break;
+}
   });
 
   return updatedState;

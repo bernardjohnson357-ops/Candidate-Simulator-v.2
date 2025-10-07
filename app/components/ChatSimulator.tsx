@@ -3,11 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Module, Task } from "@/app/ai/types";
 
-interface ChatSimulatorProps {
-  modules: Module[];
-}
-
-const ChatSimulator: React.FC<ChatSimulatorProps> = ({ modules }) => {
+const ChatSimulator: React.FC = () => {
   const [messages, setMessages] = useState<string[]>([]);
   const [input, setInput] = useState("");
   const [currentModuleIndex, setCurrentModuleIndex] = useState(0);

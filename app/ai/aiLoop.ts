@@ -1,16 +1,16 @@
 // ./app/ai/aiLoop.ts
-import { CandidateState, Module, Task, QuizQuestion } from "./types";
 
-/**
- * Initialize a new candidate state for the selected office.
- */
-export const initCandidateState = (office: "President" | "Senate" | "House"): CandidateState => {
+import { CandidateState } from "./types";
+
+export const initCandidateState = (
+  office: "President" | "Senate" | "House"
+): CandidateState => {
   return {
     office,
     cc: 0,
     signatures: 0,
-    approval: 0,
-    currentModuleId: "0",
+    voterApproval: 0,       // <-- rename from approval
+    currentModuleId: "",    // optional
   };
 };
 

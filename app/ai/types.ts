@@ -24,6 +24,14 @@ export interface Task {
   // Optional for uploads or writes
   fileType?: string;
   responsePlaceholder?: string;
+
+  // ✅ NEW: Support for nested quiz questions in JSON
+  questions?: {
+    id: string;
+    question: string;
+    options: string[];
+    correct?: string;
+  }[];
 }
 
 export interface Module {

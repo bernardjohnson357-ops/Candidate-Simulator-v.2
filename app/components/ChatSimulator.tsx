@@ -1,18 +1,18 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { CandidateState, Module } from "@/app/ai/types";
+import { CandidateState, Module, Task, QuizQuestion } from "@/app/ai/types";
 import ModuleDisplay from "@/app/components/ModuleDisplay";
-import { initCandidateState, safeRunModule } from "@/app/ai/aiLoop";
+import { initCandidateState } from "@/app/ai/aiLoop";
 
 const ChatSimulator: React.FC = () => {
   const [candidateState, setCandidateState] = useState<CandidateState | null>(null);
   const [currentModule, setCurrentModule] = useState<Module | null>(null);
+  const [currentTaskIndex, setCurrentTaskIndex] = useState<number>(0);
   const [messages, setMessages] = useState<string[]>([]);
   const [input, setInput] = useState("");
   const [office, setOffice] = useState<"President" | "Senate" | "House" | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentTaskIndex, setCurrentTaskIndex] = useState<number>(0);
 
   // --- Welcome message ---
   useEffect(() => {
@@ -22,7 +22,7 @@ const ChatSimulator: React.FC = () => {
     ]);
   }, []);
 
-  // --- Utility to load modules dynamically ---
+  // --- Load module dynamically ---
   const loadModule = async (id: string): Promise<Module | null> => {
     try {
       const mod = await import(`../data/modules/module${id}.json`);
@@ -32,83 +32,38 @@ const ChatSimulator: React.FC = () => {
     }
   };
 
-// --- Display next task or move to next module ---
-const showNextTaskOrModule = async (module: Module) => {
-  const tasks = module.tasks || [];
-  const nextIndex = currentTaskIndex + 1;
+  // --- Display current task ---
+  const displayCurrentTask = (task: Task) => {
+    if (!task) return;
 
-  if (nextIndex < tasks.length) {
-    const nextTask = tasks[nextIndex];
-    setCurrentTaskIndex(nextIndex);
-
-    // --- Handle different task types ---
-    if (nextTask.type === "quiz") {
-      const quiz = nextTask.questions?.[0];
+    if (task.type === "quiz") {
+      const quiz = task.questions?.[0];
       if (quiz) {
-        const quizText = [
-          `🧠 Quiz: ${quiz.question}`,
-          ...quiz.options.map((opt, i) => `${String.fromCharCode(65 + i)}. ${opt}`)
-        ];
-        setMessages((prev) => [...prev, ...quizText]);
+        const optionsText = quiz.options.map((opt, i) => `${String.fromCharCode(65 + i)}. ${opt}`).join("\n");
+        setMessages((prev) => [...prev, `🧩 ${quiz.question}\n${optionsText}`]);
       } else {
-        setMessages((prev) => [...prev, `🧠 Quiz: ${nextTask.prompt}`]);
+        setMessages((prev) => [...prev, `🧩 ${task.prompt}`]);
       }
-    } else if (nextTask.type === "read") {
-      setMessages((prev) => [...prev, `📘 ${nextTask.prompt}`]);
-    } else if (nextTask.type === "write") {
+    } else if (task.type === "read") {
+      setMessages((prev) => [...prev, `📘 ${task.prompt}`]);
+    } else if (task.type === "write") {
       setMessages((prev) => [
         ...prev,
-        `🖊️ ${nextTask.prompt}`,
-        nextTask.responsePlaceholder
-          ? `(Hint: ${nextTask.responsePlaceholder})`
-          : ""
+        `🖊️ ${task.prompt}`,
+        task.responsePlaceholder ? `(Hint: ${task.responsePlaceholder})` : ""
       ]);
     } else {
-      // Default case
-      setMessages((prev) => [...prev, `📘 ${nextTask.prompt}`]);
+      setMessages((prev) => [...prev, `📘 ${task.prompt}`]);
     }
+  };
 
-  } else {
-    // --- Module finished ---
-    setMessages((prev) => [...prev, `✅ ${module.title} complete!`]);
-
-    const nextModule = await loadModule(module.nextModule?.id || "");
-    if (nextModule) {
-      setCurrentModule(nextModule);
-      setCurrentTaskIndex(0);
-      setMessages((prev) => [...prev, `➡️ Starting ${nextModule.title}...`]);
-
-      if (nextModule.tasks?.length) {
-        const firstTask = nextModule.tasks[0];
-        if (firstTask.type === "quiz") {
-          const quiz = firstTask.questions?.[0];
-          if (quiz) {
-            const quizText = [
-              `🧠 Quiz: ${quiz.question}`,
-              ...quiz.options.map((opt, i) => `${String.fromCharCode(65 + i)}. ${opt}`)
-            ];
-            setMessages((prev) => [...prev, ...quizText]);
-          } else {
-            setMessages((prev) => [...prev, `🧠 Quiz: ${firstTask.prompt}`]);
-          }
-        } else {
-          setMessages((prev) => [...prev, `📘 ${firstTask.prompt}`]);
-        }
-      }
-    } else {
-      setMessages((prev) => [...prev, "🏁 Simulation complete!"]);
-      setCurrentModule(null);
-    }
-  }
-};
-
-  // --- Main input handler ---
+  // --- Handle user input ---
   const handleUserInput = async () => {
     if (!input.trim()) return;
     setMessages((prev) => [...prev, `🗣️ You: ${input}`]);
     setIsLoading(true);
 
-    // Step 1: Choose office (only once)
+    // Step 1: Office selection
     if (!office) {
       const choice = input.trim().toLowerCase();
       let selected: "President" | "Senate" | "House" | null = null;
@@ -127,69 +82,76 @@ const showNextTaskOrModule = async (module: Module) => {
       const initState = initCandidateState(selected);
       setCandidateState(initState);
 
-      // Load first module (Module 0)
-      const mod0Import = await import("../data/modules/module0.json");
-      const module0 = mod0Import.default as Module;
+      // Load first module
+      const module0 = await loadModule("0");
+      if (module0) {
+        setCurrentModule(module0);
+        setCurrentTaskIndex(0);
+        setMessages((prev) => [
+          ...prev,
+          `🏛️ You’ve chosen to run for ${selected}.`,
+          `🎯 Starting ${module0.title}...`,
+          ...(module0.readingSummary || [])
+        ]);
 
-      setCurrentModule(module0);
-      setCandidateState((prev) =>
-        prev ? { ...prev, currentModuleId: module0.id } : prev
-      );
+        // Display first task
+        displayCurrentTask(module0.tasks[0]);
+      }
 
-      setMessages((prev) => [
-        ...prev,
-        `🏛️ You’ve chosen to run for ${selected}.`,
-        `🎯 Starting ${module0.title}...`,
-        ...(module0.readingSummary || []),
-        module0.tasks?.[0]?.prompt || "No tasks found for this module.",
-      ]);
-
-      setCurrentTaskIndex(0);
       setInput("");
       setIsLoading(false);
       return;
     }
 
-    // Step 2: Handle current module’s tasks
+    // Step 2: Handle current task
     if (currentModule && candidateState) {
       const currentTask = currentModule.tasks?.[currentTaskIndex];
-
       if (!currentTask) {
-        setMessages((prev) => [...prev, "⚠️ No current task found."]);
         setIsLoading(false);
         return;
       }
 
-      // --- Handle quiz tasks ---
+      // Handle quiz
       if (currentTask.type === "quiz") {
-  const userAnswer = input.trim().toUpperCase();
-  const quiz = currentTask.questions?.[0];
-  const correct = quiz?.correct?.charAt(0).toUpperCase(); // "A) Campaign energy ..." → "A"
+        const quiz = currentTask.questions?.[0];
+        const userAnswer = input.trim().toUpperCase();
+        const correct = quiz?.correct?.charAt(0).toUpperCase(); // "A/B/C/D"
 
-  if (!["A", "B", "C", "D"].includes(userAnswer)) {
-    setMessages((prev) => [...prev, "❌ Please answer with A, B, C, or D."]);
-    setIsLoading(false);
-    setInput("");
-    return;
-  }
+        if (!["A", "B", "C", "D"].includes(userAnswer)) {
+          setMessages((prev) => [...prev, "❌ Please answer with A, B, C, or D."]);
+          setInput("");
+          setIsLoading(false);
+          return;
+        }
 
-  let feedback = "";
-  if (userAnswer === correct) {
-    feedback = "✅ Correct! You earned +5 Candidate Coins.";
-    setCandidateState((prev) => (prev ? { ...prev, cc: prev.cc + 5 } : prev));
-  } else {
-    feedback = `❌ Incorrect. The correct answer was ${correct}.`;
-  }
+        if (userAnswer === correct) {
+          setMessages((prev) => [...prev, "✅ Correct! You earned +5 Candidate Coins."]);
+          setCandidateState((prev) => (prev ? { ...prev, cc: prev.cc + 5 } : prev));
+        } else {
+          setMessages((prev) => [...prev, `❌ Incorrect. The correct answer was ${correct}.`]);
+        }
+      }
 
-  setMessages((prev) => [...prev, feedback]);
-  await showNextTaskOrModule(currentModule);
-  setInput("");
-  setIsLoading(false);
-  return;
-}
+      // --- Move to next task ---
+      const nextIndex = currentTaskIndex + 1;
+      if (currentModule.tasks && nextIndex < currentModule.tasks.length) {
+        setCurrentTaskIndex(nextIndex);
+        displayCurrentTask(currentModule.tasks[nextIndex]);
+      } else {
+        // Module complete, load next module
+        setMessages((prev) => [...prev, `✅ ${currentModule.title} complete!`]);
+        const nextModule = await loadModule(currentModule.nextModule?.id || "");
+        if (nextModule) {
+          setCurrentModule(nextModule);
+          setCurrentTaskIndex(0);
+          setMessages((prev) => [...prev, `➡️ Starting ${nextModule.title}...`]);
+          displayCurrentTask(nextModule.tasks?.[0]);
+        } else {
+          setMessages((prev) => [...prev, "🏁 Simulation complete!"]);
+          setCurrentModule(null);
+        }
+      }
 
-      // --- Handle read/write/upload or other tasks ---
-      await showNextTaskOrModule(currentModule);
       setInput("");
       setIsLoading(false);
       return;

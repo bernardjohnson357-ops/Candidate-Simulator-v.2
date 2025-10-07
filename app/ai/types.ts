@@ -13,6 +13,7 @@ export interface Task {
   type: TaskType;
   prompt: string;
   questions?: QuizQuestion[];
+  responsePlaceholder?: string; // ✅ add this optional field
 }
 
 export interface Module {

@@ -30,3 +30,12 @@ export interface Module {
     description: string;
   };
 }
+
+export interface CandidateState {
+  office: "President" | "Senate" | "House";
+  cc: number;           // Candidate Coins
+  signatures: number;   // Number of signatures collected
+  voterApproval: number; // % approval
+  currentModuleId?: string;
+  [key: string]: any;    // For any future dynamic stats
+}

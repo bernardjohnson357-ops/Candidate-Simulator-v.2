@@ -17,23 +17,17 @@ export interface Task {
   type: "read" | "write" | "quiz" | "upload" | string;
   prompt: string;
 
-  // Optional for quizzes
-  options?: string[];                // ✅ new — list of multiple-choice answers
-  correctAnswer?: string;            // ✅ what’s correct (A, B, C, etc.)
-  feedback?: Record<string, string>; // optional feedback per answer
+  // ✅ For quizzes
+  questions?: QuizQuestion[];      // array of questions per task
+  correctAnswer?: string;          // optional shorthand
+  feedback?: Record<string, string>;
 
-  // Optional for uploads or writes
+  // ✅ For uploads or writes
   fileType?: string;
   responsePlaceholder?: string;
-}
 
-  // ✅ NEW: Support for nested quiz questions in JSON
-  questions?: {
-    id: string;
-    question: string;
-    options: string[];
-    correct?: string;
-  }[];
+  // ✅ Optional flattened options (if you want quick access)
+  options?: string[];
 }
 
 export interface Module {

@@ -8,7 +8,7 @@ export interface QuizQuestion {
 
 export interface Task {
   id: string;
-  type: "read" | "quiz" | "decision" | "write" | "upload";
+  type: "read" | "quiz" | "decision" | "write" | "upload" | "speak";
   prompt: string;
   responsePlaceholder?: string;
   questions?: QuizQuestion[];

@@ -4,6 +4,44 @@
 import React, { useState, useEffect } from "react";
 import { Module, Task } from "@/app/ai/types";
 
+// --- Helper to normalize "correct" field for quizzes ---
+const normalizeCorrect = (q: any) => {
+  if (!q.correct) return [];
+  return Array.isArray(q.correct) ? q.correct : [q.correct];
+};
+
+// --- Load modules dynamically and normalize ---
+useEffect(() => {
+  const loadModules = async () => {
+    try {
+      const mod0Raw = (await import("@/app/data/modules/module0.json")).default;
+      const mod1Raw = (await import("@/app/data/modules/module1.json")).default;
+
+      const normalizeModule = (modRaw: any): Module => ({
+        ...modRaw,
+        tasks: modRaw.tasks.map((task: any) => {
+          if (task.type === "quiz" && task.questions) {
+            return {
+              ...task,
+              questions: task.questions.map((q: any) => ({
+                ...q,
+                correct: normalizeCorrect(q), // always an array
+              })),
+            };
+          }
+          return task;
+        }),
+      });
+
+      setModules([normalizeModule(mod0Raw), normalizeModule(mod1Raw)]);
+    } catch (err) {
+      console.error("Error loading modules:", err);
+    }
+  };
+
+  loadModules();
+}, []);
+
 const ChatSimulator: React.FC = () => {
   const [modules, setModules] = useState<Module[]>([]);
   const [currentModuleIndex, setCurrentModuleIndex] = useState(0);

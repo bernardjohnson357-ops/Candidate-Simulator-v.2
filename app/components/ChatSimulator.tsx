@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { CandidateState, Module, Task } from "@/app/ai/types";
+import { CandidateState, Module } from "@/app/ai/types";
 import ModuleDisplay from "@/app/components/ModuleDisplay";
 import { initCandidateState, safeRunModule } from "@/app/ai/aiLoop";
 
@@ -107,30 +107,32 @@ const ChatSimulator: React.FC = () => {
       return;
     }
 
-    // Step 2: If module and tasks exist, move through them step by step
+    // Step 2: Handle current module’s tasks
     if (currentModule && candidateState) {
       const currentTask = currentModule.tasks?.[currentTaskIndex];
 
-      // --- Handle quizzes or specific input types ---
-      if (nextTask.type === "quiz") {
-  const quiz = nextTask.questions?.[0];
-  if (quiz) {
-    const optionsList = quiz.options.map((opt) => `- ${opt}`).join("\n");
-    setMessages((prev) => [
-      ...prev,
-      `🧠 Quiz: ${quiz.question}\n\n${optionsList}`,
-    ]);
-  } else {
-    setMessages((prev) => [...prev, `🧠 Quiz: ${nextTask.prompt}`]);
-  }
-}
-      setMessages((prev) => [
-  ...prev,
-  "✍️ Please answer with A, B, C, or D.",
-]);
+      if (!currentTask) {
+        setMessages((prev) => [...prev, "⚠️ No current task found."]);
+        setIsLoading(false);
+        return;
+      }
+
+      // --- Handle quiz tasks ---
+      if (currentTask.type === "quiz") {
+        const userAnswer = input.trim().toUpperCase();
+
+        const quiz = currentTask.questions?.[0];
+        const correct = quiz?.correct?.charAt(0).toUpperCase(); // Extract A/B/C/D from "A) ..."
+
+        if (!["A", "B", "C", "D"].includes(userAnswer)) {
+          setMessages((prev) => [...prev, "❌ Please answer with A, B, C, or D."]);
+          setIsLoading(false);
+          setInput("");
+          return;
+        }
 
         let feedback = "";
-        if (answer === correct) {
+        if (userAnswer === correct) {
           feedback = "✅ Correct! You earned +5 Candidate Coins.";
           setCandidateState((prev) => (prev ? { ...prev, cc: prev.cc + 5 } : prev));
         } else {
@@ -144,7 +146,7 @@ const ChatSimulator: React.FC = () => {
         return;
       }
 
-      // --- For read/write/upload tasks ---
+      // --- Handle read/write/upload or other tasks ---
       await showNextTaskOrModule(currentModule);
       setInput("");
       setIsLoading(false);

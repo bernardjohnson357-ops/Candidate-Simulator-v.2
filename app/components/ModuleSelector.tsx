@@ -30,7 +30,7 @@ const ModuleSelector: React.FC<ModuleSelectorProps> = ({
             id: "q1",
             question: "Select the correct answer:",
             options: ["A", "B", "C", "D"],
-            correct: "A",
+            correct: ["A"],
           },
         ],
       };

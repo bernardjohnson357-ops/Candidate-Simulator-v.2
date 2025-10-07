@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { CandidateState, Module, Task, QuizQuestion } from "@/app/ai/types";
+import { CandidateState, Module, Task } from "@/app/ai/types";
 import ModuleDisplay from "@/app/components/ModuleDisplay";
 import { initCandidateState, safeRunModule } from "@/app/ai/aiLoop";
 
@@ -12,9 +12,9 @@ const ChatSimulator: React.FC = () => {
   const [input, setInput] = useState("");
   const [office, setOffice] = useState<"President" | "Senate" | "House" | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [module0Answered, setModule0Answered] = useState(false);
+  const [currentTaskIndex, setCurrentTaskIndex] = useState<number>(0);
 
-  // Welcome message
+  // --- Welcome message ---
   useEffect(() => {
     setMessages([
       "🎙️ Welcome to the Federal Candidate Simulator — AI Edition.",
@@ -22,7 +22,7 @@ const ChatSimulator: React.FC = () => {
     ]);
   }, []);
 
-  // Dynamically load module JSON
+  // --- Utility to load modules dynamically ---
   const loadModule = async (id: string): Promise<Module | null> => {
     try {
       const mod = await import(`../data/modules/module${id}.json`);
@@ -32,134 +32,120 @@ const ChatSimulator: React.FC = () => {
     }
   };
 
+  // --- Display next task or move to next module ---
+  const showNextTaskOrModule = async (module: Module) => {
+    const tasks = module.tasks || [];
+    const nextIndex = currentTaskIndex + 1;
+
+    if (nextIndex < tasks.length) {
+      const nextTask = tasks[nextIndex];
+      setMessages((prev) => [...prev, `📘 ${nextTask.prompt}`]);
+      setCurrentTaskIndex(nextIndex);
+    } else {
+      // Module finished
+      setMessages((prev) => [...prev, `✅ ${module.title} complete!`]);
+      const nextModule = await loadModule(module.nextModule?.id || "");
+      if (nextModule) {
+        setCurrentModule(nextModule);
+        setCurrentTaskIndex(0);
+        setMessages((prev) => [...prev, `➡️ Starting ${nextModule.title}...`]);
+        if (nextModule.tasks?.length) {
+          setMessages((prev) => [...prev, nextModule.tasks[0].prompt]);
+        }
+      } else {
+        setMessages((prev) => [...prev, "🏁 Simulation complete!"]);
+        setCurrentModule(null);
+      }
+    }
+  };
+
+  // --- Main input handler ---
   const handleUserInput = async () => {
     if (!input.trim()) return;
-
     setMessages((prev) => [...prev, `🗣️ You: ${input}`]);
     setIsLoading(true);
 
-    // --- Office selection ---
-    // Load Module 0 dynamically
-if (!office) {
-  const choice = input.trim().toLowerCase();
-  let selected: "President" | "Senate" | "House" | null = null;
+    // Step 1: Choose office (only once)
+    if (!office) {
+      const choice = input.trim().toLowerCase();
+      let selected: "President" | "Senate" | "House" | null = null;
+      if (choice === "president") selected = "President";
+      else if (choice === "senate") selected = "Senate";
+      else if (choice === "house") selected = "House";
 
-  if (choice === "president") selected = "President";
-  else if (choice === "senate") selected = "Senate";
-  else if (choice === "house") selected = "House";
+      if (!selected) {
+        setMessages((prev) => [...prev, "❌ Please choose: President, Senate, or House."]);
+        setIsLoading(false);
+        setInput("");
+        return;
+      }
 
-  if (!selected) {
-    setMessages((prev) => [...prev, "❌ Please choose: President, Senate, or House."]);
-    setIsLoading(false);
-    setInput("");
-    return;
-  }
+      setOffice(selected);
+      const initState = initCandidateState(selected);
+      setCandidateState(initState);
 
-  setOffice(selected);
+      // Load first module (Module 0)
+      const mod0Import = await import("../data/modules/module0.json");
+      const module0 = mod0Import.default as Module;
 
-  const initState = initCandidateState(selected);
-  setCandidateState(initState);
+      setCurrentModule(module0);
+      setCandidateState((prev) =>
+        prev ? { ...prev, currentModuleId: module0.id } : prev
+      );
 
-  // Load Module 0 dynamically from JSON
-const mod0Import = await import("../data/modules/module0.json");
-const module0 = mod0Import.default as Module;
+      setMessages((prev) => [
+        ...prev,
+        `🏛️ You’ve chosen to run for ${selected}.`,
+        `🎯 Starting ${module0.title}...`,
+        ...(module0.readingSummary || []),
+        module0.tasks?.[0]?.prompt || "No tasks found for this module.",
+      ]);
 
-setCurrentModule(module0);
-setCandidateState((prev) =>
-  prev ? { ...prev, currentModuleId: module0.id } : prev
-);
+      setCurrentTaskIndex(0);
+      setInput("");
+      setIsLoading(false);
+      return;
+    }
 
-setMessages((prev) => [
-  ...prev,
-  `🏛️ You’ve chosen to run for ${selected}.`,
-  `🎯 Starting ${module0.title}...`,
-  ...(module0.readingSummary || [])
-]);
+    // Step 2: If module and tasks exist, move through them step by step
+    if (currentModule && candidateState) {
+      const currentTask = currentModule.tasks?.[currentTaskIndex];
 
-  setInput("");
-  setIsLoading(false);
-  return;
-}
+      // --- Handle quizzes or specific input types ---
+      if (currentTask?.type === "quiz") {
+        const answer = input.trim().toUpperCase();
+        const correct = currentTask.correctAnswer?.toUpperCase();
 
-    // --- Module 0 quiz handling ---
-    if (currentModule?.id === "0" && !module0Answered && candidateState) {
-      const answer = input.trim().toUpperCase();
-      if (!["A", "B", "C", "D"].includes(answer)) {
-        setMessages((prev) => [...prev, "❌ Please answer with A, B, C, or D."]);
+        if (!answer || !["A", "B", "C", "D"].includes(answer)) {
+          setMessages((prev) => [...prev, "❌ Please answer with A, B, C, or D."]);
+          setInput("");
+          setIsLoading(false);
+          return;
+        }
+
+        let feedback = "";
+        if (answer === correct) {
+          feedback = "✅ Correct! You earned +5 Candidate Coins.";
+          setCandidateState((prev) => (prev ? { ...prev, cc: prev.cc + 5 } : prev));
+        } else {
+          feedback = `❌ Incorrect. The correct answer was ${correct}.`;
+        }
+
+        setMessages((prev) => [...prev, feedback]);
+        await showNextTaskOrModule(currentModule);
         setInput("");
         setIsLoading(false);
         return;
       }
 
-      setModule0Answered(true);
-
-      let feedback = "";
-      if (answer === "A") {
-        feedback = "✅ Correct! You earned +5 Candidate Coins.";
-        setCandidateState((prev) =>
-          prev ? { ...prev, cc: prev.cc + 5 } : prev
-        );
-      } else {
-        feedback =
-          "❌ Incorrect. Candidate Coins represent campaign energy and credibility.";
-      }
-
-      setMessages((prev) => [...prev, `🗣️ You answered: ${answer}`, feedback]);
+      // --- For read/write/upload tasks ---
+      await showNextTaskOrModule(currentModule);
       setInput("");
-
-      // Automatically load Module 1 if available
-      try {
-        const nextModule = await loadModule("1");
-        if (nextModule) {
-          setCurrentModule(nextModule);
-          setCandidateState((prev) =>
-            prev ? { ...prev, currentModuleId: nextModule.id } : prev
-          );
-          setMessages((prev) => [...prev, `➡️ Moving to ${nextModule.title}...`]);
-        } else {
-          setMessages((prev) => [...prev, "⚠️ Module 1 not found."]);
-        }
-      } catch {
-        setMessages((prev) => [...prev, "⚠️ Error loading Module 1."]);
-      }
-
       setIsLoading(false);
       return;
     }
 
-    // --- Later modules ---
-    if (currentModule && candidateState) {
-      try {
-        const updatedState = safeRunModule(candidateState, currentModule);
-
-        setCandidateState({
-          ...updatedState,
-          currentModuleId: (parseInt(currentModule.id) + 1).toString(),
-        });
-
-        setMessages((prev) => [
-          ...prev,
-          `📊 Module complete! Updated CC: ${updatedState.cc}, Signatures: ${updatedState.signatures}, Approval: ${updatedState.approval}%`,
-        ]);
-
-        // Load next module
-        const nextId = (parseInt(currentModule.id) + 1).toString();
-        const nextModule = await loadModule(nextId);
-
-        if (nextModule) {
-          setMessages((prev) => [...prev, `➡️ Moving to ${nextModule.title}...`]);
-          setCurrentModule(nextModule);
-        } else {
-          setMessages((prev) => [...prev, "🏁 Simulation complete!"]);
-          setCurrentModule(null);
-        }
-      } catch (err) {
-        console.error("Error running module:", err);
-        setMessages((prev) => [...prev, "⚠️ An error occurred while progressing the module."]);
-      } finally {
-        setIsLoading(false);
-      }
-    }
+    setIsLoading(false);
   };
 
   return (

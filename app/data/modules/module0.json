@@ -25,7 +25,7 @@
             "C) Signatures collected from voters",
             "D) Debate score multiplier"
           ],
-          "correct": "A) Campaign energy and credibility"
+          "correct": ["A) Campaign energy and credibility"]
         }
       ]
     }

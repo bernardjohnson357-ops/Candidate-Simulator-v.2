@@ -112,16 +112,22 @@ const ChatSimulator: React.FC = () => {
       const currentTask = currentModule.tasks?.[currentTaskIndex];
 
       // --- Handle quizzes or specific input types ---
-      if (currentTask?.type === "quiz") {
-        const answer = input.trim().toUpperCase();
-        const correct = currentTask.correctAnswer?.toUpperCase();
-
-        if (!answer || !["A", "B", "C", "D"].includes(answer)) {
-          setMessages((prev) => [...prev, "❌ Please answer with A, B, C, or D."]);
-          setInput("");
-          setIsLoading(false);
-          return;
-        }
+      if (nextTask.type === "quiz") {
+  const quiz = nextTask.questions?.[0];
+  if (quiz) {
+    const optionsList = quiz.options.map((opt) => `- ${opt}`).join("\n");
+    setMessages((prev) => [
+      ...prev,
+      `🧠 Quiz: ${quiz.question}\n\n${optionsList}`,
+    ]);
+  } else {
+    setMessages((prev) => [...prev, `🧠 Quiz: ${nextTask.prompt}`]);
+  }
+}
+      setMessages((prev) => [
+  ...prev,
+  "✍️ Please answer with A, B, C, or D.",
+]);
 
         let feedback = "";
         if (answer === correct) {

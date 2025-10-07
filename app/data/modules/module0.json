@@ -5,26 +5,38 @@
   "description": "Introduction to the Federal Candidate Simulator and how it works.",
   "narrator": "calm, professional",
   "readingSummary": [
-    "Welcome to the Federal Candidate Simulator — AI Edition. This simulator will take you through the entire election cycle, one step at a time. You’ll experience the real requirements of filing, fundraising, compliance, and campaigning — all safely in a simulation."
+    "Welcome to the Federal Candidate Simulator — AI Edition. This simulator will take you through the entire election cycle, one step at a time. You’ll experience filing, fundraising, compliance, and campaigning — all safely in a simulation.",
+    "Candidate Coins (CC) represent your campaign energy and credibility. You start with 50 CC, which can be spent or earned depending on your decisions.",
+    "Signatures and voter approval reflect your public support. 100 signatures = 1% voter approval.",
+    "You must choose an office: President (75 CC + 2.5% approval), Senate (50 CC + 2.5%), or House (31 CC + 2.5%)."
   ],
   "tasks": [
     {
-      "id": "0-1",
-      "type": "read",
-      "prompt": "Here are the ground rules. Think of them as your campaign manual:\n\n1. Candidate Coins (CC):\n   - 1 CC = $100 simulated.\n   - You start with 50 CC.\n   - Earn CC by passing quizzes or completing tasks.\n   - Spend CC on campaign needs like filing fees, ads, or communication coaching.\n\n2. Signatures & Voter Approval:\n   - Each quiz score = the same number of signatures.\n   - 100 signatures = 1% voter approval.\n   - Example: scoring 80% on a quiz = 80 signatures = 0.8% approval.\n\n3. Ballot Access:\n   - You must qualify for the ballot by paying CC and gathering enough signatures.\n\n4. Eligibility thresholds:\n   - President → 75 CC + 2.5% approval\n   - Senate → 50 CC + 2.5% approval\n   - House → 31 CC + 2.5% approval\n\n5. Task Types:\n   - Read: Summaries of laws, filing guides, or news.\n   - Write: Announcements, strategy documents, responses.\n   - Upload: Images (Module 5 – signs, T-shirts, bumper stickers).\n   - Speak: Speeches, press conferences, debates (Modules 7+).\n   - Some decisions appear as chat buttons.\n\n6. Feedback & Progress:\n   - After each task, CC, signatures, and approval are updated.\n   - All choices and scores carry forward."
-    },
-    {
-      "id": "0-2",
-      "type": "read",
-      "prompt": "Your first step: choose which office you are running for. This will determine the difficulty ahead.\n\nOptions:\n- President (75 CC + 2.5% approval)\n- U.S. Senate (50 CC + 2.5% approval)\n- U.S. House (31 CC + 2.5% approval)\n\nAfter choosing, you'll start with 50 CC and 0% approval. Before campaigning, you must file properly."
+      "id": "0-quiz-cc",
+      "type": "quiz",
+      "prompt": "What do Candidate Coins (CC) represent in this simulator?",
+      "questions": [
+        {
+          "id": "q1",
+          "question": "Select the correct answer:",
+          "options": [
+            "A) Campaign energy and credibility",
+            "B) Real currency for campaign ads",
+            "C) Signatures collected from voters",
+            "D) Debate score multiplier"
+          ],
+          "correct": "A) Campaign energy and credibility"
+        }
+      ]
     }
   ],
-  "purpose": "Introduce users to the simulator mechanics, CC, signatures, approval, and office selection.",
+  "purpose": "Introduce users to simulator mechanics, CC, signatures, approval, and office selection.",
   "scenarios": [],
   "outcome": "User chooses an office and understands the rules for CC, signatures, approval, and tasks.",
   "nextModule": {
     "id": "1",
     "title": "Party Filing",
-    "description": "The first official step: filing as a party candidate."
+    "description": "The first official step: filing as a party candidate.",
+    "tasks": []
   }
 }

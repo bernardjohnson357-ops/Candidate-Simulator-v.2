@@ -14,12 +14,16 @@ export interface QuizQuestion {
 
 export interface Task {
   id: string;
-  type: "read" | "write" | "speak" | "quiz";
+  type: "read" | "write" | "quiz" | "upload" | string;
   prompt: string;
-  questions?: QuizQuestion[];
 
-  // Optional feedback mapping (A, B, C, D, etc.)
+  // Optional for quizzes
+  correctAnswer?: string;
   feedback?: Record<string, string>;
+
+  // Optional for uploads or writes
+  fileType?: string;
+  responsePlaceholder?: string;
 }
 
 export interface Module {

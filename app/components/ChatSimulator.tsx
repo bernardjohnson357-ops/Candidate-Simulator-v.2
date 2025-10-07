@@ -4,20 +4,43 @@ import React, { useState, useEffect } from "react";
 import { Module, Task } from "@/app/ai/types";
 
 const ChatSimulator: React.FC = () => {
-  const [messages, setMessages] = useState<string[]>([]);
-  const [input, setInput] = useState("");
+  const [modules, setModules] = useState<Module[]>([]);
   const [currentModuleIndex, setCurrentModuleIndex] = useState(0);
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
+  const [messages, setMessages] = useState<string[]>([]);
+  const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const currentModule = modules[currentModuleIndex];
   const currentTask = currentModule?.tasks?.[currentTaskIndex];
+
+  // --- Load modules dynamically ---
+  useEffect(() => {
+    const loadModules = async () => {
+      try {
+        const mod0 = (await import("@/app/data/modules/module0.json")).default;
+        const mod1 = (await import("@/app/data/modules/module1.json")).default;
+        // Add more as needed
+        setModules([mod0, mod1]);
+      } catch (err) {
+        console.error("Error loading modules:", err);
+      }
+    };
+    loadModules();
+  }, []);
 
   // --- Initialize ---
   useEffect(() => {
-    if (currentModule) {
-      setMessages([`📘 ${currentModule.title}`, currentModule.description]);
+  if (currentModule) {
+    setMessages([
+      `🎯 ${currentModule.title}`,
+      currentModule.description || "",
+    ]);
+    if (currentModule.tasks?.length) {
+      displayTask(currentModule.tasks[0]);
     }
-  }, [currentModuleIndex]);
+  }
+}, [currentModule]);
 
   // --- Handle user input ---
   const handleUserInput = () => {

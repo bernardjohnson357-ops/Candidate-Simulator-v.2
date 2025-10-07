@@ -39,63 +39,50 @@ const ChatSimulator: React.FC = () => {
     setIsLoading(true);
 
     // --- Office selection ---
-    if (!office) {
-      const choice = input.trim().toLowerCase();
-      let selected: "President" | "Senate" | "House" | null = null;
+    // Load Module 0 dynamically
+if (!office) {
+  const choice = input.trim().toLowerCase();
+  let selected: "President" | "Senate" | "House" | null = null;
 
-      if (choice === "president") selected = "President";
-      else if (choice === "senate") selected = "Senate";
-      else if (choice === "house") selected = "House";
+  if (choice === "president") selected = "President";
+  else if (choice === "senate") selected = "Senate";
+  else if (choice === "house") selected = "House";
 
-      if (!selected) {
-        setMessages((prev) => [...prev, "❌ Please choose: President, Senate, or House."]);
-        setInput("");
-        setIsLoading(false);
-        return;
-      }
+  if (!selected) {
+    setMessages((prev) => [...prev, "❌ Please choose: President, Senate, or House."]);
+    setIsLoading(false);
+    setInput("");
+    return;
+  }
 
-      setOffice(selected);
+  setOffice(selected);
 
-      // Initialize candidate state
-      const initState = initCandidateState(selected);
-      setCandidateState(initState);
+  const initState = initCandidateState(selected);
+  setCandidateState(initState);
 
-      // Load Module 0 quiz
-      const module0: Module = {
-        id: "0",
-        title: "Orientation & Introduction",
-        description: "Welcome! Learn what Candidate Coins (CC) mean before your campaign.",
-        tasks: [
-          {
-            id: "task_module0_cc_quiz",
-            type: "quiz",
-            prompt:
-              "What do Candidate Coins (CC) represent in this simulator?\n\nA) Campaign energy and credibility\nB) Real currency for campaign ads\nC) Signatures collected from voters\nD) Debate score multiplier",
-            questions: [
-              {
-                id: "q1",
-                question: "Select the correct answer:",
-                options: ["A", "B", "C", "D"],
-                correct: "A",
-              },
-            ],
-          },
-        ],
-      };
+  // Load Module 0 from JSON
+  try {
+    const mod0Import = await import("../data/modules/module0.json");
+    const mod0 = mod0Import.default as Module;
 
-      setCurrentModule(module0);
-      setCandidateState((prev) => prev ? { ...prev, currentModuleId: module0.id } : null);
+    setCurrentModule(mod0);
+    setCandidateState((prev) =>
+      prev ? { ...prev, currentModuleId: mod0.id } : null
+    );
 
-      setMessages((prev) => [
-        ...prev,
-        `🏛️ You’ve chosen to run for ${selected}.`,
-        `🎯 Starting ${module0.title}...`,
-      ]);
+    setMessages((prev) => [
+      ...prev,
+      `🏛️ You’ve chosen to run for ${selected}.`,
+      `🎯 Starting ${mod0.title}...`,
+    ]);
+  } catch {
+    alert("⚠️ Module 0 not found. Please check your /data/modules folder.");
+  }
 
-      setInput("");
-      setIsLoading(false);
-      return;
-    }
+  setInput("");
+  setIsLoading(false);
+  return;
+}
 
     // --- Module 0 quiz handling ---
     if (currentModule?.id === "0" && !module0Answered && candidateState) {

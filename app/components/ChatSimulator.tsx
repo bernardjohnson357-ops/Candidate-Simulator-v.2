@@ -50,10 +50,13 @@ const ChatSimulator: React.FC = () => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const currentModule = modules[currentModuleIndex];
-  const currentTask = currentModule?.tasks?.[currentTaskIndex];
+  // --- Helper inside component ---
+  const normalizeCorrect = (q: any) => {
+    if (!q.correct) return [];
+    return Array.isArray(q.correct) ? q.correct : [q.correct];
+  };
 
-  // --- Load modules dynamically and fix "correct" field ---
+  // --- Load modules dynamically and normalize ---
   useEffect(() => {
     const loadModules = async () => {
       try {
@@ -68,7 +71,7 @@ const ChatSimulator: React.FC = () => {
                 ...task,
                 questions: task.questions.map((q: any) => ({
                   ...q,
-                  correct: Array.isArray(q.correct) ? q.correct : [q.correct], // wrap single string
+                  correct: normalizeCorrect(q),
                 })),
               };
             }
@@ -76,6 +79,7 @@ const ChatSimulator: React.FC = () => {
           }),
         });
 
+        // ✅ This is now inside the component and can call setModules
         setModules([normalizeModule(mod0Raw), normalizeModule(mod1Raw)]);
       } catch (err) {
         console.error("Error loading modules:", err);

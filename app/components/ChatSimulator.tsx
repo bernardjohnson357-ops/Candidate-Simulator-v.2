@@ -43,15 +43,17 @@ const showNextTaskOrModule = async (module: Module) => {
 
     // --- Handle different task types ---
     if (nextTask.type === "quiz") {
-      const quizText = [
-        `🧩 ${nextTask.prompt}`,
-        ...(nextTask.options?.map(
-          (opt, i) => `${String.fromCharCode(65 + i)}. ${opt}`
-        ) || [])
-      ];
-      setMessages((prev) => [...prev, ...quizText]);
-    } else if (nextTask.type === "read") {
-      setMessages((prev) => [...prev, `📘 ${nextTask.prompt}`]);
+  const quiz = nextTask.questions?.[0];
+  if (quiz) {
+    const quizText = [
+      `🧠 Quiz: ${quiz.question}`,
+      ...quiz.options.map((opt, i) => `${String.fromCharCode(65 + i)}. ${opt}`)
+    ];
+    setMessages((prev) => [...prev, ...quizText]);
+  } else {
+    setMessages((prev) => [...prev, `🧠 Quiz: ${nextTask.prompt}`]);
+  }
+}
     } else if (nextTask.type === "write") {
       setMessages((prev) => [
         ...prev,
@@ -155,32 +157,31 @@ const showNextTaskOrModule = async (module: Module) => {
 
       // --- Handle quiz tasks ---
       if (currentTask.type === "quiz") {
-        const userAnswer = input.trim().toUpperCase();
+  const userAnswer = input.trim().toUpperCase();
+  const quiz = currentTask.questions?.[0];
+  const correct = quiz?.correct?.charAt(0).toUpperCase(); // "A) Campaign energy ..." → "A"
 
-        const quiz = currentTask.questions?.[0];
-        const correct = quiz?.correct?.charAt(0).toUpperCase(); // Extract A/B/C/D from "A) ..."
+  if (!["A", "B", "C", "D"].includes(userAnswer)) {
+    setMessages((prev) => [...prev, "❌ Please answer with A, B, C, or D."]);
+    setIsLoading(false);
+    setInput("");
+    return;
+  }
 
-        if (!["A", "B", "C", "D"].includes(userAnswer)) {
-          setMessages((prev) => [...prev, "❌ Please answer with A, B, C, or D."]);
-          setIsLoading(false);
-          setInput("");
-          return;
-        }
+  let feedback = "";
+  if (userAnswer === correct) {
+    feedback = "✅ Correct! You earned +5 Candidate Coins.";
+    setCandidateState((prev) => (prev ? { ...prev, cc: prev.cc + 5 } : prev));
+  } else {
+    feedback = `❌ Incorrect. The correct answer was ${correct}.`;
+  }
 
-        let feedback = "";
-        if (userAnswer === correct) {
-          feedback = "✅ Correct! You earned +5 Candidate Coins.";
-          setCandidateState((prev) => (prev ? { ...prev, cc: prev.cc + 5 } : prev));
-        } else {
-          feedback = `❌ Incorrect. The correct answer was ${correct}.`;
-        }
-
-        setMessages((prev) => [...prev, feedback]);
-        await showNextTaskOrModule(currentModule);
-        setInput("");
-        setIsLoading(false);
-        return;
-      }
+  setMessages((prev) => [...prev, feedback]);
+  await showNextTaskOrModule(currentModule);
+  setInput("");
+  setIsLoading(false);
+  return;
+}
 
       // --- Handle read/write/upload or other tasks ---
       await showNextTaskOrModule(currentModule);

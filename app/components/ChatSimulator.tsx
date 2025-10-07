@@ -1,46 +1,7 @@
-// ./app/components/ChatSimulator.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
 import { Module, Task } from "@/app/ai/types";
-
-// --- Helper to normalize "correct" field for quizzes ---
-const normalizeCorrect = (q: any) => {
-  if (!q.correct) return [];
-  return Array.isArray(q.correct) ? q.correct : [q.correct];
-};
-
-// --- Load modules dynamically and normalize ---
-useEffect(() => {
-  const loadModules = async () => {
-    try {
-      const mod0Raw = (await import("@/app/data/modules/module0.json")).default;
-      const mod1Raw = (await import("@/app/data/modules/module1.json")).default;
-
-      const normalizeModule = (modRaw: any): Module => ({
-        ...modRaw,
-        tasks: modRaw.tasks.map((task: any) => {
-          if (task.type === "quiz" && task.questions) {
-            return {
-              ...task,
-              questions: task.questions.map((q: any) => ({
-                ...q,
-                correct: normalizeCorrect(q), // always an array
-              })),
-            };
-          }
-          return task;
-        }),
-      });
-
-      setModules([normalizeModule(mod0Raw), normalizeModule(mod1Raw)]);
-    } catch (err) {
-      console.error("Error loading modules:", err);
-    }
-  };
-
-  loadModules();
-}, []);
 
 const ChatSimulator: React.FC = () => {
   const [modules, setModules] = useState<Module[]>([]);
@@ -50,13 +11,17 @@ const ChatSimulator: React.FC = () => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // --- Helper inside component ---
+  // --- Derived state ---
+  const currentModule = modules[currentModuleIndex];
+  const currentTask = currentModule?.tasks?.[currentTaskIndex];
+
+  // --- Helper to normalize "correct" field ---
   const normalizeCorrect = (q: any) => {
     if (!q.correct) return [];
     return Array.isArray(q.correct) ? q.correct : [q.correct];
   };
 
-  // --- Load modules dynamically and normalize ---
+  // --- Load and normalize modules ---
   useEffect(() => {
     const loadModules = async () => {
       try {
@@ -79,7 +44,6 @@ const ChatSimulator: React.FC = () => {
           }),
         });
 
-        // ✅ This is now inside the component and can call setModules
         setModules([normalizeModule(mod0Raw), normalizeModule(mod1Raw)]);
       } catch (err) {
         console.error("Error loading modules:", err);
@@ -89,7 +53,7 @@ const ChatSimulator: React.FC = () => {
     loadModules();
   }, []);
 
-  // --- Initialize ---
+  // --- Initialize module display ---
   useEffect(() => {
     if (currentModule) {
       setMessages([
@@ -117,7 +81,7 @@ const ChatSimulator: React.FC = () => {
     }, 600);
   };
 
-  // --- Process response for quizzes or reads ---
+  // --- Process responses based on task type ---
   const processResponse = (userInput: string) => {
     if (!currentTask) return;
 
@@ -131,30 +95,26 @@ const ChatSimulator: React.FC = () => {
           if (userAnswer === correctAnswer) {
             setMessages((prev) => [
               ...prev,
-              "✅ Correct! Candidate Coins (CC) = campaign energy and credibility."
+              "✅ Correct! Candidate Coins (CC) = campaign energy and credibility.",
             ]);
           } else {
             setMessages((prev) => [
               ...prev,
-              `❌ Incorrect. The correct answer was: ${q.correct[0]}`
+              `❌ Incorrect. The correct answer was: ${q.correct[0]}`,
             ]);
           }
         } else {
           setMessages((prev) => [
             ...prev,
-            "⚠️ Quiz data incomplete — skipping this question."
+            "⚠️ Quiz data incomplete — skipping this question.",
           ]);
         }
-
         goToNextTask();
         break;
       }
 
       case "read":
-      case "speak": // optional for TTS later
-        goToNextTask();
-        break;
-
+      case "speak":
       default:
         goToNextTask();
         break;
@@ -163,9 +123,9 @@ const ChatSimulator: React.FC = () => {
 
   // --- Move to next task or module ---
   const goToNextTask = () => {
-    if (currentModule.tasks && currentTaskIndex < currentModule.tasks.length - 1) {
-      const next = currentModule.tasks[currentTaskIndex + 1];
-      displayTask(next);
+    if (currentModule?.tasks && currentTaskIndex < currentModule.tasks.length - 1) {
+      const nextTask = currentModule.tasks[currentTaskIndex + 1];
+      displayTask(nextTask);
       setCurrentTaskIndex((prev) => prev + 1);
     } else if (modules.length > currentModuleIndex + 1) {
       setMessages((prev) => [...prev, `✅ Module "${currentModule.title}" complete.`]);
@@ -176,7 +136,7 @@ const ChatSimulator: React.FC = () => {
     }
   };
 
-  // --- Display task content ---
+  // --- Display current task ---
   const displayTask = (task: Task) => {
     switch (task.type) {
       case "quiz": {
@@ -186,19 +146,22 @@ const ChatSimulator: React.FC = () => {
           q?.question,
           ...(q?.options || []),
         ];
-        setMessages((prev) => [...prev, ...quizLines.filter((line): line is string => typeof line === "string")]);
+        setMessages((prev) => [
+          ...prev,
+          ...quizLines.filter((line): line is string => typeof line === "string"),
+        ]);
         break;
       }
-      case "read": {
+      case "read":
         setMessages((prev) => [...prev, `📘 ${task.prompt}`]);
         break;
-      }
       default:
         setMessages((prev) => [...prev, `📗 ${task.prompt}`]);
         break;
     }
   };
 
+  // --- Render ---
   return (
     <div className="max-w-3xl mx-auto p-4">
       <div className="h-[450px] overflow-y-auto p-4 border rounded-md bg-gray-50 mb-4">

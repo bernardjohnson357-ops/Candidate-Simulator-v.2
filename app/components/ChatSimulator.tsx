@@ -10,7 +10,6 @@ const ChatSimulator: React.FC = () => {
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  const currentModule = modules[currentModuleIndex];
   const currentTask = currentModule?.tasks?.[currentTaskIndex];
 
   // --- Initialize ---

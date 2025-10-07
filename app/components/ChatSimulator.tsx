@@ -43,17 +43,18 @@ const showNextTaskOrModule = async (module: Module) => {
 
     // --- Handle different task types ---
     if (nextTask.type === "quiz") {
-  const quiz = nextTask.questions?.[0];
-  if (quiz) {
-    const quizText = [
-      `🧠 Quiz: ${quiz.question}`,
-      ...quiz.options.map((opt, i) => `${String.fromCharCode(65 + i)}. ${opt}`)
-    ];
-    setMessages((prev) => [...prev, ...quizText]);
-  } else {
-    setMessages((prev) => [...prev, `🧠 Quiz: ${nextTask.prompt}`]);
-  }
-}
+      const quiz = nextTask.questions?.[0];
+      if (quiz) {
+        const quizText = [
+          `🧠 Quiz: ${quiz.question}`,
+          ...quiz.options.map((opt, i) => `${String.fromCharCode(65 + i)}. ${opt}`)
+        ];
+        setMessages((prev) => [...prev, ...quizText]);
+      } else {
+        setMessages((prev) => [...prev, `🧠 Quiz: ${nextTask.prompt}`]);
+      }
+    } else if (nextTask.type === "read") {
+      setMessages((prev) => [...prev, `📘 ${nextTask.prompt}`]);
     } else if (nextTask.type === "write") {
       setMessages((prev) => [
         ...prev,
@@ -66,6 +67,7 @@ const showNextTaskOrModule = async (module: Module) => {
       // Default case
       setMessages((prev) => [...prev, `📘 ${nextTask.prompt}`]);
     }
+
   } else {
     // --- Module finished ---
     setMessages((prev) => [...prev, `✅ ${module.title} complete!`]);
@@ -79,13 +81,16 @@ const showNextTaskOrModule = async (module: Module) => {
       if (nextModule.tasks?.length) {
         const firstTask = nextModule.tasks[0];
         if (firstTask.type === "quiz") {
-          const quizText = [
-            `🧩 ${firstTask.prompt}`,
-            ...(firstTask.options?.map(
-              (opt, i) => `${String.fromCharCode(65 + i)}. ${opt}`
-            ) || [])
-          ];
-          setMessages((prev) => [...prev, ...quizText]);
+          const quiz = firstTask.questions?.[0];
+          if (quiz) {
+            const quizText = [
+              `🧠 Quiz: ${quiz.question}`,
+              ...quiz.options.map((opt, i) => `${String.fromCharCode(65 + i)}. ${opt}`)
+            ];
+            setMessages((prev) => [...prev, ...quizText]);
+          } else {
+            setMessages((prev) => [...prev, `🧠 Quiz: ${firstTask.prompt}`]);
+          }
         } else {
           setMessages((prev) => [...prev, `📘 ${firstTask.prompt}`]);
         }

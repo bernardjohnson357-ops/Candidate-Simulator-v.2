@@ -11,25 +11,25 @@
     "You must choose an office: President (75 CC + 2.5% approval), Senate (50 CC + 2.5%), or House (31 CC + 2.5%)."
   ],
   "tasks": [
-    {
-      "id": "0-quiz-cc",
-      "type": "quiz",
-      "prompt": "What do Candidate Coins (CC) represent in this simulator?",
-      "questions": [
-        {
-          "id": "q1",
-          "question": "Select the correct answer:",
-          "options": [
-            "A) Campaign energy and credibility",
-            "B) Real currency for campaign ads",
-            "C) Signatures collected from voters",
-            "D) Debate score multiplier"
-          ],
-          "correct": ["A) Campaign energy and credibility"]
-        }
-      ]
-    }
-  ],
+  {
+    "id": "0-quiz-cc",
+    "type": "quiz",
+    "prompt": "What do Candidate Coins (CC) represent in this simulator?",
+    "questions": [
+      {
+        "id": "q1",
+        "question": "Select the correct answer:",
+        "options": [
+          "A) Campaign energy and credibility",
+          "B) Real currency for campaign ads",
+          "C) Signatures collected from voters",
+          "D) Debate score multiplier"
+        ],
+        "correct": "A) Campaign energy and credibility"
+      }
+    ]
+  }
+],
   "purpose": "Introduce users to simulator mechanics, CC, signatures, approval, and office selection.",
   "scenarios": [],
   "outcome": "User chooses an office and understands the rules for CC, signatures, approval, and tasks.",

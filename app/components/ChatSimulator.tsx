@@ -1,3 +1,4 @@
+// ./app/components/ChatSimulator.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -14,18 +15,35 @@ const ChatSimulator: React.FC = () => {
   const currentModule = modules[currentModuleIndex];
   const currentTask = currentModule?.tasks?.[currentTaskIndex];
 
-  // --- Load modules dynamically ---
+  // --- Load modules dynamically and fix "correct" field ---
   useEffect(() => {
     const loadModules = async () => {
       try {
-        // Cast imported JSON to Module type
-        const mod0 = (await import("@/app/data/modules/module0.json")).default as Module;
-        const mod1 = (await import("@/app/data/modules/module1.json")).default as Module;
-        setModules([mod0, mod1]);
+        const mod0Raw = (await import("@/app/data/modules/module0.json")).default;
+        const mod1Raw = (await import("@/app/data/modules/module1.json")).default;
+
+        const normalizeModule = (modRaw: any): Module => ({
+          ...modRaw,
+          tasks: modRaw.tasks.map((task: any) => {
+            if (task.type === "quiz" && task.questions) {
+              return {
+                ...task,
+                questions: task.questions.map((q: any) => ({
+                  ...q,
+                  correct: Array.isArray(q.correct) ? q.correct : [q.correct], // wrap single string
+                })),
+              };
+            }
+            return task;
+          }),
+        });
+
+        setModules([normalizeModule(mod0Raw), normalizeModule(mod1Raw)]);
       } catch (err) {
         console.error("Error loading modules:", err);
       }
     };
+
     loadModules();
   }, []);
 
@@ -36,7 +54,6 @@ const ChatSimulator: React.FC = () => {
         `🎯 ${currentModule.title}`,
         currentModule.description || "",
       ]);
-
       if (currentModule.tasks?.length) {
         displayTask(currentModule.tasks[0]);
       }
@@ -58,7 +75,7 @@ const ChatSimulator: React.FC = () => {
     }, 600);
   };
 
-  // --- Handle logic per task type ---
+  // --- Process response for quizzes or reads ---
   const processResponse = (userInput: string) => {
     if (!currentTask) return;
 
@@ -77,7 +94,7 @@ const ChatSimulator: React.FC = () => {
           } else {
             setMessages((prev) => [
               ...prev,
-              `❌ Incorrect. The correct answer was: ${q.correct}`
+              `❌ Incorrect. The correct answer was: ${q.correct[0]}`
             ]);
           }
         } else {
@@ -92,8 +109,7 @@ const ChatSimulator: React.FC = () => {
       }
 
       case "read":
-      case "speak":
-        // For 'speak', you can call your TTS function if integrated
+      case "speak": // optional for TTS later
         goToNextTask();
         break;
 
@@ -105,7 +121,7 @@ const ChatSimulator: React.FC = () => {
 
   // --- Move to next task or module ---
   const goToNextTask = () => {
-    if (currentModule?.tasks && currentTaskIndex < currentModule.tasks.length - 1) {
+    if (currentModule.tasks && currentTaskIndex < currentModule.tasks.length - 1) {
       const next = currentModule.tasks[currentTaskIndex + 1];
       displayTask(next);
       setCurrentTaskIndex((prev) => prev + 1);
@@ -128,27 +144,18 @@ const ChatSimulator: React.FC = () => {
           q?.question,
           ...(q?.options || []),
         ];
-        setMessages((prev) =>
-          [...prev, ...quizLines.filter((line): line is string => typeof line === "string")]
-        );
+        setMessages((prev) => [...prev, ...quizLines.filter((line): line is string => typeof line === "string")]);
         break;
       }
-      case "read":
-      case "speak":
+      case "read": {
         setMessages((prev) => [...prev, `📘 ${task.prompt}`]);
         break;
+      }
       default:
         setMessages((prev) => [...prev, `📗 ${task.prompt}`]);
         break;
     }
   };
-
-  // --- Display first task on load ---
-  useEffect(() => {
-    if (currentModule?.tasks?.length) {
-      displayTask(currentModule.tasks[0]);
-    }
-  }, [currentModuleIndex]);
 
   return (
     <div className="max-w-3xl mx-auto p-4">
@@ -159,7 +166,6 @@ const ChatSimulator: React.FC = () => {
         {isLoading && <div className="text-gray-500 italic">AI is thinking...</div>}
       </div>
 
-      {/* Show input AFTER task is displayed */}
       {currentTask && (
         <div className="flex space-x-2">
           <input

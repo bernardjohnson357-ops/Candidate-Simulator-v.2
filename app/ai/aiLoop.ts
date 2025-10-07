@@ -1,6 +1,5 @@
 // ./app/ai/aiLoop.ts
-
-import { CandidateState } from "./types";
+import { CandidateState, Module, Task, QuizQuestion } from "./types";
 
 export const initCandidateState = (
   office: "President" | "Senate" | "House"

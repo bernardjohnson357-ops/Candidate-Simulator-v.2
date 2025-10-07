@@ -12,6 +12,7 @@ const ChatSimulator: React.FC = () => {
   const [input, setInput] = useState("");
   const [office, setOffice] = useState<"President" | "Senate" | "House" | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [module0Answered, setModule0Answered] = useState(false);
 
   // Welcome message
   useEffect(() => {
@@ -21,7 +22,7 @@ const ChatSimulator: React.FC = () => {
     ]);
   }, []);
 
-  // Load a module JSON dynamically
+  // Dynamically load module JSON
   const loadModule = async (id: string): Promise<Module | null> => {
     try {
       const mod = await import(`../data/modules/module${id}.json`);
@@ -31,14 +32,13 @@ const ChatSimulator: React.FC = () => {
     }
   };
 
-  // Handle user input
   const handleUserInput = async () => {
     if (!input.trim()) return;
 
     setMessages((prev) => [...prev, `🗣️ You: ${input}`]);
     setIsLoading(true);
 
-    // Office selection
+    // --- Office selection ---
     if (!office) {
       const choice = input.trim().toLowerCase();
       let selected: "President" | "Senate" | "House" | null = null;
@@ -49,8 +49,8 @@ const ChatSimulator: React.FC = () => {
 
       if (!selected) {
         setMessages((prev) => [...prev, "❌ Please choose: President, Senate, or House."]);
-        setIsLoading(false);
         setInput("");
+        setIsLoading(false);
         return;
       }
 
@@ -60,11 +60,11 @@ const ChatSimulator: React.FC = () => {
       const initState = initCandidateState(selected);
       setCandidateState(initState);
 
-      // Load Module 0
+      // Load Module 0 quiz
       const module0: Module = {
         id: "0",
         title: "Orientation & Introduction",
-        description: "Welcome to the Federal Candidate Simulator. Learn what Candidate Coins mean.",
+        description: "Welcome! Learn what Candidate Coins (CC) mean before your campaign.",
         tasks: [
           {
             id: "task_module0_cc_quiz",
@@ -97,10 +97,55 @@ const ChatSimulator: React.FC = () => {
       return;
     }
 
-    // Module progression
+    // --- Module 0 quiz handling ---
+    if (currentModule?.id === "0" && !module0Answered && candidateState) {
+      const answer = input.trim().toUpperCase();
+      if (!["A", "B", "C", "D"].includes(answer)) {
+        setMessages((prev) => [...prev, "❌ Please answer with A, B, C, or D."]);
+        setInput("");
+        setIsLoading(false);
+        return;
+      }
+
+      setModule0Answered(true);
+
+      let feedback = "";
+      if (answer === "A") {
+        feedback = "✅ Correct! You earned +5 Candidate Coins.";
+        setCandidateState((prev) =>
+          prev ? { ...prev, cc: prev.cc + 5 } : prev
+        );
+      } else {
+        feedback =
+          "❌ Incorrect. Candidate Coins represent campaign energy and credibility.";
+      }
+
+      setMessages((prev) => [...prev, `🗣️ You answered: ${answer}`, feedback]);
+      setInput("");
+
+      // Automatically load Module 1 if available
+      try {
+        const nextModule = await loadModule("1");
+        if (nextModule) {
+          setCurrentModule(nextModule);
+          setCandidateState((prev) =>
+            prev ? { ...prev, currentModuleId: nextModule.id } : prev
+          );
+          setMessages((prev) => [...prev, `➡️ Moving to ${nextModule.title}...`]);
+        } else {
+          setMessages((prev) => [...prev, "⚠️ Module 1 not found."]);
+        }
+      } catch {
+        setMessages((prev) => [...prev, "⚠️ Error loading Module 1."]);
+      }
+
+      setIsLoading(false);
+      return;
+    }
+
+    // --- Later modules ---
     if (currentModule && candidateState) {
       try {
-        // Run the module and update candidate state
         const updatedState = safeRunModule(candidateState, currentModule);
 
         setCandidateState({
@@ -124,8 +169,6 @@ const ChatSimulator: React.FC = () => {
           setMessages((prev) => [...prev, "🏁 Simulation complete!"]);
           setCurrentModule(null);
         }
-
-        setInput("");
       } catch (err) {
         console.error("Error running module:", err);
         setMessages((prev) => [...prev, "⚠️ An error occurred while progressing the module."]);

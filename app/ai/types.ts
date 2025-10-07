@@ -18,12 +18,14 @@ export interface Task {
   prompt: string;
 
   // Optional for quizzes
-  correctAnswer?: string;
-  feedback?: Record<string, string>;
+  options?: string[];                // ✅ new — list of multiple-choice answers
+  correctAnswer?: string;            // ✅ what’s correct (A, B, C, etc.)
+  feedback?: Record<string, string>; // optional feedback per answer
 
   // Optional for uploads or writes
   fileType?: string;
   responsePlaceholder?: string;
+}
 
   // ✅ NEW: Support for nested quiz questions in JSON
   questions?: {

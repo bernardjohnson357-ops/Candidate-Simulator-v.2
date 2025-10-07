@@ -73,7 +73,7 @@ setMessages((prev) => [
   ...prev,
   `🏛️ You’ve chosen to run for ${selected}.`,
   `🎯 Starting ${module0.title}...`,
-  ...module0.readingSummary
+  ...(module0.readingSummary || [])
 ]);
 
   setInput("");

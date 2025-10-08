@@ -15,6 +15,17 @@ const ChatSimulator: React.FC = () => {
   const currentModule = modules[currentModuleIndex];
   const currentTask = currentModule?.tasks?.[currentTaskIndex];
 
+  const [candidateState, setCandidateState] = useState<{
+  office?: "President" | "Senate" | "House";
+  cc?: number;
+  signatures?: number;
+  approval?: number;
+}>({
+  cc: 50,           // starting CC
+  signatures: 0,
+  approval: 0
+});
+
   // --- Load modules dynamically ---
   useEffect(() => {
     const loadModules = async () => {
@@ -83,14 +94,14 @@ const processResponse = (userInput: string) => {
     else if (choice.startsWith("B")) office = "Senate";
     else if (choice.startsWith("C")) office = "House";
 
-    if (office) {
-      setCandidateState(prev => ({ ...prev!, office }));
-      setMessages(prev => [...prev, `✅ You selected: ${office}`]);
-      setAwaitingOffice(false);
-      // Advance to next module
-      setCurrentModuleIndex(prev => prev + 1);
-      setCurrentTaskIndex(0);
-    } else {
+    iif (office) {
+  setCandidateState(prev => ({ ...prev, office }));
+  setMessages(prev => [...prev, `✅ You selected: ${office}`]);
+  setAwaitingOffice(false);
+  // Advance to next module
+  setCurrentModuleIndex(prev => prev + 1);
+  setCurrentTaskIndex(0);
+} else {
       setMessages(prev => [...prev, "❌ Invalid choice. Please select A, B, or C."]);
     }
     return;

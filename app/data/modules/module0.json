@@ -5,21 +5,28 @@
   "description": "Introduction to the Federal Candidate Simulator and how it works.",
   "narrator": "calm, professional",
   "readingSummary": [
-    "Welcome to the Federal Candidate Simulator — AI Edition...",
-    "Candidate Coins (CC) represent your campaign energy and credibility...",
-    "Signatures and voter approval reflect your public support...",
-    "You must choose an office: President (75 CC + 2.5% approval), Senate (50 CC + 2.5%), or House (31 CC + 2.5%)."
+    "Narrator [calm, professional]: “Welcome to the Federal Candidate Simulator — AI Edition. This simulator will take you through the entire election cycle, one step at a time. You’ll experience the real requirements of filing, fundraising, compliance, and campaigning — all safely in a simulation.”",
+    "Narrator [neutral]: “Here are the ground rules. Think of them as your campaign manual.”",
+    "Candidate Coins (CC): 1 CC = $100 simulated. You start with 50 CC. Earn CC by passing quizzes or completing tasks. Spend CC on campaign needs like filing fees, ads, or communication coaching.",
+    "Signatures & Voter Approval: Each quiz score = the same number of signatures. 100 signatures = 1% voter approval. Example: scoring 80% on a quiz = 80 signatures = 0.8% approval.",
+    "Ballot Access: You must qualify for the ballot by paying CC (filing fee) AND gathering enough signatures (through quizzes and tasks).",
+    "Eligibility thresholds: President → 75 CC + 2.5% approval. Senate → 50 CC + 2.5% approval. House → 31 CC + 2.5% approval.",
+    "Task Types: Read — summaries of laws, filing guides, or news. Write — announcements, strategy documents, responses. Upload — images (Module 5). Speak — speeches, press conferences, debates (Modules 7+). Some decisions appear as chat buttons.",
+    "Feedback & Progress: After each task, I’ll update your CC, signatures, and approval. I’ll narrate consequences like: 'Because you chose X, Y happened.' All choices and scores carry forward — just like a real campaign.",
+    "Narrator [encouraging]: “Now it’s time to make your first campaign decision: which office are you running for? This choice determines how tough the road ahead will be.”",
+    "Available Offices: President (75 CC + 2.5% approval), U.S. Senate (50 CC + 2.5% approval), U.S. House (31 CC + 2.5% approval).",
+    "Narrator [explanatory]: “After you choose an office, you’ll begin your campaign journey — starting with your first real step: filing properly.”"
   ],
   "tasks": [
     {
-      "id": "0-read",
+      "id": "0-1",
       "type": "read",
-      "prompt": "Read the simulator rules above carefully. Understanding CC, signatures, and ballot access is crucial."
+      "prompt": "📘 Read the simulator rules carefully. Understanding CC, signatures, and ballot access is crucial."
     },
     {
-      "id": "0-quiz-cc",
+      "id": "0-2",
       "type": "quiz",
-      "prompt": "What do Candidate Coins (CC) represent in this simulator?",
+      "prompt": "🧩 Quick Check — What do Candidate Coins (CC) represent in this simulator?",
       "questions": [
         {
           "id": "q1",
@@ -33,15 +40,19 @@
           "correct": ["A) 1 CC = $100 simulated"]
         }
       ]
+    },
+    {
+      "id": "0-3",
+      "type": "choice",
+      "prompt": "Now, type your chosen office in the chat: President, Senate, or House. Your decision determines your starting difficulty."
     }
   ],
-  "purpose": "Introduce users to simulator mechanics, CC, signatures, approval, and office selection.",
+  "purpose": "Introduce users to simulator mechanics — CC, signatures, approval, and office selection.",
   "scenarios": [],
-  "outcome": "User chooses an office and understands the rules for CC, signatures, approval, and tasks.",
+  "outcome": "User reads simulator rules, completes the quiz, selects an office, and is ready to proceed to Module 1.",
   "nextModule": {
     "id": "1",
     "title": "Party Filing",
-    "description": "The first official step: filing as a party candidate.",
-    "tasks": []
+    "description": "The first official step: filing as a party candidate with the Texas Secretary of State."
   }
 }

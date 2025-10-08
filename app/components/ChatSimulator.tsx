@@ -2,14 +2,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { modules } from "../data/modules"; // adjust path if needed
+import { modules } from "../data/modules";
 import { CandidateState, Task } from "../ai/types";
 
 const ChatSimulator: React.FC = () => {
   // ---------------------- State ----------------------
-  const [messages, setMessages] = useState<string[]>([
-    "🎯 Orientation & Introduction\nIntroduction to the Federal Candidate Simulator and how it works.\n📘 Read the simulator rules above carefully. Understanding CC, signatures, and ballot access is crucial.\nType 'start' when ready."
-  ]);
+  const [messages, setMessages] = useState<string[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [currentModuleIndex, setCurrentModuleIndex] = useState(0);
@@ -17,19 +15,30 @@ const ChatSimulator: React.FC = () => {
   const [candidateState, setCandidateState] = useState<CandidateState | null>(null);
   const [awaitingOffice, setAwaitingOffice] = useState(false);
 
-  // ---------------------- Derived ----------------------
   const currentModule = modules[currentModuleIndex];
   const currentTask: Task | null =
     currentModule && currentModule.tasks ? currentModule.tasks[currentTaskIndex] : null;
 
-  // ---------------------- Core Handlers ----------------------
+  // ---------------------- Intro ----------------------
+  useEffect(() => {
+    if (messages.length === 0 && currentModule) {
+      setMessages([
+        `🎯 ${currentModule.title}`,
+        currentModule.description,
+        ...(currentModule.readingSummary?.map(line => `📘 ${line}`) || []),
+        "Type 'start' when ready."
+      ]);
+    }
+  }, [currentModule]);
+
+  // ---------------------- Task Flow ----------------------
 
   const goToNextTask = () => {
     if (!currentModule) return;
+    const nextIndex = currentTaskIndex + 1;
 
-    const nextTaskIndex = currentTaskIndex + 1;
-    if (nextTaskIndex < currentModule.tasks.length) {
-      setCurrentTaskIndex(nextTaskIndex);
+    if (nextIndex < (currentModule.tasks?.length || 0)) {
+      setCurrentTaskIndex(nextIndex);
     } else {
       // Move to next module
       const nextModuleIndex = currentModuleIndex + 1;
@@ -64,17 +73,13 @@ const ChatSimulator: React.FC = () => {
           if (["A", "B", "C", "D"].includes(userLetter)) {
             if (userLetter === correctLetter) {
               setMessages(prev => [...prev, "✅ Correct! You earned +5 Candidate Coins."]);
-              // Example: add coins
-              setCandidateState(prev => prev ? { ...prev, cc: (prev.cc ?? 0) + 5 } : prev);
+              setCandidateState(prev => prev ? { ...prev, cc: (prev.cc ?? 0) + 5 } : { cc: 5 });
             } else {
-              setMessages(prev => [
-                ...prev,
-                `❌ Incorrect. The correct answer was: ${correctRaw}`
-              ]);
+              setMessages(prev => [...prev, `❌ Incorrect. The correct answer was: ${correctRaw}`]);
             }
           } else {
             setMessages(prev => [...prev, "❌ Please answer with A, B, C, or D."]);
-            return; // wait for valid input
+            return; // Wait for valid input
           }
         } else {
           setMessages(prev => [...prev, "⚠️ Quiz data incomplete — skipping this question."]);
@@ -86,7 +91,7 @@ const ChatSimulator: React.FC = () => {
           "🗳️ Now choose the office you want to run for. Type: President, Senate, or House."
         ]);
         setAwaitingOffice(true);
-        return; // stop until user selects office
+        return;
       }
 
       default:
@@ -95,16 +100,18 @@ const ChatSimulator: React.FC = () => {
     }
   };
 
+  // ---------------------- Input Handling ----------------------
+
   const handleUserInput = () => {
     if (!input.trim()) return;
-
-    const userMsg = `👤 ${input}`;
+    const userInput = input.trim();
+    const userMsg = `👤 ${userInput}`;
     setMessages(prev => [...prev, userMsg]);
     setIsLoading(true);
 
-    // Handle office selection flow first
+    // Handle office selection
     if (awaitingOffice) {
-      const choice = input.trim().toLowerCase();
+      const choice = userInput.toLowerCase();
       let selected: "President" | "Senate" | "House" | null = null;
 
       if (choice === "president") selected = "President";
@@ -120,38 +127,28 @@ const ChatSimulator: React.FC = () => {
 
       setMessages(prev => [...prev, `✅ You selected: ${selected}. Loading next module...`]);
       setAwaitingOffice(false);
-      setCandidateState(prev => (
-  prev
-    ? { ...prev, office: selected }
-    : { office: selected, cc: 50, signatures: 0, voterApproval: 0 }
-));
+      setCandidateState(prev =>
+        prev ? { ...prev, office: selected } : { office: selected, cc: 50, signatures: 0, voterApproval: 0 }
+      );
 
-      // Move to next module (Module 1)
-      setCurrentTaskIndex(0);
       setCurrentModuleIndex(prev => prev + 1);
-
+      setCurrentTaskIndex(0);
       setInput("");
       setIsLoading(false);
       return;
     }
 
-    // If user typed "start"
-    // When module starts
-setMessages(prev => [
-  ...prev,
-  `🎯 ${module.title}`,
-  module.description,
-  ...module.readingSummary.map(line => `📘 ${line}`),
-  "Type 'start' when ready."
-]);
+    // Start the module if user types 'start'
+    if (userInput.toLowerCase() === "start" && currentTask) {
+      setMessages(prev => [...prev, "🚀 Starting the simulation..."]);
+      goToNextTask();
+      setInput("");
+      setIsLoading(false);
+      return;
+    }
 
-// On user input
-if (userInput.toLowerCase() === 'start' && !quizStarted) {
-  setMessages(prev => [...prev, "✅ Great! Let’s move to a quick quiz to check your understanding."]);
-  setQuizStarted(true);
-}
-
-    processResponse(input);
+    // Process normal task flow
+    processResponse(userInput);
     setInput("");
     setIsLoading(false);
   };

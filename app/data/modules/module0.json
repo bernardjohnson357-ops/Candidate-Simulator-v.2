@@ -5,14 +5,20 @@
   "description": "Introduction to the Federal Candidate Simulator and how it works.",
   "narrator": "calm, professional",
   "readingSummary": [
-    "Narrator [calm, professional]:\n“Welcome to the Federal Candidate Simulator — AI Edition. This simulator will take you through the entire election cycle, one step at a time. You’ll experience the real requirements of filing, fundraising, compliance, and campaigning — all safely in a simulation.”",
-    "Narrator [neutral]:\n“Here are the ground rules. Think of them as your campaign manual.”",
-    "Candidate Coins (CC):\n1 CC = $100 simulated.\nYou start with 50 CC.\nEarn CC by passing quizzes or completing tasks.\nSpend CC on campaign needs like filing fees, ads, or communication coaching.",
-    "Signatures & Voter Approval:\nEach quiz score = the same number of signatures.\n100 signatures = 1% voter approval.\nExample: scoring 80% on a quiz = 80 signatures = 0.8% approval.",
-    "Ballot Access:\nYou must qualify for the ballot by paying CC (filing fee) AND gathering enough signatures (through quizzes and tasks).\nEligibility thresholds:\n- President → 75 CC + 2.5% approval\n- Senate → 50 CC + 2.5% approval\n- House → 31 CC + 2.5% approval",
-    "Task Types:\n- Read: Summaries of laws, filing guides, or news.\n- Write: Announcements, strategy documents, responses.\n- Upload: Images (Module 5 – signs, T-shirts, bumper stickers).\n- Speak: Speeches, press conferences, debates (Modules 7+).\nSome decisions appear as chat buttons. Click to choose your action.",
-    "Feedback & Progress:\nAfter each task, your CC, signatures, and approval are updated. Consequences are narrated: “Because you chose X, Y happened.” All choices and scores carry forward — just like a real campaign."
-  ],
+  "Narrator [calm, professional]: “Welcome to the Federal Candidate Simulator — AI Edition. This simulator will take you through the entire election cycle, one step at a time. You’ll experience the real requirements of filing, fundraising, compliance, and campaigning — all safely in a simulation.”",
+  
+  "Narrator [neutral]: “Here are the ground rules. Think of them as your campaign manual.”",
+  
+  "Candidate Coins (CC):\n- 1 CC = $100 simulated.\n- You start with 50 CC.\n- Earn CC by passing quizzes or completing tasks.\n- Spend CC on campaign needs like filing fees, ads, or communication coaching.",
+  
+  "Signatures & Voter Approval:\n- Each quiz score = the same number of signatures.\n- 100 signatures = 1% voter approval.\n- Example: scoring 80% on a quiz = 80 signatures = 0.8% approval.",
+  
+  "Ballot Access:\nYou must qualify for the ballot by:\n- Paying CC (filing fee) AND\n- Gathering enough signatures (through quizzes and tasks).\nEligibility thresholds:\n- President → 75 CC + 2.5% approval\n- Senate → 50 CC + 2.5% approval\n- House → 31 CC + 2.5% approval",
+  
+  "Task Types:\n- Read: Summaries of laws, filing guides, or news.\n- Write: Announcements, strategy documents, responses.\n- Upload: Images (Module 5 – signs, T-shirts, bumper stickers).\n- Speak: Speeches, press conferences, debates (Modules 7+).\n- Some decisions appear as chat buttons. Click to choose your action.",
+  
+  "Feedback & Progress:\n- After each task, CC, signatures, and approval are updated.\n- Consequences are narrated: “Because you chose X, Y happened.”\n- All choices and scores carry forward — just like a real campaign."
+],
   "tasks": [
     {
       "id": "0-quiz-cc",

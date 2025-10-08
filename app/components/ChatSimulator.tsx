@@ -2,199 +2,186 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Module, Task, TaskType } from "@/app/ai/types";
+import { modules } from "../data/modules"; // adjust path if needed
+import { CandidateState, Task } from "../ai/types";
 
 const ChatSimulator: React.FC = () => {
-  const [modules, setModules] = useState<Module[]>([]);
-  const [currentModuleIndex, setCurrentModuleIndex] = useState(0);
-  const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
-  const [messages, setMessages] = useState<string[]>([]);
+  // ---------------------- State ----------------------
+  const [messages, setMessages] = useState<string[]>([
+    "🎯 Orientation & Introduction\nIntroduction to the Federal Candidate Simulator and how it works.\n📘 Read the simulator rules above carefully. Understanding CC, signatures, and ballot access is crucial.\nType 'start' when ready."
+  ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [currentModuleIndex, setCurrentModuleIndex] = useState(0);
+  const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
+  const [candidateState, setCandidateState] = useState<CandidateState | null>(null);
+  const [awaitingOffice, setAwaitingOffice] = useState(false);
 
+  // ---------------------- Derived ----------------------
   const currentModule = modules[currentModuleIndex];
-  const currentTask = currentModule?.tasks?.[currentTaskIndex];
+  const currentTask: Task | null =
+    currentModule && currentModule.tasks ? currentModule.tasks[currentTaskIndex] : null;
 
-  const [candidateState, setCandidateState] = useState<{
-  office?: "President" | "Senate" | "House";
-  cc?: number;
-  signatures?: number;
-  approval?: number;
-}>({
-  cc: 50,           // starting CC
-  signatures: 0,
-  approval: 0
-});
+  // ---------------------- Core Handlers ----------------------
 
-  // --- Load modules dynamically ---
-  useEffect(() => {
-    const loadModules = async () => {
-      try {
-        const mod0Raw = await import("@/app/data/modules/module0.json");
-        const mod1Raw = await import("@/app/data/modules/module1.json");
+  const goToNextTask = () => {
+    if (!currentModule) return;
 
-        const normalizeModule = (mod: any): Module => ({
-          ...mod,
-          tasks: mod.tasks.map((t: any) => ({
-            ...t,
-            type: t.type as TaskType, // ensure type is correct
-            questions: t.questions?.map((q: any) => ({
-              ...q,
-              correct: Array.isArray(q.correct) ? q.correct : [q.correct], // always array
-            })) || [],
-          })),
-        });
-
-        setModules([normalizeModule(mod0Raw.default), normalizeModule(mod1Raw.default)]);
-      } catch (err) {
-        console.error("Error loading modules:", err);
-      }
-    };
-
-    loadModules();
-  }, []);
-
-  // --- Initialize messages for the first module ---
-  useEffect(() => {
-    if (currentModule) {
-      setMessages([
-        `🎯 ${currentModule.title}`,
-        currentModule.description || "",
-      ]);
-      if (currentModule.tasks?.length) {
-        displayTask(currentModule.tasks[0]);
+    const nextTaskIndex = currentTaskIndex + 1;
+    if (nextTaskIndex < currentModule.tasks.length) {
+      setCurrentTaskIndex(nextTaskIndex);
+    } else {
+      // Move to next module
+      const nextModuleIndex = currentModuleIndex + 1;
+      if (nextModuleIndex < modules.length) {
+        setCurrentModuleIndex(nextModuleIndex);
+        setCurrentTaskIndex(0);
+      } else {
+        setMessages(prev => [...prev, "🎉 Simulation complete! You've finished all modules."]);
       }
     }
-  }, [currentModule]);
+  };
 
-  // --- Handle user input ---
+  const processResponse = (userInput: string) => {
+    if (!currentTask) return;
+
+    switch (currentTask.type) {
+      case "read":
+        setMessages(prev => [
+          ...prev,
+          "✅ Great! Let’s move to a quick quiz to check your understanding."
+        ]);
+        goToNextTask();
+        break;
+
+      case "quiz": {
+        const q = currentTask.questions?.[0];
+        if (q && q.correct) {
+          const correctRaw = Array.isArray(q.correct) ? q.correct[0] : q.correct;
+          const correctLetter = (correctRaw || "").trim()[0]?.toUpperCase() || "";
+          const userLetter = (userInput || "").trim()[0]?.toUpperCase() || "";
+
+          if (["A", "B", "C", "D"].includes(userLetter)) {
+            if (userLetter === correctLetter) {
+              setMessages(prev => [...prev, "✅ Correct! You earned +5 Candidate Coins."]);
+              // Example: add coins
+              setCandidateState(prev => prev ? { ...prev, cc: (prev.cc ?? 0) + 5 } : prev);
+            } else {
+              setMessages(prev => [
+                ...prev,
+                `❌ Incorrect. The correct answer was: ${correctRaw}`
+              ]);
+            }
+          } else {
+            setMessages(prev => [...prev, "❌ Please answer with A, B, C, or D."]);
+            return; // wait for valid input
+          }
+        } else {
+          setMessages(prev => [...prev, "⚠️ Quiz data incomplete — skipping this question."]);
+        }
+
+        // After quiz: prompt office selection
+        setMessages(prev => [
+          ...prev,
+          "🗳️ Now choose the office you want to run for. Type: President, Senate, or House."
+        ]);
+        setAwaitingOffice(true);
+        return; // stop until user selects office
+      }
+
+      default:
+        setMessages(prev => [...prev, "🤖 Task type not recognized."]);
+        break;
+    }
+  };
+
   const handleUserInput = () => {
-    if (!input.trim() || !currentTask) return;
+    if (!input.trim()) return;
 
-    setMessages((prev) => [...prev, `🗣️ You: ${input}`]);
+    const userMsg = `👤 ${input}`;
+    setMessages(prev => [...prev, userMsg]);
     setIsLoading(true);
 
-    setTimeout(() => {
-      processResponse(input.trim());
+    // Handle office selection flow first
+    if (awaitingOffice) {
+      const choice = input.trim().toLowerCase();
+      let selected: "President" | "Senate" | "House" | null = null;
+
+      if (choice === "president") selected = "President";
+      else if (choice === "senate") selected = "Senate";
+      else if (choice === "house") selected = "House";
+
+      if (!selected) {
+        setMessages(prev => [...prev, "❌ Invalid choice. Type: President, Senate, or House."]);
+        setInput("");
+        setIsLoading(false);
+        return;
+      }
+
+      setMessages(prev => [...prev, `✅ You selected: ${selected}. Loading next module...`]);
+      setAwaitingOffice(false);
+      setCandidateState(prev => (prev ? { ...prev, office: selected } : { office: selected }));
+
+      // Move to next module (Module 1)
+      setCurrentTaskIndex(0);
+      setCurrentModuleIndex(prev => prev + 1);
+
       setInput("");
       setIsLoading(false);
-    }, 600);
-  };
+      return;
+    }
 
-  // --- Process response for quiz/read tasks ---
-// 1️⃣ Track if the user has selected office
-const processResponse = (userInput: string) => {
-  if (!currentTask) return;
-
-  // If waiting for office selection
-  if (awaitingOffice) {
-    const office = userInput.trim();
-    if (["President", "Senate", "House"].includes(office)) {
-      setCandidateState(prev => ({ ...prev!, office }));
-      setMessages(prev => [...prev, `✅ You selected: ${office}`]);
-      setAwaitingOffice(false);
-
-      // Move to next module
-      setCurrentModuleIndex(prev => prev + 1);
+    // If user typed "start"
+    if (input.trim().toLowerCase() === "start") {
+      setMessages(prev => [...prev, "🚀 Starting the simulation..."]);
+      setCurrentModuleIndex(0);
       setCurrentTaskIndex(0);
-    } else {
-      setMessages(prev => [...prev, "⚠️ Invalid selection. Type President, Senate, or House."]);
-    }
-    return; // stop further processing
-  }
-
-  switch (currentTask.type) {
-    case "quiz": {
-      const q = currentTask.questions?.[0];
-      if (q && q.correct) {
-        const correctAnswer = q.correct[0]?.toUpperCase() || "";
-        const userAnswer = userInput[0]?.toUpperCase() || "";
-
-        if (userAnswer === correctAnswer[0]) {
-          setMessages(prev => [...prev, "✅ Correct! You understand CC."]);
-        } else {
-          setMessages(prev => [...prev, `❌ Incorrect. The correct answer was: ${q.correct[0]}`]);
-        }
-      }
-
-      // Prompt office selection after quiz
-      setMessages(prev => [...prev, "Please select your office: President, Senate, or House"]);
-      setAwaitingOffice(true);
-      return; // don’t call goToNextTask yet
-    }
-
-    case "read":
-    case "speak":
-    case "write":
-    default:
+      setIsLoading(false);
       goToNextTask();
-      break;
-  }
-};
-
-  // --- Move to next task or module ---
-  const goToNextTask = () => {
-    if (currentModule.tasks && currentTaskIndex < currentModule.tasks.length - 1) {
-      setCurrentTaskIndex((prev) => prev + 1);
-      displayTask(currentModule.tasks[currentTaskIndex + 1]);
-    } else if (modules.length > currentModuleIndex + 1) {
-      setMessages((prev) => [...prev, `✅ Module "${currentModule.title}" complete.`]);
-      setCurrentModuleIndex((prev) => prev + 1);
-      setCurrentTaskIndex(0);
-    } else {
-      setMessages((prev) => [...prev, "🎉 All modules complete!"]);
+      setInput("");
+      return;
     }
+
+    processResponse(input);
+    setInput("");
+    setIsLoading(false);
   };
 
-  // --- Display task content ---
-  const displayTask = (task: Task) => {
-    switch (task.type) {
-      case "quiz": {
-        const q = task.questions?.[0];
-        const quizLines = [`🧩 ${task.prompt}`, q?.question, ...(q?.options || [])];
-        setMessages((prev) => [...prev, ...quizLines.filter((line): line is string => !!line)]);
-        break;
-      }
-      case "read":
-        setMessages((prev) => [...prev, `📘 ${task.prompt}`]);
-        break;
-      default:
-        setMessages((prev) => [...prev, `📗 ${task.prompt}`]);
-        break;
-    }
-  };
+  // ---------------------- UI ----------------------
 
   return (
-    <div className="max-w-3xl mx-auto p-4">
-      <div className="h-[450px] overflow-y-auto p-4 border rounded-md bg-gray-50 mb-4">
-        {messages.map((msg, i) => (
-          <div key={i} className="mb-2 whitespace-pre-wrap">{msg}</div>
+    <div className="flex flex-col w-full max-w-2xl mx-auto p-4 bg-gray-50 rounded-2xl shadow-md">
+      <div className="flex-1 overflow-y-auto space-y-2 mb-4">
+        {messages.map((msg, idx) => (
+          <div
+            key={idx}
+            className={`p-3 rounded-lg whitespace-pre-line ${
+              msg.startsWith("👤")
+                ? "bg-blue-100 text-blue-800 self-end"
+                : "bg-white text-gray-900"
+            }`}
+          >
+            {msg}
+          </div>
         ))}
-        {isLoading && <div className="text-gray-500 italic">AI is thinking...</div>}
+        {isLoading && <div className="text-gray-500 italic">Processing...</div>}
       </div>
 
-      {currentTask && (
-        <div className="flex space-x-2">
-          <input
-            type="text"
-            className="flex-1 border rounded-md p-2"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleUserInput()}
-            placeholder={
-              currentTask.type === "quiz"
-                ? "Answer A, B, C, or D..."
-                : "Press Enter to continue..."
-            }
-          />
-          <button
-            onClick={handleUserInput}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
-          >
-            Send
-          </button>
-        </div>
-      )}
+      <div className="flex space-x-2">
+        <input
+          className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+          value={input}
+          placeholder="Type your response..."
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={e => e.key === "Enter" && handleUserInput()}
+        />
+        <button
+          onClick={handleUserInput}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        >
+          Send
+        </button>
+      </div>
     </div>
   );
 };

@@ -78,11 +78,9 @@
 ],
   "purpose": "Teach users the party filing process, including nomination, filing fees, and petition signatures, and test understanding through a quiz.",
   "scenarios": [],
-  "outcome": 
-  "description": "User completes Party Candidate filing with correct CC, signatures, and initial voter approval. Next step: federal compliance with FEC Forms 1 and 2.",
-  "nextModule": {
-    "id": "2",
-    "title": "Federal Compliance",
-    "description": "Register with the FEC using Forms 1 and 2."
-  }
+  "outcome": "User completes Party Candidate filing with correct CC, signatures, and initial voter approval. Next step: federal compliance with FEC Forms 1 and 2.",
+"nextModule": {
+  "id": "2",
+  "title": "Federal Compliance",
+  "description": "Register with the FEC using Forms 1 and 2."
 }

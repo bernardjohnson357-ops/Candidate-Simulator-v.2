@@ -21,7 +21,7 @@ const ChatSimulator: React.FC = () => {
 
   // ---------------------- Intro ----------------------
   useEffect(() => {
-    if (messages.length === 0 && currentModule) {
+  if (currentModule) {
       setMessages([
         `🎯 ${currentModule.title}`,
         currentModule.description,
@@ -143,13 +143,36 @@ const ChatSimulator: React.FC = () => {
     }
 
     // Start the module if user types 'start'
-    if (userInput.toLowerCase() === "start" && currentTask) {
-      setMessages(prev => [...prev, "🚀 Starting the simulation..."]);
-      goToNextTask();
-      setInput("");
-      setIsLoading(false);
-      return;
-    }
+   if (input.trim().toLowerCase() === "start") {
+  setMessages(prev => [...prev, "🎬 Starting simulation..."]);
+
+  const firstModule = modules[0];
+  if (!firstModule) {
+    setMessages(prev => [...prev, "⚠️ No modules found."]);
+    setIsLoading(false);
+    return;
+  }
+
+  // Update candidate state to attach module
+  setCandidateState(prev => ({
+    ...(prev ?? { cc: 50, signatures: 0, voterApproval: 0, office: "House" }),
+    currentModuleId: firstModule.id
+  }));
+
+  // Show first quiz or next task
+  const firstTask = firstModule.tasks?.[0];
+  if (firstTask) {
+    setMessages(prev => [
+      ...prev,
+      `🧩 ${firstTask.prompt}`
+    ]);
+  } else {
+    setMessages(prev => [...prev, "⚠️ This module has no tasks configured."]);
+  }
+
+  setIsLoading(false);
+  return;
+}
 
     // Process normal task flow
     processResponse(userInput);

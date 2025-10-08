@@ -136,15 +136,20 @@ const ChatSimulator: React.FC = () => {
     }
 
     // If user typed "start"
-    if (input.trim().toLowerCase() === "start") {
-      setMessages(prev => [...prev, "🚀 Starting the simulation..."]);
-      setCurrentModuleIndex(0);
-      setCurrentTaskIndex(0);
-      setIsLoading(false);
-      goToNextTask();
-      setInput("");
-      return;
-    }
+    // When module starts
+setMessages(prev => [
+  ...prev,
+  `🎯 ${module.title}`,
+  module.description,
+  ...module.readingSummary.map(line => `📘 ${line}`),
+  "Type 'start' when ready."
+]);
+
+// On user input
+if (userInput.toLowerCase() === 'start' && !quizStarted) {
+  setMessages(prev => [...prev, "✅ Great! Let’s move to a quick quiz to check your understanding."]);
+  setQuizStarted(true);
+}
 
     processResponse(input);
     setInput("");

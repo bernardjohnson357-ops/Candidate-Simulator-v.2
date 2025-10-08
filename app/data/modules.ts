@@ -1,7 +1,7 @@
 import { Module } from "@/app/ai/types";
 
 export const modules: Module[] = [
- {
+{
   id: "module0",
   title: "Orientation & Introduction",
   description: "Introduction to the Federal Candidate Simulator and how it works.",
@@ -28,10 +28,9 @@ export const modules: Module[] = [
         }
       ]
     }
-  ]
-},
-    nextModule: { id: "module1", title: "Ballot Access & Strategy" }
-  },
+  ],
+  nextModule: { id: "module1", title: "Ballot Access & Strategy" }
+}
 
   {
     id: "module1",

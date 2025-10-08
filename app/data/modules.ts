@@ -18,7 +18,7 @@ export const modules: Module[] = [
         prompt: "📘 Read the simulator rules carefully. Understanding CC, signatures, and ballot access is crucial."
       },
       {
-        id: "quiz0",
+        id: "q1",
         type: "quiz",
         prompt: "🧩 What do Candidate Coins (CC) represent in this simulator?",
         questions: [

@@ -94,7 +94,7 @@ const processResponse = (userInput: string) => {
     else if (choice.startsWith("B")) office = "Senate";
     else if (choice.startsWith("C")) office = "House";
 
-    iif (office) {
+    if (office) {
   setCandidateState(prev => ({ ...prev, office }));
   setMessages(prev => [...prev, `✅ You selected: ${office}`]);
   setAwaitingOffice(false);

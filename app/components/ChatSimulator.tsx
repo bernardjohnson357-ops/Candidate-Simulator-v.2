@@ -6,7 +6,6 @@ import { modules } from "../data/modules";
 import { CandidateState, Task } from "../ai/types";
 
 const ChatSimulator: React.FC = () => {
-  // ---------------------- State ----------------------
   const [messages, setMessages] = useState<string[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -17,11 +16,11 @@ const ChatSimulator: React.FC = () => {
 
   const currentModule = modules[currentModuleIndex];
   const currentTask: Task | null =
-    currentModule && currentModule.tasks ? currentModule.tasks[currentTaskIndex] : null;
+    currentModule?.tasks?.[currentTaskIndex] ?? null;
 
   // ---------------------- Intro ----------------------
   useEffect(() => {
-  if (currentModule) {
+    if (currentModule) {
       setMessages([
         `🎯 ${currentModule.title}`,
         currentModule.description,
@@ -31,8 +30,7 @@ const ChatSimulator: React.FC = () => {
     }
   }, [currentModule]);
 
-  // ---------------------- Task Flow ----------------------
-
+  // ---------------------- Navigation ----------------------
   const goToNextTask = () => {
     if (!currentModule) return;
     const nextIndex = currentTaskIndex + 1;
@@ -40,7 +38,6 @@ const ChatSimulator: React.FC = () => {
     if (nextIndex < (currentModule.tasks?.length || 0)) {
       setCurrentTaskIndex(nextIndex);
     } else {
-      // Move to next module
       const nextModuleIndex = currentModuleIndex + 1;
       if (nextModuleIndex < modules.length) {
         setCurrentModuleIndex(nextModuleIndex);
@@ -51,6 +48,7 @@ const ChatSimulator: React.FC = () => {
     }
   };
 
+  // ---------------------- Logic ----------------------
   const processResponse = (userInput: string) => {
     if (!currentTask) return;
 
@@ -67,29 +65,31 @@ const ChatSimulator: React.FC = () => {
         const q = currentTask.questions?.[0];
         if (q && q.correct) {
           const correctRaw = Array.isArray(q.correct) ? q.correct[0] : q.correct;
-          const correctLetter = (correctRaw || "").trim()[0]?.toUpperCase() || "";
-          const userLetter = (userInput || "").trim()[0]?.toUpperCase() || "";
+          const correctLetter = correctRaw?.trim()[0]?.toUpperCase() || "";
+          const userLetter = userInput.trim()[0]?.toUpperCase() || "";
 
           if (["A", "B", "C", "D"].includes(userLetter)) {
             if (userLetter === correctLetter) {
               setMessages(prev => [...prev, "✅ Correct! You earned +5 Candidate Coins."]);
               setCandidateState(prev =>
-  prev
-    ? { ...prev, cc: (prev.cc ?? 0) + 5 }
-    : { cc: 5, office: "House", signatures: 0, voterApproval: 0 }
-);
+                prev
+                  ? { ...prev, cc: (prev.cc ?? 0) + 5 }
+                  : { cc: 55, office: "House", signatures: 0, voterApproval: 0 }
+              );
             } else {
-              setMessages(prev => [...prev, `❌ Incorrect. The correct answer was: ${correctRaw}`]);
+              setMessages(prev => [
+                ...prev,
+                `❌ Incorrect. The correct answer was: ${correctRaw}`
+              ]);
             }
           } else {
             setMessages(prev => [...prev, "❌ Please answer with A, B, C, or D."]);
-            return; // Wait for valid input
+            return;
           }
         } else {
           setMessages(prev => [...prev, "⚠️ Quiz data incomplete — skipping this question."]);
         }
 
-        // After quiz: prompt office selection
         setMessages(prev => [
           ...prev,
           "🗳️ Now choose the office you want to run for. Type: President, Senate, or House."
@@ -104,27 +104,24 @@ const ChatSimulator: React.FC = () => {
     }
   };
 
-  // ---------------------- Input Handling ----------------------
-
+  // ---------------------- Input Handler ----------------------
   const handleUserInput = () => {
     if (!input.trim()) return;
     const userInput = input.trim();
-    const userMsg = `👤 ${userInput}`;
-    setMessages(prev => [...prev, userMsg]);
+    setMessages(prev => [...prev, `👤 ${userInput}`]);
     setIsLoading(true);
+    setInput(""); // clear immediately
 
-    // Handle office selection
+    // Office selection
     if (awaitingOffice) {
       const choice = userInput.toLowerCase();
       let selected: "President" | "Senate" | "House" | null = null;
-
       if (choice === "president") selected = "President";
       else if (choice === "senate") selected = "Senate";
       else if (choice === "house") selected = "House";
 
       if (!selected) {
         setMessages(prev => [...prev, "❌ Invalid choice. Type: President, Senate, or House."]);
-        setInput("");
         setIsLoading(false);
         return;
       }
@@ -137,51 +134,39 @@ const ChatSimulator: React.FC = () => {
 
       setCurrentModuleIndex(prev => prev + 1);
       setCurrentTaskIndex(0);
-      setInput("");
       setIsLoading(false);
       return;
     }
 
-    // Start the module if user types 'start'
-   if (input.trim().toLowerCase() === "start") {
-  setMessages(prev => [...prev, "🎬 Starting simulation..."]);
+    // Start current module
+    if (userInput.toLowerCase() === "start") {
+      setMessages(prev => [...prev, "🎬 Starting simulation..."]);
 
-  const firstModule = modules[0];
-  if (!firstModule) {
-    setMessages(prev => [...prev, "⚠️ No modules found."]);
-    setIsLoading(false);
-    return;
-  }
+      const firstTask = currentModule?.tasks?.[0];
+      if (firstTask) {
+        setMessages(prev => [
+          ...prev,
+          firstTask.prompt // no extra 🧩 added
+        ]);
+      } else {
+        setMessages(prev => [...prev, "⚠️ This module has no tasks configured."]);
+      }
 
-  // Update candidate state to attach module
-  setCandidateState(prev => ({
-    ...(prev ?? { cc: 50, signatures: 0, voterApproval: 0, office: "House" }),
-    currentModuleId: firstModule.id
-  }));
+      setCandidateState(prev => ({
+        ...(prev ?? { cc: 50, signatures: 0, voterApproval: 0, office: "House" }),
+        currentModuleId: currentModule?.id
+      }));
 
-  // Show first quiz or next task
-  const firstTask = firstModule.tasks?.[0];
-  if (firstTask) {
-    setMessages(prev => [
-      ...prev,
-      `🧩 ${firstTask.prompt}`
-    ]);
-  } else {
-    setMessages(prev => [...prev, "⚠️ This module has no tasks configured."]);
-  }
+      setIsLoading(false);
+      return;
+    }
 
-  setIsLoading(false);
-  return;
-}
-
-    // Process normal task flow
+    // Otherwise process task input
     processResponse(userInput);
-    setInput("");
     setIsLoading(false);
   };
 
   // ---------------------- UI ----------------------
-
   return (
     <div className="flex flex-col w-full max-w-2xl mx-auto p-4 bg-gray-50 rounded-2xl shadow-md">
       <div className="flex-1 overflow-y-auto space-y-2 mb-4">

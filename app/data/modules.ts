@@ -41,11 +41,10 @@ export const modules: Module[] = [
     scenarios: [],
     outcome: "User completes the reading and quiz, understands CC and signatures, and is ready to select their office.",
     nextModule: {
-      id: "module1",
-      title: "Party Filing",
-      description: "The first official step: filing as a party candidate.",
-      tasks: []
-    }
+  id: "module1",
+  title: "Party Filing",
+  description: "The first official step: filing as a party candidate."
+}
   },
   {
     id: "module1",

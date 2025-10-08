@@ -6,7 +6,8 @@ export const modules: Module[] = [
     id: "module0",
     title: "Orientation & Introduction",
     active: true,
-    description: "Introduction to the Federal Candidate Simulator and how it works.",
+    description:
+      "Introduction to the Federal Candidate Simulator and how it works.",
     narrator: "calm, professional",
     readingSummary: [
       "Narrator [calm, professional]: “Welcome to the Federal Candidate Simulator — AI Edition. This simulator will take you through the entire election cycle, one step at a time. You’ll experience the real requirements of filing, fundraising, compliance, and campaigning — all safely in a simulation.”",
@@ -37,38 +38,49 @@ export const modules: Module[] = [
         ]
       }
     ],
-    purpose: "Introduce users to simulator mechanics, CC, signatures, approval, and office selection.",
+    purpose:
+      "Introduce users to simulator mechanics, CC, signatures, approval, and office selection.",
     scenarios: [],
-    outcome: "User completes the reading and quiz, understands CC and signatures, and is ready to select their office.",
+    outcome:
+      "User completes the reading and quiz, understands CC and signatures, and is ready to select their office.",
     nextModule: {
-  id: "module1",
-  title: "Party Filing",
-  description: "The first official step: filing as a party candidate."
-}
+      id: "module1",
+      title: "Party Filing",
+      description: "The first official step: filing as a party candidate."
+    }
   },
   {
     id: "module1",
     title: "Party Filing",
     active: true,
-    description: "Simulate filing as a Party Candidate with the Texas Secretary of State (SOS) and gathering signatures or paying fees.",
+    description:
+      "Simulate filing as a Party Candidate with the Texas Secretary of State (SOS) and gathering signatures or paying fees.",
     narrator: "neutral",
     readingSummary: [
-      "To appear on the ballot as a Party Candidate in Texas, you must:\n1. Be nominated by your party through conventions (Libertarian, Green, etc.) or a primary (Democratic, Republican).\n2. File an Application of Candidacy with the Texas Secretary of State.\n3. Choose one qualification method: Pay the required filing fee OR submit the required petition signatures.\n4. Deadlines: Party candidates must file paperwork by December of the year before the election; petition signatures are due at the same time.\n5. Signature rules: Signatures must be from registered voters who did not vote in another party’s primary; petition sheets must be submitted with a sworn affidavit."
+      "To appear on the ballot as a Party Candidate in Texas, you must:",
+      "1. Be nominated by your party through conventions (Libertarian, Green, etc.) or a primary (Democratic, Republican).",
+      "2. File an Application of Candidacy with the Texas Secretary of State.",
+      "3. Choose one qualification method: Pay the required filing fee OR submit the required petition signatures.",
+      "4. Deadlines: Party candidates must file paperwork by December of the year before the election; petition signatures are due at the same time.",
+      "5. Signature rules: Signatures must be from registered voters who did not vote in another party’s primary; petition sheets must be submitted with a sworn affidavit."
     ],
     tasks: [
       {
         id: "1-1",
         type: "read",
-        prompt: "As a Party Candidate, your filing process starts with the Texas Secretary of State (SOS) and your party’s nomination process. This is your first big step toward ballot access. You must go through your party first, then file with the SOS by paying the filing fee or submitting signatures. Mistakes in this process cost CC or signatures."
+        prompt:
+          "As a Party Candidate, your filing process starts with the Texas Secretary of State (SOS) and your party’s nomination process. This is your first big step toward ballot access. You must go through your party first, then file with the SOS by paying the filing fee or submitting signatures. Mistakes in this process cost CC or signatures."
       },
       {
         id: "1-2",
         type: "quiz",
-        prompt: "Quiz – Party Candidate Filing. Each correct answer = +20 signatures, each wrong answer = -1 CC. Score ≥ 80% = +1 CC, score 100% = +2 CC.",
+        prompt:
+          "🧩 Quiz – Party Candidate Filing. Each correct answer = +20 signatures, each wrong answer = -1 CC. Score ≥ 80% = +1 CC, score 100% = +2 CC.",
         questions: [
           {
             id: "q1",
-            question: "When must Party Candidates file their application of candidacy with the Texas SOS?",
+            question:
+              "When must Party Candidates file their application of candidacy with the Texas SOS?",
             options: [
               "A) December of the year before the election",
               "B) January of election year",
@@ -80,9 +92,11 @@ export const modules: Module[] = [
         ]
       }
     ],
-    purpose: "Teach users the party filing process, including nomination, filing fees, and petition signatures, and test understanding through a quiz.",
+    purpose:
+      "Teach users the party filing process, including nomination, filing fees, and petition signatures, and test understanding through a quiz.",
     scenarios: [],
-    outcome: "User completes Party Candidate filing with correct CC, signatures, and initial voter approval.",
+    outcome:
+      "User completes Party Candidate filing with correct CC, signatures, and initial voter approval.",
     nextModule: {
       id: "module2",
       title: "Federal Compliance",

@@ -27,7 +27,7 @@
           "C) By early May of election year",
           "D) By mid-August of election year"
         ],
-        "correct": "A) December of the year before the election"
+        "correct": ["A) December of the year before the election"]
       },
       {
         "id": "q2",
@@ -38,7 +38,7 @@
           "C) Their political party",
           "D) Any registered voter in their district"
         ],
-        "correct": "C) Their political party"
+        "correct": ["C) Their political party"]
       },
       {
         "id": "q3",
@@ -49,7 +49,7 @@
           "C) Voters who did not vote in another party’s primary",
           "D) Anyone 18 or older, even if not registered"
         ],
-        "correct": "C) Voters who did not vote in another party’s primary"
+        "correct": ["C) Voters who did not vote in another party’s primary"]
       },
       {
         "id": "q4",
@@ -60,7 +60,7 @@
           "C) Only if you have fewer than 1,000 signatures",
           "D) Only with approval from your party chair"
         ],
-        "correct": "B) No, you must choose one or the other"
+        "correct": ["B) No, you must choose one or the other"]
       },
       {
         "id": "q5",
@@ -71,16 +71,15 @@
           "C) A party endorsement letter",
           "D) A voter ID photocopy"
         ],
-        "correct": "B) A notarized affidavit"
+        "correct": ["B) A notarized affidavit"]
       }
     ]
   }
 ],
   "purpose": "Teach users the party filing process, including nomination, filing fees, and petition signatures, and test understanding through a quiz.",
   "scenarios": [],
-  "outcome": {
-    "description": "User completes Party Candidate filing with correct CC, signatures, and initial voter approval. Next step: federal compliance with FEC Forms 1 and 2."
-  },
+  "outcome": 
+  "description": "User completes Party Candidate filing with correct CC, signatures, and initial voter approval. Next step: federal compliance with FEC Forms 1 and 2.",
   "nextModule": {
     "id": "2",
     "title": "Federal Compliance",

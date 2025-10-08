@@ -1,7 +1,8 @@
+// ./app/components/ChatSimulator.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Module, Task } from "@/app/ai/types";
+import { Module, Task, TaskType } from "@/app/ai/types";
 
 const ChatSimulator: React.FC = () => {
   const [modules, setModules] = useState<Module[]>([]);
@@ -11,40 +12,29 @@ const ChatSimulator: React.FC = () => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // --- Derived state ---
   const currentModule = modules[currentModuleIndex];
   const currentTask = currentModule?.tasks?.[currentTaskIndex];
 
-  // --- Helper to normalize "correct" field ---
-  const normalizeCorrect = (q: any) => {
-    if (!q.correct) return [];
-    return Array.isArray(q.correct) ? q.correct : [q.correct];
-  };
-
-  // --- Load and normalize modules ---
+  // --- Load modules dynamically ---
   useEffect(() => {
     const loadModules = async () => {
       try {
-        const mod0Raw = (await import("@/app/data/modules/module0.json")).default;
-        const mod1Raw = (await import("@/app/data/modules/module1.json")).default;
+        const mod0Raw = await import("@/app/data/modules/module0.json");
+        const mod1Raw = await import("@/app/data/modules/module1.json");
 
-        const normalizeModule = (modRaw: any): Module => ({
-          ...modRaw,
-          tasks: modRaw.tasks.map((task: any) => {
-            if (task.type === "quiz" && task.questions) {
-              return {
-                ...task,
-                questions: task.questions.map((q: any) => ({
-                  ...q,
-                  correct: normalizeCorrect(q),
-                })),
-              };
-            }
-            return task;
-          }),
+        const normalizeModule = (mod: any): Module => ({
+          ...mod,
+          tasks: mod.tasks.map((t: any) => ({
+            ...t,
+            type: t.type as TaskType, // ensure type is correct
+            questions: t.questions?.map((q: any) => ({
+              ...q,
+              correct: Array.isArray(q.correct) ? q.correct : [q.correct], // always array
+            })) || [],
+          })),
         });
 
-        setModules([normalizeModule(mod0Raw), normalizeModule(mod1Raw)]);
+        setModules([normalizeModule(mod0Raw.default), normalizeModule(mod1Raw.default)]);
       } catch (err) {
         console.error("Error loading modules:", err);
       }
@@ -53,7 +43,7 @@ const ChatSimulator: React.FC = () => {
     loadModules();
   }, []);
 
-  // --- Initialize module display ---
+  // --- Initialize messages for the first module ---
   useEffect(() => {
     if (currentModule) {
       setMessages([
@@ -68,10 +58,9 @@ const ChatSimulator: React.FC = () => {
 
   // --- Handle user input ---
   const handleUserInput = () => {
-    if (!input.trim()) return;
+    if (!input.trim() || !currentTask) return;
 
-    const userMsg = `🗣️ You: ${input}`;
-    setMessages((prev) => [...prev, userMsg]);
+    setMessages((prev) => [...prev, `🗣️ You: ${input}`]);
     setIsLoading(true);
 
     setTimeout(() => {
@@ -81,52 +70,47 @@ const ChatSimulator: React.FC = () => {
     }, 600);
   };
 
-  // --- Process responses based on task type ---
+  // --- Process response for quiz/read tasks ---
   const processResponse = (userInput: string) => {
     if (!currentTask) return;
 
     switch (currentTask.type) {
       case "quiz": {
         const q = currentTask.questions?.[0];
-        if (q && q.correct) {
-          const correctAnswer = q.correct[0]?.toUpperCase() || "";
-          const userAnswer = userInput[0]?.toUpperCase() || "";
+        if (q && q.correct?.length) {
+          const correctAnswer = q.correct[0]?.toUpperCase();
+          const userAnswer = userInput[0]?.toUpperCase();
 
-          if (userAnswer === correctAnswer) {
-            setMessages((prev) => [
-              ...prev,
-              "✅ Correct! Candidate Coins (CC) = campaign energy and credibility.",
-            ]);
-          } else {
-            setMessages((prev) => [
-              ...prev,
-              `❌ Incorrect. The correct answer was: ${q.correct[0]}`,
-            ]);
-          }
-        } else {
           setMessages((prev) => [
             ...prev,
-            "⚠️ Quiz data incomplete — skipping this question.",
+            userAnswer === correctAnswer
+              ? "✅ Correct! Candidate Coins (CC) = campaign energy and credibility."
+              : `❌ Incorrect. The correct answer was: ${q.correct[0]}`,
           ]);
+        } else {
+          setMessages((prev) => [...prev, "⚠️ Quiz data incomplete — skipping question."]);
         }
-        goToNextTask();
         break;
       }
 
       case "read":
       case "speak":
+        setMessages((prev) => [...prev, `📘 ${currentTask.prompt}`]);
+        break;
+
       default:
-        goToNextTask();
+        setMessages((prev) => [...prev, `📗 ${currentTask.prompt}`]);
         break;
     }
+
+    goToNextTask();
   };
 
   // --- Move to next task or module ---
   const goToNextTask = () => {
-    if (currentModule?.tasks && currentTaskIndex < currentModule.tasks.length - 1) {
-      const nextTask = currentModule.tasks[currentTaskIndex + 1];
-      displayTask(nextTask);
+    if (currentModule.tasks && currentTaskIndex < currentModule.tasks.length - 1) {
       setCurrentTaskIndex((prev) => prev + 1);
+      displayTask(currentModule.tasks[currentTaskIndex + 1]);
     } else if (modules.length > currentModuleIndex + 1) {
       setMessages((prev) => [...prev, `✅ Module "${currentModule.title}" complete.`]);
       setCurrentModuleIndex((prev) => prev + 1);
@@ -136,20 +120,13 @@ const ChatSimulator: React.FC = () => {
     }
   };
 
-  // --- Display current task ---
+  // --- Display task content ---
   const displayTask = (task: Task) => {
     switch (task.type) {
       case "quiz": {
         const q = task.questions?.[0];
-        const quizLines = [
-          `🧩 ${task.prompt}`,
-          q?.question,
-          ...(q?.options || []),
-        ];
-        setMessages((prev) => [
-          ...prev,
-          ...quizLines.filter((line): line is string => typeof line === "string"),
-        ]);
+        const quizLines = [`🧩 ${task.prompt}`, q?.question, ...(q?.options || [])];
+        setMessages((prev) => [...prev, ...quizLines.filter((line): line is string => !!line)]);
         break;
       }
       case "read":
@@ -161,7 +138,6 @@ const ChatSimulator: React.FC = () => {
     }
   };
 
-  // --- Render ---
   return (
     <div className="max-w-3xl mx-auto p-4">
       <div className="h-[450px] overflow-y-auto p-4 border rounded-md bg-gray-50 mb-4">

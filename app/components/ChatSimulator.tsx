@@ -82,62 +82,44 @@ const ChatSimulator: React.FC = () => {
   };
 
   // --- Process response for quiz/read tasks ---
+// 1️⃣ Track if the user has selected office
 const [awaitingOffice, setAwaitingOffice] = useState(false);
 
-// In processResponse:
-const processResponse = (userInput: string) => {
-  if (awaitingOffice) {
-    const choice = userInput.toUpperCase();
-    let office: "President" | "Senate" | "House" | null = null;
-
-    if (choice.startsWith("A")) office = "President";
-    else if (choice.startsWith("B")) office = "Senate";
-    else if (choice.startsWith("C")) office = "House";
-
-    if (office) {
-  setCandidateState(prev => ({ ...prev, office }));
-  setMessages(prev => [...prev, `✅ You selected: ${office}`]);
-  setAwaitingOffice(false);
-  // Advance to next module
-  setCurrentModuleIndex(prev => prev + 1);
-  setCurrentTaskIndex(0);
-} else {
-      setMessages(prev => [...prev, "❌ Invalid choice. Please select A, B, or C."]);
-    }
-    return;
+// 2️⃣ In processResponse, after quiz task
+if (currentTask.type === "quiz") {
+  const q = currentTask.questions?.[0];
+  if (q) {
+    const correctAnswer = q.correct[0];
+    const userAnswer = userInput[0]?.toUpperCase() || "";
+    setMessages(prev => [
+      ...prev,
+      userAnswer === correctAnswer[0]
+        ? "✅ Correct! You understand CC."
+        : `❌ Incorrect. The correct answer was: ${correctAnswer}`
+    ]);
   }
 
-  if (!currentTask) return;
+  // Now prompt for office selection
+  setMessages(prev => [...prev, "Please select your office: President, Senate, or House"]);
+  setAwaitingOffice(true);
+  return; // stop here until office is chosen
+}
 
-  switch (currentTask.type) {
-    case "quiz": {
-      const q = currentTask.questions?.[0];
-      if (q && q.correct) {
-        const correctAnswer = q.correct[0]?.toUpperCase() || "";
-        const userAnswer = userInput[0]?.toUpperCase() || "";
+// 3️⃣ Handle office selection
+if (awaitingOffice) {
+  const office = userInput.trim() as "President" | "Senate" | "House";
+  if (["President", "Senate", "House"].includes(office)) {
+    setCandidateState(prev => ({ ...prev!, office }));
+    setMessages(prev => [...prev, `✅ You selected: ${office}`]);
+    setAwaitingOffice(false);
 
-        if (userAnswer === correctAnswer[0]) {
-          setMessages(prev => [
-            ...prev,
-            "✅ Correct! 1 CC = $100 simulated"
-          ]);
-        } else {
-          setMessages(prev => [
-            ...prev,
-            `❌ Incorrect. The correct answer was: ${q.correct[0]}`
-          ]);
-        }
-
-        // After quiz, prompt office selection
-        setMessages(prev => [
-          ...prev,
-          "🎯 Now that you know the rules, which office do you want to run for?",
-          "A) President",
-          "B) Senate",
-          "C) House"
-        ]);
-        setAwaitingOffice(true);
-      }
+    // Advance to next module
+    setCurrentModuleIndex(prev => prev + 1);
+    setCurrentTaskIndex(0);
+  } else {
+    setMessages(prev => [...prev, "⚠️ Invalid selection. Please type President, Senate, or House."]);
+  }
+}
 
       goToNextTask();
       break;

@@ -5,10 +5,47 @@
   "description": "Introduction to the Federal Candidate Simulator and how it works.",
   "narrator": "calm, professional",
   "readingSummary": [
-    "Welcome to the Federal Candidate Simulator — AI Edition. This simulator will take you through the entire election cycle, one step at a time. You’ll experience filing, fundraising, compliance, and campaigning — all safely in a simulation.",
-    "Candidate Coins (CC) represent your campaign energy and credibility. You start with 50 CC, which can be spent or earned depending on your decisions.",
-    "Signatures and voter approval reflect your public support. 100 signatures = 1% voter approval.",
-    "You must choose an office: President (75 CC + 2.5% approval), Senate (50 CC + 2.5%), or House (31 CC + 2.5%)."
+    "Narrator [calm, professional]:
+“Welcome to the Federal Candidate Simulator — AI Edition.
+This simulator will take you through the entire election cycle, one step at a time. You’ll experience the real requirements of filing, fundraising, compliance, and campaigning — all safely in a simulation.”
+
+How the Simulator Works
+Narrator [neutral]:
+“Here are the ground rules. Think of them as your campaign manual.”
+
+Candidate Coins (CC)
+
+1 CC = $100 simulated.
+You start with 50 CC.
+Earn CC by passing quizzes or completing tasks.
+Spend CC on campaign needs like filing fees, ads, or communication coaching.
+Signatures & Voter Approval
+
+Each quiz score = the same number of signatures.
+100 signatures = 1% voter approval.
+Example: scoring 80% on a quiz = 80 signatures = 0.8% approval.
+Ballot Access
+
+You must qualify for the ballot by:
+Paying CC (filing fee) AND
+Gathering enough signatures (through quizzes and tasks).
+Eligibility thresholds:
+
+President → 75 CC + 2.5% approval
+Senate → 50 CC + 2.5% approval
+House → 31 CC + 2.5% approval
+Task Types
+
+Read: Summaries of laws, filing guides, or news.
+Write: Announcements, strategy documents, responses.
+Upload: Images (Module 5 – signs, T-shirts, bumper stickers).
+Speak: Speeches, press conferences, debates (Modules 7+).
+Some decisions appear as chat buttons. Click to choose your action.
+Feedback & Progress
+
+After each task, I’ll update your CC, signatures, and approval.
+I’ll narrate consequences: “Because you chose X, Y happened.”
+All choices and scores carry forward — just like a real campaign."
   ],
   "tasks": [
   {
@@ -20,12 +57,12 @@
         "id": "q1",
         "question": "Select the correct answer:",
         "options": [
-          "A) Campaign energy and credibility",
+          "A) 1 CC = $100 simulated",
           "B) Real currency for campaign ads",
           "C) Signatures collected from voters",
           "D) Debate score multiplier"
         ],
-        "correct": ["A) Campaign energy and credibility"]
+        "correct": ["A) C1 CC = $100 simulated"]
       }
     ]
   }

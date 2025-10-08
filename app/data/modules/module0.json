@@ -6,7 +6,8 @@
   "narrator": "calm, professional",
   "readingSummary": [
     "Narrator [calm, professional]:
-“Welcome to the Federal Candidate Simulator — AI Edition.
+{
+  “Welcome to the Federal Candidate Simulator — AI Edition.
 This simulator will take you through the entire election cycle, one step at a time. You’ll experience the real requirements of filing, fundraising, compliance, and campaigning — all safely in a simulation.”
 
 How the Simulator Works
@@ -45,7 +46,7 @@ Feedback & Progress
 
 After each task, I’ll update your CC, signatures, and approval.
 I’ll narrate consequences: “Because you chose X, Y happened.”
-All choices and scores carry forward — just like a real campaign."
+All choices and scores carry forward — just like a real campaign." }
   ],
   "tasks": [
   {

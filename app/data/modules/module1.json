@@ -8,79 +8,80 @@
     "To appear on the ballot as a Party Candidate in Texas, you must:\n1. Be nominated by your party through conventions (Libertarian, Green, etc.) or a primary (Democratic, Republican).\n2. File an Application of Candidacy with the Texas Secretary of State.\n3. Choose one qualification method:\n   - Pay the required filing fee, OR\n   - Submit the required petition signatures.\n4. Deadlines: Party candidates must file paperwork by December of the year before the election; petition signatures are due at the same time.\n5. Signature rules: Signatures must be from registered voters who did not vote in another party’s primary; petition sheets must be submitted with a sworn affidavit."
   ],
   "tasks": [
-  {
-    "id": "1-1",
-    "type": "read",
-    "prompt": "As a Party Candidate, your filing process starts with the Texas Secretary of State (SOS) and your party’s nomination process. This is your first big step toward ballot access. You must go through your party first, then file with the SOS by paying the filing fee or submitting signatures. Mistakes in this process cost CC or signatures."
-  },
-  {
-    "id": "1-2",
-    "type": "quiz",
-    "prompt": "Quiz – Party Candidate Filing. Each correct answer = +20 signatures, each wrong answer = -1 CC. Score ≥ 80% = +1 CC, score 100% = +2 CC.",
-    "questions": [
-      {
-        "id": "q1",
-        "question": "When must Party Candidates file their application of candidacy with the Texas SOS?",
-        "options": [
-          "A) December of the year before the election",
-          "B) January of election year",
-          "C) By early May of election year",
-          "D) By mid-August of election year"
-        ],
-        "correct": ["A) December of the year before the election"]
-      },
-      {
-        "id": "q2",
-        "question": "Who nominates Party Candidates in Texas?",
-        "options": [
-          "A) The Secretary of State",
-          "B) The Federal Election Commission",
-          "C) Their political party",
-          "D) Any registered voter in their district"
-        ],
-        "correct": ["C) Their political party"]
-      },
-      {
-        "id": "q3",
-        "question": "If you choose petition signatures, who can sign?",
-        "options": [
-          "A) Any registered voter",
-          "B) Only party members",
-          "C) Voters who did not vote in another party’s primary",
-          "D) Anyone 18 or older, even if not registered"
-        ],
-        "correct": ["C) Voters who did not vote in another party’s primary"]
-      },
-      {
-        "id": "q4",
-        "question": "Can you combine filing fees with petition signatures?",
-        "options": [
-          "A) Yes, both can be combined",
-          "B) No, you must choose one or the other",
-          "C) Only if you have fewer than 1,000 signatures",
-          "D) Only with approval from your party chair"
-        ],
-        "correct": ["B) No, you must choose one or the other"]
-      },
-      {
-        "id": "q5",
-        "question": "What must accompany petition sheets for them to be valid?",
-        "options": [
-          "A) An FEC Form 1",
-          "B) A notarized affidavit",
-          "C) A party endorsement letter",
-          "D) A voter ID photocopy"
-        ],
-        "correct": ["B) A notarized affidavit"]
-      }
-    ]
-  }
-],
+    {
+      "id": "1-1",
+      "type": "read",
+      "prompt": "As a Party Candidate, your filing process starts with the Texas Secretary of State (SOS) and your party’s nomination process. This is your first big step toward ballot access. You must go through your party first, then file with the SOS by paying the filing fee or submitting signatures. Mistakes in this process cost CC or signatures."
+    },
+    {
+      "id": "1-2",
+      "type": "quiz",
+      "prompt": "Quiz – Party Candidate Filing. Each correct answer = +20 signatures, each wrong answer = -1 CC. Score ≥ 80% = +1 CC, score 100% = +2 CC.",
+      "questions": [
+        {
+          "id": "q1",
+          "question": "When must Party Candidates file their application of candidacy with the Texas SOS?",
+          "options": [
+            "A) December of the year before the election",
+            "B) January of election year",
+            "C) By early May of election year",
+            "D) By mid-August of election year"
+          ],
+          "correct": ["A) December of the year before the election"]
+        },
+        {
+          "id": "q2",
+          "question": "Who nominates Party Candidates in Texas?",
+          "options": [
+            "A) The Secretary of State",
+            "B) The Federal Election Commission",
+            "C) Their political party",
+            "D) Any registered voter in their district"
+          ],
+          "correct": ["C) Their political party"]
+        },
+        {
+          "id": "q3",
+          "question": "If you choose petition signatures, who can sign?",
+          "options": [
+            "A) Any registered voter",
+            "B) Only party members",
+            "C) Voters who did not vote in another party’s primary",
+            "D) Anyone 18 or older, even if not registered"
+          ],
+          "correct": ["C) Voters who did not vote in another party’s primary"]
+        },
+        {
+          "id": "q4",
+          "question": "Can you combine filing fees with petition signatures?",
+          "options": [
+            "A) Yes, both can be combined",
+            "B) No, you must choose one or the other",
+            "C) Only if you have fewer than 1,000 signatures",
+            "D) Only with approval from your party chair"
+          ],
+          "correct": ["B) No, you must choose one or the other"]
+        },
+        {
+          "id": "q5",
+          "question": "What must accompany petition sheets for them to be valid?",
+          "options": [
+            "A) An FEC Form 1",
+            "B) A notarized affidavit",
+            "C) A party endorsement letter",
+            "D) A voter ID photocopy"
+          ],
+          "correct": ["B) A notarized affidavit"]
+        }
+      ]
+    }
+  ],
   "purpose": "Teach users the party filing process, including nomination, filing fees, and petition signatures, and test understanding through a quiz.",
   "scenarios": [],
   "outcome": "User completes Party Candidate filing with correct CC, signatures, and initial voter approval. Next step: federal compliance with FEC Forms 1 and 2.",
-"nextModule": {
-  "id": "2",
-  "title": "Federal Compliance",
-  "description": "Register with the FEC using Forms 1 and 2."
+  "nextModule": {
+    "id": "2",
+    "title": "Federal Compliance",
+    "description": "Register with the FEC using Forms 1 and 2."
+  }
 }

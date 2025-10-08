@@ -4,12 +4,17 @@
   "active": true,
   "description": "Introduction to the Federal Candidate Simulator and how it works.",
   "narrator": "calm, professional",
-  "readingSummary": [],
+  "readingSummary": [
+    "Welcome to the Federal Candidate Simulator — AI Edition...",
+    "Candidate Coins (CC) represent your campaign energy and credibility...",
+    "Signatures and voter approval reflect your public support...",
+    "You must choose an office: President (75 CC + 2.5% approval), Senate (50 CC + 2.5%), or House (31 CC + 2.5%)."
+  ],
   "tasks": [
     {
-      "id": "0-read-summary",
+      "id": "0-read",
       "type": "read",
-      "prompt": "Narrator [calm, professional]:\n\n“Welcome to the Federal Candidate Simulator — AI Edition. This simulator will take you through the entire election cycle, one step at a time. You’ll experience the real requirements of filing, fundraising, compliance, and campaigning — all safely in a simulation.”\n\nHow the Simulator Works\nNarrator [neutral]:\n“Here are the ground rules. Think of them as your campaign manual.”\n\nCandidate Coins (CC)\n\n1 CC = $100 simulated.\nYou start with 50 CC.\nEarn CC by passing quizzes or completing tasks.\nSpend CC on campaign needs like filing fees, ads, or communication coaching.\n\nSignatures & Voter Approval\n\nEach quiz score = the same number of signatures.\n100 signatures = 1% voter approval.\nExample: scoring 80% on a quiz = 80 signatures = 0.8% approval.\n\nBallot Access\n\nYou must qualify for the ballot by:\nPaying CC (filing fee) AND\nGathering enough signatures (through quizzes and tasks).\nEligibility thresholds:\nPresident → 75 CC + 2.5% approval\nSenate → 50 CC + 2.5% approval\nHouse → 31 CC + 2.5% approval\n\nTask Types\n\nRead: Summaries of laws, filing guides, or news.\nWrite: Announcements, strategy documents, responses.\nUpload: Images (Module 5 – signs, T-shirts, bumper stickers).\nSpeak: Speeches, press conferences, debates (Modules 7+).\nSome decisions appear as chat buttons. Click to choose your action.\n\nFeedback & Progress\n\nAfter each task, CC, signatures, and approval are updated.\nConsequences are narrated: “Because you chose X, Y happened.”\nAll choices and scores carry forward — just like a real campaign."
+      "prompt": "Read the simulator rules above carefully. Understanding CC, signatures, and ballot access is crucial."
     },
     {
       "id": "0-quiz-cc",

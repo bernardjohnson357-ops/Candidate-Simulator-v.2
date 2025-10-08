@@ -1,40 +1,72 @@
 // ./app/components/ModuleSelector.tsx
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Module } from "@/app/ai/types";
+import React, { useState, useEffect } from "react";
+import { Module, Task, TaskType } from "@/app/ai/types";
 
 const ModuleSelector: React.FC = () => {
   const [modules, setModules] = useState<Module[]>([]);
+  const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
 
   useEffect(() => {
     const loadModules = async () => {
       try {
-        const mod0 = await import("@/app/data/modules/module0.json");
-        const mod1 = await import("@/app/data/modules/module1.json");
-        setModules([mod0.default, mod1.default]);
-      } catch (error) {
-        console.error("Error loading modules:", error);
+        const mod0Raw = await import("@/app/data/modules/module0.json");
+        const mod1Raw = await import("@/app/data/modules/module1.json");
+
+        const normalizeModule = (mod: any): Module => ({
+          ...mod,
+          tasks: mod.tasks.map((t: any) => ({
+            ...t,
+            type: t.type as TaskType,
+            questions: t.questions?.map((q: any) => ({
+              ...q,
+              correct: Array.isArray(q.correct) ? q.correct : [q.correct],
+            })) || [],
+          })),
+        });
+
+        setModules([normalizeModule(mod0Raw.default), normalizeModule(mod1Raw.default)]);
+      } catch (err) {
+        console.error("Error loading modules:", err);
       }
     };
 
     loadModules();
   }, []);
 
+  const handleSelectModule = (id: string) => {
+    setSelectedModuleId(id);
+  };
+
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <h2 className="text-xl font-semibold mb-4">📚 Select a Module</h2>
-      <ul className="space-y-3">
+    <div className="p-4">
+      <h2 className="text-xl font-bold mb-4">Select a Module</h2>
+      <ul>
         {modules.map((mod) => (
-          <li
-            key={mod.id}
-            className="border rounded-lg p-4 bg-white shadow hover:bg-blue-50 transition"
-          >
-            <h3 className="text-lg font-medium">{mod.title}</h3>
-            <p className="text-sm text-gray-700 mt-1">{mod.description}</p>
+          <li key={mod.id} className="mb-2">
+            <button
+              className={`px-4 py-2 rounded ${
+                selectedModuleId === mod.id ? "bg-blue-600 text-white" : "bg-gray-200"
+              }`}
+              onClick={() => handleSelectModule(mod.id)}
+            >
+              {mod.title}
+            </button>
           </li>
         ))}
       </ul>
+
+      {selectedModuleId && (
+        <div className="mt-4 p-4 border rounded bg-gray-50">
+          <h3 className="font-semibold">
+            {modules.find((m) => m.id === selectedModuleId)?.title}
+          </h3>
+          <p className="mt-2">
+            {modules.find((m) => m.id === selectedModuleId)?.description}
+          </p>
+        </div>
+      )}
     </div>
   );
 };

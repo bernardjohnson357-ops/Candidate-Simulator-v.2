@@ -120,7 +120,11 @@ const ChatSimulator: React.FC = () => {
 
       setMessages(prev => [...prev, `✅ You selected: ${selected}. Loading next module...`]);
       setAwaitingOffice(false);
-      setCandidateState(prev => (prev ? { ...prev, office: selected } : { office: selected }));
+      setCandidateState(prev => (
+  prev
+    ? { ...prev, office: selected }
+    : { office: selected, cc: 50, signatures: 0, voterApproval: 0 }
+));
 
       // Move to next module (Module 1)
       setCurrentTaskIndex(0);

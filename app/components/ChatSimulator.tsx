@@ -73,7 +73,11 @@ const ChatSimulator: React.FC = () => {
           if (["A", "B", "C", "D"].includes(userLetter)) {
             if (userLetter === correctLetter) {
               setMessages(prev => [...prev, "✅ Correct! You earned +5 Candidate Coins."]);
-              setCandidateState(prev => prev ? { ...prev, cc: (prev.cc ?? 0) + 5 } : { cc: 5 });
+              setCandidateState(prev =>
+  prev
+    ? { ...prev, cc: (prev.cc ?? 0) + 5 }
+    : { cc: 5, office: "House", signatures: 0, voterApproval: 0 }
+);
             } else {
               setMessages(prev => [...prev, `❌ Incorrect. The correct answer was: ${correctRaw}`]);
             }

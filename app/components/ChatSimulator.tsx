@@ -1,6 +1,7 @@
 // ./app/components/ChatSimulator.tsx
 "use client";
 
+import { speak } from "../utils/audioUtils";
 import React, { useState } from "react";
 import module0 from "../data/modules/module0.json";
 
@@ -10,6 +11,14 @@ interface CandidateState {
   signatures?: number;
   voterApproval?: number;
 }
+
+const queueSpeak = (texts: string[]) => {
+  let delay = 0;
+  for (const line of texts) {
+    setTimeout(() => speak(line), delay);
+    delay += line.split(" ").length * 250; // rough timing
+  }
+};
 
 const ChatSimulator: React.FC = () => {
   const [messages, setMessages] = useState<string[]>([

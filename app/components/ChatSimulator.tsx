@@ -41,32 +41,31 @@ const ChatSimulator: React.FC = () => {
 
   // ---------------------- Task Navigation ----------------------
   const goToNextTask = () => {
-    const nextTaskIndex = currentTaskIndex + 1;
-    const moduleTasks = currentModule?.tasks || [];
+  const nextTaskIndex = currentTaskIndex + 1;
+  const moduleTasks = currentModule?.tasks || [];
 
-    if (nextTaskIndex < moduleTasks.length) {
-      setCurrentTaskIndex(nextTaskIndex);
-      const nextTask = moduleTasks[nextTaskIndex];
+  if (nextTaskIndex < moduleTasks.length) {
+    setCurrentTaskIndex(nextTaskIndex);
+    const nextTask = moduleTasks[nextTaskIndex];
 
-      if (nextTask.type === "quiz" && nextTask.questions && nextTask.questions.length > 0) {
-  const q = nextTask.questions[0];
-  setMessages(prev => [
-    ...prev,
-    `🧩 ${q.question}`,
-    q.options.join("  ")
-  ]);
-
-  // Narrate question + options
-  queueSpeak([q.question, ...q.options]);
-}
-} else if (nextTask.type === "read") {
-  setMessages(prev => [...prev, `📘 ${nextTask.prompt}`]);
-}
-    } else {
-      setMessages(prev => [...prev, "🎉 You’ve completed this module!"]);
+    if (nextTask.type === "quiz" && nextTask.questions && nextTask.questions.length > 0) {
+      const q = nextTask.questions[0];
+      const options = q.options?.map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`) || [];
+      setMessages(prev => [
+        ...prev,
+        `🧩 ${q.question}`,
+        options.join("  ")
+      ]);
+      queueSpeak([q.question, ...options]);
+    } else if (nextTask.type === "read") {
+      setMessages(prev => [...prev, `📘 ${nextTask.prompt}`]);
+      queueSpeak([nextTask.prompt]);
     }
-  };
-
+  } else {
+    setMessages(prev => [...prev, "🎉 You’ve completed this module!"]);
+    queueSpeak(["You’ve completed this module!"]);
+  }
+};
   // ---------------------- Response Processor ----------------------
   const processResponse = (userInput: string) => {
     if (!currentTask) return;

@@ -1,8 +1,8 @@
 // ./app/components/ChatSimulator.tsx
 "use client";
 
-import { speak } from "../utils/audioUtils";
 import React, { useState } from "react";
+import { speak } from "../utils/audioUtils";
 import module0 from "../data/modules/module0.json";
 
 interface CandidateState {
@@ -16,11 +16,9 @@ const queueSpeak = (texts: string[]) => {
   let delay = 0;
   for (const line of texts) {
     setTimeout(() => speak(line), delay);
-
-    // Add longer pauses for quiz options
     const words = line.split(" ").length;
     const isOption = /^[A-D]\)/.test(line.trim());
-    delay += isOption ? words * 400 : words * 250; // slower pacing for answer choices
+    delay += isOption ? words * 400 : words * 250;
   }
 };
 
@@ -33,89 +31,112 @@ const ChatSimulator: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentModuleIndex, setCurrentModuleIndex] = useState(0);
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
-  const [candidateState, setCandidateState] = useState<CandidateState | null>(null);
+  const [candidateState, setCandidateState] = useState<CandidateState>({ cc: 0, signatures: 0, voterApproval: 0 });
+  const [selectedOffice, setSelectedOffice] = useState<string | null>(null);
+  const [inQuiz, setInQuiz] = useState(false);
 
   const modules = [module0];
   const currentModule = modules[currentModuleIndex];
   const currentTask = currentModule?.tasks?.[currentTaskIndex];
 
-  // ---------------------- Task Navigation ----------------------
+  // ---------------------- TASK FLOW ----------------------
   const goToNextTask = () => {
-  const nextTaskIndex = currentTaskIndex + 1;
-  const moduleTasks = currentModule?.tasks || [];
+    const nextTaskIndex = currentTaskIndex + 1;
+    const moduleTasks = currentModule?.tasks || [];
 
-  if (nextTaskIndex < moduleTasks.length) {
-    setCurrentTaskIndex(nextTaskIndex);
-    const nextTask = moduleTasks[nextTaskIndex];
+    if (nextTaskIndex < moduleTasks.length) {
+      setCurrentTaskIndex(nextTaskIndex);
+      const nextTask = moduleTasks[nextTaskIndex];
 
-    if (nextTask.type === "quiz" && nextTask.questions && nextTask.questions.length > 0) {
-      const q = nextTask.questions[0];
-      const options = q.options?.map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`) || [];
-      setMessages(prev => [
-        ...prev,
-        `🧩 ${q.question}`,
-        options.join("  ")
-      ]);
-      queueSpeak([q.question, ...options]);
-    } else if (nextTask.type === "read") {
-      setMessages(prev => [...prev, `📘 ${nextTask.prompt}`]);
-      queueSpeak([nextTask.prompt]);
-    }
-  } else {
-    setMessages(prev => [...prev, "🎉 You’ve completed this module!"]);
-    queueSpeak(["You’ve completed this module!"]);
-  }
-};
-  // ---------------------- Response Processor ----------------------
-  const processResponse = (userInput: string) => {
-    if (!currentTask) return;
-
-    switch (currentTask.type) {
-      case "read":
-        setMessages(prev => [
-          ...prev,
-          "✅ Great! Let’s move to a quick quiz to check your understanding."
-        ]);
-        goToNextTask();
-        break;
-
-      case "quiz": {
-        const q = currentTask.questions?.[0];
-        if (q && q.correct) {
-          const correctRaw = Array.isArray(q.correct) ? q.correct[0] : q.correct;
-          const correctLetter = (correctRaw || "").trim()[0]?.toUpperCase() || "";
-          const userLetter = (userInput || "").trim()[0]?.toUpperCase() || "";
-
-          if (["A", "B", "C", "D"].includes(userLetter)) {
-            if (userLetter === correctLetter) {
-              setMessages(prev => [...prev, "✅ Correct! You earned +5 Candidate Coins."]);
-              setCandidateState(prev =>
-                prev
-                  ? { ...prev, cc: (prev.cc ?? 0) + 5 }
-                  : { cc: 5, office: "House", signatures: 0, voterApproval: 0 }
-              );
-            } else {
-              setMessages(prev => [...prev, `❌ Incorrect. The correct answer was: ${correctRaw}`]);
-            }
-          } else {
-            setMessages(prev => [...prev, "❌ Please answer with A, B, C, or D."]);
-            return;
-          }
-        } else {
-          setMessages(prev => [...prev, "⚠️ Quiz data incomplete — skipping this question."]);
-        }
-
-        goToNextTask();
-        break;
+      if (nextTask.type === "quiz" && nextTask.questions?.length > 0) {
+        const q = nextTask.questions[0];
+        const options = q.options?.map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`) || [];
+        setMessages(prev => [...prev, `🧩 ${q.question}`, options.join("  ")]);
+        queueSpeak([q.question, ...options]);
+        setInQuiz(true);
+      } else if (nextTask.type === "read") {
+        setMessages(prev => [...prev, `📘 ${nextTask.prompt}`]);
+        queueSpeak([nextTask.prompt]);
       }
-
-      default:
-        setMessages(prev => [...prev, "🤖 Task type not recognized."]);
-        break;
+    } else {
+      setMessages(prev => [...prev, "🎉 You’ve completed this module! Moving to Module 1..."]);
+      queueSpeak(["You’ve completed this module! Moving to Module 1."]);
+      setInQuiz(false);
+      // ⏭️ Move to next module (placeholder for now)
+      // setCurrentModuleIndex(prev => prev + 1);
     }
   };
 
-  // ---------------------- Input Handler ----------------------
+  // ---------------------- RESPONSE HANDLER ----------------------
+  const processResponse = (userInput: string) => {
+    const input = userInput.trim().toLowerCase();
+
+    // Step 1: Office selection
+    if (!selectedOffice) {
+      if (["president", "senate", "house"].includes(input)) {
+        setSelectedOffice(input);
+        setCandidateState(prev => ({ ...prev, office: input }));
+        setMessages(prev => [
+          ...prev,
+          `✅ You selected: ${input.toUpperCase()}`,
+          "✅ Great! Let’s move to a quick quiz to check your understanding."
+        ]);
+        queueSpeak([
+          `You selected ${input}. Great! Let’s move to a quick quiz to check your understanding.`
+        ]);
+        goToNextTask();
+        return;
+      } else {
+        setMessages(prev => [
+          ...prev,
+          "Please choose an office: President, Senate, or House."
+        ]);
+        queueSpeak(["Please choose an office: President, Senate, or House."]);
+        return;
+      }
+    }
+
+    // Step 2: Quiz
+    if (inQuiz && currentTask?.type === "quiz") {
+      const q = currentTask.questions?.[0];
+      if (q && q.correct) {
+        const correctRaw = Array.isArray(q.correct) ? q.correct[0] : q.correct;
+        const correctLetter = (correctRaw || "").trim()[0]?.toUpperCase() || "";
+        const userLetter = (input || "").trim()[0]?.toUpperCase() || "";
+
+        if (["A", "B", "C", "D"].includes(userLetter)) {
+          if (userLetter === correctLetter) {
+            setMessages(prev => [...prev, "✅ Correct! You earned +5 Candidate Coins."]);
+            setCandidateState(prev => ({ ...prev, cc: (prev.cc ?? 0) + 5 }));
+            queueSpeak(["Correct! You earned five Candidate Coins."]);
+          } else {
+            setMessages(prev => [...prev, `❌ Incorrect. The correct answer was: ${correctRaw}`]);
+            queueSpeak([`Incorrect. The correct answer was ${correctRaw}.`]);
+          }
+        } else {
+          setMessages(prev => [...prev, "❌ Please answer with A, B, C, or D."]);
+          queueSpeak(["Please answer with A, B, C, or D."]);
+          return;
+        }
+      }
+      setInQuiz(false);
+      goToNextTask();
+      return;
+    }
+
+    // Step 3: Post-quiz (advance to next module)
+    if (!inQuiz && selectedOffice) {
+      setMessages(prev => [
+        ...prev,
+        "🎉 You’ve completed Module 0! Preparing Module 1..."
+      ]);
+      queueSpeak(["You’ve completed Module 0! Preparing Module 1."]);
+      // Placeholder for actual module transition
+      return;
+    }
+  };
+
+  // ---------------------- INPUT HANDLER ----------------------
   const handleUserInput = () => {
     if (!input.trim()) return;
     const userMsg = `👤 ${input}`;
@@ -125,52 +146,27 @@ const ChatSimulator: React.FC = () => {
     const userInput = input.trim();
     setInput("");
 
-    if (userInput.trim().toLowerCase() === "start") {
+    if (userInput.toLowerCase() === "start") {
       setMessages(prev => [...prev, "🎬 Starting simulation..."]);
       speak("Starting simulation...");
+      const firstTask = currentModule?.tasks?.[0];
 
-      const firstModule = modules[currentModuleIndex];
-      if (!firstModule) {
-        setMessages(prev => [...prev, "⚠️ No modules found."]);
-        speak("No modules found.");
-        setIsLoading(false);
-        return;
-      }
-
-      const firstTask = firstModule.tasks?.[0];
-
-      if (firstTask) {
-        // 🧠 Show reading summary before quiz or question
-        if (firstTask.type === "read") {
-          const summaryText = firstModule.readingSummary?.join(" ") || "";
-          const readingText = `📘 ${firstTask.prompt}\n\n${summaryText}`;
-          
-          setMessages(prev => [...prev, readingText, "✅ When ready, type OK to continue."]);
-          speak(`Reading summary. ${summaryText}`);
-       } else // ✅ --- QUIZ DISPLAY & AUDIO FIX ---
-
-if (firstTask.type === "quiz" && Array.isArray(firstTask.questions) && firstTask.questions.length > 0) {
-  const q = firstTask.questions[0];
-  const options = q.options?.join("  ") || "";
-
-  setMessages(prev => [...prev, `🧩 ${q.question}`, options]);
-
-  // Narrate question + options
-  queueSpeak([q.question, ...q.options]);
-}
+      if (firstTask?.type === "read") {
+        const summaryText = currentModule.readingSummary?.join(" ") || "";
+        const readingText = `📘 ${firstTask.prompt}\n\n${summaryText}`;
+        setMessages(prev => [...prev, readingText, "✅ Please type your chosen office (President, Senate, or House)."]);
+        queueSpeak([firstTask.prompt, "Please choose your office: President, Senate, or House."]);
       } else {
-        setMessages(prev => [...prev, "⚠️ This module has no tasks configured."]);
-        speak("This module has no tasks configured.");
+        setMessages(prev => [...prev, "⚠️ No valid starting task found."]);
       }
 
       setIsLoading(false);
       return;
     }
 
-    // Otherwise process task input
     processResponse(userInput);
     setIsLoading(false);
-  }; // ✅ closes handleUserInput cleanly
+  };
 
   // ---------------------- UI ----------------------
   return (

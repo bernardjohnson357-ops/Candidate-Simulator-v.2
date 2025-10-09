@@ -148,16 +148,19 @@ const processResponse = (userInput: string) => {
         const q = firstTask.questions[0];
         const options = q.options ? q.options.map(opt => `${opt}`).join("\n") : "";
         setMessages(prev => [...prev, `🧩 ${q.prompt}`, options]);
-      } else {
+      } else if (firstTask.prompt) {
         setMessages(prev => [...prev, `🧩 ${firstTask.prompt}`]);
+      } else {
+        setMessages(prev => [...prev, "⚠️ Task is missing a prompt or question."]);
       }
+
       setCurrentTask(firstTask);
     } else {
       setMessages(prev => [...prev, "⚠️ This module has no tasks configured."]);
     }
 
     setIsLoading(false);
-    return; // ✅ stop here after setting up the first task
+    return; // ✅ Stop after setting up the first task
   }
 
   // ---------------- Handle all other inputs ----------------

@@ -119,48 +119,49 @@ const ChatSimulator: React.FC = () => {
     setInput("");
 
     if (userInput.trim().toLowerCase() === "start") {
-  setMessages(prev => [...prev, "🎬 Starting simulation..."]);
-  speak("Starting simulation...");
+      setMessages(prev => [...prev, "🎬 Starting simulation..."]);
+      speak("Starting simulation...");
 
-  const firstModule = modules[currentModuleIndex];
-  if (!firstModule) {
-    setMessages(prev => [...prev, "⚠️ No modules found."]);
-    speak("No modules found.");
-    setIsLoading(false);
-    return;
-  }
+      const firstModule = modules[currentModuleIndex];
+      if (!firstModule) {
+        setMessages(prev => [...prev, "⚠️ No modules found."]);
+        speak("No modules found.");
+        setIsLoading(false);
+        return;
+      }
 
-  const firstTask = firstModule.tasks?.[0];
+      const firstTask = firstModule.tasks?.[0];
 
-  if (firstTask) {
-    // 🧠 Show reading summary before quiz or question
-    if (firstTask.type === "read") {
-      const summaryText = firstModule.readingSummary?.join(" ") || "";
-      const readingText = `📘 ${firstTask.prompt}\n\n${summaryText}`;
-      
-      setMessages(prev => [...prev, readingText, "✅ When ready, type OK to continue."]);
-      speak(`Reading summary. ${summaryText}`);
+      if (firstTask) {
+        // 🧠 Show reading summary before quiz or question
+        if (firstTask.type === "read") {
+          const summaryText = firstModule.readingSummary?.join(" ") || "";
+          const readingText = `📘 ${firstTask.prompt}\n\n${summaryText}`;
+          
+          setMessages(prev => [...prev, readingText, "✅ When ready, type OK to continue."]);
+          speak(`Reading summary. ${summaryText}`);
+        } else if (firstTask.type === "quiz" && firstTask.questions?.length > 0) {
+          const q = firstTask.questions[0];
+          const options = q.options?.join(" ") || "";
+          setMessages(prev => [...prev, `🧩 ${q.prompt}`, options]);
+          speak(q.prompt);
+        } else {
+          setMessages(prev => [...prev, `🧩 ${firstTask.prompt}`]);
+          speak(firstTask.prompt);
+        }
+      } else {
+        setMessages(prev => [...prev, "⚠️ This module has no tasks configured."]);
+        speak("This module has no tasks configured.");
+      }
+
+      setIsLoading(false);
       return;
     }
 
-    // 🎯 Otherwise, show quiz or next step
-    if (firstTask.type === "quiz" && firstTask.questions?.length > 0) {
-      const q = firstTask.questions[0];
-      const options = q.options?.join(" ") || "";
-      setMessages(prev => [...prev, `🧩 ${q.prompt}`, options]);
-      speak(q.prompt);
-    } else {
-      setMessages(prev => [...prev, `🧩 ${firstTask.prompt}`]);
-      speak(firstTask.prompt);
-    }
-  } else {
-    setMessages(prev => [...prev, "⚠️ This module has no tasks configured."]);
-    speak("This module has no tasks configured.");
-  }
-
-  setIsLoading(false);
-  return;
-}
+    // Otherwise process task input
+    processResponse(userInput);
+    setIsLoading(false);
+  }; // ✅ closes handleUserInput cleanly
 
   // ---------------------- UI ----------------------
   return (

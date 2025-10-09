@@ -194,7 +194,7 @@ const processResponse = (userInput: string) => {
   setIsLoading(false);
 };
 
-  // ---------------------- UI ----------------------
+ // ---------------------- UI ----------------------
   return (
     <div className="flex flex-col w-full max-w-2xl mx-auto p-4 bg-gray-50 rounded-2xl shadow-md">
       <div className="flex-1 overflow-y-auto space-y-2 mb-4">
@@ -218,8 +218,8 @@ const processResponse = (userInput: string) => {
           className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
           value={input}
           placeholder="Type your response..."
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={e => e.key === "Enter" && handleUserInput()}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleUserInput()}
         />
         <button
           onClick={handleUserInput}

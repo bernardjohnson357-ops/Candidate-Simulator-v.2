@@ -131,7 +131,7 @@ const processResponse = (userInput: string) => {
   setInput("");
   setIsLoading(true);
 
-  // ---------------- Handle office selection ----------------
+  // ---------------- Office selection ----------------
   if (awaitingOffice) {
     const choice = userInput.toLowerCase();
     let selected: "President" | "Senate" | "House" | null = null;
@@ -154,10 +154,10 @@ const processResponse = (userInput: string) => {
     setCurrentModuleIndex(prev => prev + 1);
     setCurrentTaskIndex(0);
     setIsLoading(false);
-    return; // ✅ safely exits the function here
+    return; // ✅ safely exits
   }
 
-  // ---------------- Handle "start" ----------------
+  // ---------------- Start module ----------------
   if (userInput.toLowerCase() === "start") {
     setMessages(prev => [...prev, "🎬 Starting simulation..."]);
 
@@ -170,11 +170,11 @@ const processResponse = (userInput: string) => {
 
     const firstTask = firstModule.tasks?.[0];
     if (firstTask) {
-      if (firstTask.type === "quiz" && firstTask.questions && firstTask.questions.length > 0) {
+      if (firstTask.type === "quiz" && firstTask.questions?.length) {
         const q = firstTask.questions[0];
-        const options = q.options ? q.options.map(opt => `${opt}`).join("\n") : "";
+        const options = q.options?.map(opt => `${opt}`).join("\n") || "";
         setMessages(prev => [...prev, `🧩 ${q.question}`, options]);
-      } else if (firstTask.prompt) {
+      } else if ("prompt" in firstTask) {
         setMessages(prev => [...prev, `🧩 ${firstTask.prompt}`]);
       } else {
         setMessages(prev => [...prev, "⚠️ Task is missing a prompt or question."]);
@@ -184,64 +184,13 @@ const processResponse = (userInput: string) => {
     }
 
     setIsLoading(false);
-    return; // ✅ safely exits after starting
+    return; // ✅ safely exits
   }
 
-  // ---------------- Handle normal task input ----------------
+  // ---------------- Normal task input ----------------
   processResponse(userInput);
   setIsLoading(false);
 };
-
-      setMessages(prev => [...prev, `✅ You selected: ${selected}. Loading next module...`]);
-      setAwaitingOffice(false);
-      setCandidateState(prev =>
-        prev ? { ...prev, office: selected } : { office: selected, cc: 50, signatures: 0, voterApproval: 0 }
-      );
-
-      setCurrentModuleIndex(prev => prev + 1);
-      setCurrentTaskIndex(0);
-      setIsLoading(false);
-      return;
-    }
-
-    // Start current module
-    if (userInput.toLowerCase() === "start") {
-      setMessages(prev => [...prev, "🎬 Starting simulation..."]);
-
-      // Show first quiz or next task
-const firstTask = firstModule.tasks?.[0];
-if (firstTask) {
-  if (firstTask.type === "quiz" && firstTask.questions && firstTask.questions.length > 0) {
-    const q = firstTask.questions[0];
-    const options = q.options ? q.options.map(opt => `${opt}`).join("\n") : "";
-    setMessages(prev => [
-      ...prev,
-      `🧩 ${q.prompt}`,
-      options
-    ]);
-  } else {
-    setMessages(prev => [
-      ...prev,
-      `🧩 ${firstTask.prompt}`
-    ]);
-  }
-} else {
-  setMessages(prev => [...prev, "⚠️ This module has no tasks configured."]);
-}
-
-      setCandidateState(prev => ({
-        ...(prev ?? { cc: 50, signatures: 0, voterApproval: 0, office: "House" }),
-        currentModuleId: currentModule?.id
-      }));
-
-      setIsLoading(false);
-      return;
-    }
-
-    // Otherwise process task input
-    processResponse(userInput);
-    setIsLoading(false);
-  };
 
   // ---------------------- UI ----------------------
   return (

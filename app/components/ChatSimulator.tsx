@@ -47,7 +47,7 @@ const goToNextTask = () => {
         const options = q.options ? q.options.map(opt => `${opt}`).join("\n") : "";
         setMessages(prev => [
           ...prev,
-          `🧩 ${q.prompt}`,
+          `🧩 ${q.question}`, // ✅ fixed: use .question instead of .prompt
           options
         ]);
       } else {

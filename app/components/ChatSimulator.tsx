@@ -151,8 +151,8 @@ const ChatSimulator: React.FC = () => {
 ) {
   const q = firstTask.questions[0];
   const options = q.options?.join(" ") || "";
-  setMessages(prev => [...prev, `🧩 ${q.prompt}`, options]);
-  speak(q.prompt);
+  setMessages(prev => [...prev, `🧩 ${q.question}`, options]);
+  speak(q.question);
 }
       } else {
         setMessages(prev => [...prev, "⚠️ This module has no tasks configured."]);

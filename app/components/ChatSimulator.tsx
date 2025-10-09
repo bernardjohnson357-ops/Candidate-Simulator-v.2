@@ -142,15 +142,26 @@ const ChatSimulator: React.FC = () => {
     if (userInput.toLowerCase() === "start") {
       setMessages(prev => [...prev, "🎬 Starting simulation..."]);
 
-      const firstTask = currentModule?.tasks?.[0];
-      if (firstTask) {
-        setMessages(prev => [
-          ...prev,
-          firstTask.prompt // no extra 🧩 added
-        ]);
-      } else {
-        setMessages(prev => [...prev, "⚠️ This module has no tasks configured."]);
-      }
+      // Show first quiz or next task
+const firstTask = firstModule.tasks?.[0];
+if (firstTask) {
+  if (firstTask.type === "quiz" && firstTask.questions && firstTask.questions.length > 0) {
+    const q = firstTask.questions[0];
+    const options = q.options ? q.options.map(opt => `${opt}`).join("\n") : "";
+    setMessages(prev => [
+      ...prev,
+      `🧩 ${q.prompt}`,
+      options
+    ]);
+  } else {
+    setMessages(prev => [
+      ...prev,
+      `🧩 ${firstTask.prompt}`
+    ]);
+  }
+} else {
+  setMessages(prev => [...prev, "⚠️ This module has no tasks configured."]);
+}
 
       setCandidateState(prev => ({
         ...(prev ?? { cc: 50, signatures: 0, voterApproval: 0, office: "House" }),

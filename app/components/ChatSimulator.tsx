@@ -35,7 +35,7 @@ const ChatSimulator: React.FC = () => {
       setCurrentTaskIndex(nextTaskIndex);
       const nextTask = moduleTasks[nextTaskIndex];
 
-      if (nextTask.type === "quiz" && nextTask.questions?.length > 0) {
+      if (nextTask.type === "quiz" && nextTask.questions && nextTask.questions.length > 0) {
         const q = nextTask.questions[0];
         setMessages(prev => [
           ...prev,

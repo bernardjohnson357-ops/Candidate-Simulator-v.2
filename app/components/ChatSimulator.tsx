@@ -31,78 +31,96 @@ const ChatSimulator: React.FC = () => {
   }, [currentModule]);
 
   // ---------------------- Navigation ----------------------
-  const goToNextTask = () => {
-    if (!currentModule) return;
-    const nextIndex = currentTaskIndex + 1;
+  // ---------------------- Task Flow ----------------------
 
-    if (nextIndex < (currentModule.tasks?.length || 0)) {
-      setCurrentTaskIndex(nextIndex);
-    } else {
-      const nextModuleIndex = currentModuleIndex + 1;
-      if (nextModuleIndex < modules.length) {
-        setCurrentModuleIndex(nextModuleIndex);
-        setCurrentTaskIndex(0);
-      } else {
-        setMessages(prev => [...prev, "🎉 Simulation complete! You've finished all modules."]);
-      }
-    }
-  };
+const goToNextTask = () => {
+  if (!currentModule) return;
+  const nextIndex = currentTaskIndex + 1;
 
-  // ---------------------- Logic ----------------------
-  const processResponse = (userInput: string) => {
-    if (!currentTask) return;
+  if (nextIndex < (currentModule.tasks?.length || 0)) {
+    setCurrentTaskIndex(nextIndex);
 
-    switch (currentTask.type) {
-      case "read":
+    const nextTask = currentModule.tasks[nextIndex];
+    if (nextTask) {
+      if (nextTask.type === "quiz" && nextTask.questions && nextTask.questions.length > 0) {
+        const q = nextTask.questions[0];
+        const options = q.options ? q.options.map(opt => `${opt}`).join("\n") : "";
         setMessages(prev => [
           ...prev,
-          "✅ Great! Let’s move to a quick quiz to check your understanding."
+          `🧩 ${q.prompt}`,
+          options
         ]);
-        goToNextTask();
-        break;
+      } else {
+        setMessages(prev => [...prev, `🧩 ${nextTask.prompt}`]);
+      }
+    }
+  } else {
+    // Move to next module
+    const nextModuleIndex = currentModuleIndex + 1;
+    if (nextModuleIndex < modules.length) {
+      setCurrentModuleIndex(nextModuleIndex);
+      setCurrentTaskIndex(0);
+      const nextModule = modules[nextModuleIndex];
+      setMessages([
+        `🎯 ${nextModule.title}`,
+        nextModule.description,
+        ...(nextModule.readingSummary?.map(line => `📘 ${line}`) || []),
+        "Type 'start' when ready."
+      ]);
+    } else {
+      setMessages(prev => [...prev, "🎉 Simulation complete! You've finished all modules."]);
+    }
+  }
+};
 
-      case "quiz": {
-        const q = currentTask.questions?.[0];
-        if (q && q.correct) {
-          const correctRaw = Array.isArray(q.correct) ? q.correct[0] : q.correct;
-          const correctLetter = correctRaw?.trim()[0]?.toUpperCase() || "";
-          const userLetter = userInput.trim()[0]?.toUpperCase() || "";
+const processResponse = (userInput: string) => {
+  if (!currentTask) return;
 
-          if (["A", "B", "C", "D"].includes(userLetter)) {
-            if (userLetter === correctLetter) {
-              setMessages(prev => [...prev, "✅ Correct! You earned +5 Candidate Coins."]);
-              setCandidateState(prev =>
-                prev
-                  ? { ...prev, cc: (prev.cc ?? 0) + 5 }
-                  : { cc: 55, office: "House", signatures: 0, voterApproval: 0 }
-              );
-            } else {
-              setMessages(prev => [
-                ...prev,
-                `❌ Incorrect. The correct answer was: ${correctRaw}`
-              ]);
-            }
+  switch (currentTask.type) {
+    case "read":
+      setMessages(prev => [
+        ...prev,
+        "✅ Great! Let’s move to a quick quiz to check your understanding."
+      ]);
+      goToNextTask();
+      break;
+
+    case "quiz": {
+      const q = currentTask.questions?.[0];
+      if (q && q.correct) {
+        const correctRaw = Array.isArray(q.correct) ? q.correct[0] : q.correct;
+        const correctLetter = (correctRaw || "").trim()[0]?.toUpperCase() || "";
+        const userLetter = (userInput || "").trim()[0]?.toUpperCase() || "";
+
+        if (["A", "B", "C", "D"].includes(userLetter)) {
+          if (userLetter === correctLetter) {
+            setMessages(prev => [...prev, "✅ Correct! You earned +5 Candidate Coins."]);
+            setCandidateState(prev =>
+              prev
+                ? { ...prev, cc: (prev.cc ?? 0) + 5 }
+                : { cc: 5, office: "House", signatures: 0, voterApproval: 0 }
+            );
           } else {
-            setMessages(prev => [...prev, "❌ Please answer with A, B, C, or D."]);
-            return;
+            setMessages(prev => [...prev, `❌ Incorrect. The correct answer was: ${correctRaw}`]);
           }
         } else {
-          setMessages(prev => [...prev, "⚠️ Quiz data incomplete — skipping this question."]);
+          setMessages(prev => [...prev, "❌ Please answer with A, B, C, or D."]);
+          return;
         }
-
-        setMessages(prev => [
-          ...prev,
-          "🗳️ Now choose the office you want to run for. Type: President, Senate, or House."
-        ]);
-        setAwaitingOffice(true);
-        return;
+      } else {
+        setMessages(prev => [...prev, "⚠️ Quiz data incomplete — skipping this question."]);
       }
 
-      default:
-        setMessages(prev => [...prev, "🤖 Task type not recognized."]);
-        break;
+      // Move to next task
+      goToNextTask();
+      break;
     }
-  };
+
+    default:
+      setMessages(prev => [...prev, "🤖 Task type not recognized."]);
+      break;
+  }
+};
 
   // ---------------------- Input Handler ----------------------
   const handleUserInput = () => {

@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState } from "react";
-import modules from "../data/modules.json";
+import module0 from "../data/modules/module0.json";
 
 interface CandidateState {
   office?: string;
@@ -22,6 +22,7 @@ const ChatSimulator: React.FC = () => {
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
   const [candidateState, setCandidateState] = useState<CandidateState | null>(null);
 
+  const modules = [module0];
   const currentModule = modules[currentModuleIndex];
   const currentTask = currentModule?.tasks?.[currentTaskIndex];
 

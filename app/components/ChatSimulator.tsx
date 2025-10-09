@@ -171,9 +171,11 @@ const processResponse = (userInput: string) => {
     const firstTask = firstModule.tasks?.[0];
     if (firstTask) {
       if (firstTask.type === "quiz" && firstTask.questions?.length) {
-        const q = firstTask.questions[0];
-        const options = q.options?.map(opt => `${opt}`).join("\n") || "";
-        setMessages(prev => [...prev, `🧩 ${q.question}`, options]);
+  const q = firstTask.questions[0];
+  const questionText = q.prompt || q.question || "Select the correct answer:";
+  const options = q.options?.map(opt => `${opt}`).join("\n") || "";
+  setMessages(prev => [...prev, `🧩 ${questionText}`, options]);
+}
       } else if ("prompt" in firstTask) {
         setMessages(prev => [...prev, `🧩 ${firstTask.prompt}`]);
       } else {

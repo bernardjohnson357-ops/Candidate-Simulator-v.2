@@ -124,44 +124,46 @@ const processResponse = (userInput: string) => {
 
   // ---------------------- Input Handler ----------------------
   const handleUserInput = () => {
-    if (input.trim().toLowerCase() === "start") {
-  setMessages(prev => [...prev, "🎬 Starting simulation..."]);
+  if (!input.trim()) return;
 
-  const firstModule = modules[currentModuleIndex]; // ✅ Define it here using current module
-  if (!firstModule) {
-    setMessages(prev => [...prev, "⚠️ No modules found."]);
-    setIsLoading(false);
-    return;
-  }
+  const userInput = input.trim();
+  setMessages(prev => [...prev, `👤 ${userInput}`]);
+  setInput("");
+  setIsLoading(true);
 
-  // Attach module to candidate state
-  setCandidateState(prev => ({
-    ...(prev ?? { cc: 50, signatures: 0, voterApproval: 0, office: "House" }),
-    currentModuleId: firstModule.id
-  }));
+  // ---------------- Handle "start" ----------------
+  if (userInput.toLowerCase() === "start") {
+    setMessages(prev => [...prev, "🎬 Starting simulation..."]);
 
-  // Get the first task
-  const firstTask = firstModule.tasks?.[0];
-  if (firstTask) {
-    if (firstTask.type === "quiz" && firstTask.questions && firstTask.questions.length > 0) {
-      const q = firstTask.questions[0];
-      const options = q.options ? q.options.map(opt => `${opt}`).join("\n") : "";
-      setMessages(prev => [
-        ...prev,
-        `🧩 ${q.question}`,
-        options,
-        "Please answer with A, B, C, or D."
-      ]);
-    } else {
-      setMessages(prev => [...prev, `🧩 ${firstTask.prompt}`]);
+    const firstModule = modules[currentModuleIndex];
+    if (!firstModule) {
+      setMessages(prev => [...prev, "⚠️ No modules found."]);
+      setIsLoading(false);
+      return;
     }
-  } else {
-    setMessages(prev => [...prev, "⚠️ This module has no tasks configured."]);
+
+    const firstTask = firstModule.tasks?.[0];
+    if (firstTask) {
+      if (firstTask.type === "quiz" && firstTask.questions && firstTask.questions.length > 0) {
+        const q = firstTask.questions[0];
+        const options = q.options ? q.options.map(opt => `${opt}`).join("\n") : "";
+        setMessages(prev => [...prev, `🧩 ${q.prompt}`, options]);
+      } else {
+        setMessages(prev => [...prev, `🧩 ${firstTask.prompt}`]);
+      }
+      setCurrentTask(firstTask);
+    } else {
+      setMessages(prev => [...prev, "⚠️ This module has no tasks configured."]);
+    }
+
+    setIsLoading(false);
+    return; // ✅ stop here after setting up the first task
   }
 
+  // ---------------- Handle all other inputs ----------------
+  processResponse(userInput);
   setIsLoading(false);
-  return;
-}
+};
 
       setMessages(prev => [...prev, `✅ You selected: ${selected}. Loading next module...`]);
       setAwaitingOffice(false);

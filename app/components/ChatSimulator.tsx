@@ -123,7 +123,7 @@ const ChatSimulator: React.FC = () => {
       if (firstTask) {
         if (firstTask.type === "read") {
           setMessages(prev => [...prev, `📘 ${firstTask.prompt}`]);
-        } else if (firstTask.type === "quiz" && firstTask.questions?.length > 0) {
+        } else if (firstTask.type === "quiz" && firstTask.questions && firstTask.questions.length > 0) {
           const q = firstTask.questions[0];
           setMessages(prev => [
             ...prev,

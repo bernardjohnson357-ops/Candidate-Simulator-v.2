@@ -48,7 +48,7 @@ const ChatSimulator: React.FC = () => {
       setCurrentTaskIndex(nextTaskIndex);
       const nextTask = moduleTasks[nextTaskIndex];
 
-      if (nextTask.type === "quiz" && nextTask.questions?.length > 0) {
+      if (nextTask.type === "quiz" && Array.isArray(nextTask.questions) && nextTask.questions.length > 0) {
         const q = nextTask.questions[0];
         const options = q.options?.map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`) || [];
         setMessages(prev => [...prev, `🧩 ${q.question}`, options.join("  ")]);

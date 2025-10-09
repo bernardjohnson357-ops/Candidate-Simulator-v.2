@@ -124,25 +124,44 @@ const processResponse = (userInput: string) => {
 
   // ---------------------- Input Handler ----------------------
   const handleUserInput = () => {
-    if (!input.trim()) return;
-    const userInput = input.trim();
-    setMessages(prev => [...prev, `👤 ${userInput}`]);
-    setIsLoading(true);
-    setInput(""); // clear immediately
+    if (input.trim().toLowerCase() === "start") {
+  setMessages(prev => [...prev, "🎬 Starting simulation..."]);
 
-    // Office selection
-    if (awaitingOffice) {
-      const choice = userInput.toLowerCase();
-      let selected: "President" | "Senate" | "House" | null = null;
-      if (choice === "president") selected = "President";
-      else if (choice === "senate") selected = "Senate";
-      else if (choice === "house") selected = "House";
+  const firstModule = modules[currentModuleIndex]; // ✅ Define it here using current module
+  if (!firstModule) {
+    setMessages(prev => [...prev, "⚠️ No modules found."]);
+    setIsLoading(false);
+    return;
+  }
 
-      if (!selected) {
-        setMessages(prev => [...prev, "❌ Invalid choice. Type: President, Senate, or House."]);
-        setIsLoading(false);
-        return;
-      }
+  // Attach module to candidate state
+  setCandidateState(prev => ({
+    ...(prev ?? { cc: 50, signatures: 0, voterApproval: 0, office: "House" }),
+    currentModuleId: firstModule.id
+  }));
+
+  // Get the first task
+  const firstTask = firstModule.tasks?.[0];
+  if (firstTask) {
+    if (firstTask.type === "quiz" && firstTask.questions && firstTask.questions.length > 0) {
+      const q = firstTask.questions[0];
+      const options = q.options ? q.options.map(opt => `${opt}`).join("\n") : "";
+      setMessages(prev => [
+        ...prev,
+        `🧩 ${q.question}`,
+        options,
+        "Please answer with A, B, C, or D."
+      ]);
+    } else {
+      setMessages(prev => [...prev, `🧩 ${firstTask.prompt}`]);
+    }
+  } else {
+    setMessages(prev => [...prev, "⚠️ This module has no tasks configured."]);
+  }
+
+  setIsLoading(false);
+  return;
+}
 
       setMessages(prev => [...prev, `✅ You selected: ${selected}. Loading next module...`]);
       setAwaitingOffice(false);

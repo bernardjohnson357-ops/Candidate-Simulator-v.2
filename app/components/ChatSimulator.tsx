@@ -16,7 +16,11 @@ const queueSpeak = (texts: string[]) => {
   let delay = 0;
   for (const line of texts) {
     setTimeout(() => speak(line), delay);
-    delay += line.split(" ").length * 250; // rough timing
+
+    // Add longer pauses for quiz options
+    const words = line.split(" ").length;
+    const isOption = /^[A-D]\)/.test(line.trim());
+    delay += isOption ? words * 400 : words * 250; // slower pacing for answer choices
   }
 };
 
@@ -44,17 +48,17 @@ const ChatSimulator: React.FC = () => {
       setCurrentTaskIndex(nextTaskIndex);
       const nextTask = moduleTasks[nextTaskIndex];
 
-      if (
-  nextTask.type === "quiz" &&
-  Array.isArray(nextTask.questions) &&
-  nextTask.questions.length > 0
-) {
+      if (nextTask.type === "quiz" && nextTask.questions && nextTask.questions.length > 0) {
   const q = nextTask.questions[0];
   setMessages(prev => [
     ...prev,
     `🧩 ${q.question}`,
-    `A) ${q.options[0]}  B) ${q.options[1]}  C) ${q.options[2]}  D) ${q.options[3]}`
+    q.options.join("  ")
   ]);
+
+  // Narrate question + options
+  queueSpeak([q.question, ...q.options]);
+}
 } else if (nextTask.type === "read") {
   setMessages(prev => [...prev, `📘 ${nextTask.prompt}`]);
 }
@@ -144,15 +148,16 @@ const ChatSimulator: React.FC = () => {
           
           setMessages(prev => [...prev, readingText, "✅ When ready, type OK to continue."]);
           speak(`Reading summary. ${summaryText}`);
-       } else if (
-  firstTask.type === "quiz" &&
-  Array.isArray(firstTask.questions) &&
-  firstTask.questions.length > 0
-) {
+       } else // ✅ --- QUIZ DISPLAY & AUDIO FIX ---
+
+if (firstTask.type === "quiz" && Array.isArray(firstTask.questions) && firstTask.questions.length > 0) {
   const q = firstTask.questions[0];
-  const options = q.options?.join(" ") || "";
+  const options = q.options?.join("  ") || "";
+
   setMessages(prev => [...prev, `🧩 ${q.question}`, options]);
-  speak(q.question);
+
+  // Narrate question + options
+  queueSpeak([q.question, ...q.options]);
 }
       } else {
         setMessages(prev => [...prev, "⚠️ This module has no tasks configured."]);

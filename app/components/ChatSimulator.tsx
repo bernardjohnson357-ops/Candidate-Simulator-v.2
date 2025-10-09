@@ -131,6 +131,32 @@ const processResponse = (userInput: string) => {
   setInput("");
   setIsLoading(true);
 
+  // ---------------- Handle office selection ----------------
+  if (awaitingOffice) {
+    const choice = userInput.toLowerCase();
+    let selected: "President" | "Senate" | "House" | null = null;
+
+    if (choice === "president") selected = "President";
+    else if (choice === "senate") selected = "Senate";
+    else if (choice === "house") selected = "House";
+
+    if (!selected) {
+      setMessages(prev => [...prev, "❌ Invalid choice. Type: President, Senate, or House."]);
+      setIsLoading(false);
+      return;
+    }
+
+    setMessages(prev => [...prev, `✅ You selected: ${selected}. Loading next module...`]);
+    setCandidateState(prev =>
+      prev ? { ...prev, office: selected } : { office: selected, cc: 50, signatures: 0, voterApproval: 0 }
+    );
+
+    setCurrentModuleIndex(prev => prev + 1);
+    setCurrentTaskIndex(0);
+    setIsLoading(false);
+    return; // ✅ safely exits the function here
+  }
+
   // ---------------- Handle "start" ----------------
   if (userInput.toLowerCase() === "start") {
     setMessages(prev => [...prev, "🎬 Starting simulation..."]);
@@ -147,23 +173,21 @@ const processResponse = (userInput: string) => {
       if (firstTask.type === "quiz" && firstTask.questions && firstTask.questions.length > 0) {
         const q = firstTask.questions[0];
         const options = q.options ? q.options.map(opt => `${opt}`).join("\n") : "";
-        setMessages(prev => [...prev, `🧩 ${q.prompt}`, options]);
+        setMessages(prev => [...prev, `🧩 ${q.question}`, options]);
       } else if (firstTask.prompt) {
         setMessages(prev => [...prev, `🧩 ${firstTask.prompt}`]);
       } else {
         setMessages(prev => [...prev, "⚠️ Task is missing a prompt or question."]);
       }
-
-      setCurrentTask(firstTask);
     } else {
       setMessages(prev => [...prev, "⚠️ This module has no tasks configured."]);
     }
 
     setIsLoading(false);
-    return; // ✅ Stop after setting up the first task
+    return; // ✅ safely exits after starting
   }
 
-  // ---------------- Handle all other inputs ----------------
+  // ---------------- Handle normal task input ----------------
   processResponse(userInput);
   setIsLoading(false);
 };

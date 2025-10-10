@@ -1,7 +1,7 @@
 // ./app/components/ChatSimulator.tsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { speak } from "../utils/audioUtils";
 import module0 from "../data/modules/module0.json";
 
@@ -31,13 +31,26 @@ const ChatSimulator: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentModuleIndex, setCurrentModuleIndex] = useState(0);
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
-  const [candidateState, setCandidateState] = useState<CandidateState>({ cc: 0, signatures: 0, voterApproval: 0 });
+  const [candidateState, setCandidateState] = useState<CandidateState>({
+    cc: 0,
+    signatures: 0,
+    voterApproval: 0
+  });
   const [selectedOffice, setSelectedOffice] = useState<string | null>(null);
   const [inQuiz, setInQuiz] = useState(false);
+  const [readyForQuiz, setReadyForQuiz] = useState(false);
 
   const modules = [module0];
   const currentModule = modules[currentModuleIndex];
   const currentTask = currentModule?.tasks?.[currentTaskIndex];
+
+  // ---------------------- EFFECT: Trigger quiz after office selection ----------------------
+  useEffect(() => {
+    if (readyForQuiz && selectedOffice) {
+      goToNextTask();
+      setReadyForQuiz(false);
+    }
+  }, [readyForQuiz, selectedOffice]);
 
   // ---------------------- TASK FLOW ----------------------
   const goToNextTask = () => {
@@ -62,7 +75,7 @@ const ChatSimulator: React.FC = () => {
       setMessages(prev => [...prev, "🎉 You’ve completed this module! Moving to Module 1..."]);
       queueSpeak(["You’ve completed this module! Moving to Module 1."]);
       setInQuiz(false);
-      // ⏭️ Move to next module (placeholder for now)
+      // Future placeholder for module transition:
       // setCurrentModuleIndex(prev => prev + 1);
     }
   };
@@ -84,7 +97,7 @@ const ChatSimulator: React.FC = () => {
         queueSpeak([
           `You selected ${input}. Great! Let’s move to a quick quiz to check your understanding.`
         ]);
-        goToNextTask();
+        setReadyForQuiz(true); // ✅ triggers quiz after render
         return;
       } else {
         setMessages(prev => [
@@ -96,7 +109,7 @@ const ChatSimulator: React.FC = () => {
       }
     }
 
-    // Step 2: Quiz
+    // Step 2: Quiz handling
     if (inQuiz && currentTask?.type === "quiz") {
       const q = currentTask.questions?.[0];
       if (q && q.correct) {
@@ -124,14 +137,13 @@ const ChatSimulator: React.FC = () => {
       return;
     }
 
-    // Step 3: Post-quiz (advance to next module)
+    // Step 3: Post-quiz transition
     if (!inQuiz && selectedOffice) {
       setMessages(prev => [
         ...prev,
         "🎉 You’ve completed Module 0! Preparing Module 1..."
       ]);
       queueSpeak(["You’ve completed Module 0! Preparing Module 1."]);
-      // Placeholder for actual module transition
       return;
     }
   };
@@ -154,7 +166,11 @@ const ChatSimulator: React.FC = () => {
       if (firstTask?.type === "read") {
         const summaryText = currentModule.readingSummary?.join(" ") || "";
         const readingText = `📘 ${firstTask.prompt}\n\n${summaryText}`;
-        setMessages(prev => [...prev, readingText, "✅ Please type your chosen office (President, Senate, or House)."]);
+        setMessages(prev => [
+          ...prev,
+          readingText,
+          "✅ Please type your chosen office (President, Senate, or House)."
+        ]);
         queueSpeak([firstTask.prompt, "Please choose your office: President, Senate, or House."]);
       } else {
         setMessages(prev => [...prev, "⚠️ No valid starting task found."]);

@@ -12,6 +12,28 @@ interface CandidateState {
   voterApproval?: number;
 }
 
+interface Task {
+  id: string;
+  type: "read" | "quiz" | "choice";
+  prompt: string;
+  questions?: {
+    id: string;
+    question: string;
+    options: string[];
+    correct: string[];
+  }[];
+}
+
+interface Module {
+  id: string;
+  title: string;
+  active: boolean;
+  description: string;
+  readingSummary: string[];
+  tasks: Task[];
+  nextModule?: { id: string; title: string; description: string };
+}
+
 const queueSpeak = (texts: string[]) => {
   let delay = 0;
   for (const line of texts) {
@@ -29,53 +51,27 @@ const ChatSimulator: React.FC = () => {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
   const [candidateState, setCandidateState] = useState<CandidateState>({
     cc: 0,
     signatures: 0,
     voterApproval: 0
   });
-
-  const [readingDone, setReadingDone] = useState(false);
-  const [quizCompleted, setQuizCompleted] = useState(false);
   const [selectedOffice, setSelectedOffice] = useState<string | null>(null);
-
-  const currentModule = module0;
-  const quizTask = currentModule.tasks.find(t => t.type === "quiz");
-  const officeTask = currentModule.tasks.find(t => t.type === "choice");
+  const [currentModule, setCurrentModule] = useState<Module>(module0);
+  const [quizAnswered, setQuizAnswered] = useState(false);
 
   // ---------------------- RESPONSE HANDLER ----------------------
-  const processResponse = (userInputRaw: string) => {
+  const processResponse = async (userInputRaw: string) => {
     const userInput = userInputRaw.trim();
     if (!userInput) return;
 
-    // ---------------------- READING DONE ----------------------
-    if (!readingDone) {
-      if (userInput.toLowerCase() === "done") {
-        setReadingDone(true);
-        // Prompt quiz
-        if (quizTask && quizTask.questions?.length) {
-          const q = quizTask.questions[0];
-          const options = q.options.map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`).join("  ");
-          setMessages(prev => [
-            ...prev,
-            `✅ Please answer the following quiz: ${q.question}`,
-            options
-          ]);
-          queueSpeak([q.question, ...q.options]);
-        }
-        return;
-      } else {
-        setMessages(prev => [...prev, "❌ Type 'done' when you have finished reading."]);
-        queueSpeak(["Type 'done' when you have finished reading."]);
-        return;
-      }
-    }
+    const quizTask = currentModule.tasks.find(t => t.type === "quiz");
+    const officeTask = currentModule.tasks.find(t => t.type === "choice");
 
     // ---------------------- QUIZ ----------------------
-    if (readingDone && !quizCompleted && quizTask && quizTask.questions?.length) {
+    if (!quizAnswered && quizTask && quizTask.questions?.length) {
       const q = quizTask.questions[0];
-      const correctLetter = q.correct[0].trim().toUpperCase();
+      const correctLetter = q.correct[0][0].toUpperCase();
       const userLetter = userInput[0].toUpperCase();
 
       if (!["A", "B", "C", "D"].includes(userLetter)) {
@@ -91,15 +87,14 @@ const ChatSimulator: React.FC = () => {
       } else {
         setMessages(prev => [
           ...prev,
-          `❌ Incorrect. The correct answer was: ${correctLetter}) ${q.options[correctLetter.charCodeAt(0) - 65]}`
+          `❌ Incorrect. The correct answer was: ${q.correct[0]}`
         ]);
-        queueSpeak([
-          `Incorrect. The correct answer was ${correctLetter}) ${q.options[correctLetter.charCodeAt(0) - 65]}`
-        ]);
+        queueSpeak([`Incorrect. The correct answer was ${q.correct[0]}`]);
       }
 
-      // Quiz done, prompt office selection
-      setQuizCompleted(true);
+      setQuizAnswered(true);
+
+      // Prompt office selection if available
       if (officeTask) {
         setMessages(prev => [
           ...prev,
@@ -111,9 +106,9 @@ const ChatSimulator: React.FC = () => {
     }
 
     // ---------------------- OFFICE SELECTION ----------------------
-    if (quizCompleted && !selectedOffice) {
+    if (quizAnswered && !selectedOffice && officeTask) {
       const inputLower = userInput.toLowerCase();
-      if (!["president", "senate", "house"].includes(inputLower)) {
+      if (!["president","senate","house"].includes(inputLower)) {
         setMessages(prev => [...prev, "❌ Please choose an office: President, Senate, or House."]);
         queueSpeak(["Please choose an office: President, Senate, or House."]);
         return;
@@ -124,10 +119,26 @@ const ChatSimulator: React.FC = () => {
       setMessages(prev => [
         ...prev,
         `✅ You selected: ${inputLower.toUpperCase()}`,
-        "🎉 Module 0 complete! Preparing Module 1..."
+        `🎉 ${currentModule.title} complete! Preparing next module...`
       ]);
-      queueSpeak([`You selected ${inputLower}. Module 0 complete! Preparing Module 1...`]);
-      // Placeholder: advance to Module 1 here
+      queueSpeak([`You selected ${inputLower}. ${currentModule.title} complete! Preparing next module...`]);
+
+      // Load next module if available
+      if (currentModule.nextModule) {
+        const modPath = `../data/modules/module${currentModule.nextModule.id}.json`;
+        const mod = await import(/* @vite-ignore */ modPath);
+        setCurrentModule(mod.default);
+        setQuizAnswered(false);
+        setSelectedOffice(null);
+
+        setMessages(prev => [
+          ...prev,
+          `📘 ${mod.default.title}: ${mod.default.description}`,
+          ...mod.default.readingSummary
+        ]);
+        queueSpeak(mod.default.readingSummary);
+      }
+
       return;
     }
   };
@@ -146,16 +157,46 @@ const ChatSimulator: React.FC = () => {
       setMessages(prev => [...prev, "🎬 Starting simulation..."]);
       speak("Starting simulation...");
 
-      // Display reading text
-      const readingTask = currentModule.tasks[0]; // read task
-      if (readingTask) {
-        const readingText = `${readingTask.prompt}\n\n${currentModule.readingSummary.join("\n")}`;
-        setMessages(prev => [...prev, readingText, "✅ Type 'done' when you have finished reading."]);
+      // Combine reading + quiz into one display for current module
+      const firstTask = currentModule.tasks[0]; // read task
+      const quizTask = currentModule.tasks.find(t => t.type === "quiz");
+
+      if (firstTask) {
+        const readingText = `${firstTask.prompt}\n\n${currentModule.readingSummary.join("\n")}`;
+        const quizQuestionText = quizTask?.questions?.[0]?.question || "";
+        const optionsText = quizTask?.questions?.[0]?.options
+          ?.map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`)
+          .join("  ") || "";
+
+        setMessages(prev => [
+          ...prev,
+          readingText,
+          `✅ Type 'done' when you have finished reading.`,
+        ]);
         queueSpeak([readingText]);
       }
 
       setIsLoading(false);
       return;
+    }
+
+    // If user types 'done' after reading
+    if (userInput.toLowerCase() === "done") {
+      const quizTask = currentModule.tasks.find(t => t.type === "quiz");
+      if (quizTask && quizTask.questions?.length) {
+        const q = quizTask.questions[0];
+        const optionsText = q.options
+          .map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`)
+          .join("  ");
+        setMessages(prev => [
+          ...prev,
+          `✅ Please answer the following quiz: ${q.question}`,
+          optionsText
+        ]);
+        queueSpeak([q.question, ...q.options]);
+        setIsLoading(false);
+        return;
+      }
     }
 
     processResponse(userInput);

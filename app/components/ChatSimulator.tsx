@@ -1,12 +1,11 @@
 // ./app/components/ChatSimulator.tsx
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { speak } from "../utils/audioUtils";
-import { allModules } from "@/app/data/allModules";
-import { Module, Task } from "../app/ai/types";
+import { allModules } from "../data/allModules";
+import { Module, Task } from "../ai/types";
 
-// ---------- TYPES ----------
 interface CandidateState {
   office?: string;
   cc?: number;
@@ -14,36 +13,10 @@ interface CandidateState {
   voterApproval?: number;
 }
 
-interface Task {
-  id: string;
-  type: "read" | "quiz" | "choice";
-  prompt: string;
-  questions?: {
-    id: string;
-    question: string;
-    options: string[];
-    correct: string[];
-  }[];
-}
-
-interface Module {
-  id: string;
-  title: string;
-  active: boolean;
-  description: string;
-  readingSummary: string[];
-  tasks: Task[];
-  nextModule?: {
-    id: string;
-    title: string;
-    description: string;
-  };
-}
-
-// ---------- AUDIO QUEUE ----------
-const queueSpeak = (lines: string[]) => {
+// ---------- Audio queue ----------
+const queueSpeak = (texts: string[]) => {
   let delay = 0;
-  for (const line of lines) {
+  for (const line of texts) {
     setTimeout(() => speak(line), delay);
     const words = line.split(" ").length;
     const isOption = /^[A-D]\)/.test(line.trim());
@@ -51,9 +24,11 @@ const queueSpeak = (lines: string[]) => {
   }
 };
 
-// ---------- MAIN COMPONENT ----------
 const ChatSimulator: React.FC = () => {
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<string[]>([
+    "Welcome to the Federal Candidate Simulator!",
+    "Type 'start' when ready.",
+  ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [candidateState, setCandidateState] = useState<CandidateState>({
@@ -62,32 +37,21 @@ const ChatSimulator: React.FC = () => {
     voterApproval: 0,
   });
   const [selectedOffice, setSelectedOffice] = useState<string | null>(null);
-  const [currentModule, setCurrentModule] = useState<Module>(() => allModules[0]);
+  const [currentModule, setCurrentModule] = useState<Module>(allModules[0]);
   const [quizAnswered, setQuizAnswered] = useState(false);
 
-  // ---------- AUTO-START MODULE 0 ----------
-  useEffect(() => {
-    const intro = [
-      `🎬 ${currentModule.title}: ${currentModule.description}`,
-      ...currentModule.readingSummary,
-      `✅ Type 'done' when you have finished reading.`,
-    ];
-    setMessages(intro);
-    queueSpeak(intro);
-  }, []);
-
-  // ---------- CORE RESPONSE HANDLER ----------
-  const processResponse = async (userInputRaw: string) => {
+  // ---------------------- RESPONSE HANDLER ----------------------
+  const processResponse = (userInputRaw: string) => {
     const userInput = userInputRaw.trim();
     if (!userInput) return;
 
     const quizTask = currentModule.tasks.find((t) => t.type === "quiz");
     const officeTask = currentModule.tasks.find((t) => t.type === "choice");
 
-    // ---------- QUIZ ----------
+    // ---------------------- QUIZ ----------------------
     if (!quizAnswered && quizTask && quizTask.questions?.length) {
       const q = quizTask.questions[0];
-      const correctLetter = q.correct[0][0].toUpperCase();
+      const correctLetter = q.correct[0].toUpperCase();
       const userLetter = userInput[0].toUpperCase();
 
       if (!["A", "B", "C", "D"].includes(userLetter)) {
@@ -110,27 +74,27 @@ const ChatSimulator: React.FC = () => {
 
       setQuizAnswered(true);
 
-      // Prompt office selection if applicable
+      // Prompt office selection if available
       if (officeTask) {
         setMessages((prev) => [
           ...prev,
-          "✅ Quiz complete! Now, type your chosen office: President, Senate, or House.",
+          "✅ Quiz complete! Now, type your chosen office in the chat: President, Senate, or House.",
         ]);
         queueSpeak([
-          "Quiz complete! Now, type your chosen office: President, Senate, or House.",
+          "Quiz complete! Now, type your chosen office in the chat: President, Senate, or House.",
         ]);
       }
 
       return;
     }
 
-    // ---------- OFFICE SELECTION ----------
+    // ---------------------- OFFICE SELECTION ----------------------
     if (quizAnswered && !selectedOffice && officeTask) {
       const inputLower = userInput.toLowerCase();
       if (!["president", "senate", "house"].includes(inputLower)) {
         setMessages((prev) => [
           ...prev,
-          "❌ Please choose: President, Senate, or House.",
+          "❌ Please choose an office: President, Senate, or House.",
         ]);
         queueSpeak(["Please choose an office: President, Senate, or House."]);
         return;
@@ -138,19 +102,21 @@ const ChatSimulator: React.FC = () => {
 
       setSelectedOffice(inputLower);
       setCandidateState((prev) => ({ ...prev, office: inputLower }));
-
-      const successMsg = [
+      setMessages((prev) => [
+        ...prev,
         `✅ You selected: ${inputLower.toUpperCase()}`,
         `🎉 ${currentModule.title} complete! Preparing next module...`,
-      ];
-      setMessages((prev) => [...prev, ...successMsg]);
-      queueSpeak(successMsg);
+      ]);
+      queueSpeak([
+        `You selected ${inputLower}. ${currentModule.title} complete! Preparing next module...`,
+      ]);
 
+      // Load next module after short delay (3 seconds)
       if (currentModule.nextModule) {
         setTimeout(() => {
           const nextMod = allModules.find((m) => m.id === currentModule.nextModule?.id);
           if (!nextMod) {
-            setMessages((prev) => [...prev, "⚠️ Next module not found."]);
+            setMessages((prev) => [...prev, "⚠️ Next module not found in allModules."]);
             return;
           }
 
@@ -161,10 +127,14 @@ const ChatSimulator: React.FC = () => {
           const nextIntro = [
             `📘 ${nextMod.title}: ${nextMod.description}`,
             ...nextMod.readingSummary,
-            `✅ Type 'done' when you have finished reading.`,
+            `✅ Type 'start' to begin the next module.`,
           ];
+
           setMessages((prev) => [...prev, ...nextIntro]);
-          queueSpeak(nextIntro);
+          queueSpeak([
+            `${nextMod.title}: ${nextMod.description}`,
+            "Type start to begin the next module.",
+          ]);
         }, 3000);
       }
 
@@ -172,7 +142,7 @@ const ChatSimulator: React.FC = () => {
     }
   };
 
-  // ---------- USER INPUT ----------
+  // ---------------------- INPUT HANDLER ----------------------
   const handleUserInput = () => {
     if (!input.trim()) return;
     const userMsg = `👤 ${input}`;
@@ -182,7 +152,22 @@ const ChatSimulator: React.FC = () => {
     const userInput = input.trim();
     setInput("");
 
-    // Move to quiz
+    if (userInput.toLowerCase() === "start") {
+      setMessages((prev) => [...prev, "🎬 Starting simulation..."]);
+      speak("Starting simulation...");
+
+      const firstTask = currentModule.tasks[0];
+
+      if (firstTask) {
+        const readingText = `${firstTask.prompt}\n\n${currentModule.readingSummary.join("\n")}`;
+        setMessages((prev) => [...prev, readingText, `✅ Type 'done' when you have finished reading.`]);
+        queueSpeak([readingText]);
+      }
+
+      setIsLoading(false);
+      return;
+    }
+
     if (userInput.toLowerCase() === "done") {
       const quizTask = currentModule.tasks.find((t) => t.type === "quiz");
       if (quizTask && quizTask.questions?.length) {
@@ -191,12 +176,7 @@ const ChatSimulator: React.FC = () => {
           .map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`)
           .join("  ");
 
-        setMessages((prev) => [
-          ...prev,
-          `🧩 ${q.question}`,
-          optionsText,
-          "Type A, B, C, or D to answer.",
-        ]);
+        setMessages((prev) => [...prev, `✅ Please answer the following quiz: ${q.question}`, optionsText]);
         queueSpeak([q.question, ...q.options]);
         setIsLoading(false);
         return;
@@ -207,7 +187,7 @@ const ChatSimulator: React.FC = () => {
     setIsLoading(false);
   };
 
-  // ---------- UI ----------
+  // ---------------------- UI ----------------------
   return (
     <div className="flex flex-col h-full p-4 space-y-3 bg-gray-50 rounded-xl shadow-inner">
       <div className="flex-1 overflow-y-auto space-y-2">

@@ -22,7 +22,7 @@
     {
       "id": "0-2",
       "type": "quiz",
-      "prompt": "🧩 Quick Check",
+      "prompt": "What do Candidate Coins (CC) represent in this simulator?k",
       "questions": [
         {
           "id": "q1",

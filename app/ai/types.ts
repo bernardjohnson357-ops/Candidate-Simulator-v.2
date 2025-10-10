@@ -6,14 +6,15 @@ export interface QuizQuestion {
   correct: string | string[]; // 👈 allow either
 }
 
-export type TaskType = "read" | "quiz" | "choice" | "decision" | "write" | "upload" | "speak";
+export type TaskType = "read" | "quiz" | "choice" | "decision";
 
 export interface Task {
   id: string;
   type: TaskType;
   prompt: string;
-  questions?: QuizQuestion[];
-  responsePlaceholder?: string; // ✅ add this optional field
+  options?: string[];        // for quiz or choice
+  answer?: string;           // for quiz (correct answer)
+  nextTaskId?: string;       // to chain to next task
 }
 
 export interface Module {

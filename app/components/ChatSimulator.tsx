@@ -90,15 +90,35 @@ const ChatSimulator: React.FC = () => {
         setSelectedOffice(input);
         setCandidateState(prev => ({ ...prev, office: input }));
         setMessages(prev => [
-          ...prev,
-          `✅ You selected: ${input.toUpperCase()}`,
-          "✅ Great! Let’s move to a quick quiz to check your understanding."
-        ]);
-        queueSpeak([
-          `You selected ${input}. Great! Let’s move to a quick quiz to check your understanding.`
-        ]);
-        setReadyForQuiz(true); // ✅ triggers quiz after render
-        return;
+  ...prev,
+  `✅ You selected: ${input.toUpperCase()}`,
+  "✅ Great! Let’s move to a quick quiz to check your understanding."
+]);
+
+queueSpeak([
+  `You selected ${input}. Great! Let’s move to a quick quiz to check your understanding.`
+]);
+
+// 🧩 Immediately show first quiz question if it exists
+const quizTask = currentModule?.tasks?.find(t => t.type === "quiz");
+if (quizTask && Array.isArray(quizTask.questions) && quizTask.questions.length > 0) {
+  const q = quizTask.questions[0];
+  const options = q.options?.map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`) || [];
+
+  setMessages(prev => [
+    ...prev,
+    `🧩 ${q.question}`,
+    options.join("  ")
+  ]);
+
+  queueSpeak([q.question, ...options]);
+  setInQuiz(true);
+} else {
+  setMessages(prev => [...prev, "⚠️ No quiz found in module."]);
+  queueSpeak(["No quiz found in this module."]);
+}
+
+return;
       } else {
         setMessages(prev => [
           ...prev,

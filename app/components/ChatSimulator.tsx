@@ -4,8 +4,10 @@
 import React, { useState } from "react";
 import { speak } from "../utils/audioUtils";
 import module0Json from "../data/modules/module0.json";
+import module1Json from "../data/modules/module1.json";
 
 const module0: Module = module0Json as Module;
+const module1: Module = module1Json as Module; 
 
 interface CandidateState {
   office?: string;
@@ -148,28 +150,32 @@ const ChatSimulator: React.FC = () => {
       ]);
 
       // Load next module after short delay (3 seconds)
-      // Load next module after short delay (3 seconds)
+// After "Preparing next module..."
 if (currentModule.nextModule) {
   setTimeout(async () => {
-    const modPath = `../data/modules/module${currentModule.nextModule!.id}.json`;
-    const mod = await import(/* @vite-ignore */ modPath);
-    setCurrentModule(mod.default);
-    setQuizAnswered(false);
-    setSelectedOffice(null);
+    try {
+      const modPath = `../data/modules/module${currentModule.nextModule.id}.json`;
+      const mod = await import(/* @vite-ignore */ modPath);
+      setCurrentModule(mod.default);
+      setQuizAnswered(false);
+      setSelectedOffice(null);
 
-    // Add clarity for the next step
-    const nextIntro = [
-      `📘 ${mod.default.title}: ${mod.default.description}`,
-      ...mod.default.readingSummary,
-      `✅ Type 'start' to begin the next module.`,
-    ];
+      const nextIntro = [
+        `📘 ${mod.default.title}: ${mod.default.description}`,
+        ...mod.default.readingSummary,
+        `✅ Type 'start' to begin the next module.`,
+      ];
 
-    setMessages((prev) => [...prev, ...nextIntro]);
-    queueSpeak([
-      `${mod.default.title}: ${mod.default.description}`,
-      "Type start to begin the next module.",
-    ]);
-  }, 3000); // 3-second pause after “Preparing next module...”
+      setMessages((prev) => [...prev, ...nextIntro]);
+      queueSpeak([
+        `${mod.default.title}: ${mod.default.description}`,
+        "Type start to begin the next module.",
+      ]);
+    } catch (err) {
+      console.error("Error loading next module:", err);
+      setMessages((prev) => [...prev, "⚠️ Failed to load next module."]);
+    }
+  }, 3000);
 }
 
       return;

@@ -63,7 +63,7 @@ const ChatSimulator: React.FC = () => {
     voterApproval: 0,
   });
   const [selectedOffice, setSelectedOffice] = useState<string | null>(null);
-  const [currentModule, setCurrentModule] = useState<Module>(allModules[0]);
+  const [currentModule, setCurrentModule] = useState<Module>(() => allModules[0]);
   const [quizAnswered, setQuizAnswered] = useState(false);
 
   // ---------------------- RESPONSE HANDLER ----------------------

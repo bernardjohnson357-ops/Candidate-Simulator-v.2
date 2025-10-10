@@ -32,10 +32,10 @@
           "id": "q1",
           "question": "Select the correct answer:",
           "options": [
-            "A) 1 CC = $100 simulated",
-            "B) Real currency for campaign ads",
-            "C) Signatures collected from voters",
-            "D) Debate score multiplier"
+            "1 CC = $100 simulated",
+            "Real currency for campaign ads",
+            "Signatures collected from voters",
+            "Debate score multiplier"
           ],
           "correct": ["A) 1 CC = $100 simulated"]
         }

@@ -124,8 +124,23 @@ if (nextTask?.type === "quiz" && nextTask.questions?.length) {
 
     // Step 2: Quiz
     if (inQuiz && currentTask?.type === "quiz") {
-      const q = currentTask.questions?.[0];
-      if (!q) return;
+  const q = currentTask.questions?.[0];
+  // ...check answer logic...
+
+  setInQuiz(false);
+
+  // ✅ Move to the next task after quiz
+  goToNextTask();  // this will display the next task, e.g., Module 1 prep
+  return;
+}
+
+// Step 1: Office selection
+if (!selectedOffice) {
+  // only prompt for office if it's not set
+  setMessages(prev => [...prev, "Please choose an office: President, Senate, or House."]);
+  queueSpeak(["Please choose an office: President, Senate, or House."]);
+  return;
+}
 
       const correctRaw = Array.isArray(q.correct) ? q.correct[0] : q.correct;
       const correctLetter = (correctRaw || "").trim()[0]?.toUpperCase() || "";

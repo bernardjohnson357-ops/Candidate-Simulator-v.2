@@ -1,4 +1,3 @@
-// ./app/components/ChatSimulator.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -36,61 +35,53 @@ const ChatSimulator: React.FC = () => {
   });
   const [selectedOffice, setSelectedOffice] = useState<string | null>(null);
   const [readingDone, setReadingDone] = useState(false);
-  const [quizActive, setQuizActive] = useState(false);
+  const [quizDone, setQuizDone] = useState(false);
 
-  const handleUserInput = () => {
-    if (!input.trim()) return;
-    const userMsg = `👤 ${input}`;
-    setMessages(prev => [...prev, userMsg]);
-    const userInput = input.trim().toLowerCase();
-    setInput("");
+  // ---------------------- RESPONSE HANDLER ----------------------
+  const processResponse = (userInputRaw: string) => {
+    const userInput = userInputRaw.trim();
+    if (!userInput) return;
 
-    if (userInput === "start") {
-      // Show reading first
-      const firstTask = module0.tasks[0]; // read task
-      const readingText = `${firstTask.prompt}\n\n${module0.readingSummary.join("\n")}`;
-      setMessages(prev => [
-        ...prev,
-        readingText,
-        "✅ Type 'done' when you have finished reading."
-      ]);
-      queueSpeak([readingText]);
-      return;
-    }
+    const quizTask = module0.tasks.find(t => t.type === "quiz");
+    const officeTask = module0.tasks.find(t => t.type === "choice");
 
+    // ---------------------- MARK READING DONE ----------------------
     if (!readingDone) {
-      if (userInput === "done") {
+      if (userInput.toLowerCase() === "done") {
         setReadingDone(true);
-        // Activate quiz
-        const quizTask = module0.tasks.find(t => t.type === "quiz");
-        if (quizTask && quizTask.questions?.length) {
+
+        if (quizTask?.questions?.length) {
           const q = quizTask.questions[0];
-          const options = q.options.map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`).join("  ");
+          const optionsText = q.options
+            .map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`)
+            .join("  ");
+
           setMessages(prev => [
             ...prev,
             `✅ Please answer the following quiz: ${q.question}`,
-            options
+            optionsText
           ]);
+
           queueSpeak([q.question, ...q.options]);
-          setQuizActive(true);
         }
         return;
       } else {
-        setMessages(prev => [...prev, "❌ Please type 'done' when finished reading."]);
-        queueSpeak(["Please type done when finished reading."]);
+        setMessages(prev => [
+          ...prev,
+          "❌ Type 'done' when you have finished reading."
+        ]);
+        queueSpeak(["Please type 'done' when you have finished reading."]);
         return;
       }
     }
 
-    if (quizActive) {
-      const quizTask = module0.tasks.find(t => t.type === "quiz");
-      if (!quizTask || !quizTask.questions?.length) return;
-
+    // ---------------------- QUIZ ----------------------
+    if (readingDone && !quizDone && quizTask?.questions?.length) {
       const q = quizTask.questions[0];
       const correctLetter = q.correct[0].trim().toUpperCase();
       const userLetter = userInput[0].toUpperCase();
 
-      if (!["A","B","C","D"].includes(userLetter)) {
+      if (!["A", "B", "C", "D"].includes(userLetter)) {
         setMessages(prev => [...prev, "❌ Please answer with A, B, C, or D."]);
         queueSpeak(["Please answer with A, B, C, or D."]);
         return;
@@ -98,44 +89,87 @@ const ChatSimulator: React.FC = () => {
 
       if (userLetter === correctLetter) {
         setMessages(prev => [...prev, `✅ Correct! You earned +5 Candidate Coins.`]);
-        queueSpeak(["Correct! You earned five Candidate Coins."]);
         setCandidateState(prev => ({ ...prev, cc: (prev.cc ?? 0) + 5 }));
+        queueSpeak(["Correct! You earned five Candidate Coins."]);
       } else {
         setMessages(prev => [
           ...prev,
-          `❌ Incorrect. The correct answer was: ${correctLetter}) ${q.options[correctLetter.charCodeAt(0)-65]}`
+          `❌ Incorrect. The correct answer was: ${correctLetter}) ${q.options[correctLetter.charCodeAt(0) - 65]}`
         ]);
         queueSpeak([
-          `Incorrect. The correct answer was ${correctLetter}) ${q.options[correctLetter.charCodeAt(0)-65]}`
+          `Incorrect. The correct answer was ${correctLetter}) ${q.options[correctLetter.charCodeAt(0) - 65]}`
         ]);
       }
 
-      setQuizActive(false);
-      // Prompt for office selection
-      setMessages(prev => [...prev, "Now, type your chosen office in the chat: President, Senate, or House."]);
-      queueSpeak(["Now, type your chosen office in the chat: President, Senate, or House."]);
+      setQuizDone(true);
+
+      if (officeTask) {
+        setMessages(prev => [
+          ...prev,
+          "Now, type your chosen office in the chat: President, Senate, or House."
+        ]);
+        queueSpeak(["Now, type your chosen office in the chat: President, Senate, or House."]);
+      }
+
       return;
     }
 
-    if (!selectedOffice) {
-      if (!["president","senate","house"].includes(userInput)) {
+    // ---------------------- OFFICE SELECTION ----------------------
+    if (quizDone && !selectedOffice) {
+      const inputLower = userInput.toLowerCase();
+      if (!["president", "senate", "house"].includes(inputLower)) {
         setMessages(prev => [...prev, "❌ Please choose an office: President, Senate, or House."]);
         queueSpeak(["Please choose an office: President, Senate, or House."]);
         return;
       }
 
-      setSelectedOffice(userInput);
-      setCandidateState(prev => ({ ...prev, office: userInput }));
+      setSelectedOffice(inputLower);
+      setCandidateState(prev => ({ ...prev, office: inputLower }));
       setMessages(prev => [
         ...prev,
-        `✅ You selected: ${userInput.toUpperCase()}`,
+        `✅ You selected: ${inputLower.toUpperCase()}`,
         "🎉 Module 0 complete! Preparing Module 1..."
       ]);
-      queueSpeak([`You selected ${userInput}. Module 0 complete! Preparing Module 1...`]);
+      queueSpeak([`You selected ${inputLower}. Module 0 complete! Preparing Module 1...`]);
       return;
     }
   };
 
+  // ---------------------- INPUT HANDLER ----------------------
+  const handleUserInput = () => {
+    if (!input.trim()) return;
+    const userMsg = `👤 ${input}`;
+    setMessages(prev => [...prev, userMsg]);
+    setIsLoading(true);
+
+    const userInput = input.trim();
+    setInput("");
+
+    if (userInput.toLowerCase() === "start") {
+      setMessages(prev => [...prev, "🎬 Starting simulation..."]);
+      speak("Starting simulation...");
+
+      // Display reading summary first
+      const firstTask = module0.tasks[0]; // read task
+      if (firstTask) {
+        const readingText = `${firstTask.prompt}\n\n${module0.readingSummary.join("\n")}`;
+        setMessages(prev => [
+          ...prev,
+          readingText,
+          "✅ Type 'done' when you have finished reading."
+        ]);
+        queueSpeak([readingText]);
+      }
+
+      setIsLoading(false);
+      return;
+    }
+
+    processResponse(userInput);
+    setIsLoading(false);
+  };
+
+  // ---------------------- UI ----------------------
   return (
     <div className="flex flex-col w-full max-w-2xl mx-auto p-4 bg-gray-50 rounded-2xl shadow-md">
       <div className="flex-1 overflow-y-auto space-y-2 mb-4">
@@ -143,7 +177,9 @@ const ChatSimulator: React.FC = () => {
           <div
             key={idx}
             className={`p-3 rounded-lg whitespace-pre-line ${
-              msg.startsWith("👤") ? "bg-blue-100 text-blue-800 self-end" : "bg-white text-gray-900"
+              msg.startsWith("👤")
+                ? "bg-blue-100 text-blue-800 self-end"
+                : "bg-white text-gray-900"
             }`}
           >
             {msg}
@@ -151,6 +187,7 @@ const ChatSimulator: React.FC = () => {
         ))}
         {isLoading && <div className="text-gray-500 italic">Processing...</div>}
       </div>
+
       <div className="flex space-x-2">
         <input
           className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"

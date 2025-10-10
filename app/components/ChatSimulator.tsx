@@ -3,11 +3,8 @@
 
 import React, { useState } from "react";
 import { speak } from "../utils/audioUtils";
-import module0Json from "../data/modules/module0.json";
-import module1Json from "../data/modules/module1.json";
-
-const module0: Module = module0Json as Module;
-const module1: Module = module1Json as Module; 
+import { allModules } from "../data/allModules";
+ 
 
 interface CandidateState {
   office?: string;
@@ -152,12 +149,30 @@ const ChatSimulator: React.FC = () => {
       // Load next module after short delay (3 seconds)
 // After "Preparing next module..."
 if (currentModule.nextModule) {
-  const next = currentModule.nextModule; // ✅ capture reference safely
-  setTimeout(async () => {
-    try {
-      const modPath = `../data/modules/module${next.id}.json`;
-      const mod = await import(/* @vite-ignore */ modPath);
-      setCurrentModule(mod.default);
+  setTimeout(() => {
+    const nextMod = allModules.find(m => m.id === currentModule.nextModule?.id);
+    if (!nextMod) {
+      setMessages(prev => [...prev, "⚠️ Next module not found in allModules."]);
+      return;
+    }
+
+    setCurrentModule(nextMod);
+    setQuizAnswered(false);
+    setSelectedOffice(null);
+
+    const nextIntro = [
+      `📘 ${nextMod.title}: ${nextMod.description}`,
+      ...nextMod.readingSummary,
+      `✅ Type 'start' to begin the next module.`,
+    ];
+
+    setMessages(prev => [...prev, ...nextIntro]);
+    queueSpeak([
+      `${nextMod.title}: ${nextMod.description}`,
+      "Type start to begin the next module.",
+    ]);
+  }, 3000);
+}
       setQuizAnswered(false);
       setSelectedOffice(null);
 

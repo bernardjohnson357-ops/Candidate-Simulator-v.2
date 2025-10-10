@@ -12,9 +12,9 @@ export interface Task {
   id: string;
   type: TaskType;
   prompt: string;
-  options?: string[];        // for quiz or choice
-  answer?: string;           // for quiz (correct answer)
-  nextTaskId?: string;       // to chain to next task
+  options?: string[];       // quiz choices or office options
+  answer?: string;          // correct answer (for quiz only)
+  nextTaskId?: string;      // optional: go directly to next task
 }
 
 export interface Module {

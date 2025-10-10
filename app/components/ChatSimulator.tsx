@@ -24,10 +24,14 @@ export interface QuizQuestion {
 
 export interface Task {
   id: string;
-  type: TaskType;
+  type: "read" | "quiz" | "choice" | "decision" | "write" | "speak" | "upload";
   prompt: string;
-  questions?: QuizQuestion[];
-  responsePlaceholder?: string;
+  questions?: {
+    id: string;
+    question: string;
+    options: string[];
+    correct: string[];
+  }[];
 }
 
 export interface Module {

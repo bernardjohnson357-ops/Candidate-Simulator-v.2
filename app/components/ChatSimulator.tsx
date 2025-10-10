@@ -166,13 +166,7 @@ if (currentModule.nextModule) {
       `✅ Type 'start' to begin the next module.`,
     ];
 
-    setMessages(prev => [...prev, ...nextIntro]);
-    queueSpeak([
-      `${nextMod.title}: ${nextMod.description}`,
-      "Type start to begin the next module.",
-    ]);
-  }, 3000);
-}
+    
       setQuizAnswered(false);
       setSelectedOffice(null);
 

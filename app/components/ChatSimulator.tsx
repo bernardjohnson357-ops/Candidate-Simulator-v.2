@@ -148,28 +148,29 @@ const ChatSimulator: React.FC = () => {
       ]);
 
       // Load next module after short delay (3 seconds)
-      if (currentModule.nextModule) {
-        setTimeout(async () => {
-          const modPath = `../data/modules/module${currentModule.nextModule!.id}.json`;
-          const mod = await import(/* @vite-ignore */ modPath);
-          setCurrentModule(mod.default);
-          setQuizAnswered(false);
-          setSelectedOffice(null);
+      // Load next module after short delay (3 seconds)
+if (currentModule.nextModule) {
+  setTimeout(async () => {
+    const modPath = `../data/modules/module${currentModule.nextModule!.id}.json`;
+    const mod = await import(/* @vite-ignore */ modPath);
+    setCurrentModule(mod.default);
+    setQuizAnswered(false);
+    setSelectedOffice(null);
 
-          setMessages((prev) => [
-            ...prev,
-            `📘 ${mod.default.title}: ${mod.default.description}`,
-            ...mod.default.readingSummary,
-            `✅ Type 'start' to begin the next module.`,
-          ]);
+    // Add clarity for the next step
+    const nextIntro = [
+      `📘 ${mod.default.title}: ${mod.default.description}`,
+      ...mod.default.readingSummary,
+      `✅ Type 'start' to begin the next module.`,
+    ];
 
-          queueSpeak([
-            `${mod.default.title}: ${mod.default.description}`,
-            ...mod.default.readingSummary,
-            "Type start to begin the next module.",
-          ]);
-        }, 3000); // 3-second delay
-      }
+    setMessages((prev) => [...prev, ...nextIntro]);
+    queueSpeak([
+      `${mod.default.title}: ${mod.default.description}`,
+      "Type start to begin the next module.",
+    ]);
+  }, 3000); // 3-second pause after “Preparing next module...”
+}
 
       return;
     }

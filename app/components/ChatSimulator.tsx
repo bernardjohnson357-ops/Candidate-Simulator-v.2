@@ -76,24 +76,24 @@ const ChatSimulator: React.FC = () => {
         setSelectedOffice(inputLower);
         setCandidateState(prev => ({ ...prev, office: inputLower }));
 
-        // Inline quiz display immediately after office selection
-        const quizTask = tasks.find(t => t.type === "quiz");
-        if (quizTask && quizTask.questions?.length) {
-          const q = quizTask.questions[0];
-          const options = q.options.map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`);
-          setMessages(prev => [
-            ...prev,
-            `✅ You selected: ${inputLower.toUpperCase()}`,
-            `✅ Great! Let’s move to a quick quiz to check your understanding. ${q.prompt}`,
-            options.join("  ")
-          ]);
-          queueSpeak([
-            `You selected ${inputLower}. Great! Let’s move to a quick quiz to check your understanding.`,
-            q.prompt,
-            ...options
-          ]);
-          setInQuiz(true);
-        }
+        // Inside processResponse, after selecting office:
+const quizTask = tasks.find(t => t.type === "quiz");
+if (quizTask && quizTask.questions?.length) {
+  const q = quizTask.questions[0];
+  const options = q.options.map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`);
+  setMessages(prev => [
+    ...prev,
+    `✅ You selected: ${inputLower.toUpperCase()}`,
+    `✅ Great! Let’s move to a quick quiz to check your understanding. ${quizTask.prompt}`,
+    options.join("  ")
+  ]);
+  queueSpeak([
+    `You selected ${inputLower}. Great! Let’s move to a quick quiz to check your understanding.`,
+    quizTask.prompt,
+    ...options
+  ]);
+  setInQuiz(true);
+}
 
         return;
       } else {

@@ -26,7 +26,7 @@
       "questions": [
         {
           "id": "q1",
-          "question": "Select the correct answer: What do Candidate Coins (CC) represent in this simulator?",
+          "question": "by selecting the correct answer: What do Candidate Coins (CC) represent in this simulator?",
           "options": [
             "1 CC = $100 simulated",
             "Real currency for campaign ads",

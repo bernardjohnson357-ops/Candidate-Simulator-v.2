@@ -3,8 +3,8 @@
 
 import React, { useEffect, useState } from "react";
 import { speak } from "../utils/audioUtils";
-import { allModules } from "@/app/data/allModules";
-import { Module, Task } from "@/app/ai/types";
+import { allModules } from "../app/data/allModules";
+import { Module, Task } from "../app/ai/types";
 
 // ---------- TYPES ----------
 interface CandidateState {

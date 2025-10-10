@@ -4,6 +4,7 @@
 import React, { useState } from "react";
 import { speak } from "../utils/audioUtils";
 import module0Json from "../data/modules/module0.json";
+
 const module0: Module = module0Json as Module;
 
 interface CandidateState {
@@ -32,9 +33,14 @@ interface Module {
   description: string;
   readingSummary: string[];
   tasks: Task[];
-  nextModule?: { id: string; title: string; description: string };
+  nextModule?: {
+    id: string;
+    title: string;
+    description: string;
+  };
 }
 
+// ---------- Audio queue for speech ----------
 const queueSpeak = (texts: string[]) => {
   let delay = 0;
   for (const line of texts) {
@@ -48,14 +54,14 @@ const queueSpeak = (texts: string[]) => {
 const ChatSimulator: React.FC = () => {
   const [messages, setMessages] = useState<string[]>([
     "Welcome to the Federal Candidate Simulator!",
-    "Type 'start' when ready."
+    "Type 'start' when ready.",
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [candidateState, setCandidateState] = useState<CandidateState>({
     cc: 0,
     signatures: 0,
-    voterApproval: 0
+    voterApproval: 0,
   });
   const [selectedOffice, setSelectedOffice] = useState<string | null>(null);
   const [currentModule, setCurrentModule] = useState<Module>(module0);
@@ -66,8 +72,8 @@ const ChatSimulator: React.FC = () => {
     const userInput = userInputRaw.trim();
     if (!userInput) return;
 
-    const quizTask = currentModule.tasks.find(t => t.type === "quiz");
-    const officeTask = currentModule.tasks.find(t => t.type === "choice");
+    const quizTask = currentModule.tasks.find((t) => t.type === "quiz");
+    const officeTask = currentModule.tasks.find((t) => t.type === "choice");
 
     // ---------------------- QUIZ ----------------------
     if (!quizAnswered && quizTask && quizTask.questions?.length) {
@@ -76,19 +82,28 @@ const ChatSimulator: React.FC = () => {
       const userLetter = userInput[0].toUpperCase();
 
       if (!["A", "B", "C", "D"].includes(userLetter)) {
-        setMessages(prev => [...prev, "❌ Please answer with A, B, C, or D."]);
+        setMessages((prev) => [
+          ...prev,
+          "❌ Please answer with A, B, C, or D.",
+        ]);
         queueSpeak(["Please answer with A, B, C, or D."]);
         return;
       }
 
       if (userLetter === correctLetter) {
-        setMessages(prev => [...prev, `✅ Correct! You earned +5 Candidate Coins.`]);
-        queueSpeak(["Correct! You earned five Candidate Coins."]);
-        setCandidateState(prev => ({ ...prev, cc: (prev.cc ?? 0) + 5 }));
-      } else {
-        setMessages(prev => [
+        setMessages((prev) => [
           ...prev,
-          `❌ Incorrect. The correct answer was: ${q.correct[0]}`
+          `✅ Correct! You earned +5 Candidate Coins.`,
+        ]);
+        queueSpeak(["Correct! You earned five Candidate Coins."]);
+        setCandidateState((prev) => ({
+          ...prev,
+          cc: (prev.cc ?? 0) + 5,
+        }));
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          `❌ Incorrect. The correct answer was: ${q.correct[0]}`,
         ]);
         queueSpeak([`Incorrect. The correct answer was ${q.correct[0]}`]);
       }
@@ -97,32 +112,40 @@ const ChatSimulator: React.FC = () => {
 
       // Prompt office selection if available
       if (officeTask) {
-        setMessages(prev => [
+        setMessages((prev) => [
           ...prev,
-          "✅ Quiz complete! Now, type your chosen office in the chat: President, Senate, or House."
+          "✅ Quiz complete! Now, type your chosen office in the chat: President, Senate, or House.",
         ]);
-        queueSpeak(["Quiz complete! Now, type your chosen office in the chat: President, Senate, or House."]);
+        queueSpeak([
+          "Quiz complete! Now, type your chosen office in the chat: President, Senate, or House.",
+        ]);
       }
+
       return;
     }
 
     // ---------------------- OFFICE SELECTION ----------------------
     if (quizAnswered && !selectedOffice && officeTask) {
       const inputLower = userInput.toLowerCase();
-      if (!["president","senate","house"].includes(inputLower)) {
-        setMessages(prev => [...prev, "❌ Please choose an office: President, Senate, or House."]);
+      if (!["president", "senate", "house"].includes(inputLower)) {
+        setMessages((prev) => [
+          ...prev,
+          "❌ Please choose an office: President, Senate, or House.",
+        ]);
         queueSpeak(["Please choose an office: President, Senate, or House."]);
         return;
       }
 
       setSelectedOffice(inputLower);
-      setCandidateState(prev => ({ ...prev, office: inputLower }));
-      setMessages(prev => [
+      setCandidateState((prev) => ({ ...prev, office: inputLower }));
+      setMessages((prev) => [
         ...prev,
         `✅ You selected: ${inputLower.toUpperCase()}`,
-        `🎉 ${currentModule.title} complete! Preparing next module...`
+        `🎉 ${currentModule.title} complete! Preparing next module...`,
       ]);
-      queueSpeak([`You selected ${inputLower}. ${currentModule.title} complete! Preparing next module...`]);
+      queueSpeak([
+        `You selected ${inputLower}. ${currentModule.title} complete! Preparing next module...`,
+      ]);
 
       // Load next module if available
       if (currentModule.nextModule) {
@@ -132,10 +155,10 @@ const ChatSimulator: React.FC = () => {
         setQuizAnswered(false);
         setSelectedOffice(null);
 
-        setMessages(prev => [
+        setMessages((prev) => [
           ...prev,
           `📘 ${mod.default.title}: ${mod.default.description}`,
-          ...mod.default.readingSummary
+          ...mod.default.readingSummary,
         ]);
         queueSpeak(mod.default.readingSummary);
       }
@@ -148,28 +171,26 @@ const ChatSimulator: React.FC = () => {
   const handleUserInput = () => {
     if (!input.trim()) return;
     const userMsg = `👤 ${input}`;
-    setMessages(prev => [...prev, userMsg]);
+    setMessages((prev) => [...prev, userMsg]);
     setIsLoading(true);
 
     const userInput = input.trim();
     setInput("");
 
     if (userInput.toLowerCase() === "start") {
-      setMessages(prev => [...prev, "🎬 Starting simulation..."]);
+      setMessages((prev) => [...prev, "🎬 Starting simulation..."]);
       speak("Starting simulation...");
 
       // Combine reading + quiz into one display for current module
       const firstTask = currentModule.tasks[0]; // read task
-      const quizTask = currentModule.tasks.find(t => t.type === "quiz");
+      const quizTask = currentModule.tasks.find((t) => t.type === "quiz");
 
       if (firstTask) {
-        const readingText = `${firstTask.prompt}\n\n${currentModule.readingSummary.join("\n")}`;
-        const quizQuestionText = quizTask?.questions?.[0]?.question || "";
-        const optionsText = quizTask?.questions?.[0]?.options
-          ?.map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`)
-          .join("  ") || "";
+        const readingText = `${firstTask.prompt}\n\n${currentModule.readingSummary.join(
+          "\n"
+        )}`;
 
-        setMessages(prev => [
+        setMessages((prev) => [
           ...prev,
           readingText,
           `✅ Type 'done' when you have finished reading.`,
@@ -183,16 +204,17 @@ const ChatSimulator: React.FC = () => {
 
     // If user types 'done' after reading
     if (userInput.toLowerCase() === "done") {
-      const quizTask = currentModule.tasks.find(t => t.type === "quiz");
+      const quizTask = currentModule.tasks.find((t) => t.type === "quiz");
       if (quizTask && quizTask.questions?.length) {
         const q = quizTask.questions[0];
         const optionsText = q.options
           .map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`)
           .join("  ");
-        setMessages(prev => [
+
+        setMessages((prev) => [
           ...prev,
           `✅ Please answer the following quiz: ${q.question}`,
-          optionsText
+          optionsText,
         ]);
         queueSpeak([q.question, ...q.options]);
         setIsLoading(false);
@@ -206,8 +228,8 @@ const ChatSimulator: React.FC = () => {
 
   // ---------------------- UI ----------------------
   return (
-    <div className="flex flex-col w-full max-w-2xl mx-auto p-4 bg-gray-50 rounded-2xl shadow-md">
-      <div className="flex-1 overflow-y-auto space-y-2 mb-4">
+    <div className="flex flex-col h-full p-4 space-y-3 bg-gray-50 rounded-xl shadow-inner">
+      <div className="flex-1 overflow-y-auto space-y-2">
         {messages.map((msg, idx) => (
           <div
             key={idx}
@@ -220,7 +242,7 @@ const ChatSimulator: React.FC = () => {
             {msg}
           </div>
         ))}
-        {isLoading && <div className="text-gray-500 italic">Processing...</div>}
+        {isLoading && <div className="text-gray-400">Processing...</div>}
       </div>
 
       <div className="flex space-x-2">

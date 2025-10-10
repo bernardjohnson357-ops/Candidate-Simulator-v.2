@@ -35,7 +35,7 @@ export interface Module {
 }
 
 export interface CandidateState {
-  office: "President" | "Senate" | "House";
+  office?: string;
   cc: number;           // Candidate Coins
   signatures: number;   // Number of signatures collected
   voterApproval: number; // % approval

@@ -3,6 +3,7 @@
 
 import React, { useState } from "react";
 import { speak } from "../utils/audioUtils";
+import { allModules } from "@/app/data/allModules";
  
 
 interface CandidateState {

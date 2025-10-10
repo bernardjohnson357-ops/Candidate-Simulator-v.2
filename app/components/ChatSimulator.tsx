@@ -166,25 +166,11 @@ if (currentModule.nextModule) {
       `✅ Type 'start' to begin the next module.`,
     ];
 
-    
-      setQuizAnswered(false);
-      setSelectedOffice(null);
-
-      const nextIntro = [
-        `📘 ${mod.default.title}: ${mod.default.description}`,
-        ...mod.default.readingSummary,
-        `✅ Type 'start' to begin the next module.`,
-      ];
-
-      setMessages((prev) => [...prev, ...nextIntro]);
-      queueSpeak([
-        `${mod.default.title}: ${mod.default.description}`,
-        "Type start to begin the next module.",
-      ]);
-    } catch (err) {
-      console.error("Error loading next module:", err);
-      setMessages((prev) => [...prev, "⚠️ Failed to load next module."]);
-    }
+    setMessages(prev => [...prev, ...nextIntro]);
+    queueSpeak([
+      `${nextMod.title}: ${nextMod.description}`,
+      "Type start to begin the next module.",
+    ]);
   }, 3000);
 }
 

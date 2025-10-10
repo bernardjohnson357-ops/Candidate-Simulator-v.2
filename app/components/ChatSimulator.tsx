@@ -7,9 +7,9 @@ import module0 from "../data/modules/module0.json";
 
 interface CandidateState {
   office?: string;
-  cc: number;
-  signatures: number;
-  voterApproval: number;
+  cc?: number;
+  signatures?: number;
+  voterApproval?: number;
 }
 
 const queueSpeak = (texts: string[]) => {
@@ -32,10 +32,79 @@ const ChatSimulator: React.FC = () => {
   const [candidateState, setCandidateState] = useState<CandidateState>({
     cc: 0,
     signatures: 0,
-    voterApproval: 0,
+    voterApproval: 0
   });
-  const [quizAnswered, setQuizAnswered] = useState(false);
-  const [officeSelected, setOfficeSelected] = useState(false);
+  const [selectedOffice, setSelectedOffice] = useState<string | null>(null);
+
+  // ---------------------- RESPONSE HANDLER ----------------------
+  const processResponse = (userInputRaw: string) => {
+    const userInput = userInputRaw.trim();
+    if (!userInput) return;
+
+    const quizTask = module0.tasks.find(t => t.type === "quiz");
+    const officeTask = module0.tasks.find(t => t.type === "choice");
+
+    const quizAnswered = candidateState.cc !== 0; // 5 CC awarded after correct quiz
+
+    // ---------------------- QUIZ ----------------------
+    if (!quizAnswered && quizTask && quizTask.questions?.length) {
+      const q = quizTask.questions[0];
+      const options = q.options.map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`).join("  ");
+      const correctLetter = q.correct[0].trim().toUpperCase();
+      const userLetter = userInput[0].toUpperCase();
+
+      if (!["A","B","C","D"].includes(userLetter)) {
+        setMessages(prev => [...prev, "❌ Please answer with A, B, C, or D."]);
+        queueSpeak(["Please answer with A, B, C, or D."]);
+        return;
+      }
+
+      if (userLetter === correctLetter) {
+        setMessages(prev => [...prev, `✅ Correct! You earned +5 Candidate Coins.`]);
+        queueSpeak(["Correct! You earned five Candidate Coins."]);
+        setCandidateState(prev => ({ ...prev, cc: (prev.cc ?? 0) + 5 }));
+      } else {
+        setMessages(prev => [
+          ...prev,
+          `❌ Incorrect. The correct answer was: ${correctLetter}) ${q.options[correctLetter.charCodeAt(0)-65]}`
+        ]);
+        queueSpeak([
+          `Incorrect. The correct answer was ${correctLetter}) ${q.options[correctLetter.charCodeAt(0)-65]}`
+        ]);
+      }
+
+      // Prompt for office selection
+      if (officeTask) {
+        setMessages(prev => [
+          ...prev,
+          "Now, type your chosen office in the chat: President, Senate, or House."
+        ]);
+        queueSpeak(["Now, type your chosen office in the chat: President, Senate, or House."]);
+      }
+      return;
+    }
+
+    // ---------------------- OFFICE SELECTION ----------------------
+    if (quizAnswered && !selectedOffice) {
+      const inputLower = userInput.toLowerCase();
+      if (!["president","senate","house"].includes(inputLower)) {
+        setMessages(prev => [...prev, "❌ Please choose an office: President, Senate, or House."]);
+        queueSpeak(["Please choose an office: President, Senate, or House."]);
+        return;
+      }
+
+      setSelectedOffice(inputLower);
+      setCandidateState(prev => ({ ...prev, office: inputLower }));
+      setMessages(prev => [
+        ...prev,
+        `✅ You selected: ${inputLower.toUpperCase()}`,
+        "🎉 Module 0 complete! Preparing Module 1..."
+      ]);
+      queueSpeak([`You selected ${inputLower}. Module 0 complete! Preparing Module 1...`]);
+      // Placeholder: advance to Module 1 here
+      return;
+    }
+  };
 
   // ---------------------- INPUT HANDLER ----------------------
   const handleUserInput = () => {
@@ -47,91 +116,36 @@ const ChatSimulator: React.FC = () => {
     const userInput = input.trim();
     setInput("");
 
-    // Start simulation
     if (userInput.toLowerCase() === "start") {
-  const firstTask = module0.tasks[0];
-  const quizTask = module0.tasks[1];
+      setMessages(prev => [...prev, "🎬 Starting simulation..."]);
+      speak("Starting simulation...");
 
-  const readingText = `${firstTask.prompt}\n\n${module0.readingSummary.join("\n")}`;
+      // Combine reading + quiz into one display for Module 0
+      const firstTask = module0.tasks[0]; // read task
+      const quizTask = module0.tasks.find(t => t.type === "quiz");
 
-  // ✅ Guard: ensure quizTask.questions exists and has at least one element
-  if (!quizTask.questions || quizTask.questions.length === 0) {
-    setMessages(prev => [...prev, "⚠️ Quiz data is missing."]);
-    setIsLoading(false);
-    return;
-  }
+      if (firstTask) {
+        const readingText = `${firstTask.prompt}\n\n${module0.readingSummary.join("\n")}`;
+        const quizQuestionText = quizTask?.questions?.[0]?.question || "";
+        const optionsText = quizTask?.questions?.[0]?.options
+          ?.map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`)
+          .join("  ") || "";
 
-  const quizQuestion = quizTask.questions[0];
-  const options = quizQuestion.options.map(
-    (opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`
-  ).join("  ");
+        setMessages(prev => [
+          ...prev,
+          readingText,
+          `✅ Please answer the following quiz first: ${quizQuestionText}`,
+          optionsText
+        ]);
 
-  setMessages(prev => [
-    ...prev,
-    "🎬 Starting simulation...",
-    readingText,
-    `🧩 ${quizTask.prompt}`,
-    options
-  ]);
-
-  queueSpeak([readingText, quizTask.prompt, ...quizQuestion.options]);
-  setIsLoading(false);
-  return;
-}
-
-    // Quiz response
-    if (!quizAnswered) {
-  const quizTask = module0.tasks[1];
-
-  if (!quizTask.questions || quizTask.questions.length === 0) {
-    setMessages(prev => [...prev, "⚠️ Quiz data is missing."]);
-    setIsLoading(false);
-    return;
-  }
-
-  const q = quizTask.questions[0];
-  const correctLetter = q.correct[0].trim().toUpperCase();
-  const userLetter = userInput[0].toUpperCase();
-
-  if (userLetter === correctLetter) {
-    setMessages(prev => [...prev, "✅ Correct! You earned +5 Candidate Coins."]);
-    setCandidateState(prev => ({ ...prev, cc: (prev.cc ?? 0) + 5 }));
-  } else {
-    setMessages(prev => [...prev, `❌ Incorrect. The correct answer was: ${q.correct[0]}`]);
-  }
-
-  setQuizAnswered(true);
-}
-
-        // Prompt for office selection
-        setMessages(prev => [...prev, "Now, type your chosen office in the chat: President, Senate, or House."]);
-        queueSpeak(["Now, type your chosen office in the chat: President, Senate, or House."]);
-      } else {
-        setMessages(prev => [...prev, "❌ Please answer with A, B, C, or D."]);
-        queueSpeak(["Please answer with A, B, C, or D."]);
+        queueSpeak([readingText, quizQuestionText, ...quizTask?.questions?.[0]?.options || []]);
       }
+
       setIsLoading(false);
       return;
     }
 
-    // Office selection
-    if (quizAnswered && !officeSelected) {
-      const inputLower = userInput.toLowerCase();
-      if (["president", "senate", "house"].includes(inputLower)) {
-        setCandidateState(prev => ({ ...prev, office: inputLower }));
-        setOfficeSelected(true);
-        setMessages(prev => [...prev, `✅ You selected: ${inputLower.toUpperCase()}`]);
-        queueSpeak([`You selected ${inputLower}.`]);
-        setMessages(prev => [...prev, "🎉 Module 0 complete! Preparing Module 1..."]);
-        queueSpeak(["Module 0 complete! Preparing Module 1..."]);
-      } else {
-        setMessages(prev => [...prev, "Please type a valid office: President, Senate, or House."]);
-        queueSpeak(["Please type a valid office: President, Senate, or House."]);
-      }
-      setIsLoading(false);
-      return;
-    }
-
+    processResponse(userInput);
     setIsLoading(false);
   };
 

@@ -85,27 +85,31 @@ const ChatSimulator: React.FC = () => {
     // Step 1: Office selection
     if (!selectedOffice) {
       if (["president", "senate", "house"].includes(inputLower)) {
-        setSelectedOffice(inputLower);
-        setCandidateState(prev => ({ ...prev, office: inputLower }));
-        setMessages(prev => [
-          ...prev,
-          `✅ You selected: ${inputLower.toUpperCase()}`,
-          `✅ Great! Let’s move to a quick quiz to check your understanding.`
-        ]);
-        queueSpeak([`You selected ${inputLower}. Great! Let’s move to a quick quiz to check your understanding.`]);
+        // After user selects office
+setSelectedOffice(inputLower);
+setCandidateState(prev => ({ ...prev, office: inputLower }));
 
-        // Immediately display the first quiz question
-        if (currentTask?.type === "quiz" && Array.isArray(currentTask.questions) && currentTask.questions.length > 0) {
-          const q = currentTask.questions[0];
-          const options = q.options?.map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`) || [];
-          setMessages(prev => [
-            ...prev,
-            `🧩 ${q.question}`,
-            options.join("  ")
-          ]);
-          queueSpeak([q.question, ...options]);
-          setInQuiz(true);
-        }
+setMessages(prev => [
+  ...prev,
+  `✅ You selected: ${inputLower.toUpperCase()}`,
+  `✅ Great! Let’s move to a quick quiz to check your understanding.`
+]);
+queueSpeak([`You selected ${inputLower}. Great! Let’s move to a quick quiz to check your understanding.`]);
+
+// ✅ Move to the quiz task
+setCurrentTaskIndex(prev => prev + 1); // point to quiz task
+const nextTask = currentModule?.tasks?.[currentTaskIndex + 1];
+if (nextTask?.type === "quiz" && nextTask.questions?.length) {
+  const q = nextTask.questions[0];
+  const options = q.options?.map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`) || [];
+  setMessages(prev => [
+    ...prev,
+    `🧩 ${q.question}`,
+    options.join("  ")
+  ]);
+  queueSpeak([q.question, ...options]);
+  setInQuiz(true);
+}
 
         return;
       } else {

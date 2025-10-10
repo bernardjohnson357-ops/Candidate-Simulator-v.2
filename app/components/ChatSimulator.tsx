@@ -4,15 +4,10 @@
 import React, { useState } from "react";
 import { speak } from "../utils/audioUtils";
 import { allModules } from "@/app/data/allModules";
+import OpenAI from "openai";
 
-export type TaskType =
-  | "read"
-  | "quiz"
-  | "choice"
-  | "decision"
-  | "write"
-  | "upload"
-  | "speak";
+// ---------- TYPES ----------
+export type TaskType = "read" | "quiz" | "choice" | "decision" | "write" | "speak" | "upload";
 
 export interface QuizQuestion {
   id: string;
@@ -26,6 +21,7 @@ export interface Task {
   type: TaskType;
   prompt: string;
   questions?: QuizQuestion[];
+  responsePlaceholder?: string;
 }
 
 export interface Module {
@@ -49,6 +45,10 @@ export interface CandidateState {
   voterApproval: number;
 }
 
+// ---------- OPENAI CLIENT ----------
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+// ---------- AUDIO QUEUE ----------
 const queueSpeak = (texts: string[]) => {
   let delay = 0;
   for (const line of texts) {
@@ -59,101 +59,131 @@ const queueSpeak = (texts: string[]) => {
   }
 };
 
+// ---------- CHAT SIMULATOR ----------
 const ChatSimulator: React.FC = () => {
   const [messages, setMessages] = useState<string[]>([
     "Welcome to the Federal Candidate Simulator!",
     "Click 'Start' when ready.",
   ]);
+  const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [candidateState, setCandidateState] = useState<CandidateState>({
     cc: 0,
     signatures: 0,
     voterApproval: 0,
   });
-  const [currentModule, setCurrentModule] = useState<Module>(
-    allModules[0] as unknown as Module
-  );
-  const [quizAnswered, setQuizAnswered] = useState(false);
-  const [showOfficeButtons, setShowOfficeButtons] = useState(false);
-  const [currentQuiz, setCurrentQuiz] = useState<QuizQuestion | null>(null);
+  const [currentModuleIndex, setCurrentModuleIndex] = useState(0);
+  const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
-  const addMessage = (msg: string) => setMessages((prev) => [...prev, msg]);
+  const currentModule = allModules[currentModuleIndex];
+  const currentTask = currentModule.tasks[currentTaskIndex];
+  const currentQuestion = currentTask?.questions?.[currentQuestionIndex];
 
-  // ---------- START MODULE ----------
-  const startModule = () => {
-    const firstTask = currentModule.tasks[0];
-    if (!firstTask) return;
+  // ---------- OpenAI RESPONSE ----------
+  const askAssistant = async (userInput: string) => {
+    const moduleData = { ...currentModule, tasks: [currentTask] }; // only current task
+    try {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are the Federal Candidate Simulator assistant. Evaluate quiz answers, give guidance, and manage module progression.",
+          },
+          {
+            role: "user",
+            content: JSON.stringify({ module: moduleData, userInput }),
+          },
+        ],
+      });
 
-    const readingText = `${firstTask.prompt}\n\n${currentModule.readingSummary.join(
-      "\n"
-    )}`;
-    addMessage("🎬 Starting module...");
-    addMessage(readingText);
-    queueSpeak([readingText]);
-
-    // Show quiz if present
-    const quizTask = currentModule.tasks.find((t) => t.type === "quiz");
-    if (quizTask && quizTask.questions?.length) {
-      setCurrentQuiz(quizTask.questions[0]);
+      return response.choices[0].message?.content || "";
+    } catch (err) {
+      console.error("OpenAI request failed:", err);
+      return "⚠️ Error processing your answer. Try again.";
     }
   };
 
-  // ---------- HANDLE QUIZ ----------
-  const handleQuizAnswer = (letter: string) => {
-    if (!currentQuiz) return;
-    const correctLetter = currentQuiz.correct[0][0].toUpperCase();
-    const userLetter = letter.toUpperCase();
+  // ---------- USER INPUT HANDLER ----------
+  const handleUserInput = async () => {
+    if (!input.trim()) return;
+    const userMsg = `👤 ${input}`;
+    setMessages((prev) => [...prev, userMsg]);
+    setIsLoading(true);
 
-    if (userLetter === correctLetter) {
-      addMessage(`✅ Correct! You earned +5 Candidate Coins.`);
-      setCandidateState((prev) => ({ ...prev, cc: prev.cc + 5 }));
-      queueSpeak(["Correct! You earned five Candidate Coins."]);
-    } else {
-      addMessage(`❌ Incorrect. Correct answer: ${currentQuiz.correct[0]}`);
-      queueSpeak([`Incorrect. The correct answer was ${currentQuiz.correct[0]}`]);
+    const userInput = input.trim();
+    setInput("");
+
+    // ---------- START MODULE ----------
+    if (userInput.toLowerCase() === "start") {
+      setMessages((prev) => [
+        ...prev,
+        "🎬 Starting module...",
+        `${currentTask.prompt}\n\n${currentModule.readingSummary.join("\n")}`,
+        "✅ Type 'done' when you have finished reading.",
+      ]);
+      queueSpeak([`${currentTask.prompt}`, ...currentModule.readingSummary]);
+      setIsLoading(false);
+      return;
     }
 
-    setQuizAnswered(true);
-    setShowOfficeButtons(true);
-  };
+    // ---------- DONE READING ----------
+    if (userInput.toLowerCase() === "done") {
+      if (currentTask.type === "quiz" && currentTask.questions?.length) {
+        const q = currentTask.questions[currentQuestionIndex];
+        const optionsText = q.options
+          .map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`)
+          .join("  ");
 
-  // ---------- HANDLE OFFICE SELECTION ----------
-  const handleOfficeSelect = (office: string) => {
-    setCandidateState((prev) => ({ ...prev, office }));
-    addMessage(`✅ You selected: ${office.toUpperCase()}`);
-    addMessage(`🎉 ${currentModule.title} complete! Preparing next module...`);
-    queueSpeak([
-      `You selected ${office}. ${currentModule.title} complete! Preparing next module...`,
-    ]);
+        setMessages((prev) => [
+          ...prev,
+          `🧩 Quiz: ${q.question}`,
+          optionsText,
+        ]);
+        queueSpeak([q.question, ...q.options]);
+      }
+      setIsLoading(false);
+      return;
+    }
 
-    // Load next module
-    if (currentModule.nextModule) {
-      setTimeout(() => {
-        const nextMod = allModules.find(
-          (m) => m.id === currentModule.nextModule?.id
-        );
-        if (!nextMod) {
-          addMessage("⚠️ Next module not found in allModules.");
-          return;
-        }
+    // ---------- QUIZ OR OTHER TASK ----------
+    if (currentTask.type === "quiz") {
+      const assistantReply = await askAssistant(userInput);
+      setMessages((prev) => [...prev, assistantReply]);
 
-        setCurrentModule(nextMod as unknown as Module);
-        setQuizAnswered(false);
-        setShowOfficeButtons(false);
-        setCurrentQuiz(null);
+      // Move to next question or task
+      if (currentQuestionIndex + 1 < currentTask.questions!.length) {
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+      } else if (currentTaskIndex + 1 < currentModule.tasks.length) {
+        setCurrentTaskIndex(currentTaskIndex + 1);
+        setCurrentQuestionIndex(0);
+      } else if (currentModuleIndex + 1 < allModules.length) {
+        // Move to next module
+        setCurrentModuleIndex(currentModuleIndex + 1);
+        setCurrentTaskIndex(0);
+        setCurrentQuestionIndex(0);
 
+        const nextMod = allModules[currentModuleIndex + 1];
         const nextIntro = [
           `📘 ${nextMod.title}: ${nextMod.description}`,
           ...nextMod.readingSummary,
-          `✅ Click 'Start' to begin the next module.`,
+          "✅ Click 'Start' to begin the next module.",
         ];
         setMessages((prev) => [...prev, ...nextIntro]);
         queueSpeak([`${nextMod.title}: ${nextMod.description}`]);
-      }, 1500);
+      }
+    } else {
+      // Other task types (choice, decision, write)
+      const assistantReply = await askAssistant(userInput);
+      setMessages((prev) => [...prev, assistantReply]);
     }
+
+    setIsLoading(false);
   };
 
-  // ---------- UI ----------
+  // ---------- RENDER ----------
   return (
     <div className="flex flex-col h-full p-4 space-y-3 bg-gray-50 rounded-xl shadow-inner">
       <div className="flex-1 overflow-y-auto space-y-2">
@@ -169,48 +199,22 @@ const ChatSimulator: React.FC = () => {
             {msg}
           </div>
         ))}
-
-        {currentQuiz && !quizAnswered && (
-          <div className="mt-2 space-y-1">
-            {currentQuiz.options.map((opt, i) => (
-              <button
-                key={i}
-                className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-                onClick={() =>
-                  handleQuizAnswer(String.fromCharCode(65 + i))
-                }
-              >
-                {String.fromCharCode(65 + i)}) {opt}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {showOfficeButtons && (
-          <div className="mt-2 space-y-1">
-            {[
-              { label: "President", cc: 75, approval: 2.5 },
-              { label: "Senate", cc: 50, approval: 2.5 },
-              { label: "House", cc: 31, approval: 2.5 },
-            ].map((office) => (
-              <button
-                key={office.label}
-                className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-                onClick={() => handleOfficeSelect(office.label.toLowerCase())}
-              >
-                {office.label} ({office.cc} CC + {office.approval}% approval)
-              </button>
-            ))}
-          </div>
-        )}
+        {isLoading && <div className="text-gray-400">Processing...</div>}
       </div>
 
-      <div className="flex space-x-2 mt-2">
+      <div className="flex space-x-2">
+        <input
+          className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+          value={input}
+          placeholder="Type your response..."
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleUserInput()}
+        />
         <button
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          onClick={startModule}
+          onClick={handleUserInput}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
         >
-          Start
+          Send
         </button>
       </div>
     </div>

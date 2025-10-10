@@ -9,10 +9,9 @@
     "Candidate Coins (CC): 1 CC = $100 simulated. You start with 50 CC. Earn CC by passing quizzes or completing tasks. Spend CC on campaign needs like filing fees, ads, or communication coaching.",
     "Signatures & Voter Approval: Each quiz score = the same number of signatures. 100 signatures = 1% voter approval. Example: scoring 80% on a quiz = 80 signatures = 0.8% approval.",
     "Ballot Access: You must qualify for the ballot by paying CC (filing fee) AND gathering enough signatures (through quizzes and tasks).",
-    "Eligibility thresholds: President → 75 CC + 2.5% approval. Senate → 50 CC + 2.5% approval. House → 31 CC + 2.5% approval.",
+    "Eligibility thresholds: President (75 CC + 2.5% approval), U.S. Senate (50 CC + 2.5% approval), U.S. House (31 CC + 2.5% approval).",
     "Task Types: Read — summaries of laws, filing guides, or news. Write — announcements, strategy documents, responses. Upload — images (Module 5). Speak — speeches, press conferences, debates (Modules 7+). Some decisions appear as chat buttons.",
     "Feedback & Progress: After each task, your CC, signatures, and approval are updated. All choices and scores carry forward.",
-    "Available Offices: President (75 CC + 2.5% approval), U.S. Senate (50 CC + 2.5% approval), U.S. House (31 CC + 2.5% approval)."
   ],
   "tasks": [
     {

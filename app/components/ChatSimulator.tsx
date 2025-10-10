@@ -92,7 +92,7 @@ const ChatSimulator: React.FC = () => {
         setMessages(prev => [
   ...prev,
   `✅ You selected: ${input.toUpperCase()}`,
-  "✅ Great! Let’s move to a quick quiz to check your understanding."
+  "✅ Great! Let’s move to a quick quiz to check your understanding. What do Candidate Coins (CC) represent in this simulator?"
 ]);
 
 queueSpeak([

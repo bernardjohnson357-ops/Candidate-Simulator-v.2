@@ -6,7 +6,14 @@ export interface QuizQuestion {
   correct: string | string[]; // 👈 allow either
 }
 
-export type TaskType = "read" | "quiz" | "choice" | "decision";
+export type TaskType =
+  | "read"
+  | "quiz"
+  | "choice"
+  | "decision"
+  | "write"
+  | "upload"
+  | "speak"; // ✅ Add this line
 
 export interface Task {
   id: string;

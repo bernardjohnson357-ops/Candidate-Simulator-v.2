@@ -40,7 +40,7 @@ interface Module {
   };
 }
 
-// ---------- Audio queue for speech ----------
+// ---------- Audio queue ----------
 const queueSpeak = (texts: string[]) => {
   let delay = 0;
   for (const line of texts) {
@@ -147,20 +147,28 @@ const ChatSimulator: React.FC = () => {
         `You selected ${inputLower}. ${currentModule.title} complete! Preparing next module...`,
       ]);
 
-      // Load next module if available
+      // Load next module after short delay (3 seconds)
       if (currentModule.nextModule) {
-        const modPath = `../data/modules/module${currentModule.nextModule.id}.json`;
-        const mod = await import(/* @vite-ignore */ modPath);
-        setCurrentModule(mod.default);
-        setQuizAnswered(false);
-        setSelectedOffice(null);
+        setTimeout(async () => {
+          const modPath = `../data/modules/module${currentModule.nextModule!.id}.json`;
+          const mod = await import(/* @vite-ignore */ modPath);
+          setCurrentModule(mod.default);
+          setQuizAnswered(false);
+          setSelectedOffice(null);
 
-        setMessages((prev) => [
-          ...prev,
-          `📘 ${mod.default.title}: ${mod.default.description}`,
-          ...mod.default.readingSummary,
-        ]);
-        queueSpeak(mod.default.readingSummary);
+          setMessages((prev) => [
+            ...prev,
+            `📘 ${mod.default.title}: ${mod.default.description}`,
+            ...mod.default.readingSummary,
+            `✅ Type 'start' to begin the next module.`,
+          ]);
+
+          queueSpeak([
+            `${mod.default.title}: ${mod.default.description}`,
+            ...mod.default.readingSummary,
+            "Type start to begin the next module.",
+          ]);
+        }, 3000); // 3-second delay
       }
 
       return;
@@ -181,8 +189,7 @@ const ChatSimulator: React.FC = () => {
       setMessages((prev) => [...prev, "🎬 Starting simulation..."]);
       speak("Starting simulation...");
 
-      // Combine reading + quiz into one display for current module
-      const firstTask = currentModule.tasks[0]; // read task
+      const firstTask = currentModule.tasks[0];
       const quizTask = currentModule.tasks.find((t) => t.type === "quiz");
 
       if (firstTask) {
@@ -202,7 +209,6 @@ const ChatSimulator: React.FC = () => {
       return;
     }
 
-    // If user types 'done' after reading
     if (userInput.toLowerCase() === "done") {
       const quizTask = currentModule.tasks.find((t) => t.type === "quiz");
       if (quizTask && quizTask.questions?.length) {

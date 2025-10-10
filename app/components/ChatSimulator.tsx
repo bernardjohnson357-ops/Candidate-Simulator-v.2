@@ -152,9 +152,10 @@ const ChatSimulator: React.FC = () => {
       // Load next module after short delay (3 seconds)
 // After "Preparing next module..."
 if (currentModule.nextModule) {
+  const next = currentModule.nextModule; // ✅ capture reference safely
   setTimeout(async () => {
     try {
-      const modPath = `../data/modules/module${currentModule.nextModule.id}.json`;
+      const modPath = `../data/modules/module${next.id}.json`;
       const mod = await import(/* @vite-ignore */ modPath);
       setCurrentModule(mod.default);
       setQuizAnswered(false);

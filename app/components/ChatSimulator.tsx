@@ -49,26 +49,35 @@ const ChatSimulator: React.FC = () => {
 
     // Start simulation
     if (userInput.toLowerCase() === "start") {
-      const firstTask = module0.tasks[0];
-      const quizTask = module0.tasks[1];
+  const firstTask = module0.tasks[0];
+  const quizTask = module0.tasks[1];
 
-      // Combine reading + quiz in one output
-      const readingText = `${firstTask.prompt}\n\n${module0.readingSummary.join("\n")}`;
-      const quizQuestion = quizTask.questions[0];
-      const options = quizQuestion.options.map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`).join("  ");
+  const readingText = `${firstTask.prompt}\n\n${module0.readingSummary.join("\n")}`;
 
-      setMessages(prev => [
-        ...prev,
-        "🎬 Starting simulation...",
-        readingText,
-        `🧩 ${quizTask.prompt}`,
-        options
-      ]);
+  // ✅ Guard: ensure quizTask.questions exists and has at least one element
+  if (!quizTask.questions || quizTask.questions.length === 0) {
+    setMessages(prev => [...prev, "⚠️ Quiz data is missing."]);
+    setIsLoading(false);
+    return;
+  }
 
-      queueSpeak([readingText, quizTask.prompt, ...quizQuestion.options]);
-      setIsLoading(false);
-      return;
-    }
+  const quizQuestion = quizTask.questions[0];
+  const options = quizQuestion.options.map(
+    (opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`
+  ).join("  ");
+
+  setMessages(prev => [
+    ...prev,
+    "🎬 Starting simulation...",
+    readingText,
+    `🧩 ${quizTask.prompt}`,
+    options
+  ]);
+
+  queueSpeak([readingText, quizTask.prompt, ...quizQuestion.options]);
+  setIsLoading(false);
+  return;
+}
 
     // Quiz response
     if (!quizAnswered) {

@@ -3,7 +3,8 @@
 
 import React, { useState } from "react";
 import { speak } from "../utils/audioUtils";
-import module0 from "../data/modules/module0.json";
+import module0Json from "../data/modules/module0.json";
+const module0: Module = module0Json as Module;
 
 interface CandidateState {
   office?: string;

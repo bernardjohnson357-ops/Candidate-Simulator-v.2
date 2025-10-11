@@ -58,30 +58,63 @@ const ChatSimulator: React.FC = () => {
     const task = currentModule.tasks[0]; // only first task for simplicity
 
     // ---------- QUIZ ----------
-    if (task.type === "quiz" && !quizAnswered && task.questions?.length) {
-      const quiz = task.questions[0];
-      const userLetter = input[0].toUpperCase();
-      const correctLetter = Array.isArray(quiz.correct)
-        ? quiz.correct[0][0].toUpperCase()
-        : quiz.correct[0].toUpperCase();
+if (!quizAnswered && quizTask && quizTask.questions?.length) {
+  const quiz = quizTask.questions[0]; // current question
+  const userLetter = userInput[0].toUpperCase();
 
-      if (userLetter === correctLetter) {
-        addMessage(`✅ Correct! You earned +5 Candidate Coins`);
-        setCandidateState((prev) => ({
-          ...prev,
-          cc: prev.cc + 5,
-          signatures: prev.signatures + 5,
-        }));
-      } else {
-        addMessage(`❌ Incorrect. The correct answer was: ${quiz.correct}`);
-      }
-      setQuizAnswered(true);
+  if (!["A", "B", "C", "D"].includes(userLetter)) {
+    setMessages((prev) => [
+      ...prev,
+      "❌ Please answer with A, B, C, or D.",
+    ]);
+    queueSpeak(["Please answer with A, B, C, or D."]);
+    return;
+  }
 
-      addMessage(
-        "✅ Quiz complete! Now, select your office: President (75 CC + 2.5% approval), Senate (50 CC + 2.5%), House (31 CC + 2.5%)."
-      );
-      return;
-    }
+  // Safely determine the first correct letter
+  const correctLetter =
+    typeof quiz.correct === "string"
+      ? quiz.correct[0].toUpperCase()
+      : quiz.correct[0][0].toUpperCase();
+
+  if (userLetter === correctLetter) {
+    setMessages((prev) => [
+      ...prev,
+      `✅ Correct! You earned +5 Candidate Coins.`,
+    ]);
+    queueSpeak(["Correct! You earned five Candidate Coins."]);
+    setCandidateState((prev) => ({
+      ...prev,
+      cc: prev.cc + 5,
+      signatures: prev.signatures + 5, // optional: update signatures too
+      voterApproval: prev.voterApproval + 0.05, // optional: update approval
+    }));
+  } else {
+    setMessages((prev) => [
+      ...prev,
+      `❌ Incorrect. The correct answer was: ${Array.isArray(quiz.correct) ? quiz.correct[0] : quiz.correct}`,
+    ]);
+    queueSpeak([
+      `Incorrect. The correct answer was: ${
+        Array.isArray(quiz.correct) ? quiz.correct[0] : quiz.correct
+      }`,
+    ]);
+  }
+
+  setQuizAnswered(true);
+
+  if (officeTask) {
+    setMessages((prev) => [
+      ...prev,
+      "✅ Quiz complete! Now, select your office: President (75 CC + 2.5% approval), Senate (50 CC + 2.5%), House (31 CC + 2.5%).",
+    ]);
+    queueSpeak([
+      "Quiz complete! Now, select your office: President, Senate, or House.",
+    ]);
+  }
+
+  return;
+}
 
     // ---------- OFFICE SELECTION ----------
     if (quizAnswered && !selectedOffice) {
